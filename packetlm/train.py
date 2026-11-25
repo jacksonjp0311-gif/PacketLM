@@ -4,7 +4,7 @@ Focus: TinyStories-scale next-token on packet overlap.
 Windows stories into short segments and measures whether residual hops change retrieval.
 Evaluates sealed probes with twin measurement (cold vs field).
 Gate result is recorded in the receipt; the process does not fail the job.
-Loads language and reasoning domains.
+Loads language, reasoning, and planning domains.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from .router import Router
 
 def load_corpus() -> list[str]:
     stories = []
-    for name in ("tinystories_slice.txt", "reasoning_slice.txt"):
+    for name in ("tinystories_slice.txt", "reasoning_slice.txt", "planning_slice.txt"):
         p = Path("data") / name
         if p.exists():
             text = p.read_text()
@@ -176,9 +176,9 @@ def run(seed: int = 0, steps: int = 50) -> dict:
         "hop_ablation": ablation,
         "gate_passed": gate_passed,
         "m3_ready": m3_ready,
-        "phase": "language+reasoning",
-        "corpus": "tinystories+reasoning",
-        "claim": "overlap proxy + hop count + twin probe eval on language and reasoning windows; gate result recorded; not a real language model yet",
+        "phase": "language+reasoning+planning",
+        "corpus": "tinystories+reasoning+planning",
+        "claim": "overlap proxy + hop count + twin probe eval on three domains; gate result recorded; not a real language model yet",
         "status": status
     }
     Path("artifacts").mkdir(exist_ok=True)
