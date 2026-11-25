@@ -4,7 +4,7 @@ Focus: TinyStories-scale next-token on packet overlap.
 Windows stories into short segments and measures whether residual hops change retrieval.
 Evaluates sealed probes with twin measurement (cold vs field).
 Hard gate: rejects the run if no probes certify OR hops do not improve (M3 demand).
-Hop-depth ablation: compares single-select vs residual hops on certified probes.
+Hop-depth ablation: compares single-select vs residual path union on probes.
 Produces a simple loss curve artifact for the runner.
 """
 
@@ -105,7 +105,7 @@ def evaluate_probe(router: Router, probe: dict) -> dict:
     }
 
 def hop_ablation(router: Router, probes: list[dict]) -> dict:
-    """Compare single-select vs residual hops on probe hit rate."""
+    """Compare single-select vs residual path union on probe hit rate."""
     single_hits = 0
     hop_hits = 0
     for probe in probes:
@@ -114,8 +114,8 @@ def hop_ablation(router: Router, probes: list[dict]) -> dict:
         single = router.select(q, k=1)
         if single and single[0][0].overlap(exp) > 0:
             single_hits += 1
-        hops = router.residual_hop(q, depth=3)
-        hop_hit = any(h.overlap(exp) > 0 for h in hops)
+        union = router.path_union(q, depth=3)
+        hop_hit = union is not None and union.overlap(exp) > 0
         if hop_hit:
             hop_hits += 1
     n = len(probes) or 1
