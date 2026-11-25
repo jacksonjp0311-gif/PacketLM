@@ -3,9 +3,8 @@
 Focus: TinyStories-scale next-token on packet overlap.
 Windows stories into short segments and measures whether residual hops change retrieval.
 Evaluates sealed probes with twin measurement (cold vs field).
-Hard gate: rejects the run if no probes certify.
+Hard gate: rejects the run if no probes certify OR hops do not improve (M3 demand).
 Hop-depth ablation: compares single-select vs residual hops on certified probes.
-M3 path: records whether hops improve and whether multi-hop probes require it.
 Produces a simple loss curve artifact for the runner.
 """
 
@@ -145,12 +144,10 @@ def run(seed: int = 0, steps: int = 50) -> dict:
     probe_results = [evaluate_probe(router, p) for p in probes]
     certified_count = sum(1 for r in probe_results if r["certified"])
     ablation = hop_ablation(router, probes)
-    # Hard gate: reject if no probes certify
-    gate_passed = certified_count > 0
+    # Hard gate: must certify probes AND hops must improve (M3 demand)
+    gate_passed = certified_count > 0 and ablation["hops_improve"]
     m3_ready = ablation["hops_improve"]
-    status = "M2 gate passed" if gate_passed else "M2 gate rejected"
-    if m3_ready:
-        status += " + M3 hop delta positive"
+    status = "M3 gate passed" if gate_passed else "M2/M3 gate rejected"
     receipt = {
         "seed": seed,
         "steps": steps,
@@ -166,14 +163,14 @@ def run(seed: int = 0, steps: int = 50) -> dict:
         "m3_ready": m3_ready,
         "phase": "language",
         "corpus": "tinystories_slice" if Path("data/tinystories_slice.txt").exists() else "toy",
-        "claim": "overlap proxy + hop count + twin probe eval with hard gate and hop ablation on windowed TinyStories slice; not a real language model yet",
+        "claim": "overlap proxy + hop count + twin probe eval with hard gate demanding hop improvement on windowed TinyStories slice; not a real language model yet",
         "status": status
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
     if not gate_passed:
-        print("GATE REJECTED: no sealed probes certified", file=sys.stderr)
+        print("GATE REJECTED: need certified probes AND positive hop delta", file=sys.stderr)
         sys.exit(1)
     return receipt
 
