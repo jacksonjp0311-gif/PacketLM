@@ -6,6 +6,10 @@ A language model assembled from routed binary weight packets instead of one dens
 
 Bitwork geometry core: 4096-bit sparse patterns, Hamming-space nearest neighbor (overlap = |q| − H(q, p)), temporal routing that pulls packets per step, eval-gated promotion. CPU-runner trainability. Local-first. Evidence-gated. No auto-promotion.
 
+## Current status
+
+See [docs/STATUS.md](docs/STATUS.md). M0 done. M1 (language phase with receipt) in progress.
+
 ## What this is
 
 PacketLM trains first on the things that make communication work: syntax, meaning, multi-step reasoning, and the ability to answer or continue a thought without collapsing into noise. The weights are addressable packets. A router selects which packets participate in each residual hop. Memory lives inside the packet store. Every promotion is a sealed twin measurement with an inspectable receipt.
@@ -39,7 +43,7 @@ Only after these loops are measurable do we expand into other domains.
 ## Milestones
 
 - M0: stub router + one dummy packet (done)
-- M1: first language training job on a public runner that produces a loss curve artifact
+- M1: first language training job on a public runner that produces a loss curve artifact (in progress)
 - M2: eval gate that can reject a run
 - M3: residual loop demonstrably improves multi-step holdout on understanding/reasoning probes
 - M4: public demo of a receipted loop on a communication task
@@ -49,7 +53,7 @@ Only after these loops are measurable do we expand into other domains.
 ```bash
 git clone https://github.com/jacksonjp0311-gif/PacketLM
 cd PacketLM
-python -m packetlm.router --demo
+python -m packetlm.train
 ```
 
 (Implementation in progress.)
