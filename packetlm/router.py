@@ -14,9 +14,10 @@ class Router:
         return scored[:k]
 
     def residual_hop(self, residual: Packet, depth: int = 3) -> list[Packet]:
-        """AND-NOT winner bits and re-query. Logs each hop."""
+        """AND-NOT winner bits and re-query. Accumulates path that covers residual."""
         current_bits = int.from_bytes(residual.bits, "big")
         path = []
+        seen = set()
         for _ in range(depth):
             current = Packet(
                 bits=current_bits.to_bytes(BITS // 8, "big"),
@@ -28,8 +29,12 @@ class Router:
             winner, score = top[0]
             if score <= 0:
                 break
+            # avoid immediate repeat
+            wid = id(winner)
+            if wid in seen:
+                break
+            seen.add(wid)
             path.append(winner)
-            # residual = residual AND NOT winner
             winner_int = int.from_bytes(winner.bits, "big")
             current_bits = current_bits & ~winner_int
             if current_bits == 0:
@@ -45,7 +50,6 @@ def demo():
     print("Top packets:", [(getattr(p, "meta", None), s) for p, s in r.select(q)])
     hops = r.residual_hop(q)
     print("Hop path length:", len(hops))
-    print("Final residual empty:", True)  # after hops
 
 if __name__ == "__main__":
     demo()
