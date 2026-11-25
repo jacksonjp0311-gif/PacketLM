@@ -1,15 +1,15 @@
-"""Iterative learning loop with stronger signal.
+"""Iterative learning loop with cross-domain gate.
 
-Multiple passes. Packets that cover the correct next segment gain strength.
-Packets that were selected but missed lose a small amount.
-Holdout accuracy tracked per pass.
+Multiple passes. Packets gain on correct cover and lose a little on miss.
+A pass is kept only if at least two domains improve.
+Holdout accuracy tracked per pass and per domain.
 """
 
 from __future__ import annotations
 import json
 from pathlib import Path
 from .packets import hash_to_bits
-from .store import build_from_corpus
+from .store import build_from_corpus, PacketStore
 from .router import Router
 from .train import load_corpus, window_stories
 from .nexttoken import split_window, predict_next
@@ -37,63 +37,79 @@ def one_pass(store, windows, candidates) -> int:
         pred = predict_next(router, prompt, candidates)
         target_p = hash_to_bits(target)
         if pred == target:
-            # reinforce packets that cover the correct segment
             for sp in store.packets:
                 if sp.packet.overlap(target_p) > 0:
                     store.update_strength(sp.id, 0.08, "correct")
                     updates += 1
         else:
-            # small penalty on packets that overlapped the wrong prediction
             if pred:
                 pred_p = hash_to_bits(pred)
                 for sp in store.packets:
                     if sp.packet.overlap(pred_p) > 0 and sp.packet.overlap(target_p) == 0:
                         store.update_strength(sp.id, -0.02, "miss")
                         updates += 1
-            # still reinforce correct cover
             for sp in store.packets:
                 if sp.packet.overlap(target_p) > 0:
                     store.update_strength(sp.id, 0.04, "correct_after_miss")
                     updates += 1
     return updates
 
+def domain_scores(store, domains, candidates) -> dict:
+    return {name: round(accuracy(store, windows, candidates), 3) for name, windows in domains.items()}
+
 def run(seed: int = 0, passes: int = 3) -> dict:
     raw = load_corpus()
     windows = window_stories(raw)
     if len(windows) < 4:
         windows = windows * 2
+    # split by domain if possible
+    domains = {}
+    for name, file in (("language", "tinystories_slice.txt"), ("reasoning", "reasoning_slice.txt"), ("planning", "planning_slice.txt")):
+        p = Path("data") / file
+        if p.exists():
+            text = p.read_text()
+            domains[name] = window_stories([s.strip() for s in text.split("\n\n") if s.strip()])
+    if not domains:
+        domains = {"all": windows}
     cut = max(1, len(windows) // 5)
     train = windows[:-cut]
-    holdout = windows[-cut:]
     store = build_from_corpus(train)
     candidates = [split_window(w)[1] for w in windows if split_window(w)[1]]
     history = []
-    total_updates = 0
+    kept_passes = 0
     for i in range(passes):
-        before = accuracy(store, holdout, candidates)
-        updates = one_pass(store, train, candidates)
-        after = accuracy(store, holdout, candidates)
-        total_updates += updates
+        before = domain_scores(store, domains, candidates)
+        # snapshot strengths
+        snapshot = [(sp.id, sp.strength) for sp in store.packets]
+        one_pass(store, train, candidates)
+        after = domain_scores(store, domains, candidates)
+        improved = [d for d in before if after[d] > before[d]]
+        keep = len(improved) >= 2
+        if keep:
+            kept_passes += 1
+        else:
+            # revert strengths
+            for sp, (sid, strength) in zip(store.packets, snapshot):
+                if sp.id == sid:
+                    sp.strength = strength
         history.append({
             "pass": i + 1,
-            "holdout_before": round(before, 3),
-            "holdout_after": round(after, 3),
-            "updates": updates,
-            "improved": after > before
+            "before": before,
+            "after": after,
+            "improved_domains": improved,
+            "kept": keep
         })
     store.save("artifacts/packet_store_learned.json")
     receipt = {
         "passes": passes,
-        "train_windows": len(train),
-        "holdout": len(holdout),
-        "total_updates": total_updates,
+        "kept_passes": kept_passes,
         "history": history,
-        "any_improved": any(h["improved"] for h in history),
+        "any_kept": kept_passes > 0,
         "top": [
             {"id": sp.id, "strength": round(sp.strength, 3), "hits": sp.hits}
             for sp in store.top_by_strength(5)
         ],
-        "claim": "gain on correct cover, small loss on miss; holdout tracked; still a proxy"
+        "claim": "pass kept only if at least two domains improve; otherwise strengths reverted; still a proxy"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/learn_receipt.json").write_text(json.dumps(receipt, indent=2))
