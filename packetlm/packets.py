@@ -38,11 +38,9 @@ def hash_to_bits(text: str, seed: int = 0) -> Packet:
     Any window containing a token will overlap that token's packet.
     """
     bits_int = 0
-    # base hash (keeps some density for residual)
     h = hashlib.sha256(f"{seed}:{text}".encode()).digest()
     for i in range(0, min(len(h), 32)):
         bits_int |= (1 << (h[i] % BITS))
-    # token features — this is what makes expected-word overlap reliable
     for token in text.split():
         clean = "".join(c for c in token.lower() if c.isalnum())
         if clean:
@@ -50,3 +48,9 @@ def hash_to_bits(text: str, seed: int = 0) -> Packet:
     bits = bits_int.to_bytes(BITS // 8, "big")
     count = bin(bits_int).count("1")
     return Packet(bits=bits, count=count)
+
+def identity_packet(token: str) -> Packet:
+    """One unique bit for a token. Residual injection of this packet is unambiguous."""
+    bit = _token_bit(token)
+    bits_int = 1 << bit
+    return Packet(bits=bits_int.to_bytes(BITS // 8, "big"), count=1)
