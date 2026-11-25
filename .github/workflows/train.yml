@@ -19,9 +19,18 @@ jobs:
           python-version: '3.12'
       - name: Language-phase with hard gate
         run: python -m packetlm.train
-      - name: Upload receipt
+      - name: Upload training receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: packetlm-language-receipt
           path: artifacts/receipt.json
+      - name: Receipted continuation demo
+        if: always()
+        run: python -m packetlm.demo
+      - name: Upload demo receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-demo-receipt
+          path: artifacts/demo_receipt.json
