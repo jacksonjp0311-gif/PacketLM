@@ -115,3 +115,12 @@ jobs:
         with:
           name: packetlm-gaptest-receipt
           path: artifacts/gaptest_receipt.json
+      - name: Transfer test
+        if: always()
+        run: python -m packetlm.transfer
+      - name: Upload transfer receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-transfer-receipt
+          path: artifacts/transfer_receipt.json
