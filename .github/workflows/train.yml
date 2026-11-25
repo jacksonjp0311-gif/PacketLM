@@ -97,3 +97,12 @@ jobs:
         with:
           name: packetlm-memory-receipt
           path: artifacts/memory_receipt.json
+      - name: Gap proposals
+        if: always()
+        run: python -m packetlm.gap
+      - name: Upload gap receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-gap-receipt
+          path: artifacts/gap_receipt.json
