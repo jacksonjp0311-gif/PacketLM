@@ -14,7 +14,7 @@ class Router:
         return scored[:k]
 
     def residual_hop(self, residual: Packet, depth: int = 3) -> list[Packet]:
-        """AND-NOT winner bits and re-query. Accumulates path that covers residual."""
+        """AND-NOT winner bits and re-query. Collects diverse packets."""
         current_bits = int.from_bytes(residual.bits, "big")
         path = []
         seen = set()
@@ -23,20 +23,24 @@ class Router:
                 bits=current_bits.to_bytes(BITS // 8, "big"),
                 count=bin(current_bits).count("1")
             )
-            top = self.select(current, k=1)
+            # take top-2 so we can pull a second packet that covers residual
+            top = self.select(current, k=2)
             if not top:
                 break
-            winner, score = top[0]
-            if score <= 0:
+            added = False
+            for winner, score in top:
+                if score <= 0:
+                    continue
+                wid = id(winner)
+                if wid in seen:
+                    continue
+                seen.add(wid)
+                path.append(winner)
+                winner_int = int.from_bytes(winner.bits, "big")
+                current_bits = current_bits & ~winner_int
+                added = True
                 break
-            wid = id(winner)
-            if wid in seen:
-                break
-            seen.add(wid)
-            path.append(winner)
-            winner_int = int.from_bytes(winner.bits, "big")
-            current_bits = current_bits & ~winner_int
-            if current_bits == 0:
+            if not added or current_bits == 0:
                 break
         return path
 
