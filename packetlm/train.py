@@ -5,6 +5,7 @@ Windows stories into short segments and measures whether residual hops change re
 Evaluates sealed probes with twin measurement (cold vs field).
 Hard gate: rejects the run if no probes certify.
 Hop-depth ablation: compares single-select vs residual hops on certified probes.
+M3 path: records whether hops improve and whether multi-hop probes require it.
 Produces a simple loss curve artifact for the runner.
 """
 
@@ -100,7 +101,8 @@ def evaluate_probe(router: Router, probe: dict) -> dict:
         "field_hit": field_hit,
         "cold_hit": cold_hit,
         "field_overlap": field_overlap,
-        "certified": certified
+        "certified": certified,
+        "requires_hop": probe.get("requires_hop", False)
     }
 
 def hop_ablation(router: Router, probes: list[dict]) -> dict:
@@ -110,11 +112,9 @@ def hop_ablation(router: Router, probes: list[dict]) -> dict:
     for probe in probes:
         q = hash_to_bits(probe["prompt"])
         exp = hash_to_bits(probe["expected"])
-        # single
         single = router.select(q, k=1)
         if single and single[0][0].overlap(exp) > 0:
             single_hits += 1
-        # hops: check if any hop packet overlaps expected
         hops = router.residual_hop(q, depth=3)
         hop_hit = any(h.overlap(exp) > 0 for h in hops)
         if hop_hit:
@@ -147,9 +147,10 @@ def run(seed: int = 0, steps: int = 50) -> dict:
     ablation = hop_ablation(router, probes)
     # Hard gate: reject if no probes certify
     gate_passed = certified_count > 0
+    m3_ready = ablation["hops_improve"]
     status = "M2 gate passed" if gate_passed else "M2 gate rejected"
-    if ablation["hops_improve"]:
-        status += " + hops improve"
+    if m3_ready:
+        status += " + M3 hop delta positive"
     receipt = {
         "seed": seed,
         "steps": steps,
@@ -162,6 +163,7 @@ def run(seed: int = 0, steps: int = 50) -> dict:
         "certified_probes": certified_count,
         "hop_ablation": ablation,
         "gate_passed": gate_passed,
+        "m3_ready": m3_ready,
         "phase": "language",
         "corpus": "tinystories_slice" if Path("data/tinystories_slice.txt").exists() else "toy",
         "claim": "overlap proxy + hop count + twin probe eval with hard gate and hop ablation on windowed TinyStories slice; not a real language model yet",
