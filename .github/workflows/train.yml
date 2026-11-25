@@ -61,7 +61,7 @@ jobs:
         with:
           name: packetlm-feedpull-receipt
           path: artifacts/feedpull_receipt.json
-      - name: Closed learning loop
+      - name: Iterative learning
         if: always()
         run: python -m packetlm.learn
       - name: Upload learn receipt
@@ -70,3 +70,12 @@ jobs:
         with:
           name: packetlm-learn-receipt
           path: artifacts/learn_receipt.json
+      - name: Offer language packet
+        if: always()
+        run: python -m packetlm.feedoffer
+      - name: Upload offer receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-feedoffer-receipt
+          path: artifacts/feedoffer_receipt.json
