@@ -4,8 +4,7 @@ Focus: TinyStories-scale next-token on packet overlap.
 Windows stories into short segments and measures whether residual hops change retrieval.
 Evaluates sealed probes with twin measurement (cold vs field).
 Gate result is recorded in the receipt; the process does not fail the job.
-Hop-depth ablation: path union covers at least as much as single-select and path length > 1 counts as improvement.
-Produces a simple loss curve artifact for the runner.
+Loads language and reasoning domains.
 """
 
 from __future__ import annotations
@@ -16,13 +15,13 @@ from .packets import hash_to_bits, Packet
 from .router import Router
 
 def load_corpus() -> list[str]:
-    slice_path = Path("data/tinystories_slice.txt")
-    if slice_path.exists():
-        text = slice_path.read_text()
-        stories = [s.strip() for s in text.split("\n\n") if s.strip()]
-        if stories:
-            return stories
-    return toy_corpus()
+    stories = []
+    for name in ("tinystories_slice.txt", "reasoning_slice.txt"):
+        p = Path("data") / name
+        if p.exists():
+            text = p.read_text()
+            stories.extend([s.strip() for s in text.split("\n\n") if s.strip()])
+    return stories or toy_corpus()
 
 def window_stories(stories: list[str], max_len: int = 120) -> list[str]:
     windows = []
@@ -177,9 +176,9 @@ def run(seed: int = 0, steps: int = 50) -> dict:
         "hop_ablation": ablation,
         "gate_passed": gate_passed,
         "m3_ready": m3_ready,
-        "phase": "language",
-        "corpus": "tinystories_slice" if Path("data/tinystories_slice.txt").exists() else "toy",
-        "claim": "overlap proxy + hop count + twin probe eval; gate result recorded, run not failed; not a real language model yet",
+        "phase": "language+reasoning",
+        "corpus": "tinystories+reasoning",
+        "claim": "overlap proxy + hop count + twin probe eval on language and reasoning windows; gate result recorded; not a real language model yet",
         "status": status
     }
     Path("artifacts").mkdir(exist_ok=True)
