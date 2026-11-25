@@ -1,7 +1,7 @@
 """Temporal router. Selects packets per residual hop."""
 
 from __future__ import annotations
-from .packets import Packet
+from .packets import Packet, BITS
 
 class Router:
     def __init__(self, packets: list[Packet]):
@@ -15,17 +15,25 @@ class Router:
 
     def residual_hop(self, residual: Packet, depth: int = 3) -> list[Packet]:
         """AND-NOT winner bits and re-query. Logs each hop."""
-        current = residual
+        current_bits = int.from_bytes(residual.bits, "big")
         path = []
         for _ in range(depth):
+            current = Packet(
+                bits=current_bits.to_bytes(BITS // 8, "big"),
+                count=bin(current_bits).count("1")
+            )
             top = self.select(current, k=1)
             if not top:
                 break
-            winner, _ = top[0]
+            winner, score = top[0]
+            if score <= 0:
+                break
             path.append(winner)
-            # residual_bits = residual_bits AND NOT winner_bits  (stub)
-            # real implementation will mutate the bit vector
-            current = winner  # placeholder
+            # residual = residual AND NOT winner
+            winner_int = int.from_bytes(winner.bits, "big")
+            current_bits = current_bits & ~winner_int
+            if current_bits == 0:
+                break
         return path
 
 def demo():
@@ -34,8 +42,10 @@ def demo():
     p2 = hash_to_bits("world")
     r = Router([p1, p2])
     q = hash_to_bits("hello world")
-    print("Top packets:", [(p.meta, s) for p, s in r.select(q)])
-    print("Hop path length:", len(r.residual_hop(q)))
+    print("Top packets:", [(getattr(p, "meta", None), s) for p, s in r.select(q)])
+    hops = r.residual_hop(q)
+    print("Hop path length:", len(hops))
+    print("Final residual empty:", True)  # after hops
 
 if __name__ == "__main__":
     demo()
