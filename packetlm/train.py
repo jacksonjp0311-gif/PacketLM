@@ -3,12 +3,14 @@
 Focus: TinyStories-scale next-token on packet overlap.
 Windows stories into short segments and measures whether residual hops change retrieval.
 Evaluates sealed probes with twin measurement (cold vs field).
+Hard gate: rejects the run if no probes certify.
 Produces a simple loss curve artifact for the runner.
 """
 
 from __future__ import annotations
 import json
 import random
+import sys
 from pathlib import Path
 from .packets import hash_to_bits, Packet
 from .router import Router
@@ -78,7 +80,6 @@ def evaluate_probe(router: Router, probe: dict) -> dict:
     """Twin measurement: field vs cold (empty router)."""
     q = hash_to_bits(probe["prompt"])
     exp = hash_to_bits(probe["expected"])
-    # field
     field_scored = router.select(q, k=1)
     field_hit = False
     field_overlap = 0
@@ -86,7 +87,6 @@ def evaluate_probe(router: Router, probe: dict) -> dict:
         winner = field_scored[0][0]
         field_overlap = winner.overlap(exp)
         field_hit = field_overlap > 0
-    # cold
     cold = Router([])
     cold_scored = cold.select(q, k=1)
     cold_hit = False
@@ -119,6 +119,9 @@ def run(seed: int = 0, steps: int = 50) -> dict:
     probes = load_probes()
     probe_results = [evaluate_probe(router, p) for p in probes]
     certified_count = sum(1 for r in probe_results if r["certified"])
+    # Hard gate: reject if no probes certify
+    gate_passed = certified_count > 0
+    status = "M2 gate passed" if gate_passed else "M2 gate rejected"
     receipt = {
         "seed": seed,
         "steps": steps,
@@ -129,14 +132,18 @@ def run(seed: int = 0, steps: int = 50) -> dict:
         "hop_effects": effects,
         "probes": probe_results,
         "certified_probes": certified_count,
+        "gate_passed": gate_passed,
         "phase": "language",
         "corpus": "tinystories_slice" if Path("data/tinystories_slice.txt").exists() else "toy",
-        "claim": "overlap proxy + hop count + twin probe eval on windowed TinyStories slice; not a real language model yet",
-        "status": "M1 in progress"
+        "claim": "overlap proxy + hop count + twin probe eval with hard gate on windowed TinyStories slice; not a real language model yet",
+        "status": status
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
+    if not gate_passed:
+        print("GATE REJECTED: no sealed probes certified", file=sys.stderr)
+        sys.exit(1)
     return receipt
 
 if __name__ == "__main__":
