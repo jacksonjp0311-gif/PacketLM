@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Language-phase with hard gate
+      - name: Language-phase measurement
         run: python -m packetlm.train
       - name: Upload training receipt
         if: always()
