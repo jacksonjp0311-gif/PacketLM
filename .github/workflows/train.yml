@@ -1,0 +1,27 @@
+name: PacketLM Train
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'packetlm/**'
+      - '.github/workflows/train.yml'
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Demo router
+        run: python -m packetlm.router
+      - name: Upload receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-demo-receipt
+          path: |
+            # future loss curves and receipts
