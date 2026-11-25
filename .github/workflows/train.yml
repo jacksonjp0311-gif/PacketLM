@@ -17,11 +17,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Demo router
-        run: python -m packetlm.router
+      - name: Language-phase stub
+        run: python -m packetlm.train
       - name: Upload receipt
         uses: actions/upload-artifact@v4
         with:
-          name: packetlm-demo-receipt
-          path: |
-            # future loss curves and receipts
+          name: packetlm-language-receipt
+          path: artifacts/receipt.json
