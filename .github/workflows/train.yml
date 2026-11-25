@@ -133,3 +133,12 @@ jobs:
         with:
           name: packetlm-vocab-receipt
           path: artifacts/vocab_receipt.json
+      - name: Token identity training
+        if: always()
+        run: python -m packetlm.tokenid
+      - name: Upload tokenid receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-tokenid-receipt
+          path: artifacts/tokenid_receipt.json
