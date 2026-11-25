@@ -14,12 +14,13 @@ Last updated: 2026-11-25
 | G3 | Next-token objective | Begun |
 | G4 | Pull certified packets from NOMAD feed | Begun |
 | G5 | Closed learning loop (prediction-error updates strength) | Begun |
+| G6 | Iterative learning (multiple passes, holdout tracked) | Begun |
 
 ## Goal
 Turn PacketLM into a general intelligence: a system that improves its own packets under measurement, learns from language and sealed probes, and can accept and offer certified knowledge without losing the claim boundary.
 
 ## Where we are
-All original milestones are complete. Packets have strength that rises when they help a sealed probe or cover a correct next segment after a miss. Next-segment prediction is measured on held-out windows. One optional domain packet is pulled from the NOMAD feed. A closed learning loop now runs on the public runner.
+All original milestones are complete. The learning loop now runs multiple passes. Each pass measures holdout accuracy before and after, and raises strength on packets that cover the correct next segment after a miss. The public runner executes it.
 
 ## Capabilities
 - Stores weights as many small binary packets instead of one big dense set
@@ -31,6 +32,7 @@ All original milestones are complete. Packets have strength that rises when they
 - Produces a two-turn continuation where the second turn keeps content from the first
 - Raises a packet’s strength only when it improves a sealed probe over the empty baseline
 - Raises strength of packets that cover the correct next segment after a miss
+- Runs multiple learning passes and tracks whether holdout accuracy improved
 - Measures next-segment prediction accuracy on held-out windows
 - Pulls one optional domain packet from the NOMAD feed
 - Runs on ordinary CPU runners and leaves a receipt you can open
@@ -38,9 +40,9 @@ All original milestones are complete. Packets have strength that rises when they
 
 ## Open
 - Still a proxy on a few short stories
-- Learning loop is one pass; not yet iterative
+- Iterative improvement not yet confirmed on a public run
 - Feed pull is one-way
 - No general capability beyond the small story slice
 
 ## Next
-Confirm the learn receipt on the public run. Then make the learning loop iterative so a second pass can improve on the first.
+Confirm the iterative receipt shows at least one pass improved holdout accuracy. Then offer a language packet back to the feed.
