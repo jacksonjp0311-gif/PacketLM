@@ -17,3 +17,13 @@ Goal: help the kitten. Step 1: find the kitten. Step 2: give water. Step 3: call
 Goal: light the path. Step 1: wait until dark. Step 2: turn on. Step 3: stay on until morning.
 
 Goal: cross the stream. Step 1: gather sticks. Step 2: build the bridge. Step 3: test and cross.
+
+Goal: fetch the stick. Step 1: ask the owner. Step 2: run after the stick. Step 3: bring it back.
+
+Goal: make rain. Step 1: gather water. Step 2: rain on the garden. Step 3: watch the flowers grow.
+
+Goal: grow a plant. Step 1: plant the seed. Step 2: water it every day. Step 3: see the plant come up.
+
+Goal: help a passenger. Step 1: stop at the station. Step 2: wait for the passenger. Step 3: continue on time.
+
+Goal: fly a kite. Step 1: build the kite. Step 2: wait for wind. Step 3: hold the string and watch.
