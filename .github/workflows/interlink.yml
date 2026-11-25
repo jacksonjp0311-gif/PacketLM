@@ -1,0 +1,26 @@
+name: PacketLM Interlink
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [packetlm-interlink]
+  schedule:
+    - cron: '0 */6 * * *'  # every 6 hours as fallback presence
+
+jobs:
+  interlink:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Mark presence and prepare offer
+        run: python scripts/interlink.py
+      - name: Upload receipt artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: interlink-receipt
+          path: |
+            # future receipt files
