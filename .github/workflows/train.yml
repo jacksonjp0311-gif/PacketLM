@@ -106,3 +106,12 @@ jobs:
         with:
           name: packetlm-gap-receipt
           path: artifacts/gap_receipt.json
+      - name: Gap capability test
+        if: always()
+        run: python -m packetlm.gaptest
+      - name: Upload gap test receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-gaptest-receipt
+          path: artifacts/gaptest_receipt.json
