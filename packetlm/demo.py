@@ -2,6 +2,7 @@
 
 Prints a receipted two-turn continuation on a communication-style prompt.
 Each turn is selected by the residual path union.
+Measures whether the second turn stays consistent with the first.
 Claim boundary explicit.
 """
 
@@ -44,6 +45,11 @@ def demo(seed: int = 42) -> dict:
     union2 = router.path_union(q2, depth=3)
     cont2, ov2 = best_window(union2, corpus)
 
+    # consistency: how much of turn 1's continuation is still covered by turn 2's path
+    consistency = 0
+    if cont1 and union2:
+        consistency = union2.overlap(hash_to_bits(cont1))
+
     receipt = {
         "turns": [
             {
@@ -62,8 +68,10 @@ def demo(seed: int = 42) -> dict:
             }
         ],
         "multi_step": cont1 is not None and cont2 is not None,
+        "consistency_overlap": consistency,
+        "consistent": consistency > 0,
         "seed": seed,
-        "claim": "two-turn continuation selected by residual path union on TinyStories slice; not a real language model"
+        "claim": "two-turn continuation selected by residual path union; consistency measured by overlap of second path with first continuation; not a real language model"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/demo_receipt.json").write_text(json.dumps(receipt, indent=2))
