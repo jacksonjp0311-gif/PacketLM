@@ -151,3 +151,12 @@ jobs:
         with:
           name: packetlm-direct-receipt
           path: artifacts/direct_receipt.json
+      - name: Multi-token generation
+        if: always()
+        run: python -m packetlm.generate
+      - name: Upload generate receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-generate-receipt
+          path: artifacts/generate_receipt.json
