@@ -1,8 +1,9 @@
-"""Multi-token generation.
+"""Multi-token generation with learned update.
 
-Chains nearest-prompt predictions for several steps.
-Scores how many of the target tokens appear in the generated continuation.
-This is a continuation, not a single first-token hit.
+Chains predictions for several steps.
+After scoring the continuation, updates the prompt-to-token table
+so correct next tokens from the target are preferred on the next pass.
+Measures overlap before and after the update.
 """
 
 from __future__ import annotations
@@ -18,7 +19,6 @@ def build_table(windows: list[str]) -> dict[str, str]:
         prompt, target = split_window(w)
         if not prompt or not target:
             continue
-        # map prompt to the next token in the target
         nxt = target.split()[0] if target.split() else ""
         if nxt:
             table[prompt] = nxt
@@ -35,6 +35,32 @@ def generate(prompt: str, table: dict[str, str], steps: int = 6) -> list[str]:
         current = (current + " " + tok).strip()
     return out
 
+def score(windows, table) -> float:
+    scores = []
+    for w in windows[:8]:
+        prompt, target = split_window(w)
+        if not target:
+            continue
+        gen = generate(prompt, table, steps=6)
+        target_toks = target.split()
+        hit = sum(1 for t in target_toks if t in gen)
+        scores.append(hit / max(len(target_toks), 1))
+    return sum(scores) / max(len(scores), 1)
+
+def learn_from_score(table: dict[str, str], windows: list[str]) -> int:
+    """On a miss, write the correct next token into the table for that prompt."""
+    updates = 0
+    for w in windows:
+        prompt, target = split_window(w)
+        if not prompt or not target:
+            continue
+        correct = target.split()[0]
+        pred = nearest(prompt, table)
+        if pred != correct:
+            table[prompt] = correct
+            updates += 1
+    return updates
+
 def run() -> dict:
     raw = load_corpus()
     windows = window_stories(raw)
@@ -44,31 +70,29 @@ def run() -> dict:
     train = windows[:-cut]
     holdout = windows[-cut:]
     table = build_table(train)
-
-    scores = []
+    before = score(holdout, table)
+    updates = learn_from_score(table, train)
+    after = score(holdout, table)
     samples = []
-    for w in holdout[:8]:
+    for w in holdout[:4]:
         prompt, target = split_window(w)
         if not target:
             continue
         gen = generate(prompt, table, steps=6)
-        target_toks = target.split()
-        hit = sum(1 for t in target_toks if t in gen)
-        scores.append(hit / max(len(target_toks), 1))
         samples.append({
             "prompt": prompt[:60],
             "generated": gen,
-            "target": target_toks[:6],
-            "token_overlap": round(hit / max(len(target_toks), 1), 3)
+            "target": target.split()[:6]
         })
-
-    mean = sum(scores) / max(len(scores), 1)
     receipt = {
         "train": len(train),
-        "holdout_scored": len(scores),
-        "mean_token_overlap": round(mean, 3),
-        "samples": samples[:4],
-        "claim": "multi-token continuation by chained nearest-prompt; scored against target tokens; still a proxy"
+        "holdout": len(holdout),
+        "overlap_before": round(before, 3),
+        "overlap_after": round(after, 3),
+        "improved": after > before,
+        "updates": updates,
+        "samples": samples,
+        "claim": "continuation scored; table updated from misses; still a proxy"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/generate_receipt.json").write_text(json.dumps(receipt, indent=2))
