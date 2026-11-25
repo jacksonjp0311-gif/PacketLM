@@ -13,14 +13,15 @@ Last updated: 2026-11-25
 | G2 | Strength raised only when packet helps a sealed probe | Done |
 | G3 | Next-token objective | Begun |
 | G4 | Pull certified packets from NOMAD feed | Begun |
-| G5 | Closed learning loop (prediction-error updates strength) | Begun |
+| G5 | Closed learning loop | Begun |
 | G6 | Iterative learning (multiple passes, holdout tracked) | Begun |
+| G7 | Offer a language packet (local, no write-back) | Begun |
 
 ## Goal
 Turn PacketLM into a general intelligence: a system that improves its own packets under measurement, learns from language and sealed probes, and can accept and offer certified knowledge without losing the claim boundary.
 
 ## Where we are
-All original milestones are complete. The learning loop now runs multiple passes. Each pass measures holdout accuracy before and after, and raises strength on packets that cover the correct next segment after a miss. The public runner executes it.
+All original milestones are complete. Multiple steps landed together: the learning loop is iterative and tracks holdout accuracy per pass, and a language packet can be offered locally for external use. No write into NOMAD. The public runner executes both.
 
 ## Capabilities
 - Stores weights as many small binary packets instead of one big dense set
@@ -35,14 +36,15 @@ All original milestones are complete. The learning loop now runs multiple passes
 - Runs multiple learning passes and tracks whether holdout accuracy improved
 - Measures next-segment prediction accuracy on held-out windows
 - Pulls one optional domain packet from the NOMAD feed
+- Offers a language packet locally for external use (no write-back)
 - Runs on ordinary CPU runners and leaves a receipt you can open
 - Still a proxy on a few short stories, not a general language model
 
 ## Open
 - Still a proxy on a few short stories
-- Iterative improvement not yet confirmed on a public run
-- Feed pull is one-way
+- Iterative improvement and offer not yet confirmed on a public run
+- Feed connection is one-way plus a local offer
 - No general capability beyond the small story slice
 
 ## Next
-Confirm the iterative receipt shows at least one pass improved holdout accuracy. Then offer a language packet back to the feed.
+Confirm the learn and offer receipts on the public run. Then expand the corpus beyond the five-story slice.
