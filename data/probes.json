@@ -22,5 +22,14 @@
     "expected": "mom",
     "seed": 42,
     "cold_must_fail": true
+  },
+  {
+    "id": "reason-001",
+    "phase": "reasoning",
+    "prompt": "Lily found a needle and asked her mom to sew. What did they fix?",
+    "expected": "shirt",
+    "seed": 42,
+    "cold_must_fail": true,
+    "requires_hop": true
   }
 ]
