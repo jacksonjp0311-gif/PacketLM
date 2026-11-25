@@ -88,3 +88,12 @@ jobs:
         with:
           name: packetlm-crossdomain-receipt
           path: artifacts/crossdomain_receipt.json
+      - name: Persistent residual memory
+        if: always()
+        run: python -m packetlm.memory
+      - name: Upload memory receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-memory-receipt
+          path: artifacts/memory_receipt.json
