@@ -2,7 +2,7 @@
 
 After a residual is built, propose a new packet from the uncovered bits of a holdout window.
 Keep the proposal only if it overlaps the residual gap and reduces the uncovered count.
-Receipt records the proposal and the decision.
+Receipt records the proposal and the decision. Returns the last kept text.
 """
 
 from __future__ import annotations
@@ -28,7 +28,6 @@ def run() -> dict:
     router = Router(store.as_list())
     mem = ResidualMemory()
 
-    # build residual from first few windows
     for w in windows[:5]:
         q = hash_to_bits(w)
         union = router.path_union(q, depth=3)
@@ -38,22 +37,24 @@ def run() -> dict:
     before = mem.covered_count()
     proposals = 0
     kept = 0
+    last_kept = None
     for w in windows[5:10]:
         prop = propose_from_gap(mem, w)
         if prop is None:
             continue
         proposals += 1
-        # keep if it covers uncovered material
         new_covered = mem.covered | int.from_bytes(prop.bits, "big")
         if bin(new_covered).count("1") > before:
             store.add(w, provenance="gap_proposal")
             mem.covered = new_covered
             kept += 1
             before = bin(new_covered).count("1")
+            last_kept = w[:200]
 
     receipt = {
         "proposals": proposals,
         "kept": kept,
+        "last_kept": last_kept,
         "final_covered_bits": mem.covered_count(),
         "store_size": len(store.packets),
         "claim": "new packets proposed from residual gaps and kept only if they cover previously uncovered bits; still a proxy"
