@@ -4,9 +4,11 @@ PacketLM trains first on language learning, understanding, reasoning, and commun
 
 ## Phase 1 — Language
 
-- Corpus: TinyStories-scale (short, clean, vocabulary-constrained).
+- Corpus: TinyStories-scale (short, clean, vocabulary-constrained). Currently a small self-contained slice in `data/tinystories_slice.txt`.
+- Windowing: stories are split into short segments so packets capture local structure rather than whole-story hashes.
 - Goal: loss decreases, local coherence appears, next-token prediction on held-out stories beats a non-looped baseline under the same seed.
-- Metric: cross-entropy or exact-match on short continuations.
+- Hop measurement: receipt records whether residual hops change the selected packets on the same query. If hop count stays 1, the loop is not yet doing work.
+- Metric: cross-entropy or exact-match on short continuations (proxy today: normalized overlap).
 
 ## Phase 2 — Understanding
 
