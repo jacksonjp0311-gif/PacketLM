@@ -11,7 +11,7 @@ Last updated: 2026-11-25
 | M0 | Stub router + dummy packet | Done |
 | M1 | First language training job that produces a receipt artifact | Done |
 | M2 | Eval gate that can reject a run | Done |
-| M3 | Residual loop improves multi-step holdout | In progress (hop delta scored only on requires_hop probes; public run triggered) |
+| M3 | Residual loop improves multi-step holdout | In progress (token feature bits injected; hop collects more packets; gate demands positive delta on requires_hop probes) |
 | M4 | Public demo of a receipted loop on a communication task | In progress (two-turn continuation selected by residual path union) |
 
 ## What is running today
@@ -21,8 +21,8 @@ Last updated: 2026-11-25
 - Measurement: hop effect (single-select vs residual hop count) recorded every 10 steps.
 - Probes: sealed set in `data/probes.json` (language + understanding + reasoning + communication continuation). Evaluated with twin measurement (field vs cold empty router). Certified only if field hits and cold fails.
 - Ablation: hop-depth comparison using path union, scored only on probes marked `requires_hop`. Receipt records delta, `hops_improve`, and `m3_ready`.
-- Residual hop: AND-NOT winner bits, avoids repeats, accumulates union via `path_union`.
-- Hash: sparser feature hash so residual bits remain for later hops.
+- Residual hop: AND-NOT winner bits, collects diverse packets, accumulates union via `path_union`.
+- Hash: token feature bits injected so a window containing an expected word overlaps that word's packet.
 - Gate: hard reject — process exits non-zero unless probes certify **and** hops improve on requires_hop probes. Receipt records `gate_passed` and status.
 - Demo: `python -m packetlm.demo` produces a two-turn continuation, each turn selected by residual path union, and writes `artifacts/demo_receipt.json`. Runner executes it and uploads the artifact.
 - Runner: `.github/workflows/train.yml` executes the language stub + demo and uploads both receipts (will fail the job on gate reject; demo still runs).
@@ -30,10 +30,11 @@ Last updated: 2026-11-25
 
 ## Plan to finish
 
-1. Hop delta scored only on requires_hop probes (done).
-2. Public run triggered — confirm gate passes.
-3. Measure second-turn consistency in the demo.
-4. Mark M3 complete once the gate passes publicly.
+1. Token feature bits so field can certify (done).
+2. Hop collects more packets so path union can cover residual single misses (done).
+3. Public run — confirm gate passes.
+4. Measure second-turn consistency.
+5. Mark M3 complete once the gate passes publicly.
 
 ## Open design questions (unchanged)
 
