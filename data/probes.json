@@ -1,0 +1,26 @@
+[
+  {
+    "id": "lang-cont-001",
+    "phase": "language",
+    "prompt": "One day, a little girl named Lily found a",
+    "expected": "needle",
+    "seed": 42,
+    "cold_must_fail": true
+  },
+  {
+    "id": "understand-001",
+    "phase": "understanding",
+    "prompt": "what did Lily find",
+    "expected": "needle",
+    "seed": 42,
+    "cold_must_fail": true
+  },
+  {
+    "id": "understand-002",
+    "phase": "understanding",
+    "prompt": "who helped sew the shirt",
+    "expected": "mom",
+    "seed": 42,
+    "cold_must_fail": true
+  }
+]
