@@ -1,7 +1,7 @@
 """Language-phase training stub.
 
 Focus: TinyStories-scale next-token on packet overlap.
-Windows stories into short segments and measures whether residual hops change retrieval.
+Windows stories into longer segments and measures whether residual hops change retrieval.
 Evaluates sealed probes with twin measurement (cold vs field).
 Gate result is recorded in the receipt; the process does not fail the job.
 Loads language, reasoning, and planning domains.
@@ -23,12 +23,14 @@ def load_corpus() -> list[str]:
             stories.extend([s.strip() for s in text.split("\n\n") if s.strip()])
     return stories or toy_corpus()
 
-def window_stories(stories: list[str], max_len: int = 120) -> list[str]:
+def window_stories(stories: list[str], max_len: int = 240) -> list[str]:
     windows = []
     for story in stories:
         words = story.split()
-        for i in range(0, len(words), max_len // 8):
-            chunk = " ".join(words[i:i + max_len // 4])
+        step = max(1, max_len // 12)
+        size = max(8, max_len // 3)
+        for i in range(0, len(words), step):
+            chunk = " ".join(words[i:i + size])
             if len(chunk) > 20:
                 windows.append(chunk)
     return windows or stories
@@ -178,7 +180,8 @@ def run(seed: int = 0, steps: int = 50) -> dict:
         "m3_ready": m3_ready,
         "phase": "language+reasoning+planning",
         "corpus": "tinystories+reasoning+planning",
-        "claim": "overlap proxy + hop count + twin probe eval on three domains; gate result recorded; not a real language model yet",
+        "window_len": 240,
+        "claim": "longer windows; overlap proxy + hop count + twin probe eval on three domains; still a proxy",
         "status": status
     }
     Path("artifacts").mkdir(exist_ok=True)
