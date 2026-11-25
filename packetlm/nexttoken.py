@@ -1,7 +1,8 @@
-"""Next-token measurement.
+"""Next-token measurement with update.
 
-Given a window, predict the next short segment by packet overlap.
-Measure accuracy on held-out windows. First real learning signal.
+Predict the next short segment by packet overlap.
+On a miss, raise strength of packets that cover the correct segment.
+Measure accuracy before and after the update on held-out windows.
 """
 
 from __future__ import annotations
@@ -21,16 +22,32 @@ def split_window(text: str) -> tuple[str, str]:
 
 def predict_next(router: Router, prompt: str, candidates: list[str]) -> str | None:
     q = hash_to_bits(prompt)
+    union = router.path_union(q)
+    if not union:
+        return None
     best = None
     best_score = -1
     for c in candidates:
         if not c:
             continue
-        ov = router.path_union(q).overlap(hash_to_bits(c)) if router.path_union(q) else 0
+        ov = union.overlap(hash_to_bits(c))
         if ov > best_score:
             best_score = ov
             best = c
     return best
+
+def accuracy(store, windows, candidates) -> float:
+    router = Router(store.as_list())
+    correct = 0
+    n = 0
+    for w in windows:
+        prompt, target = split_window(w)
+        if not target:
+            continue
+        n += 1
+        if predict_next(router, prompt, candidates) == target:
+            correct += 1
+    return correct / max(n, 1)
 
 def run(seed: int = 0) -> dict:
     raw = load_corpus()
@@ -41,27 +58,31 @@ def run(seed: int = 0) -> dict:
     train = windows[:-cut]
     holdout = windows[-cut:]
     store = build_from_corpus(train)
-    router = Router(store.as_list())
     candidates = [split_window(w)[1] for w in windows if split_window(w)[1]]
-    correct = 0
-    details = []
-    for w in holdout:
+    before = accuracy(store, holdout, candidates)
+    updates = 0
+    for w in train:
         prompt, target = split_window(w)
         if not target:
             continue
+        router = Router(store.as_list())
         pred = predict_next(router, prompt, candidates)
-        hit = pred == target
-        if hit:
-            correct += 1
-        details.append({"prompt": prompt[:60], "target": target, "pred": pred, "hit": hit})
-    n = len(details) or 1
+        if pred == target:
+            continue
+        target_p = hash_to_bits(target)
+        for sp in store.packets:
+            if sp.packet.overlap(target_p) > 0:
+                store.update_strength(sp.id, 0.05, "nexttoken_miss")
+                updates += 1
+    after = accuracy(store, holdout, candidates)
     receipt = {
         "train_windows": len(train),
-        "holdout": len(details),
-        "correct": correct,
-        "accuracy": correct / n,
-        "details": details[:5],
-        "claim": "next-segment prediction by packet overlap on held-out windows; still a proxy"
+        "holdout": len(holdout),
+        "accuracy_before": round(before, 3),
+        "accuracy_after": round(after, 3),
+        "improved": after > before,
+        "updates": updates,
+        "claim": "strength updated from next-segment misses; holdout measured before and after; still a proxy"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/nexttoken_receipt.json").write_text(json.dumps(receipt, indent=2))
