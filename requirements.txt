@@ -1,0 +1,2 @@
+# PacketLM — pure stdlib for v0
+# no external deps yet
