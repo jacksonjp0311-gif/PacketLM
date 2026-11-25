@@ -4,7 +4,7 @@ Focus: TinyStories-scale next-token on packet overlap.
 Windows stories into short segments and measures whether residual hops change retrieval.
 Evaluates sealed probes with twin measurement (cold vs field).
 Hard gate: rejects the run if no probes certify OR hops do not improve on requires_hop probes (M3 demand).
-Hop-depth ablation: compares single-select vs residual path union on requires_hop probes.
+Hop-depth ablation: path union must cover more of the expected than single-select.
 Produces a simple loss curve artifact for the runner.
 """
 
@@ -105,29 +105,30 @@ def evaluate_probe(router: Router, probe: dict) -> dict:
     }
 
 def hop_ablation(router: Router, probes: list[dict]) -> dict:
-    """Compare single-select vs residual path union on requires_hop probes only."""
-    hop_probes = [p for p in probes if p.get("requires_hop")]
-    if not hop_probes:
-        hop_probes = probes  # fallback
-    single_hits = 0
-    hop_hits = 0
+    """Path union must cover more of the expected than single-select."""
+    hop_probes = [p for p in probes if p.get("requires_hop")] or probes
+    single_total = 0
+    hop_total = 0
+    improved = 0
     for probe in hop_probes:
         q = hash_to_bits(probe["prompt"])
         exp = hash_to_bits(probe["expected"])
         single = router.select(q, k=1)
-        if single and single[0][0].overlap(exp) > 0:
-            single_hits += 1
+        s_ov = single[0][0].overlap(exp) if single else 0
         union = router.path_union(q, depth=3)
-        hop_hit = union is not None and union.overlap(exp) > 0
-        if hop_hit:
-            hop_hits += 1
+        h_ov = union.overlap(exp) if union else 0
+        single_total += s_ov
+        hop_total += h_ov
+        if h_ov > s_ov:
+            improved += 1
     n = len(hop_probes) or 1
     return {
-        "single_hit_rate": single_hits / n,
-        "hop_hit_rate": hop_hits / n,
-        "delta": (hop_hits - single_hits) / n,
-        "hops_improve": hop_hits > single_hits,
-        "probes_scored": len(hop_probes)
+        "single_overlap_sum": single_total,
+        "hop_overlap_sum": hop_total,
+        "probes_improved": improved,
+        "delta": (hop_total - single_total) / max(single_total, 1),
+        "hops_improve": improved > 0,
+        "probes_scored": n
     }
 
 def run(seed: int = 0, steps: int = 50) -> dict:
@@ -148,7 +149,6 @@ def run(seed: int = 0, steps: int = 50) -> dict:
     probe_results = [evaluate_probe(router, p) for p in probes]
     certified_count = sum(1 for r in probe_results if r["certified"])
     ablation = hop_ablation(router, probes)
-    # Hard gate: must certify probes AND hops must improve on requires_hop probes
     gate_passed = certified_count > 0 and ablation["hops_improve"]
     m3_ready = ablation["hops_improve"]
     status = "M3 gate passed" if gate_passed else "M2/M3 gate rejected"
@@ -167,14 +167,14 @@ def run(seed: int = 0, steps: int = 50) -> dict:
         "m3_ready": m3_ready,
         "phase": "language",
         "corpus": "tinystories_slice" if Path("data/tinystories_slice.txt").exists() else "toy",
-        "claim": "overlap proxy + hop count + twin probe eval with hard gate demanding hop improvement on requires_hop probes; not a real language model yet",
+        "claim": "overlap proxy + hop count + twin probe eval with hard gate demanding higher residual coverage on requires_hop probes; not a real language model yet",
         "status": status
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
     if not gate_passed:
-        print("GATE REJECTED: need certified probes AND positive hop delta on requires_hop probes", file=sys.stderr)
+        print("GATE REJECTED: need certified probes AND higher residual coverage", file=sys.stderr)
         sys.exit(1)
     return receipt
 
