@@ -4,6 +4,7 @@ Focus: TinyStories-scale next-token on packet overlap.
 Windows stories into short segments and measures whether residual hops change retrieval.
 Evaluates sealed probes with twin measurement (cold vs field).
 Hard gate: rejects the run if no probes certify.
+Hop-depth ablation: compares single-select vs residual hops on certified probes.
 Produces a simple loss curve artifact for the runner.
 """
 
@@ -102,6 +103,30 @@ def evaluate_probe(router: Router, probe: dict) -> dict:
         "certified": certified
     }
 
+def hop_ablation(router: Router, probes: list[dict]) -> dict:
+    """Compare single-select vs residual hops on probe hit rate."""
+    single_hits = 0
+    hop_hits = 0
+    for probe in probes:
+        q = hash_to_bits(probe["prompt"])
+        exp = hash_to_bits(probe["expected"])
+        # single
+        single = router.select(q, k=1)
+        if single and single[0][0].overlap(exp) > 0:
+            single_hits += 1
+        # hops: check if any hop packet overlaps expected
+        hops = router.residual_hop(q, depth=3)
+        hop_hit = any(h.overlap(exp) > 0 for h in hops)
+        if hop_hit:
+            hop_hits += 1
+    n = len(probes) or 1
+    return {
+        "single_hit_rate": single_hits / n,
+        "hop_hit_rate": hop_hits / n,
+        "delta": (hop_hits - single_hits) / n,
+        "hops_improve": hop_hits > single_hits
+    }
+
 def run(seed: int = 0, steps: int = 50) -> dict:
     random.seed(seed)
     raw = load_corpus()
@@ -119,9 +144,12 @@ def run(seed: int = 0, steps: int = 50) -> dict:
     probes = load_probes()
     probe_results = [evaluate_probe(router, p) for p in probes]
     certified_count = sum(1 for r in probe_results if r["certified"])
+    ablation = hop_ablation(router, probes)
     # Hard gate: reject if no probes certify
     gate_passed = certified_count > 0
     status = "M2 gate passed" if gate_passed else "M2 gate rejected"
+    if ablation["hops_improve"]:
+        status += " + hops improve"
     receipt = {
         "seed": seed,
         "steps": steps,
@@ -132,10 +160,11 @@ def run(seed: int = 0, steps: int = 50) -> dict:
         "hop_effects": effects,
         "probes": probe_results,
         "certified_probes": certified_count,
+        "hop_ablation": ablation,
         "gate_passed": gate_passed,
         "phase": "language",
         "corpus": "tinystories_slice" if Path("data/tinystories_slice.txt").exists() else "toy",
-        "claim": "overlap proxy + hop count + twin probe eval with hard gate on windowed TinyStories slice; not a real language model yet",
+        "claim": "overlap proxy + hop count + twin probe eval with hard gate and hop ablation on windowed TinyStories slice; not a real language model yet",
         "status": status
     }
     Path("artifacts").mkdir(exist_ok=True)
