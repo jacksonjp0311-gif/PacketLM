@@ -31,5 +31,13 @@
     "seed": 42,
     "cold_must_fail": true,
     "requires_hop": true
+  },
+  {
+    "id": "comm-001",
+    "phase": "communication",
+    "prompt": "Lily thanked her mom. How did they both feel?",
+    "expected": "happy",
+    "seed": 42,
+    "cold_must_fail": true
   }
 ]
