@@ -52,3 +52,12 @@ jobs:
         with:
           name: packetlm-nexttoken-receipt
           path: artifacts/nexttoken_receipt.json
+      - name: Pull NOMAD feed packet
+        if: always()
+        run: python -m packetlm.feedpull
+      - name: Upload feed pull receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-feedpull-receipt
+          path: artifacts/feedpull_receipt.json
