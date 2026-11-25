@@ -13,21 +13,32 @@ Last updated: 2026-11-25
 | M2 | Eval gate that can reject a run | Done |
 | M3 | Residual loop improves multi-step holdout | Done |
 | M4 | Public demo of a receipted loop on a communication task | Done |
-| G1 | Packet store with strength and provenance | Done (strength rises on probe help) |
-| G2 | Strength raised only when packet helps a sealed probe | Done (local run showed positive deltas) |
-| G3 | Next-token objective | Begun (holdout next-segment measurement added) |
-| G4 | Pull certified packets from NOMAD feed | Not started |
+| G1 | Packet store with strength and provenance | Done |
+| G2 | Strength raised only when packet helps a sealed probe | Done |
+| G3 | Next-token objective | Begun (public run succeeded) |
+| G4 | Pull certified packets from NOMAD feed | Begun (one optional domain packet) |
 
 ## Where we are
-All original milestones are complete. Packets have strength that rises only when they help a sealed probe. A next-segment prediction measurement on held-out windows is now in the public runner.
+All original milestones are complete. Packets have strength that rises only when they help a sealed probe. Next-segment prediction is measured on held-out windows. One optional domain packet is pulled from the NOMAD feed. No write-back.
 
-## What it is
-A small language model that does not store one dense set of weights. It holds many compressed binary packets. When a question or a continuation is asked, a router selects which packets are relevant for that step, removes what they already covered, and asks again. Later selections can cover parts the first packet missed. Packets have strength and provenance. Strength increases only when the packet improves a sealed probe over the empty baseline. A next-segment prediction is measured on held-out windows. A short public demonstration produces a two-turn continuation that stays consistent with the first. It runs on ordinary CPU runners. It is still a proxy on a few short stories, not a general language model.
+## Capabilities
+- Stores weights as many small binary packets instead of one big dense set
+- Picks relevant packets for a question, removes what they already covered, and looks again
+- Later looks can cover parts the first packet missed
+- Checks every test against an empty start and against the single best packet
+- Records whether the multi-step look covered at least as much as the first packet
+- Records whether a sealed question was answered only when the packets were present
+- Produces a two-turn continuation where the second turn keeps content from the first
+- Raises a packet’s strength only when it improves a sealed probe over the empty baseline
+- Measures next-segment prediction accuracy on held-out windows
+- Pulls one optional domain packet from the NOMAD feed
+- Runs on ordinary CPU runners and leaves a receipt you can open
+- Still a proxy on a few short stories, not a general language model
 
 ## Open
 - Still a proxy on a few short stories
-- Next-token accuracy not yet confirmed on a public run
-- No feed connection to NOMAD yet
+- Next-token accuracy not yet inspected on the public artifact
+- Feed pull is one-way and optional
 
 ## Next
-Confirm the next-token accuracy on the public receipt. Then pull one certified packet from the NOMAD feed as an optional domain packet.
+Confirm the feed-pull receipt on the public run. Then decide whether to offer a language packet back to the feed.
