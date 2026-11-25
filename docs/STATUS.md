@@ -8,18 +8,18 @@ Last updated: 2026-11-25
 
 | Milestone | Description | Status |
 |-----------|-------------|--------|
-| M0 | Stub router + dummy packet | Done |
-| M1 | First language training job that produces a receipt artifact | Done |
-| M2 | Eval gate that can reject a run | Done |
-| M3 | Residual loop improves multi-step holdout | Done |
-| M4 | Public demo of a receipted loop on a communication task | Done |
+| M0–M4 | Original plan | Done |
 | G1 | Packet store with strength and provenance | Done |
 | G2 | Strength raised only when packet helps a sealed probe | Done |
-| G3 | Next-token objective | Begun (public run succeeded) |
-| G4 | Pull certified packets from NOMAD feed | Begun (one optional domain packet) |
+| G3 | Next-token objective | Begun |
+| G4 | Pull certified packets from NOMAD feed | Begun |
+| G5 | Closed learning loop (prediction-error updates strength) | Begun |
+
+## Goal
+Turn PacketLM into a general intelligence: a system that improves its own packets under measurement, learns from language and sealed probes, and can accept and offer certified knowledge without losing the claim boundary.
 
 ## Where we are
-All original milestones are complete. Packets have strength that rises only when they help a sealed probe. Next-segment prediction is measured on held-out windows. One optional domain packet is pulled from the NOMAD feed. No write-back.
+All original milestones are complete. Packets have strength that rises when they help a sealed probe or cover a correct next segment after a miss. Next-segment prediction is measured on held-out windows. One optional domain packet is pulled from the NOMAD feed. A closed learning loop now runs on the public runner.
 
 ## Capabilities
 - Stores weights as many small binary packets instead of one big dense set
@@ -30,6 +30,7 @@ All original milestones are complete. Packets have strength that rises only when
 - Records whether a sealed question was answered only when the packets were present
 - Produces a two-turn continuation where the second turn keeps content from the first
 - Raises a packet’s strength only when it improves a sealed probe over the empty baseline
+- Raises strength of packets that cover the correct next segment after a miss
 - Measures next-segment prediction accuracy on held-out windows
 - Pulls one optional domain packet from the NOMAD feed
 - Runs on ordinary CPU runners and leaves a receipt you can open
@@ -37,8 +38,9 @@ All original milestones are complete. Packets have strength that rises only when
 
 ## Open
 - Still a proxy on a few short stories
-- Next-token accuracy not yet inspected on the public artifact
-- Feed pull is one-way and optional
+- Learning loop is one pass; not yet iterative
+- Feed pull is one-way
+- No general capability beyond the small story slice
 
 ## Next
-Confirm the feed-pull receipt on the public run. Then decide whether to offer a language packet back to the feed.
+Confirm the learn receipt on the public run. Then make the learning loop iterative so a second pass can improve on the first.
