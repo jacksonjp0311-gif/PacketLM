@@ -12,7 +12,7 @@ Last updated: 2026-11-25
 | M1 | First language training job that produces a receipt artifact | Done |
 | M2 | Eval gate that can reject a run | Done |
 | M3 | Residual loop improves multi-step holdout | In progress (gate demands positive hop delta; path union + sparser hash) |
-| M4 | Public demo of a receipted loop on a communication task | In progress (continuation now selected by residual path union; receipt uploaded by runner) |
+| M4 | Public demo of a receipted loop on a communication task | In progress (two-turn continuation selected by residual path union; receipt uploaded by runner) |
 
 ## What is running today
 
@@ -24,13 +24,13 @@ Last updated: 2026-11-25
 - Residual hop: AND-NOT winner bits, avoids repeats, accumulates union via `path_union`.
 - Hash: sparser feature hash so residual bits remain for later hops.
 - Gate: hard reject — process exits non-zero unless probes certify **and** hops improve. Receipt records `gate_passed` and status.
-- Demo: `python -m packetlm.demo` selects continuation by residual path union and writes `artifacts/demo_receipt.json`. Runner executes it and uploads the artifact.
+- Demo: `python -m packetlm.demo` produces a two-turn continuation, each turn selected by residual path union, and writes `artifacts/demo_receipt.json`. Runner executes it and uploads the artifact.
 - Runner: `.github/workflows/train.yml` executes the language stub + demo and uploads both receipts (will fail the job on gate reject; demo still runs).
 - Claim boundary: still a proxy on a tiny slice. Not a real language model.
 
 ## Next concrete step
 
-Confirm the gate can pass on a public run. Then add a second communication turn so the demo shows multi-step consistency.
+Confirm the gate can pass on a public run. Then measure whether the second turn stays consistent with the first (multi-step communication score).
 
 ## Open design questions (unchanged)
 
