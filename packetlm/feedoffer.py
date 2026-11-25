@@ -1,15 +1,13 @@
-"""Offer a language packet only if the cross-domain gate kept a pass
+"""Offer a kept gap packet only if the cross-domain gate kept a pass
 and residual coverage increased.
 
-Writes a versioned receipted packet for external use.
+The offered packet is the last kept gap proposal, not a corpus window.
 Does not push into NOMAD.
 """
 
 from __future__ import annotations
 import json
 from pathlib import Path
-from .store import build_from_corpus
-from .train import load_corpus, window_stories
 from .learn import run as learn_run
 from .gap import run as gap_run
 
@@ -19,30 +17,27 @@ def offer() -> dict:
     kept = learn_receipt.get("any_kept", False)
     residual_reduced = gap_receipt.get("kept", 0) > 0
     packet = None
-    if kept and residual_reduced:
-        raw = load_corpus()
-        windows = window_stories(raw)
-        store = build_from_corpus(windows)
-        top = store.top_by_strength(1)
-        if top:
-            sp = top[0]
-            packet = {
-                "id": sp.id,
-                "text": sp.text,
-                "strength": round(sp.strength, 3),
-                "provenance": sp.provenance,
-                "source": "PacketLM",
-                "gate": "two_domain+residual",
-                "claim": "language window packet; offered only after a kept cross-domain pass and residual reduction; still a proxy"
-            }
+    if kept and residual_reduced and gap_receipt.get("last_kept"):
+        packet = {
+            "id": "gap_kept",
+            "text": gap_receipt["last_kept"],
+            "source": "PacketLM",
+            "gate": "two_domain+residual+gap",
+            "provenance": "gap_proposal",
+            "claim": "kept gap packet; offered only after a kept cross-domain pass and residual reduction; still a proxy"
+        }
     out = {
         "offered": packet is not None,
         "gate_kept": kept,
         "residual_reduced": residual_reduced,
         "packet": packet,
         "learn_history": learn_receipt.get("history"),
-        "gap": {"proposals": gap_receipt.get("proposals"), "kept": gap_receipt.get("kept")},
-        "note": "local offer only; offered only if gate kept a pass and residual reduced; no write into NOMAD"
+        "gap": {
+            "proposals": gap_receipt.get("proposals"),
+            "kept": gap_receipt.get("kept"),
+            "last_kept": gap_receipt.get("last_kept")
+        },
+        "note": "local offer only; offered packet is a kept gap proposal; no write into NOMAD"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/feedoffer_receipt.json").write_text(json.dumps(out, indent=2))
