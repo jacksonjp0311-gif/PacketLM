@@ -43,3 +43,12 @@ jobs:
         with:
           name: packetlm-improve-receipt
           path: artifacts/improve_receipt.json
+      - name: Next-token holdout
+        if: always()
+        run: python -m packetlm.nexttoken
+      - name: Upload next-token receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-nexttoken-receipt
+          path: artifacts/nexttoken_receipt.json
