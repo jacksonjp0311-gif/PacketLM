@@ -4,7 +4,7 @@ Last updated: 2026-11-25
 
 ## Current position
 
-**Milestone: M0–M2 complete, M3 in progress, M4 begun**
+**Milestone: M0–M2 complete, M3 in progress, M4 in progress**
 
 | Milestone | Description | Status |
 |-----------|-------------|--------|
@@ -12,7 +12,7 @@ Last updated: 2026-11-25
 | M1 | First language training job that produces a receipt artifact | Done |
 | M2 | Eval gate that can reject a run | Done |
 | M3 | Residual loop improves multi-step holdout | In progress (gate demands positive hop delta; path union + sparser hash) |
-| M4 | Public demo of a receipted loop on a communication task | Begun (communication continuation probe added) |
+| M4 | Public demo of a receipted loop on a communication task | In progress (demo.py prints receipted continuation) |
 
 ## What is running today
 
@@ -24,12 +24,13 @@ Last updated: 2026-11-25
 - Residual hop: AND-NOT winner bits, avoids repeats, accumulates union via `path_union`.
 - Hash: sparser feature hash so residual bits remain for later hops.
 - Gate: hard reject — process exits non-zero unless probes certify **and** hops improve. Receipt records `gate_passed` and status.
+- Demo: `python -m packetlm.demo` prints a receipted continuation on a communication prompt and writes `artifacts/demo_receipt.json`.
 - Runner: `.github/workflows/train.yml` executes the language stub and uploads the receipt (will fail the job on reject).
 - Claim boundary: still a proxy on a tiny slice. Not a real language model.
 
 ## Next concrete step
 
-Confirm the gate can pass with the communication probe included. Then wire a minimal public demo path that prints a receipted continuation.
+Confirm the gate can pass. Then make the demo continuation use the residual path more explicitly and surface it in the public runner artifact.
 
 ## Open design questions (unchanged)
 
