@@ -1,16 +1,33 @@
-"""Direct token lookup.
+"""Direct token lookup with nearest-prompt generalization.
 
-Maps each training prompt to the identity bit of its correct first token.
-At prediction, looks up the identity bit instead of scoring residual overlap.
-Compares direct accuracy against the overlap proxy on the same holdout.
+Exact match first. If the prompt is unseen, pick the training prompt
+that shares the most tokens and use its first-token label.
+Measures exact and nearest accuracy on holdout.
 """
 
 from __future__ import annotations
 import json
 from pathlib import Path
-from .packets import identity_packet, _token_bit
 from .train import load_corpus, window_stories
 from .nexttoken import split_window, first_token
+
+def tokens(text: str) -> set[str]:
+    return {t for t in text.lower().split() if t}
+
+def nearest(prompt: str, table: dict[str, str]) -> str | None:
+    if prompt in table:
+        return table[prompt]
+    q = tokens(prompt)
+    if not q:
+        return None
+    best = None
+    best_score = 0
+    for p, tok in table.items():
+        score = len(q & tokens(p))
+        if score > best_score:
+            best_score = score
+            best = tok
+    return best
 
 def run() -> dict:
     raw = load_corpus()
@@ -21,7 +38,6 @@ def run() -> dict:
     train = windows[:-cut]
     holdout = windows[-cut:]
 
-    # direct map: prompt text -> correct first token
     table = {}
     for w in train:
         prompt, target = split_window(w)
@@ -29,23 +45,27 @@ def run() -> dict:
         if prompt and tok:
             table[prompt] = tok
 
-    direct_correct = 0
+    exact = 0
+    near = 0
     n = 0
     for w in holdout:
         prompt, target = split_window(w)
         if not target:
             continue
         n += 1
-        pred = table.get(prompt)
-        if pred == first_token(target):
-            direct_correct += 1
+        if table.get(prompt) == first_token(target):
+            exact += 1
+        if nearest(prompt, table) == first_token(target):
+            near += 1
 
     receipt = {
         "train": len(train),
         "holdout": n,
         "table_size": len(table),
-        "direct_accuracy": round(direct_correct / max(n, 1), 3),
-        "claim": "direct prompt-to-token map; bypasses overlap proxy; still a proxy, not a language model"
+        "exact_accuracy": round(exact / max(n, 1), 3),
+        "nearest_accuracy": round(near / max(n, 1), 3),
+        "generalized": near > exact,
+        "claim": "exact map plus nearest-prompt by shared tokens; still a proxy, not a language model"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/direct_receipt.json").write_text(json.dumps(receipt, indent=2))
