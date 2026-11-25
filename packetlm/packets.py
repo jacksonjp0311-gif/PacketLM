@@ -3,7 +3,6 @@
 from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
-from typing import Iterable
 
 BITS = 4096
 
@@ -14,7 +13,6 @@ class Packet:
     meta: dict | None = None
 
     def overlap(self, other: Packet) -> int:
-        # popcount of AND
         return bin(int.from_bytes(self.bits, "big") & int.from_bytes(other.bits, "big")).count("1")
 
     def hamming(self, other: Packet) -> int:
@@ -25,22 +23,30 @@ class Packet:
         return 2 * query.overlap(self) - self.count
 
     def union(self, other: Packet) -> Packet:
-        """Bitwise OR. Used by residual path accumulation."""
         a = int.from_bytes(self.bits, "big")
         b = int.from_bytes(other.bits, "big")
         u = a | b
         return Packet(bits=u.to_bytes(BITS // 8, "big"), count=bin(u).count("1"))
 
+def _token_bit(token: str) -> int:
+    """Deterministic bit index for a content token."""
+    h = hashlib.sha256(token.lower().encode()).digest()
+    return int.from_bytes(h[:2], "big") % BITS
+
 def hash_to_bits(text: str, seed: int = 0) -> Packet:
-    """Deterministic sparse feature hash → 4096-bit packet.
-    Sparser than before so residual hops can cover remaining bits."""
-    h = hashlib.sha256(f"{seed}:{text}".encode()).digest()
-    # take only every 4th bit to keep density low
-    raw = int.from_bytes(h * (BITS // 256), "big")
+    """Deterministic packet with token feature bits.
+    Any window containing a token will overlap that token's packet.
+    """
     bits_int = 0
-    for i in range(BITS):
-        if (raw >> (i * 4)) & 1:
-            bits_int |= (1 << i)
+    # base hash (keeps some density for residual)
+    h = hashlib.sha256(f"{seed}:{text}".encode()).digest()
+    for i in range(0, min(len(h), 32)):
+        bits_int |= (1 << (h[i] % BITS))
+    # token features — this is what makes expected-word overlap reliable
+    for token in text.split():
+        clean = "".join(c for c in token.lower() if c.isalnum())
+        if clean:
+            bits_int |= (1 << _token_bit(clean))
     bits = bits_int.to_bytes(BITS // 8, "big")
     count = bin(bits_int).count("1")
     return Packet(bits=bits, count=count)
