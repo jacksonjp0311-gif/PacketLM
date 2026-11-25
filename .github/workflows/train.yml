@@ -124,3 +124,12 @@ jobs:
         with:
           name: packetlm-transfer-receipt
           path: artifacts/transfer_receipt.json
+      - name: Token vocabulary
+        if: always()
+        run: python -m packetlm.vocab
+      - name: Upload vocab receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-vocab-receipt
+          path: artifacts/vocab_receipt.json
