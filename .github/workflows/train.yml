@@ -34,3 +34,12 @@ jobs:
         with:
           name: packetlm-demo-receipt
           path: artifacts/demo_receipt.json
+      - name: Strength update
+        if: always()
+        run: python -m packetlm.improve
+      - name: Upload improve receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-improve-receipt
+          path: artifacts/improve_receipt.json
