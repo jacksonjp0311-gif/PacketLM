@@ -11,7 +11,7 @@ Last updated: 2026-11-25
 | M0 | Stub router + dummy packet | Done |
 | M1 | First language training job that produces a receipt artifact | Done |
 | M2 | Eval gate that can reject a run | Done |
-| M3 | Residual loop improves multi-step holdout | In progress (hop delta now scored only on requires_hop probes; gate demands positive delta) |
+| M3 | Residual loop improves multi-step holdout | In progress (hop delta scored only on requires_hop probes; public run triggered) |
 | M4 | Public demo of a receipted loop on a communication task | In progress (two-turn continuation selected by residual path union) |
 
 ## What is running today
@@ -31,7 +31,7 @@ Last updated: 2026-11-25
 ## Plan to finish
 
 1. Hop delta scored only on requires_hop probes (done).
-2. Confirm gate passes on a public run.
+2. Public run triggered — confirm gate passes.
 3. Measure second-turn consistency in the demo.
 4. Mark M3 complete once the gate passes publicly.
 
