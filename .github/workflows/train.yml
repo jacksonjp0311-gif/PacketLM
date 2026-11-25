@@ -142,3 +142,12 @@ jobs:
         with:
           name: packetlm-tokenid-receipt
           path: artifacts/tokenid_receipt.json
+      - name: Direct token lookup
+        if: always()
+        run: python -m packetlm.direct
+      - name: Upload direct receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-direct-receipt
+          path: artifacts/direct_receipt.json
