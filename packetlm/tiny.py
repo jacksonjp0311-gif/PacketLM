@@ -13,8 +13,8 @@ import random
 from pathlib import Path
 from .train import load_corpus, window_stories
 
-DIM = 16
-STEPS = 200
+DIM = 32
+STEPS = 300
 
 def tokenize(text: str) -> list[str]:
     return [t for t in text.lower().split() if t]
@@ -154,6 +154,7 @@ def run() -> dict:
     gen = [inv.get(i, "<unk>") for i in model.generate(ids(prompt, vocab), steps=8)]
     receipt = {
         "vocab": len(vocab),
+        "dim": DIM,
         "layers": 2,
         "steps": STEPS,
         "mean_loss": round(sum(losses) / max(len(losses), 1), 4),
@@ -162,7 +163,7 @@ def run() -> dict:
         "improved": after > before,
         "prompt": prompt,
         "generated": gen,
-        "claim": "two-layer tiny next-token model; still tiny, not a general language model"
+        "claim": "two-layer tiny next-token model at dim 32; still tiny, not a general language model"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/tiny_receipt.json").write_text(json.dumps(receipt, indent=2))
