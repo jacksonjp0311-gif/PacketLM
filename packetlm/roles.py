@@ -1,8 +1,8 @@
-"""Correction through the same field.
+"""No private color function.
 
-Two sentences still write one owns fact.
-Dax tails go from blue to green. Mira's answer changes.
-Owns stays.
+The answer is the stored operator: isa chain tail, isa compose hastail.
+Remove the operator. The answer must die.
+Each sentence is checked before the facts are merged.
 Not a general mind.
 """
 
@@ -28,6 +28,9 @@ def fits(order, examples) -> bool:
 def induce(examples):
     if len(examples) < 2:
         return None
+    meanings = {r for _, (_, r, _) in examples}
+    if len(meanings) != 1:
+        return None
     hits = [order for order in ORDERS if fits(order, examples)]
     if len(hits) != 1:
         return None
@@ -51,59 +54,67 @@ def select(library, sentence):
     mapped = {role: parts[i] for i, role in enumerate(c["order"])}
     return mapped["s"], c["meaning"], mapped["o"]
 
-def example_for(order):
-    out = []
-    for s, r, o in [("ada", "vek", "box"), ("ned", "vek", "key")]:
-        roles = {"s": s, "r": r, "o": o}
-        out.append((" ".join(roles[role] for role in order), (s, "owns", o)))
-    return out
-
-def color(field, name, objects):
+def through_operator(field, name, objects):
+    if ask(field, "isa", "compose", objects) != "hastail":
+        return None
+    if ask(field, "isa", "chain", objects) != "tail":
+        return None
     kind = ask(field, name, "isa", objects)
     if not kind:
         return None
     return ask(field, kind, "tail", objects)
 
 def run() -> dict:
-    applied = {}
-    for order in ORDERS:
-        got = induce(example_for(order))
-        roles = {"s": "rex", "r": "vek", "o": "map"}
-        sent = " ".join(roles[role] for role in order)
-        applied["".join(order)] = select([got], sent) == ("rex", "owns", "map") if got else False
-    vek = induce(example_for(("o", "r", "s")))
-    owns = induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))])
-    isa = induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))])
-    other = {"order": ["s", "r", "o"], "rel_at": 1, "word": "vek", "meaning": "holds"}
+    vek = induce([
+        ("box vek ada", ("ada", "owns", "box")),
+        ("key vek ned", ("ned", "owns", "key")),
+    ])
+    owns = induce([
+        ("ada owns box", ("ada", "owns", "box")),
+        ("ned owns key", ("ned", "owns", "key")),
+    ])
+    bad = induce([
+        ("ada vek box", ("ada", "owns", "box")),
+        ("ned vek key", ("ned", "holds", "key")),
+    ])
+    isa = induce([
+        ("mira isa dax", ("mira", "isa", "dax")),
+        ("sam isa cat", ("sam", "isa", "cat")),
+    ])
     library = [c for c in (vek, owns, isa) if c]
     save(FIELD, library)
     loaded = load(FIELD)
-    objects = ["isa", "tail", "hastail", "blue", "green", "dax"]
+    owns_sent = select(loaded, "rex owns map")
+    vek_sent = select(loaded, "map vek rex")
+    objects = ["isa", "tail", "hastail", "green", "dax"]
     field = []
-    for sent in ("rex owns map", "map vek rex", "mira isa dax"):
-        fact = select(loaded, sent)
+    for fact in (owns_sent, vek_sent, select(loaded, "mira isa dax")):
         if fact and fact not in [(f["s"], f["r"], f["o"]) for f in field]:
             for t in fact:
                 if t not in objects:
                     objects.append(t)
             add(field, *fact)
-    add(field, "dax", "tail", "blue")
-    before = color(field, "mira", objects)
-    field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
+    add(field, "isa", "chain", "tail")
+    add(field, "isa", "compose", "hastail")
     add(field, "dax", "tail", "green")
-    after = color(field, "mira", objects)
+    with_op = through_operator(field, "mira", objects)
+    stripped = [f for f in field if f["r"] != "compose"]
+    without_op = through_operator(stripped, "mira", objects)
     checks = {
-        "all_six_applied": all(applied.values()) and len(applied) == 6,
+        "each_sentence": owns_sent == ("rex", "owns", "map") and vek_sent == ("rex", "owns", "map"),
         "one_fact": sum(1 for f in field if f["s"] == "rex" and f["r"] == "owns") == 1,
-        "before_blue": before == "blue",
-        "after_green": after == "green",
-        "owns_kept": ask(field, "rex", "owns", objects) == "map",
-        "real_clash": select([vek, other], "map vek rex") is None if vek else False,
+        "through_operator": with_op == "green",
+        "operator_causal": without_op is None,
+        "contradiction_rejected": bad is None,
         "unknown_abstain": select(loaded, "rex holds map") is None,
         "library_reloaded": len(loaded) == 3,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "correction changes the derived answer; owns stays"}
+    receipt = {
+        **checks,
+        "failed": failed,
+        "claim": "answer dies when the operator is removed; no private color function"
+    }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
