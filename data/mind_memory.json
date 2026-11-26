@@ -178,5 +178,37 @@
       "<unk>"
     ],
     "stable_overlap": 0
+  },
+  {
+    "turn": 0,
+    "query": "count the stones in the cold river at dusk",
+    "packet": "pkt-4",
+    "grown": false,
+    "held": false,
+    "generated": [
+      "<unk>",
+      "<unk>",
+      "at",
+      "<unk>",
+      "at",
+      "<unk>"
+    ],
+    "stable_overlap": 1
+  },
+  {
+    "turn": 1,
+    "query": "count the stones in the cold river at dusk",
+    "packet": "pkt-4",
+    "grown": false,
+    "held": true,
+    "generated": [
+      "count",
+      "the",
+      "stones",
+      "in",
+      "the",
+      "cold"
+    ],
+    "stable_overlap": 5
   }
 ]
