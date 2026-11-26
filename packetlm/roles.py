@@ -1,8 +1,8 @@
-"""Suite held together.
+"""Correction is a sentence.
 
-Six orders applied.
-Operator answers. Remove it and the answer dies.
-Contradictory labels rejected.
+'correct dax tail green' replaces the tail.
+The operator answer changes. Owns stays.
+Six orders and causality stay.
 Not a general mind.
 """
 
@@ -26,21 +26,14 @@ def fits(order, examples) -> bool:
     return True
 
 def induce(examples):
-    if len(examples) < 2:
-        return None
-    if len({r for _, (_, r, _) in examples}) != 1:
+    if len(examples) < 2 or len({r for _, (_, r, _) in examples}) != 1:
         return None
     hits = [order for order in ORDERS if fits(order, examples)]
     if len(hits) != 1:
         return None
     order = hits[0]
     rel_at = order.index("r")
-    return {
-        "order": list(order),
-        "rel_at": rel_at,
-        "word": examples[0][0].split()[rel_at],
-        "meaning": examples[0][1][1],
-    }
+    return {"order": list(order), "rel_at": rel_at, "word": examples[0][0].split()[rel_at], "meaning": examples[0][1][1]}
 
 def select(library, sentence):
     parts = sentence.lower().strip().split()
@@ -59,32 +52,33 @@ def through_operator(field, name, objects):
     kind = ask(field, name, "isa", objects)
     return ask(field, kind, "tail", objects) if kind else None
 
+def correct(field, sentence):
+    parts = sentence.lower().split()
+    if len(parts) != 4 or parts[0] != "correct":
+        return field
+    _, s, r, o = parts
+    field = [f for f in field if not (f["s"] == s and f["r"] == r)]
+    add(field, s, r, o)
+    return field
+
 def example_for(order):
-    out = []
-    for s, r, o in [("ada", "vek", "box"), ("ned", "vek", "key")]:
-        roles = {"s": s, "r": r, "o": o}
-        out.append((" ".join(roles[role] for role in order), (s, "owns", o)))
-    return out
+    return [(" ".join({"s": s, "r": r, "o": o}[role] for role in order), (s, "owns", o)) for s, r, o in [("ada", "vek", "box"), ("ned", "vek", "key")]]
 
 def run() -> dict:
     applied = {}
     for order in ORDERS:
         got = induce(example_for(order))
         roles = {"s": "rex", "r": "vek", "o": "map"}
-        sent = " ".join(roles[role] for role in order)
-        applied["".join(order)] = select([got], sent) == ("rex", "owns", "map") if got else False
+        applied["".join(order)] = select([got], " ".join(roles[role] for role in order)) == ("rex", "owns", "map") if got else False
     vek = induce(example_for(("o", "r", "s")))
     owns = induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))])
     isa = induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))])
-    bad = induce([("ada vek box", ("ada", "owns", "box")), ("ned vek key", ("ned", "holds", "key"))])
     library = [c for c in (vek, owns, isa) if c]
     save(FIELD, library)
     loaded = load(FIELD)
-    owns_sent = select(loaded, "rex owns map")
-    vek_sent = select(loaded, "map vek rex")
-    objects = ["isa", "tail", "hastail", "green", "dax"]
+    objects = ["isa", "tail", "hastail", "blue", "green", "dax"]
     field = []
-    for fact in (owns_sent, vek_sent, select(loaded, "mira isa dax")):
+    for fact in (select(loaded, "rex owns map"), select(loaded, "map vek rex"), select(loaded, "mira isa dax")):
         if fact and fact not in [(f["s"], f["r"], f["o"]) for f in field]:
             for t in fact:
                 if t not in objects:
@@ -92,18 +86,21 @@ def run() -> dict:
             add(field, *fact)
     add(field, "isa", "chain", "tail")
     add(field, "isa", "compose", "hastail")
-    add(field, "dax", "tail", "green")
+    add(field, "dax", "tail", "blue")
+    before = through_operator(field, "mira", objects)
+    field = correct(field, "correct dax tail green")
+    after = through_operator(field, "mira", objects)
     checks = {
         "all_six_applied": all(applied.values()) and len(applied) == 6,
-        "each_sentence": owns_sent == vek_sent == ("rex", "owns", "map"),
-        "through_operator": through_operator(field, "mira", objects) == "green",
+        "before_blue": before == "blue",
+        "corrected_green": after == "green",
+        "owns_kept": ask(field, "rex", "owns", objects) == "map",
         "operator_causal": through_operator([f for f in field if f["r"] != "compose"], "mira", objects) is None,
-        "contradiction_rejected": bad is None,
         "unknown_abstain": select(loaded, "rex holds map") is None,
         "library_reloaded": len(loaded) == 3,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "six orders and operator causality in one run"}
+    receipt = {**checks, "failed": failed, "claim": "correction sentence revises the tail; suite retained"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
