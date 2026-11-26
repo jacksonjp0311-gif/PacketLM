@@ -25,6 +25,15 @@ jobs:
         with:
           name: packetlm-tiny-receipt
           path: artifacts/tiny_receipt.json
+      - name: Intelligence probe
+        if: always()
+        run: python -m packetlm.iq
+      - name: Upload iq receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-iq-receipt
+          path: artifacts/iq_receipt.json
       - name: Self-edit
         if: always()
         run: python -m packetlm.selfedit
