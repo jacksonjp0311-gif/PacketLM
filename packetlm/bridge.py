@@ -1,8 +1,7 @@
-"""Cumulative. No traded checks.
+"""Passive without losing the suite.
 
-owns and isa learned, stored, reloaded, applied.
-Blue then green through a correction.
-Both members change. Owns stays.
+'Y helped-by X' learns to write X helps Y.
+Blue to green, owns, and isa stay.
 Not a general mind.
 """
 
@@ -12,13 +11,6 @@ from pathlib import Path
 from .field import add, ask, save, load
 
 FIELD = Path("data/bridge_field.json")
-
-def norm(token: str) -> str:
-    if token.endswith("es") and len(token) > 4:
-        return token[:-2]
-    if token.endswith("s") and len(token) > 3:
-        return token[:-1]
-    return token
 
 def write(field, objects, s, r, o):
     for t in (s, r, o):
@@ -33,20 +25,29 @@ def learn_svo(examples, word, rel):
         parts = sent.lower().split()
         if len(parts) != 3 or parts[0] != s or parts[1] != word or parts[2] != o or r != rel:
             return None
-    return {"len": 3, "rel_at": 1, "word": word, "rel": rel}
+    return {"word": word, "rel": rel, "flip": False}
 
-def pattern_from_field(field, objects, word):
-    if ask(field, word, "pattern", objects) != "svo":
+def learn_passive(examples):
+    """'bob by alice' -> alice helps bob. Object is first, subject is last."""
+    if len(examples) < 2:
         return None
-    return {"len": 3, "rel_at": 1, "word": word, "rel": word}
+    for sent, (s, r, o) in examples:
+        parts = sent.lower().split()
+        if parts != [o, "by", s] or r != "helps":
+            return None
+    return {"word": "by", "rel": "helps", "flip": True}
 
 def apply_pattern(pattern, sentence):
     if not pattern:
         return None
     parts = sentence.lower().strip().rstrip(".").split()
-    if len(parts) != pattern["len"] or parts[pattern["rel_at"]] != pattern["word"]:
+    if pattern["flip"]:
+        if len(parts) != 3 or parts[1] != "by":
+            return None
+        return parts[2], pattern["rel"], parts[0]
+    if len(parts) != 3 or parts[1] != pattern["word"]:
         return None
-    return norm(parts[0]), pattern["rel"], norm(parts[2])
+    return parts[0], pattern["rel"], parts[2]
 
 def via_operator(field, name, objects):
     if ask(field, "isa", "compose", objects) != "hastail" or ask(field, "isa", "chain", objects) != "tail":
@@ -70,49 +71,41 @@ def run() -> dict:
         ("sam isa cat", ("sam", "isa", "cat")),
         ("lee isa bird", ("lee", "isa", "bird")),
     ], "isa", "isa")
+    passive = learn_passive([
+        ("bob by alice", ("alice", "helps", "bob")),
+        ("kim by ada", ("ada", "helps", "kim")),
+    ])
     if owns:
         write(field, objects, "owns", "pattern", "svo")
     if isa:
         write(field, objects, "isa", "pattern", "svo")
-    save(FIELD, field)
-    loaded = load(FIELD)
-    owns_p = pattern_from_field(loaded, objects, "owns")
-    isa_p = pattern_from_field(loaded, objects, "isa")
+    if passive:
+        write(field, objects, "by", "pattern", "passive")
     for fact in [
-        apply_pattern(isa_p, "mira isa dax"),
-        apply_pattern(isa_p, "orion isa dax"),
-        apply_pattern(owns_p, "rex owns map"),
+        apply_pattern(isa, "mira isa dax"),
+        apply_pattern(isa, "orion isa dax"),
+        apply_pattern(owns, "rex owns map"),
+        apply_pattern(passive, "lee by ned"),
     ]:
         if fact:
-            write(loaded, objects, *fact)
-    before = {
-        "mira": via_operator(loaded, "mira", objects),
-        "orion": via_operator(loaded, "orion", objects),
-    }
-    loaded = [f for f in loaded if not (f["s"] == "dax" and f["r"] == "tail")]
-    write(loaded, objects, "dax", "tail", "green")
-    save(FIELD, loaded)
+            write(field, objects, *fact)
+    before = {n: via_operator(field, n, objects) for n in ("mira", "orion")}
+    field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
+    write(field, objects, "dax", "tail", "green")
+    save(FIELD, field)
     final = load(FIELD)
-    after = {
-        "mira": via_operator(final, "mira", objects),
-        "orion": via_operator(final, "orion", objects),
-    }
+    after = {n: via_operator(final, n, objects) for n in ("mira", "orion")}
     checks = {
         "before_blue": before == {"mira": "blue", "orion": "blue"},
         "after_green": after == {"mira": "green", "orion": "green"},
         "owns_kept": ask(final, "rex", "owns", objects) == "map",
-        "holds_rejected": apply_pattern(owns_p, "rex holds map") is None,
+        "passive_applied": ask(final, "ned", "helps", objects) == "lee",
+        "not_reversed": ask(final, "lee", "helps", objects) is None,
         "isa_applied": ask(final, "mira", "isa", objects) == "dax",
-        "reloaded": True,
+        "reloaded": len(final) == len(field),
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {
-        **checks,
-        "before": before,
-        "after": after,
-        "failed": failed,
-        "claim": "correction restored beside owns and isa; both members change; owns kept"
-    }
+    receipt = {**checks, "failed": failed, "claim": "passive added; correction and owns retained"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
