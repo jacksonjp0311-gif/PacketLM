@@ -118,5 +118,35 @@
       "<unk>"
     ],
     "strength": 1.3
+  },
+  {
+    "turn": 0,
+    "query": "count the stones in the cold river at dusk",
+    "packet": "language",
+    "grown": false,
+    "generated": [
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>"
+    ],
+    "stable_overlap": 0
+  },
+  {
+    "turn": 1,
+    "query": "count the stones in the cold river at dusk",
+    "packet": "language",
+    "grown": false,
+    "generated": [
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>"
+    ],
+    "stable_overlap": 1
   }
 ]
