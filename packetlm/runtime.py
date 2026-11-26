@@ -1,8 +1,7 @@
-"""Active step.
+"""Ask.
 
-A tie keeps both candidates.
-New evidence kills one.
-Distractors and the oracle stay.
+Two paths fit. The system names a subject where they disagree.
+The answer kills one.
 Not a general mind.
 """
 
@@ -40,36 +39,54 @@ def apply_path(field, path, subject, objects):
     mid = ask(field, subject, first, objects)
     return ask(field, mid, second, objects) if mid else None
 
+def distinguish(field, paths, subjects, objects):
+    """A subject where the paths predict different values."""
+    for s in subjects:
+        preds = {apply_path(field, p, s, objects) for p in paths}
+        preds.discard(None)
+        if len(preds) > 1:
+            return s, preds
+    return None, set()
+
 def run() -> dict:
-    objects = ["bearing", "motor", "machine", "gear", "pump", "line"]
+    objects = ["bearing", "motor", "machine", "gear", "pump", "line", "seal", "valve", "plant"]
     field = []
     for s, r, o in [
         ("bearing", "in", "motor"), ("motor", "in", "machine"),
         ("bearing", "near", "bench"), ("bench", "near", "wall"),
         ("gear", "in", "pump"), ("pump", "in", "line"),
+        ("seal", "in", "valve"), ("valve", "in", "plant"),
     ]:
         add(field, s, r, o)
     path = discover(field, [("bearing", "part", "machine"), ("gear", "part", "line")], objects)
-    add(field, "seal", "in", "valve")
-    add(field, "valve", "in", "plant")
-    objects += ["seal", "valve", "plant"]
-    # tie, then evidence
-    tie_field = []
-    for s, r, o in [("x", "p", "y"), ("y", "p", "z"), ("x", "q", "y"), ("y", "q", "z"), ("m", "p", "n")]:
-        add(tie_field, s, r, o)
-    objs = objects + ["x", "y", "z", "m", "n", "w"]
-    both = candidates(tie_field, [("x", "out", "z")], objs)
-    add(tie_field, "n", "p", "w")
-    add(tie_field, "m", "q", "nope")
-    after = candidates(tie_field, [("x", "out", "z"), ("m", "out", "w")], objs)
+    # clean tie: no cross edges
+    tie = []
+    for s, r, o in [
+        ("x", "p", "y"), ("y", "p", "z"),
+        ("x", "q", "a"), ("a", "q", "z"),
+        ("m", "p", "n"), ("n", "p", "w"),
+        ("m", "q", "b"), ("b", "q", "nope"),
+    ]:
+        add(tie, s, r, o)
+    objs = objects + ["x", "y", "z", "a", "m", "n", "w", "b", "nope"]
+    both = candidates(tie, [("x", "out", "z")], objs)
+    question, preds = distinguish(tie, both, ["m"], objs)
+    after = candidates(tie, [("x", "out", "z"), ("m", "out", "w")], objs)
     checks = {
         "chose_in": path == ("in", "in", "part"),
         "oracle": apply_path(field, path, "seal", objects) == "plant",
-        "kept_both": set(both) == {("p", "p", "out"), ("q", "q", "out")},
+        "kept_both": set(tuple(p) for p in both) == {("p", "p", "out"), ("q", "q", "out")},
+        "asked_m": question == "m" and preds == {"w", "nope"},
         "evidence_killed_q": after == [("p", "p", "out")],
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "after": after, "failed": failed, "claim": "tie kept; new evidence killed q"}
+    receipt = {
+        **checks,
+        "question": question,
+        "preds": sorted(preds),
+        "failed": failed,
+        "claim": "system named the subject that separates the two paths"
+    }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
