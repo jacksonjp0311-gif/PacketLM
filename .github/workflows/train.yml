@@ -38,3 +38,12 @@ jobs:
         with:
           name: packetlm-system-receipt
           path: artifacts/system_receipt.json
+      - name: Language bridge
+        if: always()
+        run: python -m packetlm.bridge
+      - name: Upload bridge receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-bridge-receipt
+          path: artifacts/bridge_receipt.json
