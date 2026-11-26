@@ -7,7 +7,7 @@ on:
     paths:
       - 'packetlm/**'
       - '.github/workflows/train.yml'
-      - 'data/weights.json'
+      - 'data/**'
 
 permissions:
   contents: write
@@ -29,6 +29,23 @@ jobs:
         with:
           name: packetlm-nodes-receipt
           path: artifacts/nodes_receipt.json
+      - name: Context packets
+        if: always()
+        run: python -m packetlm.context
+      - name: Upload context receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-context-receipt
+          path: artifacts/context_receipt.json
+      - name: Commit context packets
+        if: always()
+        run: |
+          git config user.name "packetlm"
+          git config user.email "packetlm@users.noreply.github.com"
+          git add data/context_packets.json data/weights.json || true
+          git diff --cached --quiet || git commit -m "Persist context packets from runner"
+          git push || true
       - name: Tiny next-token model
         if: always()
         run: python -m packetlm.tiny
@@ -38,14 +55,6 @@ jobs:
         with:
           name: packetlm-tiny-receipt
           path: artifacts/tiny_receipt.json
-      - name: Commit persisted weights
-        if: always()
-        run: |
-          git config user.name "packetlm"
-          git config user.email "packetlm@users.noreply.github.com"
-          git add data/weights.json || true
-          git diff --cached --quiet || git commit -m "Persist weights from runner"
-          git push || true
       - name: Intelligence probe
         if: always()
         run: python -m packetlm.iq
