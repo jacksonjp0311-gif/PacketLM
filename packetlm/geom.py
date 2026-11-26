@@ -1,7 +1,9 @@
-"""Masks from predictions. Composition with bits.
+"""Programs execute.
 
-Not a proven geometric advantage.
-Not a general mind.
+Predictions come from composition, not an array.
+A walk is the reference.
+List and mask must agree.
+Not a proven advantage. Not a general mind.
 """
 
 from __future__ import annotations
@@ -17,25 +19,17 @@ def mask_of(ids):
 def bits(m):
     return [i for i in range(m.bit_length()) if m & (1 << i)]
 
-def classify(preds, answer):
-    supported, undetermined = [], []
-    for i, pred in enumerate(preds):
-        if pred is None:
-            undetermined.append(i)
-        elif pred == answer:
-            supported.append(i)
-    return supported, undetermined
-
-def filter_mask(live, supported, undetermined):
-    return live & (mask_of(supported) | mask_of(undetermined))
+def rows_from(facts, n, rel):
+    rows = [0] * n
+    for s, r, o in facts:
+        if r == rel:
+            rows[s] |= 1 << o
+    return rows
 
 def compose(a_rows, b_rows):
-    """C_i = OR over k of (A_ik and B_k). Rows are bitsets of targets."""
     out = []
     for a in a_rows:
-        acc = 0
-        k = 0
-        row = a
+        acc, k, row = 0, 0, a
         while row:
             if row & 1:
                 acc |= b_rows[k]
@@ -44,34 +38,56 @@ def compose(a_rows, b_rows):
         out.append(acc)
     return out
 
+def walk(facts, start, rels):
+    cur = {start}
+    for rel in rels:
+        nxt = set()
+        for s, r, o in facts:
+            if r == rel and s in cur:
+                nxt.add(o)
+        cur = nxt
+    return cur
+
+def predict(rows, start):
+    return bits(rows[start])
+
 def run() -> dict:
-    # predictions for 8 hypotheses on one question
-    preds = ["w", None, "w", "no", "w", "no", "w", "no"]
-    supported, undetermined = classify(preds, "w")
-    live = (1 << 8) - 1
-    after = filter_mask(live, supported, undetermined)
-    # second question
-    preds2 = ["yes", None, "no", "no", "yes", "no", "no", "no"]
-    s2, u2 = classify(preds2, "yes")
-    after2 = filter_mask(after, s2, u2)
-    # composition: in then in
-    # nodes: 0 bearing, 1 motor, 2 machine
-    inn = [1 << 1, 1 << 2, 0]
-    composed = compose(inn, inn)
-    walked = 1 << 2  # bearing -> machine
+    # 0 bearing, 1 motor, 2 machine, 3 bench
+    facts = [(0, "in", 1), (1, "in", 2), (0, "near", 3)]
+    inn = rows_from(facts, 4, "in")
+    near = rows_from(facts, 4, "near")
+    programs = {
+        "in": inn,
+        "in_in": compose(inn, inn),
+        "near": near,
+    }
+    # expected from independent walk
+    walks = {
+        "in": walk(facts, 0, ["in"]),
+        "in_in": walk(facts, 0, ["in", "in"]),
+        "near": walk(facts, 0, ["near"]),
+    }
+    preds = {name: predict(rows, 0) for name, rows in programs.items()}
+    # evidence: bearing part machine. which program predicts {2}?
+    answer = {2}
+    supported = [i for i, name in enumerate(programs) if set(preds[name]) == answer]
+    undetermined = []
+    live = (1 << len(programs)) - 1
+    listed = [i for i in range(len(programs)) if i in supported or i in undetermined]
+    masked = bits(live & (mask_of(supported) | mask_of(undetermined)))
     checks = {
-        "from_predictions": bits(after) == [0, 1, 2, 4, 6],
-        "narrowed": bits(after2) == [0, 1, 4],
-        "undetermined_kept": 1 in bits(after2),
-        "composed": composed[0] == walked,
+        "bits_match_walk": all(set(preds[k]) == walks[k] for k in programs),
+        "found": supported == [1],
+        "list_matches_mask": listed == masked,
+        "one_hop_kept": preds["in"] == [1],
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "after": bits(after),
-        "after2": bits(after2),
+        "preds": preds,
+        "walks": {k: sorted(v) for k, v in walks.items()},
         "failed": failed,
-        "claim": "masks built from predictions; composition matches the walk; not a proven advantage"
+        "claim": "programs executed; bits match the walk; list matches the mask"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
