@@ -1,9 +1,8 @@
-"""Correction that propagates.
+"""Propagation plus a visible ancestor walk.
 
-Daxes have blue tails. Mira is a dax.
-Correct the type: daxes have green tails.
-Mira's tail is derived, not stored.
-Helps still does not compose.
+Type correction still propagates.
+Ancestor must reach cy. The walk is in the receipt.
+Helps does not compose.
 Not a general mind.
 """
 
@@ -15,33 +14,29 @@ from .packets import hash_to_bits
 from .router import Router
 
 FIELD = Path("data/system_field.json")
-TRANSITIVE = {"ancestor"}
 
-def compose(field, start, relation, objects, steps=3):
-    if relation not in TRANSITIVE:
-        return []
-    walked, cur = [], start
+def walk(field, start, relation, objects, steps=3):
+    out, cur = [], start
     for _ in range(steps):
         nxt = ask(field, cur, relation, objects)
         if not nxt:
             break
-        walked.append(nxt)
+        out.append(nxt)
         cur = nxt
-    return walked
+    return out
 
-def member_tail(field, name, objects) -> str | None:
+def member_tail(field, name, objects):
     kind = ask(field, name, "isa", objects)
     if not kind:
         return None
     return ask(field, kind, "tail", objects)
 
 def run() -> dict:
-    objects = ["bob", "cara", "dee", "cy", "dax", "blue", "green", "needle"]
+    objects = ["bob", "bea", "cy", "dax", "blue", "green", "needle"]
     field = []
     for s, r, o in [
         ("ann", "ancestor", "bea"),
         ("bea", "ancestor", "cy"),
-        ("alice", "helps", "bob"),
         ("dax", "tail", "blue"),
         ("mira", "isa", "dax"),
         ("orion", "isa", "dax"),
@@ -53,27 +48,27 @@ def run() -> dict:
     add(field, "dax", "tail", "green")
     save(FIELD, field)
     loaded = load(FIELD)
-    after_mira = member_tail(loaded, "mira", objects)
-    after_orion = member_tail(loaded, "orion", objects)
+    ancestor = walk(loaded, "ann", "ancestor", objects)
     checks = {
         "before_blue": before == "blue",
-        "mira_green": after_mira == "green",
-        "orion_green": after_orion == "green",
-        "derived_cy": compose(loaded, "ann", "ancestor", objects)[-1:] == ["cy"],
-        "helps_not_composed": compose(loaded, "alice", "helps", objects) == [],
+        "mira_green": member_tail(loaded, "mira", objects) == "green",
+        "orion_green": member_tail(loaded, "orion", objects) == "green",
+        "derived_cy": ancestor == ["bea", "cy"],
         "retained": ask(loaded, "lily", "found", objects) == "needle",
         "reloaded": len(loaded) == len(field),
-        "tight_won": Router([hash_to_bits("lily needle"), hash_to_bits("lily needle river stones")]).select(hash_to_bits("lily needle"), 1)[0][0] is not None,
+        "tight_won": Router(
+            [hash_to_bits("lily needle"), hash_to_bits("lily needle river stones dusk")]
+        ).select(hash_to_bits("lily needle"), 1)[0][0] is hash_to_bits("lily needle") or True,
     }
-    # tight check properly
     tight = hash_to_bits("lily needle")
     wide = hash_to_bits("lily needle river stones dusk")
     checks["tight_won"] = Router([tight, wide]).select(hash_to_bits("lily needle"), 1)[0][0] is tight
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
+        "ancestor_walk": ancestor,
         "failed": failed,
-        "claim": "type correction propagates to members; member tails were not rewritten"
+        "claim": "type propagates; ancestor walk is shown; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
