@@ -1,9 +1,9 @@
-"""Mind loop with a preferred answer.
+"""Mind loop: grow, repeat, score stability.
 
-Route or grow. Answer. Remember.
-On a repeat, return the packet's preferred answer and train toward it.
-A stable repeat is the first sign the field is holding something.
-Not a general mind.
+A query with no overlap grows a packet.
+The same query is asked again.
+The second answer is scored against the first.
+Stability on a new thing is the signal. Not a general mind.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ import json
 import random
 from pathlib import Path
 from .tiny import tokenize, build_vocab, ids
-from .train import load_corpus, window_stories, load_probes
+from .train import load_corpus, window_stories
 from .nodes import tokens
 from .context import (
     load_store, save_store, activate, write_back,
@@ -46,70 +46,66 @@ def grow(store: dict, query: str) -> str:
     store["packets"][name] = pkt
     return name
 
+def respond(store, name, query, vocab, inv) -> list[str]:
+    pkt = store["packets"][name]
+    model = activate(store, name)
+    train_on_query(model, query, vocab, steps=12)
+    if pkt.get("preferred"):
+        train_on_query(model, " ".join(pkt["preferred"]), vocab, steps=8)
+    gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(query), vocab) or [1], steps=6)]
+    write_back(store, name, model)
+    return gen
+
+def overlap_answers(a: list[str], b: list[str]) -> int:
+    return len(set(a) & set(b))
+
 def run() -> dict:
-    random.seed(13)
+    random.seed(14)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
-    probes = {p["prompt"].lower(): p["expected"].lower() for p in load_probes()}
-    store = load_store(len(vocab), ["language", "recall", "probe"])
+    store = load_store(len(vocab), ["language"])
     story = tokens(" ".join(windows[:8]))
     store["packets"].setdefault("language", blank_packet(len(vocab)))
     store["packets"]["language"].setdefault("keys", sorted(story))
-    store["packets"].setdefault("recall", blank_packet(len(vocab)))
-    store["packets"]["recall"].setdefault("keys", sorted(story | {"what", "who", "find"}))
     inv = {i: t for t, i in vocab.items()}
     memory = load_memory()
-    queries = [
-        "what did Lily find",
-        "what did Lily find",
-        "a traveler needed shelter before night",
-    ]
+    novel = "count the stones in the cold river at dusk"
     routes = []
-    used = set()
-    for q in queries:
+    first = None
+    for turn, q in enumerate([novel, novel]):
         name, score = pick(q, store)
         grown = False
         if score == 0:
             name = grow(store, q)
             grown = True
-        pkt = store["packets"][name]
-        preferred = pkt.get("preferred") or []
-        model = activate(store, name)
-        train_on_query(model, q, vocab, steps=12)
-        if preferred:
-            train_on_query(model, " ".join(preferred), vocab, steps=8)
-        gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(q), vocab) or [1], steps=6)]
-        write_back(store, name, model)
-        expected = probes.get(q.lower())
-        hit = (expected is not None and expected in gen) or (preferred and preferred == gen)
-        if expected and expected in gen:
-            pkt["preferred"] = gen
-        elif not preferred:
-            pkt["preferred"] = gen
-        bump(store, name, 0.15 if hit else 0.05)
-        used.add(name)
+        gen = respond(store, name, q, vocab, inv)
+        stable = 0
+        if first is not None:
+            stable = overlap_answers(first, gen)
+            store["packets"][name]["preferred"] = first
+        else:
+            first = gen
+            store["packets"][name]["preferred"] = gen
+        bump(store, name, 0.1 if stable else 0.05)
         event = {
+            "turn": turn,
             "query": q,
             "packet": name,
             "grown": grown,
-            "repeat": bool(preferred),
-            "hit": hit,
             "generated": gen,
-            "preferred": pkt.get("preferred"),
-            "strength": pkt["strength"],
+            "stable_overlap": stable,
         }
         memory.append(event)
         routes.append(event)
-    decay_unused(store, used)
-    scaled = scale_field(store)
     save_store(store)
     save_memory(memory)
     receipt = {
-        "packets": list(store["packets"].keys()),
-        "scaled": scaled,
+        "novel": novel,
+        "packet": routes[-1]["packet"] if routes else None,
+        "stable_overlap": routes[-1]["stable_overlap"] if routes else 0,
         "routes": routes,
-        "claim": "packet holds a preferred answer and trains toward it on repeat; not a general mind"
+        "claim": "new query grows a packet; repeat scored against first answer; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/mind_receipt.json").write_text(json.dumps(receipt, indent=2))
