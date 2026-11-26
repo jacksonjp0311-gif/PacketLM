@@ -1,10 +1,9 @@
-"""Multi-question residual training.
+"""Field geometry on the Bitwork score.
 
-Several questions in one run.
-Each walks the field.
-A hit strengthens every packet on the path.
-A miss weakens the first packet.
-Pace over one-at-a-time. Not a general mind.
+Score is 2|q ∩ p| - |p|.
+A larger packet is not favored just for being larger.
+Surplus is still what the packet holds that the query did not say.
+Not a general mind.
 """
 
 from __future__ import annotations
@@ -20,6 +19,10 @@ STOP = {"the", "a", "an", "in", "on", "at", "of", "to", "and", "before", "did", 
 def content(text: str) -> set[str]:
     return {t for t in tokens(text) if t not in STOP}
 
+def bitwork(q: set[str], p: set[str]) -> int:
+    overlap = len(q & p)
+    return 2 * overlap - len(p)
+
 def ensure(store, name, keys, preferred, strength=1.0):
     if name not in store["packets"]:
         store["packets"][name] = blank_packet(store["vocab"])
@@ -31,17 +34,17 @@ def useful(pkt, q):
     return [t for t in pkt.get("preferred", []) if t not in q and t not in STOP]
 
 def best(q, store, used):
-    name, score, extra = "", 0.0, []
+    name, score, extra = "", -10**9, []
     for n, pkt in store["packets"].items():
         if n in used or n in {"language", "recall", "probe"}:
             continue
-        o = len(q & set(pkt.get("keys", [])))
-        if o == 0:
-            continue
-        s = o * float(pkt.get("strength", 1.0))
+        keys = set(pkt.get("keys", []))
+        s = bitwork(q, keys) * float(pkt.get("strength", 1.0))
         ex = useful(pkt, q)
         if ex and s > score:
             name, score, extra = n, s, ex
+    if score <= 0:
+        return "", 0.0, []
     return name, score, extra
 
 def walk(start, store, steps=4):
@@ -67,41 +70,34 @@ def run() -> dict:
     facts = [
         ("lily", ["lily", "found", "needle"], "lily found a needle"),
         ("needle", ["needle", "sew", "cloth"], "a needle can sew cloth"),
-        ("infer-sew", ["lily", "sew"], "lily can sew"),
         ("dress", ["sew", "dress"], "sew makes a dress"),
         ("river", ["river", "cold", "stones"], "the river is cold and has stones"),
         ("dusk", ["dusk", "dark", "night"], "dusk is dark before night"),
         ("traveler", ["traveler", "shelter", "night"], "a traveler needed shelter before night"),
+        ("wide", ["lily", "found", "needle", "river", "stones", "dusk", "night", "cold"], "a wide packet that should lose"),
     ]
     for name, keys, text in facts:
         ensure(store, name, keys, tokenize(text))
     questions = [
         ("what can lily make", "dress"),
-        ("what can lily do with a needle", "sew"),
         ("what is in the river", "stones"),
         ("what is dusk", "dark"),
-        ("what did the traveler need", "shelter"),
         ("what did lily find", "needle"),
     ]
     results = []
-    hits = 0
+    wide_won = 0
     for q, expected in questions:
         path = walk(q, store)
         flat = [t for step in path for t in step["surplus"]]
-        hit = expected in flat
-        if hit:
-            hits += 1
-            for step in path:
-                bump(store, step["packet"], 0.1)
-        elif path:
-            bump(store, path[0]["packet"], -0.05)
-        results.append({"q": q, "expected": expected, "hit": hit, "path": [s["packet"] for s in path]})
-    save_store(store)
+        winner = path[0]["packet"] if path else None
+        if winner == "wide":
+            wide_won += 1
+        results.append({"q": q, "winner": winner, "hit": expected in flat})
     receipt = {
-        "questions": len(questions),
-        "hits": hits,
+        "score": "2|q∩p|-|p|",
+        "wide_packet_wins": wide_won,
         "results": results,
-        "claim": "multi-question residual training; hits strengthen the path; not a general mind"
+        "claim": "field walk uses Bitwork score; a wide packet should not win on size"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geometry_receipt.json").write_text(json.dumps(receipt, indent=2))
