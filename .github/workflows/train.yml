@@ -38,21 +38,12 @@ jobs:
         with:
           name: packetlm-bind-receipt
           path: artifacts/bind_receipt.json
-      - name: Field geometry
+      - name: Unstored walk
         if: always()
-        run: python -m packetlm.geometry
-      - name: Upload geometry receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-geometry-receipt
-          path: artifacts/geometry_receipt.json
-      - name: Speak from route
-        if: always()
-        run: python -m packetlm.speak
-      - name: Upload speak receipt
+        run: python -m packetlm.infer
+      - name: Upload infer receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: packetlm-speak-receipt
-          path: artifacts/speak_receipt.json
+          name: packetlm-infer-receipt
+          path: artifacts/infer_receipt.json
