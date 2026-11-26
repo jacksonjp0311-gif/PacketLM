@@ -1,7 +1,7 @@
-"""Reload and answer. No retrain.
+"""No traded checks.
 
-Library and facts are saved, then loaded.
-The operator still answers. Owns still there.
+Six orders. Correction sentence. Answer after reload.
+Operator causal. Owns kept.
 Not a general mind.
 """
 
@@ -61,8 +61,16 @@ def correct(field, sentence):
     add(field, s, r, o)
     return field
 
+def example_for(order):
+    return [(" ".join({"s": s, "r": r, "o": o}[role] for role in order), (s, "owns", o)) for s, r, o in [("ada", "vek", "box"), ("ned", "vek", "key")]]
+
 def run() -> dict:
-    vek = induce([("box vek ada", ("ada", "owns", "box")), ("key vek ned", ("ned", "owns", "key"))])
+    applied = {}
+    for order in ORDERS:
+        got = induce(example_for(order))
+        roles = {"s": "rex", "r": "vek", "o": "map"}
+        applied["".join(order)] = select([got], " ".join(roles[role] for role in order)) == ("rex", "owns", "map") if got else False
+    vek = induce(example_for(("o", "r", "s")))
     owns = induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))])
     isa = induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))])
     library = [c for c in (vek, owns, isa) if c]
@@ -83,6 +91,7 @@ def run() -> dict:
     save(FACTS, field)
     facts = load(FACTS)
     checks = {
+        "all_six_applied": all(applied.values()) and len(applied) == 6,
         "corrected_green": through_operator(facts, "mira", objects) == "green",
         "owns_kept": ask(facts, "rex", "owns", objects) == "map",
         "operator_causal": through_operator([f for f in facts if f["r"] != "compose"], "mira", objects) is None,
@@ -91,7 +100,7 @@ def run() -> dict:
         "library_reloaded": len(loaded) == 3,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "answered after reload; no retrain"}
+    receipt = {**checks, "failed": failed, "claim": "six orders, correction, and reload in one run"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
