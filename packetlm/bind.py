@@ -1,7 +1,8 @@
-"""G38: the bound vector is the retrieval key.
+"""G38: retrieve from a partial bind.
 
-The packet stores the bound bits, not a name prefix.
-A query bound as subject retrieves the matching fact by Hamming score.
+Store full role-bound facts.
+Query with subject and relation only.
+The matching fact should rank first by Bitwork score.
 Not a general mind.
 """
 
@@ -23,6 +24,12 @@ def bind(subject: str, relation: str, obj: str) -> Packet:
     x = int.from_bytes(s.bits, "big") ^ int.from_bytes(r.bits, "big") ^ int.from_bytes(o.bits, "big")
     return Packet(bits=x.to_bytes(BITS // 8, "big"), count=bin(x).count("1"))
 
+def partial(subject: str, relation: str) -> Packet:
+    s = rotate(identity_packet(subject), 0)
+    r = rotate(identity_packet(relation), 64)
+    x = int.from_bytes(s.bits, "big") ^ int.from_bytes(r.bits, "big")
+    return Packet(bits=x.to_bytes(BITS // 8, "big"), count=bin(x).count("1"))
+
 def as_hex(pkt: Packet) -> str:
     return pkt.bits.hex()
 
@@ -35,24 +42,23 @@ def run() -> dict:
         ("alice", "helps", "bob"),
         ("bob", "helps", "alice"),
         ("mira", "has", "tail"),
+        ("lily", "found", "needle"),
     ]
-    store = []
-    for s, r, o in facts:
-        pkt = bind(s, r, o)
-        store.append({"s": s, "r": r, "o": o, "bits": as_hex(pkt)})
-    # query: who does alice help — bind alice as subject with relation, compare
-    query = bind("alice", "helps", "bob")
+    store = [{"s": s, "r": r, "o": o, "bits": as_hex(bind(s, r, o))} for s, r, o in facts]
+    query = partial("alice", "helps")
     ranked = []
     for item in store:
         pkt = from_hex(item["bits"])
-        ranked.append((item["s"], item["o"], pkt.score(query)))
-    ranked.sort(key=lambda x: x[2], reverse=True)
+        ranked.append((item["s"], item["r"], item["o"], pkt.score(query)))
+    ranked.sort(key=lambda x: x[3], reverse=True)
     top = ranked[0]
-    ok = top[0] == "alice" and top[1] == "bob"
+    ok = top[0] == "alice" and top[2] == "bob"
     receipt = {
-        "ranked": [{"subject": a, "object": b, "score": s} for a, b, s in ranked],
-        "top_is_alice_bob": ok,
-        "claim": "retrieval uses the bound vector score, not the packet name"
+        "query": "alice helps ?",
+        "top": {"subject": top[0], "object": top[2], "score": top[3]},
+        "ranked": [{"s": a, "o": c, "score": s} for a, _, c, s in ranked],
+        "retrieved_bob": ok,
+        "claim": "partial bind retrieves the object by score; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bind_receipt.json").write_text(json.dumps(receipt, indent=2))
