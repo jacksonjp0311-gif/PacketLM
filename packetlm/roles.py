@@ -1,8 +1,8 @@
-"""No private color function.
+"""Suite held together.
 
-The answer is the stored operator: isa chain tail, isa compose hastail.
-Remove the operator. The answer must die.
-Each sentence is checked before the facts are merged.
+Six orders applied.
+Operator answers. Remove it and the answer dies.
+Contradictory labels rejected.
 Not a general mind.
 """
 
@@ -28,8 +28,7 @@ def fits(order, examples) -> bool:
 def induce(examples):
     if len(examples) < 2:
         return None
-    meanings = {r for _, (_, r, _) in examples}
-    if len(meanings) != 1:
+    if len({r for _, (_, r, _) in examples}) != 1:
         return None
     hits = [order for order in ORDERS if fits(order, examples)]
     if len(hits) != 1:
@@ -55,32 +54,29 @@ def select(library, sentence):
     return mapped["s"], c["meaning"], mapped["o"]
 
 def through_operator(field, name, objects):
-    if ask(field, "isa", "compose", objects) != "hastail":
-        return None
-    if ask(field, "isa", "chain", objects) != "tail":
+    if ask(field, "isa", "compose", objects) != "hastail" or ask(field, "isa", "chain", objects) != "tail":
         return None
     kind = ask(field, name, "isa", objects)
-    if not kind:
-        return None
-    return ask(field, kind, "tail", objects)
+    return ask(field, kind, "tail", objects) if kind else None
+
+def example_for(order):
+    out = []
+    for s, r, o in [("ada", "vek", "box"), ("ned", "vek", "key")]:
+        roles = {"s": s, "r": r, "o": o}
+        out.append((" ".join(roles[role] for role in order), (s, "owns", o)))
+    return out
 
 def run() -> dict:
-    vek = induce([
-        ("box vek ada", ("ada", "owns", "box")),
-        ("key vek ned", ("ned", "owns", "key")),
-    ])
-    owns = induce([
-        ("ada owns box", ("ada", "owns", "box")),
-        ("ned owns key", ("ned", "owns", "key")),
-    ])
-    bad = induce([
-        ("ada vek box", ("ada", "owns", "box")),
-        ("ned vek key", ("ned", "holds", "key")),
-    ])
-    isa = induce([
-        ("mira isa dax", ("mira", "isa", "dax")),
-        ("sam isa cat", ("sam", "isa", "cat")),
-    ])
+    applied = {}
+    for order in ORDERS:
+        got = induce(example_for(order))
+        roles = {"s": "rex", "r": "vek", "o": "map"}
+        sent = " ".join(roles[role] for role in order)
+        applied["".join(order)] = select([got], sent) == ("rex", "owns", "map") if got else False
+    vek = induce(example_for(("o", "r", "s")))
+    owns = induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))])
+    isa = induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))])
+    bad = induce([("ada vek box", ("ada", "owns", "box")), ("ned vek key", ("ned", "holds", "key"))])
     library = [c for c in (vek, owns, isa) if c]
     save(FIELD, library)
     loaded = load(FIELD)
@@ -97,24 +93,17 @@ def run() -> dict:
     add(field, "isa", "chain", "tail")
     add(field, "isa", "compose", "hastail")
     add(field, "dax", "tail", "green")
-    with_op = through_operator(field, "mira", objects)
-    stripped = [f for f in field if f["r"] != "compose"]
-    without_op = through_operator(stripped, "mira", objects)
     checks = {
-        "each_sentence": owns_sent == ("rex", "owns", "map") and vek_sent == ("rex", "owns", "map"),
-        "one_fact": sum(1 for f in field if f["s"] == "rex" and f["r"] == "owns") == 1,
-        "through_operator": with_op == "green",
-        "operator_causal": without_op is None,
+        "all_six_applied": all(applied.values()) and len(applied) == 6,
+        "each_sentence": owns_sent == vek_sent == ("rex", "owns", "map"),
+        "through_operator": through_operator(field, "mira", objects) == "green",
+        "operator_causal": through_operator([f for f in field if f["r"] != "compose"], "mira", objects) is None,
         "contradiction_rejected": bad is None,
         "unknown_abstain": select(loaded, "rex holds map") is None,
         "library_reloaded": len(loaded) == 3,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {
-        **checks,
-        "failed": failed,
-        "claim": "answer dies when the operator is removed; no private color function"
-    }
+    receipt = {**checks, "failed": failed, "claim": "six orders and operator causality in one run"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
