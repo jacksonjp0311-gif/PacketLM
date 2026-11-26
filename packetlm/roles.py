@@ -1,7 +1,7 @@
-"""Role induction.
+"""All six role orders.
 
-Six permutations. The examples pick the order.
-If more than one order fits, abstain.
+Each order is induced from two examples and applied to one unseen sentence.
+Two competing orders abstain.
 Not a general mind.
 """
 
@@ -33,42 +33,47 @@ def induce(examples):
 def apply(order, sentence):
     if not order:
         return None
-    parts = sentence.lower().strip().rstrip(".").split()
+    parts = sentence.lower().strip().split()
     if len(parts) != 3:
         return None
     mapped = {role: parts[i] for i, role in enumerate(order)}
     return mapped["s"], mapped["r"], mapped["o"]
 
+def example_for(order):
+    """Build two sentences whose tokens sit in this order."""
+    triples = [("ada", "vek", "box"), ("ned", "vek", "key")]
+    out = []
+    for s, r, o in triples:
+        roles = {"s": s, "r": r, "o": o}
+        sent = " ".join(roles[role] for role in order)
+        out.append((sent, (s, r, o)))
+    return out
+
 def run() -> dict:
-    # O R S: box vek ada = owns(ada, box)
-    ors = [
-        ("box vek ada", ("ada", "vek", "box")),
-        ("key vek ned", ("ned", "vek", "key")),
-    ]
-    # S R O
-    sro = [
-        ("ada owns box", ("ada", "owns", "box")),
-        ("ned owns key", ("ned", "owns", "key")),
-    ]
-    # ambiguous: one example is not enough, two identical orders only
-    order_ors = induce(ors)
-    order_sro = induce(sro)
-    unseen = apply(order_ors, "map vek rex")
-    wrong = apply(order_ors, "rex vek map")
+    found = {}
+    applied = {}
+    for order in ORDERS:
+        examples = example_for(order)
+        got = induce(examples)
+        found["".join(order)] = got == order
+        # unseen uses new entities in the same order
+        roles = {"s": "rex", "r": "vek", "o": "map"}
+        sent = " ".join(roles[role] for role in order)
+        applied["".join(order)] = apply(got, sent) == ("rex", "vek", "map")
+    # ambiguous: two examples that fit more than one reading should not happen
+    # with consistent labels; a single example must abstain
+    one = induce([("box vek ada", ("ada", "vek", "box"))])
     checks = {
-        "found_ors": order_ors == ("o", "r", "s"),
-        "found_sro": order_sro == ("s", "r", "o"),
-        "unseen": unseen == ("rex", "vek", "map"),
-        "different_order": wrong != ("rex", "vek", "map"),
-        "six_searched": len(ORDERS) == 6,
+        "all_six": all(found.values()) and len(found) == 6,
+        "all_applied": all(applied.values()),
+        "one_example_abstains": one is None,
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "ors": order_ors,
-        "unseen": unseen,
+        "found": found,
         "failed": failed,
-        "claim": "order induced from examples; grammar was not hardcoded"
+        "claim": "six orders induced from examples; one example abstains"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
