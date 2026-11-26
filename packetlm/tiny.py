@@ -2,7 +2,7 @@
 
 Pure Python. No torch. Trains on the runner.
 Token embeddings, two attention layers with residual skip, next-token head.
-Context is longer. Training is longer.
+Loads saved weights if present and saves after training so runs accumulate.
 """
 
 from __future__ import annotations
@@ -11,6 +11,7 @@ import math
 import random
 from pathlib import Path
 from .train import load_corpus, window_stories
+from .persist import load_into, save_from
 
 DIM = 32
 STEPS = 500
@@ -74,7 +75,6 @@ class TinyLM:
             for j, w in enumerate(weights):
                 for d in range(DIM):
                     out[i][d] += w * v[j][d]
-            # residual: keep the input token signal
             for d in range(DIM):
                 out[i][d] += x[i][d]
         return out
@@ -139,6 +139,7 @@ def run() -> dict:
     vocab = build_vocab(windows)
     inv = {i: t for t, i in vocab.items()}
     model = TinyLM(len(vocab))
+    loaded = load_into(model)
     pairs = []
     for w in windows:
         toks = tokenize(w)
@@ -154,6 +155,8 @@ def run() -> dict:
         ctx, tgt = random.choice(pairs)
         losses.append(model.step(ctx, tgt))
     after = holdout_score(model, holdout, vocab, inv)
+    if after >= before:
+        save_from(model)
     prompt = tokenize(windows[0])[:4] if windows else ["one"]
     gen = [inv.get(i, "<unk>") for i in model.generate(ids(prompt, vocab), steps=8)]
     receipt = {
@@ -162,6 +165,8 @@ def run() -> dict:
         "context": CTX,
         "layers": 2,
         "residual": True,
+        "loaded": loaded,
+        "saved": after >= before,
         "steps": STEPS,
         "mean_loss": round(sum(losses) / max(len(losses), 1), 4),
         "holdout_before": round(before, 3),
@@ -169,7 +174,7 @@ def run() -> dict:
         "improved": after > before,
         "prompt": prompt,
         "generated": gen,
-        "claim": "residual attention and longer training; still tiny, not a general language model"
+        "claim": "weights persist across runs when holdout does not fall; still tiny, not a general language model"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/tiny_receipt.json").write_text(json.dumps(receipt, indent=2))
