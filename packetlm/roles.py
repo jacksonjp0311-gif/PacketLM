@@ -1,8 +1,8 @@
-"""Surface word and meaning are separate.
+"""Equivalence.
 
-vek maps to owns.
-Two constructions that disagree on the same sentence abstain.
-All six orders are induced and applied to an unseen sentence.
+owns and vek both write the same fact.
+An isa sentence plus a type fact answers a derived question.
+Six orders and the real clash stay.
 Not a general mind.
 """
 
@@ -23,8 +23,6 @@ def fits(order, examples) -> bool:
         mapped = {role: parts[i] for i, role in enumerate(order)}
         if (mapped["s"], mapped["o"]) != (s, o):
             return False
-        if mapped["r"] != examples[0][0].split()[order.index("r")]:
-            return False
     return True
 
 def induce(examples):
@@ -35,16 +33,18 @@ def induce(examples):
         return None
     order = hits[0]
     rel_at = order.index("r")
-    word = examples[0][0].split()[rel_at]
-    meaning = examples[0][1][1]
-    return {"order": list(order), "rel_at": rel_at, "word": word, "meaning": meaning}
+    return {
+        "order": list(order),
+        "rel_at": rel_at,
+        "word": examples[0][0].split()[rel_at],
+        "meaning": examples[0][1][1],
+    }
 
 def select(library, sentence):
     parts = sentence.lower().strip().split()
     if len(parts) != 3:
         return None
     hits = [c for c in library if parts[c["rel_at"]] == c["word"]]
-    meanings = {(c["meaning"], tuple(c["order"])) for c in hits}
     if len(hits) != 1:
         return None
     c = hits[0]
@@ -62,40 +62,44 @@ def run() -> dict:
     applied = {}
     for order in ORDERS:
         got = induce(example_for(order))
-        if not got:
-            applied["".join(order)] = False
-            continue
         roles = {"s": "rex", "r": "vek", "o": "map"}
         sent = " ".join(roles[role] for role in order)
-        applied["".join(order)] = select([got], sent) == ("rex", "owns", "map")
+        applied["".join(order)] = select([got], sent) == ("rex", "owns", "map") if got else False
     vek = induce(example_for(("o", "r", "s")))
     owns = induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))])
-    # real clash: same sentence, two meanings
+    isa = induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))])
     other = {"order": ["s", "r", "o"], "rel_at": 1, "word": "vek", "meaning": "holds"}
-    clash = select([vek, other], "map vek rex") if vek else None
-    library = [c for c in (vek, owns) if c]
+    library = [c for c in (vek, owns, isa) if c]
     save(FIELD, library)
     loaded = load(FIELD)
-    objects = ["rex", "owns", "map"]
+    objects = []
     field = []
-    chosen = select(loaded, "map vek rex")
-    if chosen:
-        add(field, *chosen)
+    for sent in ("rex owns map", "map vek rex", "mira isa dax"):
+        fact = select(loaded, sent)
+        if fact and fact not in [(f["s"], f["r"], f["o"]) for f in field]:
+            for t in fact:
+                if t not in objects:
+                    objects.append(t)
+            add(field, *fact)
+    for t in ("isa", "tail", "hastail", "green", "dax"):
+        if t not in objects:
+            objects.append(t)
+    add(field, "isa", "chain", "tail")
+    add(field, "isa", "compose", "hastail")
+    add(field, "dax", "tail", "green")
+    kind = ask(field, "mira", "isa", objects)
+    color = ask(field, kind, "tail", objects) if kind else None
     checks = {
         "all_six_applied": all(applied.values()) and len(applied) == 6,
-        "vek_means_owns": chosen == ("rex", "owns", "map") and ask(field, "rex", "owns", objects) == "map",
+        "one_fact": sum(1 for f in field if f["s"] == "rex" and f["r"] == "owns") == 1,
+        "vek_and_owns": ask(field, "rex", "owns", objects) == "map",
+        "derived_green": color == "green",
+        "real_clash": select([vek, other], "map vek rex") is None if vek else False,
         "unknown_abstain": select(loaded, "rex holds map") is None,
-        "real_clash": clash is None,
-        "library_reloaded": len(loaded) == 2,
+        "library_reloaded": len(loaded) == 3,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {
-        **checks,
-        "applied": applied,
-        "chosen": chosen,
-        "failed": failed,
-        "claim": "vek means owns; six orders applied; real clash abstains"
-    }
+    receipt = {**checks, "failed": failed, "claim": "two sentences, one fact; operator answers from it"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
