@@ -1,8 +1,7 @@
-"""Correction is a sentence.
+"""Reload and answer. No retrain.
 
-'correct dax tail green' replaces the tail.
-The operator answer changes. Owns stays.
-Six orders and causality stay.
+Library and facts are saved, then loaded.
+The operator still answers. Owns still there.
 Not a general mind.
 """
 
@@ -13,7 +12,8 @@ from pathlib import Path
 from .field import add, ask, save, load
 
 ORDERS = list(permutations(["s", "r", "o"]))
-FIELD = Path("data/roles_field.json")
+LIB = Path("data/roles_field.json")
+FACTS = Path("data/roles_facts.json")
 
 def fits(order, examples) -> bool:
     for sent, (s, r, o) in examples:
@@ -61,21 +61,13 @@ def correct(field, sentence):
     add(field, s, r, o)
     return field
 
-def example_for(order):
-    return [(" ".join({"s": s, "r": r, "o": o}[role] for role in order), (s, "owns", o)) for s, r, o in [("ada", "vek", "box"), ("ned", "vek", "key")]]
-
 def run() -> dict:
-    applied = {}
-    for order in ORDERS:
-        got = induce(example_for(order))
-        roles = {"s": "rex", "r": "vek", "o": "map"}
-        applied["".join(order)] = select([got], " ".join(roles[role] for role in order)) == ("rex", "owns", "map") if got else False
-    vek = induce(example_for(("o", "r", "s")))
+    vek = induce([("box vek ada", ("ada", "owns", "box")), ("key vek ned", ("ned", "owns", "key"))])
     owns = induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))])
     isa = induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))])
     library = [c for c in (vek, owns, isa) if c]
-    save(FIELD, library)
-    loaded = load(FIELD)
+    save(LIB, library)
+    loaded = load(LIB)
     objects = ["isa", "tail", "hastail", "blue", "green", "dax"]
     field = []
     for fact in (select(loaded, "rex owns map"), select(loaded, "map vek rex"), select(loaded, "mira isa dax")):
@@ -87,20 +79,19 @@ def run() -> dict:
     add(field, "isa", "chain", "tail")
     add(field, "isa", "compose", "hastail")
     add(field, "dax", "tail", "blue")
-    before = through_operator(field, "mira", objects)
     field = correct(field, "correct dax tail green")
-    after = through_operator(field, "mira", objects)
+    save(FACTS, field)
+    facts = load(FACTS)
     checks = {
-        "all_six_applied": all(applied.values()) and len(applied) == 6,
-        "before_blue": before == "blue",
-        "corrected_green": after == "green",
-        "owns_kept": ask(field, "rex", "owns", objects) == "map",
-        "operator_causal": through_operator([f for f in field if f["r"] != "compose"], "mira", objects) is None,
+        "corrected_green": through_operator(facts, "mira", objects) == "green",
+        "owns_kept": ask(facts, "rex", "owns", objects) == "map",
+        "operator_causal": through_operator([f for f in facts if f["r"] != "compose"], "mira", objects) is None,
         "unknown_abstain": select(loaded, "rex holds map") is None,
+        "reloaded_facts": len(facts) == len(field),
         "library_reloaded": len(loaded) == 3,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "correction sentence revises the tail; suite retained"}
+    receipt = {**checks, "failed": failed, "claim": "answered after reload; no retrain"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
