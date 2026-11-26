@@ -139,7 +139,7 @@ def run() -> dict:
     vocab = build_vocab(windows)
     inv = {i: t for t, i in vocab.items()}
     model = TinyLM(len(vocab))
-    loaded = load_into(model)
+    loaded = load_into(model, DIM)
     pairs = []
     for w in windows:
         toks = tokenize(w)
@@ -156,7 +156,7 @@ def run() -> dict:
         losses.append(model.step(ctx, tgt))
     after = holdout_score(model, holdout, vocab, inv)
     if after >= before:
-        save_from(model)
+        save_from(model, DIM)
     prompt = tokenize(windows[0])[:4] if windows else ["one"]
     gen = [inv.get(i, "<unk>") for i in model.generate(ids(prompt, vocab), steps=8)]
     receipt = {
