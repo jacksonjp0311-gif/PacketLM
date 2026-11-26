@@ -43,6 +43,15 @@ jobs:
         with:
           name: packetlm-embed-receipt
           path: artifacts/embed_receipt.json
+      - name: Held-out probe
+        if: always()
+        run: python -m packetlm.transfer_probe
+      - name: Upload held-out probe receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-transfer-probe-receipt
+          path: artifacts/transfer_probe_receipt.json
       - name: Self-edit
         if: always()
         run: python -m packetlm.selfedit
