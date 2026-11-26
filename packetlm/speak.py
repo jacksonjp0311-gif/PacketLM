@@ -1,35 +1,33 @@
-"""Language on the route.
+"""Language on the route, held to the fact.
 
 The walk picks the packet.
-That packet's weights generate the next tokens.
-The route decides. The packet speaks.
-Not a general mind.
+The packet generates.
+If the generation misses the surplus, the surplus is spoken.
+The route decides. The fact is what is said. Not a general mind.
 """
 
 from __future__ import annotations
 import json
 import random
 from pathlib import Path
-from .tiny import TinyLM, tokenize, build_vocab, ids
+from .tiny import tokenize, build_vocab, ids
 from .train import load_corpus, window_stories
-from .nodes import tokens
-from .context import load_store, save_store, bump, blank_packet, activate, write_back, train_on_query
-from .geometry import content, ensure, walk
+from .context import load_store, save_store, bump, activate, write_back, train_on_query
+from .geometry import ensure, walk
 
-STOP = {"the", "a", "an", "in", "on", "at", "of", "to", "and", "before", "did", "what", "can", "with", "make", "makes"}
-
-def speak(store, name, prompt, vocab, inv) -> list[str]:
+def speak(store, name, prompt, vocab, inv, surplus) -> tuple[list[str], bool]:
     model = activate(store, name)
-    train_on_query(model, prompt, vocab, steps=20)
     preferred = " ".join(store["packets"][name].get("preferred") or [])
-    if preferred:
-        train_on_query(model, preferred, vocab, steps=12)
+    for _ in range(3):
+        train_on_query(model, preferred or prompt, vocab, steps=24)
     gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(prompt), vocab) or [1], steps=6)]
     write_back(store, name, model)
-    return gen
+    if any(t in gen for t in surplus):
+        return gen, False
+    return surplus[:6], True
 
 def run() -> dict:
-    random.seed(24)
+    random.seed(25)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
@@ -41,6 +39,7 @@ def run() -> dict:
         ("dress", ["sew", "dress"], "sew makes a dress"),
         ("river", ["river", "cold", "stones"], "the river is cold and has stones"),
         ("dusk", ["dusk", "dark", "night"], "dusk is dark before night"),
+        ("traveler", ["traveler", "shelter", "night"], "a traveler needed shelter before night"),
     ]
     for name, keys, text in facts:
         ensure(store, name, keys, tokenize(text))
@@ -50,31 +49,35 @@ def run() -> dict:
         ("what can lily do with a needle", "sew"),
         ("what is in the river", "stones"),
         ("what is dusk", "dark"),
+        ("what did the traveler need", "shelter"),
+        ("what did lily find", "needle"),
     ]
     results = []
     for q, expected in questions:
         path = walk(q, store)
         if not path:
-            results.append({"q": q, "hit": False, "spoke": []})
+            results.append({"q": q, "hit": False})
             continue
         name = path[0]["packet"]
-        spoken = speak(store, name, q, vocab, inv)
-        flat = [t for step in path for t in step["surplus"]] + spoken
-        hit = expected in flat
+        surplus = path[0]["surplus"]
+        spoken, held = speak(store, name, q, vocab, inv, surplus)
+        hit = expected in spoken or expected in surplus
         bump(store, name, 0.1 if hit else -0.05)
         results.append({
             "q": q,
             "packet": name,
-            "surplus": path[0]["surplus"],
+            "surplus": surplus,
             "spoke": spoken,
+            "held": held,
             "hit": hit,
         })
     save_store(store)
     receipt = {
         "questions": len(questions),
-        "hits": sum(1 for r in results if r["hit"]),
+        "hits": sum(1 for r in results if r.get("hit")),
+        "held": sum(1 for r in results if r.get("held")),
         "results": results,
-        "claim": "route picks the packet; packet speaks; not a general mind"
+        "claim": "packet speaks surplus when generation misses; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/speak_receipt.json").write_text(json.dumps(receipt, indent=2))
