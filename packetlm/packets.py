@@ -8,8 +8,8 @@ BITS = 4096
 
 @dataclass
 class Packet:
-    bits: bytes          # packed bit vector, length BITS//8
-    count: int           # popcount
+    bits: bytes
+    count: int
     meta: dict | None = None
 
     def overlap(self, other: Packet) -> int:
@@ -29,28 +29,24 @@ class Packet:
         return Packet(bits=u.to_bytes(BITS // 8, "big"), count=bin(u).count("1"))
 
 def _token_bit(token: str) -> int:
-    """Deterministic bit index for a content token."""
     h = hashlib.sha256(token.lower().encode()).digest()
     return int.from_bytes(h[:2], "big") % BITS
 
 def hash_to_bits(text: str, seed: int = 0) -> Packet:
-    """Deterministic packet with token feature bits.
-    Any window containing a token will overlap that token's packet.
-    """
+    """Token features plus sentence features spread across all 4096 bits."""
     bits_int = 0
-    h = hashlib.sha256(f"{seed}:{text}".encode()).digest()
-    for i in range(0, min(len(h), 32)):
-        bits_int |= (1 << (h[i] % BITS))
+    digest = hashlib.sha256(f"{seed}:{text}".encode()).digest()
+    for i in range(8):
+        idx = int.from_bytes(digest[i * 2:(i * 2) + 2], "big") % BITS
+        bits_int |= 1 << idx
     for token in text.split():
         clean = "".join(c for c in token.lower() if c.isalnum())
         if clean:
-            bits_int |= (1 << _token_bit(clean))
+            bits_int |= 1 << _token_bit(clean)
     bits = bits_int.to_bytes(BITS // 8, "big")
-    count = bin(bits_int).count("1")
-    return Packet(bits=bits, count=count)
+    return Packet(bits=bits, count=bin(bits_int).count("1"))
 
 def identity_packet(token: str) -> Packet:
-    """One unique bit for a token. Residual injection of this packet is unambiguous."""
     bit = _token_bit(token)
     bits_int = 1 << bit
     return Packet(bits=bits_int.to_bytes(BITS // 8, "big"), count=1)
