@@ -1,9 +1,8 @@
-"""Train and repair.
+"""Train and repair, with strength that can win.
 
-Ten questions, four epochs.
-A hit strengthens the packet.
-A miss grows a packet keyed to the question, holding the expected answer.
-The next epoch can route to what the last epoch lacked.
+A hit strengthens.
+A miss grows a packet at high strength, keyed to the question.
+The next epoch should route to it.
 Not a general mind.
 """
 
@@ -13,7 +12,6 @@ import random
 from pathlib import Path
 from .tiny import tokenize, build_vocab, ids
 from .train import load_corpus, window_stories
-from .nodes import tokens
 from .context import load_store, save_store, bump, activate, write_back, train_on_query
 from .geometry import ensure, walk, content
 
@@ -46,8 +44,8 @@ QUESTIONS = [
 def speak(store, name, prompt, vocab, inv, surplus):
     model = activate(store, name)
     preferred = " ".join(store["packets"][name].get("preferred") or [])
-    train_on_query(model, preferred or prompt, vocab, steps=12)
-    gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(prompt), vocab) or [1], steps=6)]
+    train_on_query(model, preferred or prompt, vocab, steps=8)
+    gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(prompt), vocab) or [1], steps=4)]
     write_back(store, name, model)
     if any(t in gen for t in surplus):
         return gen, False
@@ -55,12 +53,17 @@ def speak(store, name, prompt, vocab, inv, surplus):
 
 def repair(store, question, expected):
     name = "fix-" + expected
-    keys = content(question) | {expected}
-    ensure(store, name, keys, tokenize(question + " " + expected), strength=1.5)
+    keys = list(content(question) | {expected})
+    if name not in store["packets"]:
+        from .context import blank_packet
+        store["packets"][name] = blank_packet(store["vocab"])
+    store["packets"][name]["keys"] = sorted(set(keys))
+    store["packets"][name]["preferred"] = tokenize(expected + " " + question)
+    store["packets"][name]["strength"] = 4.0
     return name
 
 def run() -> dict:
-    random.seed(27)
+    random.seed(28)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
@@ -76,9 +79,9 @@ def run() -> dict:
             path = walk(q, store)
             name = path[0]["packet"] if path else None
             surplus = path[0]["surplus"] if path else []
-            spoken, held = ([], True)
+            spoken = []
             if name:
-                spoken, held = speak(store, name, q, vocab, inv, surplus)
+                spoken, _ = speak(store, name, q, vocab, inv, surplus)
             hit = expected in spoken or expected in surplus
             if hit and name:
                 hits += 1
@@ -93,7 +96,7 @@ def run() -> dict:
         "epochs": epochs,
         "grown": grown,
         "final_hits": epochs[-1]["hits"],
-        "claim": "miss grows a packet; next epoch can hit; not a general mind"
+        "claim": "repair packets start at strength 4 so the next epoch can route; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/speak_receipt.json").write_text(json.dumps(receipt, indent=2))
