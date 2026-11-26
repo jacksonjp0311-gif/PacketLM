@@ -46,5 +46,77 @@
       "something"
     ],
     "strength": 1.36
+  },
+  {
+    "query": "what did Lily find",
+    "packet": "recall",
+    "grown": false,
+    "repeat": false,
+    "hit": [],
+    "generated": [
+      "did",
+      "lily",
+      "find",
+      "did",
+      "lily",
+      "find"
+    ],
+    "preferred": [
+      "did",
+      "lily",
+      "find",
+      "did",
+      "lily",
+      "find"
+    ],
+    "strength": 1.41
+  },
+  {
+    "query": "what did Lily find",
+    "packet": "recall",
+    "grown": false,
+    "repeat": true,
+    "hit": true,
+    "generated": [
+      "did",
+      "lily",
+      "find",
+      "did",
+      "lily",
+      "find"
+    ],
+    "preferred": [
+      "did",
+      "lily",
+      "find",
+      "did",
+      "lily",
+      "find"
+    ],
+    "strength": 1.56
+  },
+  {
+    "query": "a traveler needed shelter before night",
+    "packet": "language",
+    "grown": false,
+    "repeat": false,
+    "hit": [],
+    "generated": [
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>"
+    ],
+    "preferred": [
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>"
+    ],
+    "strength": 1.3
   }
 ]
