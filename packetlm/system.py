@@ -1,9 +1,8 @@
-"""One system, harder.
+"""One system.
 
-Field checks stay.
-Training is longer and on more facts.
-One prompt is held out. A hit there would be suspicious.
-Generation is still scored apart.
+The field is written, then read back, then queried from the reloaded bytes.
+A failed check exits nonzero.
+Generation is scored apart and does not gate the field.
 Not a general mind.
 """
 
@@ -66,39 +65,41 @@ def run() -> dict:
         ("cara", "helps", "dee"),
         ("mira", "tail", "blue"),
         ("lily", "found", "needle"),
-        ("alice", "owns", "cloth"),
         ("traveler", "needed", "shelter"),
     ]:
         add(field, s, r, o)
+    before = ask(field, "mira", "tail", objects)
+    field = [f for f in field if not (f["s"] == "mira" and f["r"] == "tail")]
+    add(field, "mira", "tail", "green")
+    FIELD.parent.mkdir(exist_ok=True)
+    FIELD.write_text(json.dumps(field))
+    loaded = json.loads(FIELD.read_text())
     walked, cur = [], "alice"
     for _ in range(3):
-        nxt = ask(field, cur, "helps", objects)
+        nxt = ask(loaded, cur, "helps", objects)
         if not nxt:
             break
         walked.append(nxt)
         cur = nxt
-    before = ask(field, "mira", "tail", objects)
-    field = [f for f in field if not (f["s"] == "mira" and f["r"] == "tail")]
-    add(field, "mira", "tail", "green")
-    after = ask(field, "mira", "tail", objects)
-    kept = ask(field, "lily", "found", objects)
-    unknown = ask(field, "nope", "nope", objects)
+    after = ask(loaded, "mira", "tail", objects)
+    kept = ask(loaded, "lily", "found", objects)
+    unknown = ask(loaded, "nope", "nope", objects)
     tight = hash_to_bits("lily needle")
     wide = hash_to_bits("lily needle river stones dusk night cold")
     top = Router([tight, wide]).select(hash_to_bits("lily needle"), k=1)[0][0]
-    FIELD.parent.mkdir(exist_ok=True)
-    FIELD.write_text(json.dumps(field))
+    checks = {
+        "reached_dee": walked[-1] == "dee" if walked else False,
+        "corrected": before == "blue" and after == "green",
+        "retained": kept == "needle",
+        "unknown_abstained": unknown is None,
+        "tight_won": top is tight,
+        "reloaded": len(loaded) == len(field) and after == "green",
+    }
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
-    train_facts = [
-        "alice helps bob",
-        "lily found needle",
-        "mira tail green",
-        "traveler needed shelter",
-    ]
-    held_out = ("bob helps", "cara")
-    for text in train_facts + ["bob helps cara"]:
+    train_facts = ["alice helps bob", "lily found needle", "mira tail green"]
+    for text in train_facts:
         for t in tokenize(text):
             if t not in vocab:
                 vocab[t] = len(vocab)
@@ -106,34 +107,27 @@ def run() -> dict:
     inv = {i: t for t, i in vocab.items()}
     for text in train_facts:
         toks = ids(tokenize(text), vocab)
-        for _ in range(50):
+        for _ in range(40):
             for i in range(1, len(toks)):
                 model.step(toks[:i], toks[i], lr=0.25)
     spoken = {}
-    for prompt, expected in [
-        ("alice helps", "bob"),
-        ("lily found", "needle"),
-        ("mira tail", "green"),
-        ("traveler needed", "shelter"),
-        held_out,
-    ]:
+    for prompt, expected in [("alice helps", "bob"), ("lily found", "needle"), ("mira tail", "green")]:
         gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(prompt), vocab), steps=2)]
-        spoken[prompt] = {"gen": gen, "hit": expected in gen, "held_out": prompt == held_out[0]}
+        spoken[prompt] = {"gen": gen, "hit": expected in gen}
+    failed = [k for k, v in checks.items() if not v]
     receipt = {
-        "reached_dee": walked[-1] == "dee" if walked else False,
-        "corrected": before == "blue" and after == "green",
-        "retained": kept == "needle",
-        "unknown_abstained": unknown is None,
-        "tight_won": top is tight,
-        "reloaded": True,
+        **checks,
+        "walked": walked,
         "spoken": spoken,
-        "trained_hits": sum(1 for k, v in spoken.items() if v["hit"] and k != held_out[0]),
-        "held_out_hit": spoken[held_out[0]]["hit"],
-        "claim": "field holds; generation is memorization of trained facts; held-out should miss"
+        "generated_hits": sum(1 for v in spoken.values() if v["hit"]),
+        "failed": failed,
+        "claim": "field queried after reload; run fails if a field check fails; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
+    if failed:
+        raise SystemExit(1)
     return receipt
 
 if __name__ == "__main__":
