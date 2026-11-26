@@ -338,5 +338,12 @@
       }
     ],
     "inferred": true
+  },
+  {
+    "question": "what can lily do with a needle",
+    "inferred": true,
+    "remembered": "infer-sew",
+    "follow": "lily sew",
+    "follow_got": true
   }
 ]
