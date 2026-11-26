@@ -1,7 +1,7 @@
 """Cumulative bridge.
 
-Concepts register when a fact is written.
-Question, correction, abstain, and learned owns all stay.
+Every written token is registered before it is asked.
+Question, correction, abstain, and learned owns stay.
 Not a general mind.
 """
 
@@ -23,6 +23,10 @@ def register(objects, *tokens):
     for t in tokens:
         if t not in objects:
             objects.append(t)
+
+def write(field, objects, s, r, o):
+    register(objects, s, r, o)
+    add(field, s, r, o)
 
 def learn_owns(examples):
     rels = set()
@@ -67,24 +71,20 @@ def ask_color(field, sentence, objects):
 def run() -> dict:
     objects = []
     field = []
-    register(objects, "isa", "tail", "hastail", "owns")
-    add(field, "isa", "chain", "tail")
-    add(field, "isa", "compose", "hastail")
-    register(objects, "mira", "dax", "green")
-    add(field, "mira", "isa", "dax")
-    add(field, "dax", "tail", "blue")
+    write(field, objects, "isa", "chain", "tail")
+    write(field, objects, "isa", "compose", "hastail")
+    write(field, objects, "mira", "isa", "dax")
+    write(field, objects, "dax", "tail", "blue")
     before = ask_color(field, "what color is mira tail?", objects)
     field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
-    add(field, "dax", "tail", "green")
-    examples = [
+    write(field, objects, "dax", "tail", "green")
+    pattern = learn_owns([
         ("ada owns box", ("ada", "owns", "box")),
         ("ned owns key", ("ned", "owns", "key")),
-    ]
-    pattern = learn_owns(examples)
+    ])
     unseen = apply_pattern(pattern, "rex owns map")
     if unseen:
-        register(objects, *unseen)
-        add(field, *unseen)
+        write(field, objects, *unseen)
     bad = apply_pattern(pattern, "rex holds map")
     save(FIELD, field)
     loaded = load(FIELD)
@@ -105,7 +105,7 @@ def run() -> dict:
     receipt = {
         **checks,
         "failed": failed,
-        "claim": "concepts registered on write; question, correction, and owns all present"
+        "claim": "every written token is registered; prior checks remain"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
