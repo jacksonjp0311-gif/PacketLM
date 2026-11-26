@@ -307,5 +307,36 @@
         ]
       }
     ]
+  },
+  {
+    "question": "what can lily do with a needle",
+    "hits": [
+      "recall",
+      "lily",
+      "needle"
+    ],
+    "composed": [
+      {
+        "packet": "recall",
+        "retrieved": [
+          "find",
+          "find"
+        ]
+      },
+      {
+        "packet": "lily",
+        "retrieved": [
+          "found"
+        ]
+      },
+      {
+        "packet": "needle",
+        "retrieved": [
+          "sew",
+          "cloth"
+        ]
+      }
+    ],
+    "inferred": true
   }
 ]
