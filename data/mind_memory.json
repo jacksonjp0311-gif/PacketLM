@@ -1,0 +1,50 @@
+[
+  {
+    "query": "what did Lily find",
+    "packet": "recall",
+    "grown": false,
+    "overlap": 3,
+    "repeat": false,
+    "generated": [
+      "brought",
+      "park.",
+      "button",
+      "fish",
+      "rain?",
+      "\"mom,"
+    ],
+    "strength": 1.21
+  },
+  {
+    "query": "a traveler needed shelter before night",
+    "packet": "language",
+    "grown": false,
+    "overlap": 1,
+    "repeat": false,
+    "generated": [
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>",
+      "<unk>"
+    ],
+    "strength": 1.25
+  },
+  {
+    "query": "what did Lily find",
+    "packet": "recall",
+    "grown": false,
+    "overlap": 3,
+    "repeat": true,
+    "generated": [
+      "brought",
+      "park.",
+      "shared",
+      "bigger.",
+      "mia",
+      "something"
+    ],
+    "strength": 1.36
+  }
+]
