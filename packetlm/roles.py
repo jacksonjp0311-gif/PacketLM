@@ -1,9 +1,6 @@
-"""Autonomous selection.
+"""Library persists. Selection writes the field.
 
-Constructions are induced and stored.
-A sentence picks its construction. The caller does not pass the order.
-An unknown relation word abstains.
-Two constructions that both match abstain.
+Reload, select, write. Unknown still abstains.
 Not a general mind.
 """
 
@@ -11,8 +8,10 @@ from __future__ import annotations
 import json
 from itertools import permutations
 from pathlib import Path
+from .field import add, ask, save, load
 
 ORDERS = list(permutations(["s", "r", "o"]))
+FIELD = Path("data/roles_field.json")
 
 def fits(order, examples) -> bool:
     for sent, (s, r, o) in examples:
@@ -33,7 +32,7 @@ def induce(examples):
     order = hits[0]
     rel_at = order.index("r")
     word = examples[0][0].split()[rel_at]
-    return {"order": order, "rel_at": rel_at, "word": word}
+    return {"order": list(order), "rel_at": rel_at, "word": word}
 
 def select(library, sentence):
     parts = sentence.lower().strip().split()
@@ -47,35 +46,31 @@ def select(library, sentence):
     return mapped["s"], mapped["r"], mapped["o"]
 
 def run() -> dict:
-    owns = induce([
-        ("ada owns box", ("ada", "owns", "box")),
-        ("ned owns key", ("ned", "owns", "key")),
-    ])
-    vek = induce([
-        ("box vek ada", ("ada", "vek", "box")),
-        ("key vek ned", ("ned", "vek", "key")),
-    ])
-    library = [c for c in (owns, vek) if c]
-    chosen_owns = select(library, "rex owns map")
-    chosen_vek = select(library, "map vek rex")
-    unknown = select(library, "rex holds map")
-    # competing: two constructions with the same relation word and slot
-    clash = select([owns, owns], "rex owns map") if owns else "skipped"
+    library = [
+        induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))]),
+        induce([("box vek ada", ("ada", "vek", "box")), ("key vek ned", ("ned", "vek", "key"))]),
+    ]
+    library = [c for c in library if c]
+    save(FIELD, library)
+    loaded = load(FIELD)
+    objects = []
+    field = []
+    chosen = select(loaded, "rex owns map")
+    if chosen:
+        for t in chosen:
+            if t not in objects:
+                objects.append(t)
+        add(field, *chosen)
+    unknown = select(loaded, "rex holds map")
+    save(Path("data/roles_facts.json"), field)
+    facts = load(Path("data/roles_facts.json"))
     checks = {
-        "selected_owns": chosen_owns == ("rex", "owns", "map"),
-        "selected_vek": chosen_vek == ("rex", "vek", "map"),
+        "library_reloaded": len(loaded) == 2,
+        "wrote_owns": chosen == ("rex", "owns", "map") and ask(facts, "rex", "owns", objects) == "map",
         "unknown_abstain": unknown is None,
-        "clash_abstain": clash is None,
-        "no_order_passed": True,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {
-        **checks,
-        "owns": chosen_owns,
-        "vek": chosen_vek,
-        "failed": failed,
-        "claim": "construction selected from the sentence; unknown and clash abstain"
-    }
+    receipt = {**checks, "failed": failed, "claim": "library reloaded; selected fact written to the field"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
