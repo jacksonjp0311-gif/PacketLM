@@ -21,7 +21,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Field geometry
+        run: python -m packetlm.geometry
+      - name: Upload geometry receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-geometry-receipt
+          path: artifacts/geometry_receipt.json
       - name: Field mind
+        if: always()
         run: python -m packetlm.mind
       - name: Upload mind receipt
         if: always()
