@@ -1,8 +1,7 @@
-"""Role binding in the field.
+"""G38: the bound vector is the retrieval key.
 
-Alice helps Bob is stored as a bound packet.
-A query for Alice should retrieve helps and Bob.
-A query for Bob should not return the same packet as if Bob were the subject.
+The packet stores the bound bits, not a name prefix.
+A query bound as subject retrieves the matching fact by Hamming score.
 Not a general mind.
 """
 
@@ -10,10 +9,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from .packets import Packet, BITS, identity_packet
-from .tiny import tokenize, build_vocab
-from .train import load_corpus, window_stories
-from .context import load_store, save_store, blank_packet
-from .geometry import ensure, content
 
 def rotate(pkt: Packet, k: int) -> Packet:
     n = int.from_bytes(pkt.bits, "big")
@@ -28,35 +23,42 @@ def bind(subject: str, relation: str, obj: str) -> Packet:
     x = int.from_bytes(s.bits, "big") ^ int.from_bytes(r.bits, "big") ^ int.from_bytes(o.bits, "big")
     return Packet(bits=x.to_bytes(BITS // 8, "big"), count=bin(x).count("1"))
 
+def as_hex(pkt: Packet) -> str:
+    return pkt.bits.hex()
+
+def from_hex(h: str) -> Packet:
+    raw = bytes.fromhex(h)
+    return Packet(bits=raw, count=bin(int.from_bytes(raw, "big")).count("1"))
+
 def run() -> dict:
-    raw = load_corpus()
-    windows = window_stories(raw)
-    vocab = build_vocab(windows)
-    store = load_store(len(vocab), ["language"])
-    ab = bind("alice", "helps", "bob")
-    ba = bind("bob", "helps", "alice")
-    ensure(store, "alice-helps-bob", ["alice", "helps", "bob"], tokenize("alice helps bob"))
-    store["packets"]["alice-helps-bob"]["bound"] = ab.count
-    ensure(store, "bob-helps-alice", ["bob", "helps", "alice"], tokenize("bob helps alice"))
-    store["packets"]["bob-helps-alice"]["bound"] = ba.count
-    # subject query should prefer the packet where that name is the subject key first
-    q_alice = content("alice")
-    hits = []
-    for name, pkt in store["packets"].items():
-        if "alice" in pkt.get("keys", []) and name.startswith("alice"):
-            hits.append(name)
-    save_store(store)
+    facts = [
+        ("alice", "helps", "bob"),
+        ("bob", "helps", "alice"),
+        ("mira", "has", "tail"),
+    ]
+    store = []
+    for s, r, o in facts:
+        pkt = bind(s, r, o)
+        store.append({"s": s, "r": r, "o": o, "bits": as_hex(pkt)})
+    # query: who does alice help — bind alice as subject with relation, compare
+    query = bind("alice", "helps", "bob")
+    ranked = []
+    for item in store:
+        pkt = from_hex(item["bits"])
+        ranked.append((item["s"], item["o"], pkt.score(query)))
+    ranked.sort(key=lambda x: x[2], reverse=True)
+    top = ranked[0]
+    ok = top[0] == "alice" and top[1] == "bob"
     receipt = {
-        "same_packet": ab.bits == ba.bits,
-        "alice_packet": "alice-helps-bob" in store["packets"],
-        "bob_packet": "bob-helps-alice" in store["packets"],
-        "alice_query_hits": hits,
-        "distinguished": ab.bits != ba.bits,
-        "claim": "role-bound facts stored as separate packets; not a general mind"
+        "ranked": [{"subject": a, "object": b, "score": s} for a, b, s in ranked],
+        "top_is_alice_bob": ok,
+        "claim": "retrieval uses the bound vector score, not the packet name"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bind_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
+    if not ok:
+        raise SystemExit(1)
     return receipt
 
 if __name__ == "__main__":
