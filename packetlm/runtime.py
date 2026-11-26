@@ -1,16 +1,15 @@
-"""Ask.
+"""Autonomous step.
 
-Two paths fit. The system names a subject where they disagree.
-The answer kills one.
+The environment holds the rule.
+The learner picks a subject where the paths disagree.
+It asks. One path dies.
 Not a general mind.
 """
 
 from __future__ import annotations
 import json
 from pathlib import Path
-from .field import add, ask, save, load
-
-STATE = Path("data/runtime_state.json")
+from .field import add, ask
 
 def candidates(field, examples, objects):
     rels = sorted({f["r"] for f in field})
@@ -39,53 +38,45 @@ def apply_path(field, path, subject, objects):
     mid = ask(field, subject, first, objects)
     return ask(field, mid, second, objects) if mid else None
 
-def distinguish(field, paths, subjects, objects):
-    """A subject where the paths predict different values."""
+def pick(field, paths, subjects, objects):
     for s in subjects:
         preds = {apply_path(field, p, s, objects) for p in paths}
         preds.discard(None)
         if len(preds) > 1:
-            return s, preds
-    return None, set()
+            return s
+    return None
 
 def run() -> dict:
-    objects = ["bearing", "motor", "machine", "gear", "pump", "line", "seal", "valve", "plant"]
-    field = []
-    for s, r, o in [
-        ("bearing", "in", "motor"), ("motor", "in", "machine"),
-        ("bearing", "near", "bench"), ("bench", "near", "wall"),
-        ("gear", "in", "pump"), ("pump", "in", "line"),
-        ("seal", "in", "valve"), ("valve", "in", "plant"),
-    ]:
-        add(field, s, r, o)
-    path = discover(field, [("bearing", "part", "machine"), ("gear", "part", "line")], objects)
-    # clean tie: no cross edges
-    tie = []
+    # hidden rule: p then p
+    env = []
     for s, r, o in [
         ("x", "p", "y"), ("y", "p", "z"),
         ("x", "q", "a"), ("a", "q", "z"),
         ("m", "p", "n"), ("n", "p", "w"),
         ("m", "q", "b"), ("b", "q", "nope"),
+        ("hold", "p", "mid"), ("mid", "p", "yes"),
     ]:
-        add(tie, s, r, o)
-    objs = objects + ["x", "y", "z", "a", "m", "n", "w", "b", "nope"]
-    both = candidates(tie, [("x", "out", "z")], objs)
-    question, preds = distinguish(tie, both, ["m"], objs)
-    after = candidates(tie, [("x", "out", "z"), ("m", "out", "w")], objs)
+        add(env, s, r, o)
+    objects = ["x", "y", "z", "a", "m", "n", "w", "b", "nope", "hold", "mid", "yes"]
+    live = candidates(env, [("x", "out", "z")], objects)
+    chosen = pick(env, live, ["m", "hold"], objects)
+    answer = apply_path(env, ("p", "p", "out"), chosen, objects) if chosen else None
+    after = candidates(env, [("x", "out", "z"), (chosen, "out", answer)], objects) if chosen else []
+    qualified = apply_path(env, after[0], "hold", objects) if len(after) == 1 else None
     checks = {
-        "chose_in": path == ("in", "in", "part"),
-        "oracle": apply_path(field, path, "seal", objects) == "plant",
-        "kept_both": set(tuple(p) for p in both) == {("p", "p", "out"), ("q", "q", "out")},
-        "asked_m": question == "m" and preds == {"w", "nope"},
-        "evidence_killed_q": after == [("p", "p", "out")],
+        "started_tied": set(map(tuple, live)) == {("p", "p", "out"), ("q", "q", "out")},
+        "picked": chosen == "m",
+        "asked_env": answer == "w",
+        "resolved": after == [("p", "p", "out")],
+        "qualified": qualified == "yes",
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "question": question,
-        "preds": sorted(preds),
+        "chosen": chosen,
+        "answer": answer,
         "failed": failed,
-        "claim": "system named the subject that separates the two paths"
+        "claim": "learner picked the question; environment answered; one path remained"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
