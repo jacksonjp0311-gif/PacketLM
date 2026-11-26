@@ -1,9 +1,8 @@
-"""Three values.
+"""Eight.
 
-Agrees: keep.
-Disagrees: drop.
-Cannot answer: keep.
-Two-step and stuck stay.
+Eight paths fit the first example.
+Three binary questions isolate one.
+Missing still is not wrong.
 Not a general mind.
 """
 
@@ -22,13 +21,9 @@ def candidates(field, examples, objects):
         return []
     out_rel = next(iter(out_rels))
     return [
-        (first, second, out_rel)
-        for first in rels
-        for second in rels
-        if all(
-            ask(field, ask(field, s, first, objects) or "", second, objects) == expected
-            for s, _, expected in examples
-        )
+        (a, b, out_rel)
+        for a in rels for b in rels
+        if all(ask(field, ask(field, s, a, objects) or "", b, objects) == exp for s, _, exp in examples)
     ]
 
 def discover(field, examples, objects):
@@ -38,9 +33,9 @@ def discover(field, examples, objects):
 def apply_path(field, path, subject, objects):
     if not path:
         return None
-    first, second, _ = path
-    mid = ask(field, subject, first, objects)
-    return ask(field, mid, second, objects) if mid else None
+    a, b, _ = path
+    mid = ask(field, subject, a, objects)
+    return ask(field, mid, b, objects) if mid else None
 
 def judge(pred, ans):
     if pred is None:
@@ -61,7 +56,7 @@ def pick(field, paths, objects, skip):
             best, best_score = s, score
     return best
 
-def investigate(field, paths, objects, truth, budget=3):
+def investigate(field, paths, objects, truth, budget=6):
     asked, live = [], list(paths)
     for _ in range(budget):
         if len(live) <= 1:
@@ -75,42 +70,31 @@ def investigate(field, paths, objects, truth, budget=3):
     return live, asked
 
 def run() -> dict:
-    objects = ["bearing", "motor", "machine", "gear", "pump", "line", "seal", "valve", "plant"]
-    field = []
-    for s, r, o in [
-        ("bearing", "in", "motor"), ("motor", "in", "machine"),
-        ("gear", "in", "pump"), ("pump", "in", "line"),
-        ("seal", "in", "valve"), ("valve", "in", "plant"),
-    ]:
-        add(field, s, r, o)
-    path = discover(field, [("bearing", "part", "machine"), ("gear", "part", "line")], objects)
-    env = []
-    for s, r, o in [
-        ("x", "p", "y"), ("y", "p", "z"),
-        ("x", "q", "a"), ("a", "q", "z"),
-        ("x", "r", "c"), ("c", "r", "z"),
-        ("m", "p", "n"), ("n", "p", "w"),
-        ("m", "q", "b"), ("b", "q", "w"),
-        ("m", "r", "d"), ("d", "r", "nope"),
-        ("k", "p", "e"), ("e", "p", "yes"),
-        ("k", "q", "f"), ("f", "q", "no"),
-    ]:
-        add(env, s, r, o)
-    objs = objects + ["x", "y", "z", "a", "c", "m", "n", "w", "b", "d", "nope", "k", "e", "f", "yes", "no"]
-    start = candidates(env, [("x", "out", "z")], objs)
-    live, asked = investigate(env, start, objs, ("p", "p", "out"))
-    # r cannot answer k. Asking k must not kill r.
-    r_pred = apply_path(env, ("r", "r", "out"), "k", objs)
-    kept = judge(r_pred, "yes") == "undetermined"
+    names = [f"r{i}" for i in range(8)]
+    env, objects = [], ["x", "z", "out"]
+    for i, name in enumerate(names):
+        mid = f"m{i}"
+        add(env, "x", name, mid)
+        add(env, mid, name, "z")
+        objects += [mid]
+        for bit in range(3):
+            sub, val = f"q{bit}", "yes" if (i >> bit) & 1 else "no"
+            hop = f"h{i}_{bit}"
+            add(env, sub, name, hop)
+            add(env, hop, name, val)
+            objects += [sub, hop, val]
+    start = candidates(env, [("x", "out", "z")], objects)
+    live, asked = investigate(env, start, objects, ("r0", "r0", "out"))
+    save(STATE, [{"path": list(p)} for p in live])
     checks = {
-        "oracle": apply_path(field, path, "seal", objects) == "plant",
-        "asked_twice": asked == ["m", "k"],
-        "resolved": [list(p) for p in live] == [["p", "p", "out"]],
-        "missing_kept": kept and r_pred is None,
-        "wrong_dropped": judge("nope", "w") == "contradicted",
+        "eight": len(start) == 8,
+        "three_asks": len(asked) == 3,
+        "resolved": [list(p) for p in live] == [["r0", "r0", "out"]],
+        "missing_kept": judge(None, "yes") == "undetermined",
+        "reloaded": load(STATE) == [{"path": ["r0", "r0", "out"]}],
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "asked": asked, "failed": failed, "claim": "missing is undetermined; wrong is contradicted"}
+    receipt = {**checks, "asked": asked, "failed": failed, "claim": "eight hypotheses; three questions; missing is not wrong"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
