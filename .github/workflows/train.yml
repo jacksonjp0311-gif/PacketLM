@@ -56,3 +56,12 @@ jobs:
         with:
           name: packetlm-roles-receipt
           path: artifacts/roles_receipt.json
+      - name: Runtime
+        if: always()
+        run: python -m packetlm.runtime
+      - name: Upload runtime receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-runtime-receipt
+          path: artifacts/runtime_receipt.json
