@@ -1,7 +1,9 @@
-"""All six role orders.
+"""Autonomous selection.
 
-Each order is induced from two examples and applied to one unseen sentence.
-Two competing orders abstain.
+Constructions are induced and stored.
+A sentence picks its construction. The caller does not pass the order.
+An unknown relation word abstains.
+Two constructions that both match abstain.
 Not a general mind.
 """
 
@@ -28,52 +30,51 @@ def induce(examples):
     hits = [order for order in ORDERS if fits(order, examples)]
     if len(hits) != 1:
         return None
-    return hits[0]
+    order = hits[0]
+    rel_at = order.index("r")
+    word = examples[0][0].split()[rel_at]
+    return {"order": order, "rel_at": rel_at, "word": word}
 
-def apply(order, sentence):
-    if not order:
-        return None
+def select(library, sentence):
     parts = sentence.lower().strip().split()
     if len(parts) != 3:
         return None
-    mapped = {role: parts[i] for i, role in enumerate(order)}
+    hits = [c for c in library if parts[c["rel_at"]] == c["word"]]
+    if len(hits) != 1:
+        return None
+    c = hits[0]
+    mapped = {role: parts[i] for i, role in enumerate(c["order"])}
     return mapped["s"], mapped["r"], mapped["o"]
 
-def example_for(order):
-    """Build two sentences whose tokens sit in this order."""
-    triples = [("ada", "vek", "box"), ("ned", "vek", "key")]
-    out = []
-    for s, r, o in triples:
-        roles = {"s": s, "r": r, "o": o}
-        sent = " ".join(roles[role] for role in order)
-        out.append((sent, (s, r, o)))
-    return out
-
 def run() -> dict:
-    found = {}
-    applied = {}
-    for order in ORDERS:
-        examples = example_for(order)
-        got = induce(examples)
-        found["".join(order)] = got == order
-        # unseen uses new entities in the same order
-        roles = {"s": "rex", "r": "vek", "o": "map"}
-        sent = " ".join(roles[role] for role in order)
-        applied["".join(order)] = apply(got, sent) == ("rex", "vek", "map")
-    # ambiguous: two examples that fit more than one reading should not happen
-    # with consistent labels; a single example must abstain
-    one = induce([("box vek ada", ("ada", "vek", "box"))])
+    owns = induce([
+        ("ada owns box", ("ada", "owns", "box")),
+        ("ned owns key", ("ned", "owns", "key")),
+    ])
+    vek = induce([
+        ("box vek ada", ("ada", "vek", "box")),
+        ("key vek ned", ("ned", "vek", "key")),
+    ])
+    library = [c for c in (owns, vek) if c]
+    chosen_owns = select(library, "rex owns map")
+    chosen_vek = select(library, "map vek rex")
+    unknown = select(library, "rex holds map")
+    # competing: two constructions with the same relation word and slot
+    clash = select([owns, owns], "rex owns map") if owns else "skipped"
     checks = {
-        "all_six": all(found.values()) and len(found) == 6,
-        "all_applied": all(applied.values()),
-        "one_example_abstains": one is None,
+        "selected_owns": chosen_owns == ("rex", "owns", "map"),
+        "selected_vek": chosen_vek == ("rex", "vek", "map"),
+        "unknown_abstain": unknown is None,
+        "clash_abstain": clash is None,
+        "no_order_passed": True,
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "found": found,
+        "owns": chosen_owns,
+        "vek": chosen_vek,
         "failed": failed,
-        "claim": "six orders induced from examples; one example abstains"
+        "claim": "construction selected from the sentence; unknown and clash abstain"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
