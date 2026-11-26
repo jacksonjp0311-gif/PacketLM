@@ -21,7 +21,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: G37 test
+        run: python -m packetlm.g37_test
+      - name: Upload G37 receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-g37-receipt
+          path: artifacts/g37_receipt.json
       - name: Role binding
+        if: always()
         run: python -m packetlm.bind
       - name: Upload bind receipt
         if: always()
@@ -47,12 +56,3 @@ jobs:
         with:
           name: packetlm-speak-receipt
           path: artifacts/speak_receipt.json
-      - name: Tiny next-token model
-        if: always()
-        run: python -m packetlm.tiny
-      - name: Upload tiny receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-tiny-receipt
-          path: artifacts/tiny_receipt.json
