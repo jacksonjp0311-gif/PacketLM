@@ -1,8 +1,9 @@
-"""Canonical field plus a composition rule.
+"""Correction that propagates.
 
-Ancestor is transitive. A walk may derive an unstored link.
-Helps is not. A walk is not a claim that Alice helps Dee.
-Failed field checks exit nonzero.
+Daxes have blue tails. Mira is a dax.
+Correct the type: daxes have green tails.
+Mira's tail is derived, not stored.
+Helps still does not compose.
 Not a general mind.
 """
 
@@ -12,13 +13,11 @@ from pathlib import Path
 from .field import add, ask, save, load
 from .packets import hash_to_bits
 from .router import Router
-from .tiny import TinyLM, tokenize, build_vocab, ids
-from .train import load_corpus, window_stories
 
 FIELD = Path("data/system_field.json")
 TRANSITIVE = {"ancestor"}
 
-def compose(field, start, relation, objects, steps=3) -> list[str]:
+def compose(field, start, relation, objects, steps=3):
     if relation not in TRANSITIVE:
         return []
     walked, cur = [], start
@@ -30,62 +29,51 @@ def compose(field, start, relation, objects, steps=3) -> list[str]:
         cur = nxt
     return walked
 
+def member_tail(field, name, objects) -> str | None:
+    kind = ask(field, name, "isa", objects)
+    if not kind:
+        return None
+    return ask(field, kind, "tail", objects)
+
 def run() -> dict:
-    objects = ["bob", "cara", "dee", "green", "needle", "ann", "bea", "cy"]
+    objects = ["bob", "cara", "dee", "cy", "dax", "blue", "green", "needle"]
     field = []
     for s, r, o in [
         ("ann", "ancestor", "bea"),
         ("bea", "ancestor", "cy"),
         ("alice", "helps", "bob"),
-        ("bob", "helps", "cara"),
+        ("dax", "tail", "blue"),
+        ("mira", "isa", "dax"),
+        ("orion", "isa", "dax"),
         ("lily", "found", "needle"),
-        ("mira", "tail", "green"),
     ]:
         add(field, s, r, o)
+    before = member_tail(field, "mira", objects)
+    field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
+    add(field, "dax", "tail", "green")
     save(FIELD, field)
     loaded = load(FIELD)
-    derived = compose(loaded, "ann", "ancestor", objects)
-    helps_composed = compose(loaded, "alice", "helps", objects)
-    kept = ask(loaded, "lily", "found", objects)
-    unknown = ask(loaded, "nope", "nope", objects)
+    after_mira = member_tail(loaded, "mira", objects)
+    after_orion = member_tail(loaded, "orion", objects)
+    checks = {
+        "before_blue": before == "blue",
+        "mira_green": after_mira == "green",
+        "orion_green": after_orion == "green",
+        "derived_cy": compose(loaded, "ann", "ancestor", objects)[-1:] == ["cy"],
+        "helps_not_composed": compose(loaded, "alice", "helps", objects) == [],
+        "retained": ask(loaded, "lily", "found", objects) == "needle",
+        "reloaded": len(loaded) == len(field),
+        "tight_won": Router([hash_to_bits("lily needle"), hash_to_bits("lily needle river stones")]).select(hash_to_bits("lily needle"), 1)[0][0] is not None,
+    }
+    # tight check properly
     tight = hash_to_bits("lily needle")
     wide = hash_to_bits("lily needle river stones dusk")
-    top = Router([tight, wide]).select(hash_to_bits("lily needle"), k=1)[0][0]
-    checks = {
-        "derived_cy": derived[-1] == "cy" if derived else False,
-        "helps_not_composed": helps_composed == [],
-        "retained": kept == "needle",
-        "unknown_abstained": unknown is None,
-        "tight_won": top is tight,
-        "reloaded": len(loaded) == len(field),
-    }
-    raw = load_corpus()
-    windows = window_stories(raw)
-    vocab = build_vocab(windows)
-    train_facts = ["lily found needle", "mira tail green"]
-    for text in train_facts:
-        for t in tokenize(text):
-            if t not in vocab:
-                vocab[t] = len(vocab)
-    model = TinyLM(len(vocab))
-    inv = {i: t for t, i in vocab.items()}
-    for text in train_facts:
-        toks = ids(tokenize(text), vocab)
-        for _ in range(30):
-            for i in range(1, len(toks)):
-                model.step(toks[:i], toks[i], lr=0.25)
-    spoken = {}
-    for prompt, expected in [("lily found", "needle"), ("mira tail", "green")]:
-        gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(prompt), vocab), steps=2)]
-        spoken[prompt] = {"gen": gen, "hit": expected in gen}
+    checks["tight_won"] = Router([tight, wide]).select(hash_to_bits("lily needle"), 1)[0][0] is tight
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "derived": derived,
-        "spoken": spoken,
-        "generated_hits": sum(1 for v in spoken.values() if v["hit"]),
         "failed": failed,
-        "claim": "only transitive relations compose; helps does not; not a mind"
+        "claim": "type correction propagates to members; member tails were not rewritten"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
