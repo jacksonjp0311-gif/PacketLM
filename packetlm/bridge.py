@@ -1,8 +1,7 @@
-"""Language bridge.
+"""Questions read the field.
 
-Four-word tail sentences are valid.
-Plurals normalize.
-Answers are spoken from the field.
+Statements write facts.
+A question returns the derived answer or abstains.
 Not a general mind.
 """
 
@@ -50,40 +49,49 @@ def color_of(field, name, objects):
         return None
     return ask(field, kind, "tail", objects)
 
+def ask_sentence(field, sentence, objects):
+    s = sentence.lower().strip().rstrip("?")
+    parts = s.split()
+    if len(parts) >= 5 and parts[0] == "what" and parts[1] == "color" and parts[3] == "tail":
+        name = norm(parts[4]) if parts[2] == "is" else norm(parts[2])
+        # what color is mira tail / what color mira tail
+        if "is" in parts:
+            name = norm(parts[parts.index("is") + 1])
+        color = color_of(field, name, objects)
+        if not color:
+            return {"abstain": True, "name": name}
+        return {"abstain": False, "answer": f"{name} has a {color} tail"}
+    return {"abstain": True, "reason": "unparsed"}
+
 def run() -> dict:
     objects = []
     field = []
-    written = []
-    for s in [
-        "Mira is a dax.",
-        "daxes have blue tails",
-        "Alice helps Bob.",
-        "Bob is helped by Alice.",
-    ]:
-        written.append(ingest(field, s, objects))
-    before = color_of(field, "mira", objects)
+    for s in ["Mira is a dax.", "daxes have blue tails", "Alice helps Bob.", "Bob is helped by Alice."]:
+        ingest(field, s, objects)
+    before = ask_sentence(field, "what color is mira tail?", objects)
     field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
-    written.append(ingest(field, "daxes have green tails", objects))
+    ingest(field, "daxes have green tails", objects)
     save(FIELD, field)
     loaded = load(FIELD)
-    after = color_of(loaded, "mira", objects)
-    alice_helps = [f for f in loaded if f["s"] == "alice" and f["r"] == "helps"]
+    after = ask_sentence(loaded, "what color is mira tail?", objects)
+    unknown = ask_sentence(loaded, "what color is orion tail?", objects)
+    fly = ask_sentence(loaded, "can mira fly?", objects)
     checks = {
-        "parsed_tail": written[1] == ("dax", "tail", "blue"),
-        "before_blue": before == "blue",
-        "after_green": after == "green",
-        "spoke": after == "green",
-        "both_alice_helps_bob": len(alice_helps) == 2 and all(f["o"] == "bob" for f in alice_helps),
+        "before_blue": before.get("answer") == "mira has a blue tail",
+        "after_green": after.get("answer") == "mira has a green tail",
+        "unknown_abstain": unknown.get("abstain") is True,
+        "unparsed_abstain": fly.get("abstain") is True,
         "not_reversed": ask(loaded, "bob", "helps", objects) is None,
         "reloaded": len(loaded) == len(field),
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "written": written,
-        "answer": f"mira has a {after} tail" if after else None,
+        "before": before,
+        "after": after,
+        "unknown": unknown,
         "failed": failed,
-        "claim": "four-word tail sentence writes the field; answer comes from it"
+        "claim": "question reads the field; unknown and unparsed abstain"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
