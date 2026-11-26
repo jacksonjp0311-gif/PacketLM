@@ -23,27 +23,18 @@ jobs:
           python-version: '3.12'
       - name: G37 test
         run: python -m packetlm.g37_test
-      - name: Upload G37 receipt
+      - name: Evolution pass
+        if: always()
+        run: python -m packetlm.evolve
+      - name: Upload evolve receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: packetlm-g37-receipt
-          path: artifacts/g37_receipt.json
+          name: packetlm-evolve-receipt
+          path: artifacts/evolve_receipt.json
       - name: Role binding
         if: always()
         run: python -m packetlm.bind
-      - name: Upload bind receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-bind-receipt
-          path: artifacts/bind_receipt.json
       - name: Unstored walk
         if: always()
         run: python -m packetlm.infer
-      - name: Upload infer receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-infer-receipt
-          path: artifacts/infer_receipt.json
