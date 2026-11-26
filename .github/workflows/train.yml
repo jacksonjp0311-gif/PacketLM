@@ -65,3 +65,12 @@ jobs:
         with:
           name: packetlm-runtime-receipt
           path: artifacts/runtime_receipt.json
+      - name: Chat
+        if: always()
+        run: python -m packetlm.chat
+      - name: Upload chat receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-chat-receipt
+          path: artifacts/chat_receipt.json
