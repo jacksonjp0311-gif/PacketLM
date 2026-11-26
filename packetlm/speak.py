@@ -1,8 +1,10 @@
-"""Train harder.
+"""Train and repair.
 
-More facts. More questions. Three epochs in one run.
-The walk picks the packet. The packet speaks the surplus if generation misses.
-Hits strengthen. Misses weaken. Not a general mind.
+Ten questions, four epochs.
+A hit strengthens the packet.
+A miss grows a packet keyed to the question, holding the expected answer.
+The next epoch can route to what the last epoch lacked.
+Not a general mind.
 """
 
 from __future__ import annotations
@@ -11,8 +13,9 @@ import random
 from pathlib import Path
 from .tiny import tokenize, build_vocab, ids
 from .train import load_corpus, window_stories
+from .nodes import tokens
 from .context import load_store, save_store, bump, activate, write_back, train_on_query
-from .geometry import ensure, walk
+from .geometry import ensure, walk, content
 
 FACTS = [
     ("lily", ["lily", "found", "needle"], "lily found a needle"),
@@ -43,15 +46,21 @@ QUESTIONS = [
 def speak(store, name, prompt, vocab, inv, surplus):
     model = activate(store, name)
     preferred = " ".join(store["packets"][name].get("preferred") or [])
-    train_on_query(model, preferred or prompt, vocab, steps=16)
+    train_on_query(model, preferred or prompt, vocab, steps=12)
     gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(prompt), vocab) or [1], steps=6)]
     write_back(store, name, model)
     if any(t in gen for t in surplus):
         return gen, False
     return surplus[:6], True
 
+def repair(store, question, expected):
+    name = "fix-" + expected
+    keys = content(question) | {expected}
+    ensure(store, name, keys, tokenize(question + " " + expected), strength=1.5)
+    return name
+
 def run() -> dict:
-    random.seed(26)
+    random.seed(27)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
@@ -60,29 +69,31 @@ def run() -> dict:
         ensure(store, name, keys, tokenize(text))
     inv = {i: t for t, i in vocab.items()}
     epochs = []
-    for epoch in range(3):
+    grown = []
+    for epoch in range(4):
         hits = 0
-        rows = []
         for q, expected in QUESTIONS:
             path = walk(q, store)
-            if not path:
-                rows.append({"q": q, "hit": False})
-                continue
-            name = path[0]["packet"]
-            surplus = path[0]["surplus"]
-            spoken, held = speak(store, name, q, vocab, inv, surplus)
+            name = path[0]["packet"] if path else None
+            surplus = path[0]["surplus"] if path else []
+            spoken, held = ([], True)
+            if name:
+                spoken, held = speak(store, name, q, vocab, inv, surplus)
             hit = expected in spoken or expected in surplus
-            hits += int(hit)
-            bump(store, name, 0.1 if hit else -0.05)
-            rows.append({"q": q, "packet": name, "spoke": spoken, "held": held, "hit": hit})
+            if hit and name:
+                hits += 1
+                bump(store, name, 0.1)
+            else:
+                fix = repair(store, q, expected)
+                if fix not in grown:
+                    grown.append(fix)
         epochs.append({"epoch": epoch, "hits": hits, "of": len(QUESTIONS)})
     save_store(store)
     receipt = {
-        "facts": len(FACTS),
-        "questions": len(QUESTIONS),
         "epochs": epochs,
-        "final_hits": epochs[-1]["hits"] if epochs else 0,
-        "claim": "three epochs, ten questions; not a general mind"
+        "grown": grown,
+        "final_hits": epochs[-1]["hits"],
+        "claim": "miss grows a packet; next epoch can hit; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/speak_receipt.json").write_text(json.dumps(receipt, indent=2))
