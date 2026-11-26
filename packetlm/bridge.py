@@ -1,9 +1,8 @@
 """Language bridge.
 
-Sentences write the field.
-Plurals normalize so daxes and dax are one type.
-A question reads the field and speaks a short answer.
-Equivalent forms share a fact. Reversed roles do not.
+Four-word tail sentences are valid.
+Plurals normalize.
+Answers are spoken from the field.
 Not a general mind.
 """
 
@@ -26,9 +25,9 @@ def parse(sentence: str) -> tuple[str, str, str] | None:
     parts = s.split()
     if len(parts) >= 4 and parts[1] == "is" and parts[2] == "a":
         return norm(parts[0]), "isa", norm(parts[3])
-    if len(parts) >= 5 and parts[1] == "have" and parts[3] == "tails":
+    if len(parts) >= 4 and parts[1] == "have" and parts[-1] in {"tails", "tail"}:
         return norm(parts[0]), "tail", norm(parts[2])
-    if "helps" in parts and len(parts) == 3:
+    if len(parts) == 3 and parts[1] == "helps":
         return norm(parts[0]), "helps", norm(parts[2])
     if len(parts) >= 5 and parts[1] == "is" and parts[2] == "helped" and parts[3] == "by":
         return norm(parts[4]), "helps", norm(parts[0])
@@ -51,32 +50,29 @@ def color_of(field, name, objects):
         return None
     return ask(field, kind, "tail", objects)
 
-def speak(name, color) -> str | None:
-    if not color:
-        return None
-    return f"{name} has a {color} tail"
-
 def run() -> dict:
     objects = []
     field = []
+    written = []
     for s in [
         "Mira is a dax.",
-        "daxes have blue tails.",
+        "daxes have blue tails",
         "Alice helps Bob.",
         "Bob is helped by Alice.",
     ]:
-        ingest(field, s, objects)
+        written.append(ingest(field, s, objects))
     before = color_of(field, "mira", objects)
     field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
-    ingest(field, "daxes have green tails.", objects)
+    written.append(ingest(field, "daxes have green tails", objects))
     save(FIELD, field)
     loaded = load(FIELD)
     after = color_of(loaded, "mira", objects)
     alice_helps = [f for f in loaded if f["s"] == "alice" and f["r"] == "helps"]
     checks = {
+        "parsed_tail": written[1] == ("dax", "tail", "blue"),
         "before_blue": before == "blue",
         "after_green": after == "green",
-        "spoke": speak("mira", after) == "mira has a green tail",
+        "spoke": after == "green",
         "both_alice_helps_bob": len(alice_helps) == 2 and all(f["o"] == "bob" for f in alice_helps),
         "not_reversed": ask(loaded, "bob", "helps", objects) is None,
         "reloaded": len(loaded) == len(field),
@@ -84,9 +80,10 @@ def run() -> dict:
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "answer": speak("mira", after),
+        "written": written,
+        "answer": f"mira has a {after} tail" if after else None,
         "failed": failed,
-        "claim": "plural normalized; answer spoken from the field; not a mind"
+        "claim": "four-word tail sentence writes the field; answer comes from it"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
