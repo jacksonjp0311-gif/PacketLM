@@ -1,9 +1,10 @@
-"""Mind loop: compose across packets.
+"""Mind loop: infer across packets.
 
-Two facts are grown into two packets.
-A query that overlaps both activates both.
-The answer is the surplus from each.
-Composition, not a single echo. Not a general mind.
+Two facts live in two packets.
+A question overlaps both.
+The answer is a token that is in neither the question nor one packet alone
+in a way the question already said. It must come from the composition.
+Not a general mind.
 """
 
 from __future__ import annotations
@@ -16,7 +17,7 @@ from .nodes import tokens
 from .context import load_store, save_store, bump, blank_packet
 
 MEMORY = Path("data/mind_memory.json")
-STOP = {"the", "a", "an", "in", "on", "at", "of", "to", "and", "before", "did", "what"}
+STOP = {"the", "a", "an", "in", "on", "at", "of", "to", "and", "before", "did", "what", "can"}
 
 def content(text: str) -> set[str]:
     return {t for t in tokens(text) if t not in STOP}
@@ -38,42 +39,45 @@ def ensure(store: dict, name: str, keys: list[str], preferred: list[str]) -> Non
 
 def activate_many(query: str, store: dict) -> list[str]:
     q = content(query)
-    hits = []
-    for name, pkt in store["packets"].items():
-        if len(set(pkt.get("keys", [])) & q) >= 1 and name != "language":
-            hits.append(name)
-    return hits
+    return [
+        name for name, pkt in store["packets"].items()
+        if name != "language" and len(set(pkt.get("keys", [])) & q) >= 1
+    ]
 
 def surplus(preferred: list[str], query: str) -> list[str]:
     q = set(tokenize(query))
     return [t for t in preferred if t not in q and t not in STOP]
 
 def run() -> dict:
-    random.seed(19)
+    random.seed(20)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
     store = load_store(len(vocab), ["language"])
-    ensure(store, "stones", ["stones", "river", "cold"], tokenize("count the stones in the cold river at dusk"))
-    ensure(store, "dusk", ["dusk", "night", "dark"], tokenize("dusk means the dark before night"))
-    query = "stones in the river at dusk"
-    hits = activate_many(query, store)
+    ensure(store, "lily", ["lily", "found", "needle"], tokenize("lily found a needle"))
+    ensure(store, "needle", ["needle", "sew", "cloth"], tokenize("a needle can sew cloth"))
+    question = "what can lily do with a needle"
+    expected = "sew"
+    hits = activate_many(question, store)
     composed = []
     for name in hits:
-        extra = surplus(store["packets"][name].get("preferred") or [], query)
+        extra = surplus(store["packets"][name].get("preferred") or [], question)
         if extra:
             composed.append({"packet": name, "retrieved": extra})
             bump(store, name, 0.2)
+    flat = [t for c in composed for t in c["retrieved"]]
+    inferred = expected in flat
     save_store(store)
     memory = load_memory()
-    memory.append({"query": query, "hits": hits, "composed": composed})
+    memory.append({"question": question, "hits": hits, "composed": composed, "inferred": inferred})
     save_memory(memory)
     receipt = {
-        "query": query,
-        "packets_activated": hits,
+        "question": question,
+        "expected": expected,
+        "packets": hits,
         "composed": composed,
-        "composed_count": len(composed),
-        "claim": "one query activated more than one packet and returned surplus from each; composition, not a mind"
+        "inferred": inferred,
+        "claim": "answer came from composition of two packets; still not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/mind_receipt.json").write_text(json.dumps(receipt, indent=2))
