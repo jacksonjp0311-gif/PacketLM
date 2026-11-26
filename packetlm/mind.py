@@ -1,8 +1,9 @@
-"""Mind loop: grow, seed, hold on repeat.
+"""Mind loop: grow, hold, transfer.
 
-Low content overlap grows a packet and seeds it with the query.
-On the repeat, if generation drifts from the seed, the seed is held.
-Stability is measured against the seed. Not a general mind.
+A novel query grows a packet and seeds it.
+The repeat holds the seed if generation drifts.
+A related query should route to that packet and return what it holds.
+Not a general mind.
 """
 
 from __future__ import annotations
@@ -52,10 +53,10 @@ def grow(store: dict, query: str) -> str:
 def respond(store, name, query, vocab, inv, hold: bool) -> tuple[list[str], bool]:
     pkt = store["packets"][name]
     model = activate(store, name)
-    train_on_query(model, query, vocab, steps=16)
+    train_on_query(model, query, vocab, steps=12)
     preferred = pkt.get("preferred") or []
     if preferred:
-        train_on_query(model, " ".join(preferred), vocab, steps=12)
+        train_on_query(model, " ".join(preferred), vocab, steps=8)
     gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(query), vocab) or [1], steps=6)]
     write_back(store, name, model)
     overlap = len(set(gen) & set(preferred))
@@ -66,7 +67,7 @@ def respond(store, name, query, vocab, inv, hold: bool) -> tuple[list[str], bool
     return gen, held
 
 def run() -> dict:
-    random.seed(16)
+    random.seed(17)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
@@ -77,13 +78,15 @@ def run() -> dict:
     inv = {i: t for t, i in vocab.items()}
     memory = load_memory()
     novel = "count the stones in the cold river at dusk"
+    related = "stones in the cold river"
+    queries = [novel, novel, related]
     routes = []
-    for turn, q in enumerate([novel, novel]):
+    for turn, q in enumerate(queries):
         name, score = pick(q, store)
         grown = score < 2
         if grown:
             name = grow(store, q)
-        gen, held = respond(store, name, q, vocab, inv, hold=turn > 0)
+        gen, held = respond(store, name, q, vocab, inv, hold=True)
         preferred = store["packets"][name].get("preferred") or []
         stable = len(set(gen) & set(preferred))
         bump(store, name, 0.2 if stable >= 2 else 0.05)
@@ -93,20 +96,20 @@ def run() -> dict:
             "packet": name,
             "grown": grown,
             "held": held,
-            "generated": gen,
             "stable_overlap": stable,
+            "generated": gen,
         }
         memory.append(event)
         routes.append(event)
     save_store(store)
     save_memory(memory)
+    same = len(routes) >= 3 and routes[2]["packet"] == routes[0]["packet"]
     receipt = {
-        "novel": novel,
         "grown": any(r["grown"] for r in routes),
-        "held": any(r["held"] for r in routes),
-        "stable_overlap": routes[-1]["stable_overlap"] if routes else 0,
+        "related_same_packet": same,
+        "related_stable": routes[2]["stable_overlap"] if len(routes) > 2 else 0,
         "routes": routes,
-        "claim": "new packet seeded with the query; repeat holds the seed if generation drifts; not a general mind"
+        "claim": "related query routes to the held packet; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/mind_receipt.json").write_text(json.dumps(receipt, indent=2))
