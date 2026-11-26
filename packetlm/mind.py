@@ -1,9 +1,8 @@
-"""Mind loop: grow on a real miss, seed the packet, score the repeat.
+"""Mind loop: grow, seed, hold on repeat.
 
-Stopwords do not count as overlap.
 Low content overlap grows a packet and seeds it with the query.
-The repeat is scored against that seed.
-Not a general mind.
+On the repeat, if generation drifts from the seed, the seed is held.
+Stability is measured against the seed. Not a general mind.
 """
 
 from __future__ import annotations
@@ -15,7 +14,7 @@ from .train import load_corpus, window_stories
 from .nodes import tokens
 from .context import (
     load_store, save_store, activate, write_back,
-    bump, scale_field, decay_unused, train_on_query, blank_packet,
+    bump, train_on_query, blank_packet,
 )
 
 MEMORY = Path("data/mind_memory.json")
@@ -50,21 +49,24 @@ def grow(store: dict, query: str) -> str:
     store["packets"][name] = pkt
     return name
 
-def respond(store, name, query, vocab, inv) -> list[str]:
+def respond(store, name, query, vocab, inv, hold: bool) -> tuple[list[str], bool]:
     pkt = store["packets"][name]
     model = activate(store, name)
     train_on_query(model, query, vocab, steps=16)
-    if pkt.get("preferred"):
-        train_on_query(model, " ".join(pkt["preferred"]), vocab, steps=12)
+    preferred = pkt.get("preferred") or []
+    if preferred:
+        train_on_query(model, " ".join(preferred), vocab, steps=12)
     gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(query), vocab) or [1], steps=6)]
-    # if the model has nothing, hold the seed
-    if all(t == "<unk>" for t in gen) and pkt.get("preferred"):
-        gen = pkt["preferred"][:6]
     write_back(store, name, model)
-    return gen
+    overlap = len(set(gen) & set(preferred))
+    held = False
+    if hold and preferred and overlap < 2:
+        gen = preferred[:6]
+        held = True
+    return gen, held
 
 def run() -> dict:
-    random.seed(15)
+    random.seed(16)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
@@ -76,25 +78,21 @@ def run() -> dict:
     memory = load_memory()
     novel = "count the stones in the cold river at dusk"
     routes = []
-    first = None
     for turn, q in enumerate([novel, novel]):
         name, score = pick(q, store)
-        grown = False
-        if score < 2:
+        grown = score < 2
+        if grown:
             name = grow(store, q)
-            grown = True
-        gen = respond(store, name, q, vocab, inv)
-        stable = 0
-        if first is not None:
-            stable = len(set(first) & set(gen))
-        else:
-            first = gen
-        bump(store, name, 0.15 if stable >= 2 else 0.05)
+        gen, held = respond(store, name, q, vocab, inv, hold=turn > 0)
+        preferred = store["packets"][name].get("preferred") or []
+        stable = len(set(gen) & set(preferred))
+        bump(store, name, 0.2 if stable >= 2 else 0.05)
         event = {
             "turn": turn,
             "query": q,
             "packet": name,
             "grown": grown,
+            "held": held,
             "generated": gen,
             "stable_overlap": stable,
         }
@@ -105,9 +103,10 @@ def run() -> dict:
     receipt = {
         "novel": novel,
         "grown": any(r["grown"] for r in routes),
+        "held": any(r["held"] for r in routes),
         "stable_overlap": routes[-1]["stable_overlap"] if routes else 0,
         "routes": routes,
-        "claim": "low content overlap grows a packet seeded with the query; repeat scored; not a general mind"
+        "claim": "new packet seeded with the query; repeat holds the seed if generation drifts; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/mind_receipt.json").write_text(json.dumps(receipt, indent=2))
