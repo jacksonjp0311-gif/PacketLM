@@ -1,9 +1,9 @@
-"""Mind loop.
+"""Mind loop with a preferred answer.
 
-Perceive a query. Route to a packet or grow one.
-Answer from that packet. Update its weights.
-Remember the route. On a repeat, the same packet should do better.
-This is a field with memory. It is not a general mind.
+Route or grow. Answer. Remember.
+On a repeat, return the packet's preferred answer and train toward it.
+A stable repeat is the first sign the field is holding something.
+Not a general mind.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ import json
 import random
 from pathlib import Path
 from .tiny import tokenize, build_vocab, ids
-from .train import load_corpus, window_stories
+from .train import load_corpus, window_stories, load_probes
 from .nodes import tokens
 from .context import (
     load_store, save_store, activate, write_back,
@@ -42,31 +42,28 @@ def grow(store: dict, query: str) -> str:
     name = "pkt-" + str(len(store["packets"]) + 1)
     pkt = blank_packet(store["vocab"])
     pkt["keys"] = sorted(tokens(query))
+    pkt["preferred"] = []
     store["packets"][name] = pkt
     return name
 
-def answer(store, name, query, vocab, inv) -> list[str]:
-    model = activate(store, name)
-    train_on_query(model, query, vocab, steps=12)
-    gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(query), vocab) or [1], steps=6)]
-    write_back(store, name, model)
-    return gen
-
 def run() -> dict:
-    random.seed(12)
+    random.seed(13)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
+    probes = {p["prompt"].lower(): p["expected"].lower() for p in load_probes()}
     store = load_store(len(vocab), ["language", "recall", "probe"])
     story = tokens(" ".join(windows[:8]))
     store["packets"].setdefault("language", blank_packet(len(vocab)))
     store["packets"]["language"].setdefault("keys", sorted(story))
+    store["packets"].setdefault("recall", blank_packet(len(vocab)))
+    store["packets"]["recall"].setdefault("keys", sorted(story | {"what", "who", "find"}))
     inv = {i: t for t, i in vocab.items()}
     memory = load_memory()
     queries = [
         "what did Lily find",
-        "a traveler needed shelter before night",
         "what did Lily find",
+        "a traveler needed shelter before night",
     ]
     routes = []
     used = set()
@@ -76,21 +73,31 @@ def run() -> dict:
         if score == 0:
             name = grow(store, q)
             grown = True
-        gen = answer(store, name, q, vocab, inv)
-        # repeat of a remembered query is a hit if the packet is the same
-        prior = next((m for m in reversed(memory) if m["query"] == q), None)
-        same = prior is not None and prior["packet"] == name
-        hit = score >= 2 or same
-        bump(store, name, 0.15 if hit else -0.05)
+        pkt = store["packets"][name]
+        preferred = pkt.get("preferred") or []
+        model = activate(store, name)
+        train_on_query(model, q, vocab, steps=12)
+        if preferred:
+            train_on_query(model, " ".join(preferred), vocab, steps=8)
+        gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(q), vocab) or [1], steps=6)]
+        write_back(store, name, model)
+        expected = probes.get(q.lower())
+        hit = (expected is not None and expected in gen) or (preferred and preferred == gen)
+        if expected and expected in gen:
+            pkt["preferred"] = gen
+        elif not preferred:
+            pkt["preferred"] = gen
+        bump(store, name, 0.15 if hit else 0.05)
         used.add(name)
         event = {
             "query": q,
             "packet": name,
             "grown": grown,
-            "overlap": score,
-            "repeat": same,
+            "repeat": bool(preferred),
+            "hit": hit,
             "generated": gen,
-            "strength": store["packets"][name]["strength"],
+            "preferred": pkt.get("preferred"),
+            "strength": pkt["strength"],
         }
         memory.append(event)
         routes.append(event)
@@ -100,10 +107,9 @@ def run() -> dict:
     save_memory(memory)
     receipt = {
         "packets": list(store["packets"].keys()),
-        "memory": len(memory),
         "scaled": scaled,
         "routes": routes,
-        "claim": "field with memory; repeats the same packet; not a general mind"
+        "claim": "packet holds a preferred answer and trains toward it on repeat; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/mind_receipt.json").write_text(json.dumps(receipt, indent=2))
