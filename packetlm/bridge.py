@@ -1,10 +1,10 @@
 """Language bridge.
 
-A sentence writes a fact into the field.
-A question reads the field.
-Equivalent sentences must land on the same fact.
-Reversed roles must not.
-No transformer. Not a general mind.
+Sentences write the field.
+Plurals normalize so daxes and dax are one type.
+A question reads the field and speaks a short answer.
+Equivalent forms share a fact. Reversed roles do not.
+Not a general mind.
 """
 
 from __future__ import annotations
@@ -14,17 +14,24 @@ from .field import add, ask, save, load
 
 FIELD = Path("data/bridge_field.json")
 
+def norm(token: str) -> str:
+    if token.endswith("es") and len(token) > 4:
+        return token[:-2]
+    if token.endswith("s") and len(token) > 3:
+        return token[:-1]
+    return token
+
 def parse(sentence: str) -> tuple[str, str, str] | None:
     s = sentence.lower().strip().rstrip(".").rstrip("?")
     parts = s.split()
     if len(parts) >= 4 and parts[1] == "is" and parts[2] == "a":
-        return parts[0], "isa", parts[3]
+        return norm(parts[0]), "isa", norm(parts[3])
     if len(parts) >= 5 and parts[1] == "have" and parts[3] == "tails":
-        return parts[0], "tail", parts[2]
+        return norm(parts[0]), "tail", norm(parts[2])
     if "helps" in parts and len(parts) == 3:
-        return parts[0], "helps", parts[2]
+        return norm(parts[0]), "helps", norm(parts[2])
     if len(parts) >= 5 and parts[1] == "is" and parts[2] == "helped" and parts[3] == "by":
-        return parts[4], "helps", parts[0]
+        return norm(parts[4]), "helps", norm(parts[0])
     return None
 
 def ingest(field, sentence, objects):
@@ -44,40 +51,42 @@ def color_of(field, name, objects):
         return None
     return ask(field, kind, "tail", objects)
 
+def speak(name, color) -> str | None:
+    if not color:
+        return None
+    return f"{name} has a {color} tail"
+
 def run() -> dict:
     objects = []
     field = []
-    sentences = [
+    for s in [
         "Mira is a dax.",
         "daxes have blue tails.",
         "Alice helps Bob.",
         "Bob is helped by Alice.",
-    ]
-    written = [ingest(field, s, objects) for s in sentences]
-    # correction
-    field = [f for f in field if not (f["s"] == "daxes" and f["r"] == "tail")]
+    ]:
+        ingest(field, s, objects)
+    before = color_of(field, "mira", objects)
+    field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
     ingest(field, "daxes have green tails.", objects)
     save(FIELD, field)
     loaded = load(FIELD)
+    after = color_of(loaded, "mira", objects)
+    alice_helps = [f for f in loaded if f["s"] == "alice" and f["r"] == "helps"]
     checks = {
-        "mira_isa": ask(loaded, "mira", "isa", objects) == "dax",
-        "tail_green": ask(loaded, "daxes", "tail", objects) == "green",
-        "derived": color_of(loaded, "mira", objects) == "green",
-        "helps_once": sum(1 for f in loaded if f["r"] == "helps" and f["s"] == "alice") == 2,
-        "same_fact": ask(loaded, "alice", "helps", objects) == "bob",
-        "not_reversed": ask(loaded, "bob", "helps", objects) != "alice" or True,
+        "before_blue": before == "blue",
+        "after_green": after == "green",
+        "spoke": speak("mira", after) == "mira has a green tail",
+        "both_alice_helps_bob": len(alice_helps) == 2 and all(f["o"] == "bob" for f in alice_helps),
+        "not_reversed": ask(loaded, "bob", "helps", objects) is None,
         "reloaded": len(loaded) == len(field),
     }
-    # passive and active should both be alice helps bob
-    alice_helps = [f for f in loaded if f["s"] == "alice" and f["r"] == "helps"]
-    checks["both_alice_helps_bob"] = all(f["o"] == "bob" for f in alice_helps) and len(alice_helps) == 2
-    checks["not_reversed"] = ask(loaded, "bob", "helps", objects) is None
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "written": written,
+        "answer": speak("mira", after),
         "failed": failed,
-        "claim": "sentences write the field; equivalent forms share a fact; not a mind"
+        "claim": "plural normalized; answer spoken from the field; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
