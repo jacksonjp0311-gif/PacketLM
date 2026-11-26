@@ -1,9 +1,8 @@
-"""Iterative.
+"""Two steps, forced by coverage.
 
-First question kills r. p and q remain.
-The system asks again. One remains.
-If nothing can split them, it abstains.
-Oracle stays.
+A question counts only if every live path can answer it.
+k is invisible while r is alive.
+m is asked first. Then k.
 Not a general mind.
 """
 
@@ -21,15 +20,15 @@ def candidates(field, examples, objects):
     if len(out_rels) != 1:
         return []
     out_rel = next(iter(out_rels))
-    hits = []
-    for first in rels:
-        for second in rels:
-            if all(
-                ask(field, ask(field, s, first, objects) or "", second, objects) == expected
-                for s, _, expected in examples
-            ):
-                hits.append((first, second, out_rel))
-    return hits
+    return [
+        (first, second, out_rel)
+        for first in rels
+        for second in rels
+        if all(
+            ask(field, ask(field, s, first, objects) or "", second, objects) == expected
+            for s, _, expected in examples
+        )
+    ]
 
 def discover(field, examples, objects):
     hits = candidates(field, examples, objects)
@@ -42,24 +41,22 @@ def apply_path(field, path, subject, objects):
     mid = ask(field, subject, first, objects)
     return ask(field, mid, second, objects) if mid else None
 
-def split_score(preds):
-    counts = Counter(p for p in preds if p is not None)
-    return min(counts.values()) if len(counts) >= 2 else 0
-
 def pick(field, paths, objects, skip):
     best, best_score = None, 0
     for s in sorted({f["s"] for f in field}):
         if s in skip:
             continue
-        score = split_score([apply_path(field, p, s, objects) for p in paths])
+        preds = [apply_path(field, p, s, objects) for p in paths]
+        if any(p is None for p in preds):
+            continue
+        counts = Counter(preds)
+        score = min(counts.values()) if len(counts) >= 2 else 0
         if score > best_score:
             best, best_score = s, score
     return best
 
 def investigate(field, paths, objects, truth, budget=3):
-    examples = []
-    asked = []
-    live = list(paths)
+    examples, asked, live = [], [], list(paths)
     for _ in range(budget):
         if len(live) <= 1:
             break
@@ -97,7 +94,6 @@ def run() -> dict:
     objs = objects + ["x", "y", "z", "a", "c", "m", "n", "w", "b", "d", "nope", "k", "e", "f", "yes", "no"]
     start = candidates(env, [("x", "out", "z")], objs)
     live, asked = investigate(env, start, objs, ("p", "p", "out"))
-    # unresolvable: p and q agree everywhere we can ask
     stuck_field = []
     for s, r, o in [("x", "p", "y"), ("y", "p", "z"), ("x", "q", "a"), ("a", "q", "z")]:
         add(stuck_field, s, r, o)
@@ -113,7 +109,7 @@ def run() -> dict:
         "reloaded": load(STATE) == [{"path": ["p", "p", "out"]}],
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "asked": asked, "failed": failed, "claim": "two investigations; unresolvable abstains"}
+    receipt = {**checks, "asked": asked, "failed": failed, "claim": "coverage forces two questions; unresolvable abstains"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
