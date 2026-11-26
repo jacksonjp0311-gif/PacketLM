@@ -29,22 +29,13 @@ jobs:
         with:
           name: packetlm-mind-receipt
           path: artifacts/mind_receipt.json
-      - name: Context packets
-        if: always()
-        run: python -m packetlm.context
-      - name: Upload context receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-context-receipt
-          path: artifacts/context_receipt.json
-      - name: Commit field
+      - name: Commit field and memory
         if: always()
         run: |
           git config user.name "packetlm"
           git config user.email "packetlm@users.noreply.github.com"
-          git add data/context_packets.json || true
-          git diff --cached --quiet || git commit -m "Persist field from runner"
+          git add data/context_packets.json data/mind_memory.json || true
+          git diff --cached --quiet || git commit -m "Persist field and memory"
           git push || true
       - name: Tiny next-token model
         if: always()
@@ -73,21 +64,3 @@ jobs:
         with:
           name: packetlm-selfedit-receipt
           path: artifacts/selfedit_receipt.json
-      - name: Language-phase measurement
-        if: always()
-        run: python -m packetlm.train
-      - name: Upload training receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-language-receipt
-          path: artifacts/receipt.json
-      - name: Multi-token generation
-        if: always()
-        run: python -m packetlm.generate
-      - name: Upload generate receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-generate-receipt
-          path: artifacts/generate_receipt.json
