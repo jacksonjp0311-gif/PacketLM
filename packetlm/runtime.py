@@ -1,8 +1,8 @@
-"""Additive.
+"""Isolated query.
 
-Eight hypotheses, three questions.
-Seal oracle is back.
-Missing is not wrong.
+The learner asks a subject. The environment answers.
+The true path is not an argument.
+Oracle and eight stay.
 Not a general mind.
 """
 
@@ -56,7 +56,7 @@ def pick(field, paths, objects, skip):
             best, best_score = s, score
     return best
 
-def investigate(field, paths, objects, truth, budget=6):
+def investigate(field, paths, objects, query, budget=6):
     asked, live = [], list(paths)
     for _ in range(budget):
         if len(live) <= 1:
@@ -64,13 +64,12 @@ def investigate(field, paths, objects, truth, budget=6):
         q = pick(field, live, objects, set(asked))
         if not q:
             break
-        ans = apply_path(field, truth, q, objects)
+        ans = query(q)
         asked.append(q)
         live = [p for p in live if judge(apply_path(field, p, q, objects), ans) != "contradicted"]
     return live, asked
 
 def run() -> dict:
-    # oracle
     o_objects = ["bearing", "motor", "machine", "gear", "pump", "line", "seal", "valve", "plant"]
     o_field = []
     for s, r, o in [
@@ -80,7 +79,6 @@ def run() -> dict:
     ]:
         add(o_field, s, r, o)
     o_path = discover(o_field, [("bearing", "part", "machine"), ("gear", "part", "line")], o_objects)
-    # eight
     names = [f"r{i}" for i in range(8)]
     env, objects = [], ["x", "z", "out"]
     for i, name in enumerate(names):
@@ -94,19 +92,28 @@ def run() -> dict:
             add(env, sub, name, hop)
             add(env, hop, name, val)
             objects += [sub, hop, val]
+    hidden = ("r0", "r0", "out")
+
+    def query(subject):
+        return apply_path(env, hidden, subject, objects)
+
     start = candidates(env, [("x", "out", "z")], objects)
-    live, asked = investigate(env, start, objects, ("r0", "r0", "out"))
+    live, asked = investigate(env, start, objects, query)
+    # incomplete survives a real question
+    incomplete = ("missing", "missing", "out")
+    kept = judge(apply_path(env, incomplete, "q0", objects), query("q0")) == "undetermined"
     save(STATE, [{"path": list(p)} for p in live])
     checks = {
         "oracle": apply_path(o_field, o_path, "seal", o_objects) == "plant",
         "eight": len(start) == 8,
         "three_asks": len(asked) == 3,
         "resolved": [list(p) for p in live] == [["r0", "r0", "out"]],
-        "missing_kept": judge(None, "yes") == "undetermined",
+        "no_truth_arg": True,
+        "missing_in_question": kept,
         "reloaded": load(STATE) == [{"path": ["r0", "r0", "out"]}],
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "asked": asked, "failed": failed, "claim": "eight kept; oracle restored"}
+    receipt = {**checks, "asked": asked, "failed": failed, "claim": "learner queries; it does not receive the operator"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
