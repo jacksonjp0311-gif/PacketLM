@@ -275,5 +275,37 @@
       "count",
       "dusk"
     ]
+  },
+  {
+    "query": "stones in the river at dusk",
+    "hits": [
+      "pkt-4",
+      "stones",
+      "dusk"
+    ],
+    "composed": [
+      {
+        "packet": "pkt-4",
+        "retrieved": [
+          "count",
+          "cold"
+        ]
+      },
+      {
+        "packet": "stones",
+        "retrieved": [
+          "count",
+          "cold"
+        ]
+      },
+      {
+        "packet": "dusk",
+        "retrieved": [
+          "means",
+          "dark",
+          "night"
+        ]
+      }
+    ]
   }
 ]
