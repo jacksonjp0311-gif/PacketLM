@@ -1,8 +1,9 @@
-"""Propagation with a negative.
+"""Two types.
 
-Dax tails go green. Mira and Orion inherit.
-Sam is not a dax. Sam must not inherit green.
-Ancestor still walks to cy.
+Dax tails go green. Cat whiskers go long.
+Mira inherits green, not long.
+Sam inherits long, not green.
+Ancestor still reaches cy.
 Not a general mind.
 """
 
@@ -25,34 +26,33 @@ def walk(field, start, relation, objects, steps=3):
         cur = nxt
     return out
 
-def member_tail(field, name, objects):
+def prop(field, name, relation, objects):
     kind = ask(field, name, "isa", objects)
     if not kind:
         return None
-    return ask(field, kind, "tail", objects)
+    return ask(field, kind, relation, objects)
 
 def run() -> dict:
-    objects = ["bea", "cy", "dax", "blue", "green", "needle", "cat"]
+    objects = ["bea", "cy", "dax", "cat", "green", "long", "needle"]
     field = []
     for s, r, o in [
         ("ann", "ancestor", "bea"),
         ("bea", "ancestor", "cy"),
-        ("dax", "tail", "blue"),
+        ("dax", "tail", "green"),
+        ("cat", "whiskers", "long"),
         ("mira", "isa", "dax"),
-        ("orion", "isa", "dax"),
         ("sam", "isa", "cat"),
         ("lily", "found", "needle"),
     ]:
         add(field, s, r, o)
-    field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
-    add(field, "dax", "tail", "green")
     save(FIELD, field)
     loaded = load(FIELD)
     ancestor = walk(loaded, "ann", "ancestor", objects)
     checks = {
-        "mira_green": member_tail(loaded, "mira", objects) == "green",
-        "orion_green": member_tail(loaded, "orion", objects) == "green",
-        "sam_not_green": member_tail(loaded, "sam", objects) != "green",
+        "mira_tail": prop(loaded, "mira", "tail", objects) == "green",
+        "mira_not_whiskers": prop(loaded, "mira", "whiskers", objects) != "long",
+        "sam_whiskers": prop(loaded, "sam", "whiskers", objects) == "long",
+        "sam_not_tail": prop(loaded, "sam", "tail", objects) != "green",
         "derived_cy": ancestor == ["bea", "cy"],
         "retained": ask(loaded, "lily", "found", objects) == "needle",
         "reloaded": len(loaded) == len(field),
@@ -64,9 +64,8 @@ def run() -> dict:
     receipt = {
         **checks,
         "ancestor_walk": ancestor,
-        "sam_tail": member_tail(loaded, "sam", objects),
         "failed": failed,
-        "claim": "members inherit; non-members do not; not a mind"
+        "claim": "two types; each member inherits only its own; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
