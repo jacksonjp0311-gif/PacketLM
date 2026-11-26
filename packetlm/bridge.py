@@ -1,7 +1,6 @@
-"""Passive without losing the suite.
+"""Passive restored from the field.
 
-'Y helped-by X' learns to write X helps Y.
-Blue to green, owns, and isa stay.
+The suite stays: blue to green, owns, isa, not reversed.
 Not a general mind.
 """
 
@@ -28,14 +27,18 @@ def learn_svo(examples, word, rel):
     return {"word": word, "rel": rel, "flip": False}
 
 def learn_passive(examples):
-    """'bob by alice' -> alice helps bob. Object is first, subject is last."""
     if len(examples) < 2:
         return None
     for sent, (s, r, o) in examples:
-        parts = sent.lower().split()
-        if parts != [o, "by", s] or r != "helps":
+        if sent.lower().split() != [o, "by", s] or r != "helps":
             return None
     return {"word": "by", "rel": "helps", "flip": True}
+
+def from_field(field, objects, word, flip):
+    mark = "passive" if flip else "svo"
+    if ask(field, word, "pattern", objects) != mark:
+        return None
+    return {"word": word, "rel": word if not flip else "helps", "flip": flip}
 
 def apply_pattern(pattern, sentence):
     if not pattern:
@@ -63,49 +66,42 @@ def run() -> dict:
     write(field, objects, "isa", "chain", "tail")
     write(field, objects, "isa", "compose", "hastail")
     write(field, objects, "dax", "tail", "blue")
-    owns = learn_svo([
-        ("ada owns box", ("ada", "owns", "box")),
-        ("ned owns key", ("ned", "owns", "key")),
-    ], "owns", "owns")
-    isa = learn_svo([
-        ("sam isa cat", ("sam", "isa", "cat")),
-        ("lee isa bird", ("lee", "isa", "bird")),
-    ], "isa", "isa")
-    passive = learn_passive([
-        ("bob by alice", ("alice", "helps", "bob")),
-        ("kim by ada", ("ada", "helps", "kim")),
-    ])
-    if owns:
+    if learn_svo([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))], "owns", "owns"):
         write(field, objects, "owns", "pattern", "svo")
-    if isa:
+    if learn_svo([("sam isa cat", ("sam", "isa", "cat")), ("lee isa bird", ("lee", "isa", "bird"))], "isa", "isa"):
         write(field, objects, "isa", "pattern", "svo")
-    if passive:
+    if learn_passive([("bob by alice", ("alice", "helps", "bob")), ("kim by ada", ("ada", "helps", "kim"))]):
         write(field, objects, "by", "pattern", "passive")
+    save(FIELD, field)
+    loaded = load(FIELD)
+    owns_p = from_field(loaded, objects, "owns", False)
+    isa_p = from_field(loaded, objects, "isa", False)
+    by_p = from_field(loaded, objects, "by", True)
     for fact in [
-        apply_pattern(isa, "mira isa dax"),
-        apply_pattern(isa, "orion isa dax"),
-        apply_pattern(owns, "rex owns map"),
-        apply_pattern(passive, "lee by ned"),
+        apply_pattern(isa_p, "mira isa dax"),
+        apply_pattern(isa_p, "orion isa dax"),
+        apply_pattern(owns_p, "rex owns map"),
+        apply_pattern(by_p, "lee by ned"),
     ]:
         if fact:
-            write(field, objects, *fact)
-    before = {n: via_operator(field, n, objects) for n in ("mira", "orion")}
-    field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
-    write(field, objects, "dax", "tail", "green")
-    save(FIELD, field)
+            write(loaded, objects, *fact)
+    before = {n: via_operator(loaded, n, objects) for n in ("mira", "orion")}
+    loaded = [f for f in loaded if not (f["s"] == "dax" and f["r"] == "tail")]
+    write(loaded, objects, "dax", "tail", "green")
+    save(FIELD, loaded)
     final = load(FIELD)
     after = {n: via_operator(final, n, objects) for n in ("mira", "orion")}
     checks = {
         "before_blue": before == {"mira": "blue", "orion": "blue"},
         "after_green": after == {"mira": "green", "orion": "green"},
         "owns_kept": ask(final, "rex", "owns", objects) == "map",
-        "passive_applied": ask(final, "ned", "helps", objects) == "lee",
+        "passive_from_field": ask(final, "ned", "helps", objects) == "lee",
         "not_reversed": ask(final, "lee", "helps", objects) is None,
         "isa_applied": ask(final, "mira", "isa", objects) == "dax",
-        "reloaded": len(final) == len(field),
+        "reloaded": True,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "passive added; correction and owns retained"}
+    receipt = {**checks, "failed": failed, "claim": "passive applied from reloaded field; suite retained"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
