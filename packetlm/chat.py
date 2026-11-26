@@ -1,7 +1,7 @@
-"""Chat through acquired language.
+"""Speak what was derived.
 
-Statements are selected, not parsed by hand.
-A fact is spoken by reversing the construction.
+A path is discovered. Orion's tail is derived.
+The conclusion is spoken by reversing a construction.
 Not a general mind.
 """
 
@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 from .field import add, ask, save, load
 from .roles import induce, select
+from .runtime import discover, apply_path
 
 STATE = Path("data/chat_state.json")
 
@@ -19,35 +20,31 @@ def express(construction, fact):
     s, r, o = fact
     if r != construction["meaning"]:
         return None
-    order = construction["order"]
     roles = {"s": s, "r": construction["word"], "o": o}
-    return " ".join(roles[role] for role in order)
+    return " ".join(roles[role] for role in construction["order"])
 
 def run() -> dict:
     isa = induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))])
-    owns = induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))])
-    library = [c for c in (isa, owns) if c]
-    objects = ["dax", "green", "red"]
+    hastail = induce([("mira hastail green", ("mira", "hastail", "green")), ("sam hastail blue", ("sam", "hastail", "blue"))])
+    objects = ["dax", "cat", "green", "blue", "mira", "sam", "orion"]
     field = []
-    add(field, "dax", "tail", "green")
-    membership = select(library, "orion isa dax")
-    if membership:
-        add(field, *membership)
-    kind = ask(field, "orion", "isa", objects)
-    color = ask(field, kind, "tail", objects) if kind else None
-    spoken = express(owns, ("rex", "owns", "map"))
-    roundtrip = select(library, spoken) if spoken else None
+    for s, r, o in [("mira", "isa", "dax"), ("dax", "tail", "green"), ("sam", "isa", "cat"), ("cat", "tail", "blue"), ("orion", "isa", "dax")]:
+        add(field, s, r, o)
+    path = discover(field, [("mira", "hastail", "green"), ("sam", "hastail", "blue")], objects)
+    derived = apply_path(field, path, "orion", objects)
+    fact = ("orion", "hastail", derived) if derived else None
+    spoken = express(hastail, fact)
+    back = select([hastail], spoken) if spoken else None
     save(STATE, field)
     checks = {
-        "selected": membership == ("orion", "isa", "dax"),
-        "answered": color == "green",
-        "expressed": spoken == "rex owns map",
-        "roundtrip": roundtrip == ("rex", "owns", "map"),
-        "unknown_verb": select(library, "rex holds map") is None,
+        "path": path == ("isa", "tail", "hastail"),
+        "derived": derived == "green",
+        "spoken": spoken == "orion hastail green",
+        "roundtrip": back == fact,
         "reloaded": ask(load(STATE), "orion", "isa", objects) == "dax",
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "spoken": spoken, "failed": failed, "claim": "construction interprets and expresses; not a live loop"}
+    receipt = {**checks, "spoken": spoken, "failed": failed, "claim": "derived conclusion spoken through an acquired construction"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
