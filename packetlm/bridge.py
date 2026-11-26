@@ -1,7 +1,7 @@
-"""Cumulative bridge.
+"""Cumulative bridge. Construction is stored.
 
-Every written token is registered before it is asked.
-Question, correction, abstain, and learned owns stay.
+The owns pattern is written into the field and read back.
+Question, correction, abstain stay.
 Not a general mind.
 """
 
@@ -82,31 +82,29 @@ def run() -> dict:
         ("ada owns box", ("ada", "owns", "box")),
         ("ned owns key", ("ned", "owns", "key")),
     ])
+    if pattern:
+        write(field, objects, "owns", "pattern", "svo")
     unseen = apply_pattern(pattern, "rex owns map")
     if unseen:
         write(field, objects, *unseen)
     bad = apply_pattern(pattern, "rex holds map")
     save(FIELD, field)
     loaded = load(FIELD)
+    stored = ask(loaded, "owns", "pattern", objects) == "svo"
     after = ask_color(loaded, "what color is mira tail?", objects)
-    unknown = ask_color(loaded, "what color is orion tail?", objects)
-    fly = ask_color(loaded, "can mira fly?", objects)
     checks = {
         "before_blue": before.get("answer") == "mira has a blue tail",
         "after_green": after.get("answer") == "mira has a green tail",
-        "unknown_reason": unknown.get("reason") == "unknown",
-        "unparsed_reason": fly.get("reason") == "unparsed",
+        "unknown_reason": ask_color(loaded, "what color is orion tail?", objects).get("reason") == "unknown",
+        "unparsed_reason": ask_color(loaded, "can mira fly?", objects).get("reason") == "unparsed",
         "learned": pattern is not None and pattern["rel"] == "owns",
+        "pattern_stored": stored,
         "unseen_owns": unseen == ("rex", "owns", "map") and ask(loaded, "rex", "owns", objects) == "map",
         "holds_rejected": bad is None,
         "reloaded": len(loaded) == len(field),
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {
-        **checks,
-        "failed": failed,
-        "claim": "every written token is registered; prior checks remain"
-    }
+    receipt = {**checks, "failed": failed, "claim": "construction stored in the field; prior checks remain"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
