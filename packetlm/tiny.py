@@ -2,8 +2,7 @@
 
 Pure Python. No torch. Trains on the runner.
 Token embeddings, two attention layers, next-token head.
-Trained by prediction error. Generates by argmax.
-Receipt records loss and holdout continuation score.
+Context is longer. Embedding update is stronger.
 """
 
 from __future__ import annotations
@@ -15,6 +14,7 @@ from .train import load_corpus, window_stories
 
 DIM = 32
 STEPS = 300
+CTX = 12
 
 def tokenize(text: str) -> list[str]:
     return [t for t in text.lower().split() if t]
@@ -96,9 +96,11 @@ class TinyLM:
             g = probs[j] - (1.0 if j == target else 0.0)
             for d in range(DIM):
                 self.Wo[j][d] -= lr * g * last[d]
-        last_id = token_ids[-1]
-        for d in range(DIM):
-            self.E[last_id][d] -= lr * 0.01 * (probs[target] - 1.0) * self.Wo[target][d]
+        # stronger update on every context token, not only the last
+        err = probs[target] - 1.0
+        for tid in token_ids[-CTX:]:
+            for d in range(DIM):
+                self.E[tid][d] -= lr * 0.05 * err * self.Wo[target][d]
         return loss
 
     def predict(self, token_ids: list[int]) -> int:
@@ -110,7 +112,7 @@ class TinyLM:
     def generate(self, prompt_ids: list[int], steps: int = 8) -> list[int]:
         out = prompt_ids[:]
         for _ in range(steps):
-            nxt = self.predict(out[-8:])
+            nxt = self.predict(out[-CTX:])
             out.append(nxt)
         return out[len(prompt_ids):]
 
@@ -139,7 +141,7 @@ def run() -> dict:
     for w in windows:
         toks = tokenize(w)
         for i in range(1, len(toks)):
-            pairs.append((ids(toks[max(0, i - 6):i], vocab), vocab.get(toks[i], 1)))
+            pairs.append((ids(toks[max(0, i - CTX):i], vocab), vocab.get(toks[i], 1)))
     if not pairs:
         pairs = [([1], 1)]
     cut = max(1, len(windows) // 5)
@@ -155,6 +157,7 @@ def run() -> dict:
     receipt = {
         "vocab": len(vocab),
         "dim": DIM,
+        "context": CTX,
         "layers": 2,
         "steps": STEPS,
         "mean_loss": round(sum(losses) / max(len(losses), 1), 4),
@@ -163,7 +166,7 @@ def run() -> dict:
         "improved": after > before,
         "prompt": prompt,
         "generated": gen,
-        "claim": "two-layer tiny next-token model at dim 32; still tiny, not a general language model"
+        "claim": "longer context and stronger embedding update; still tiny, not a general language model"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/tiny_receipt.json").write_text(json.dumps(receipt, indent=2))
