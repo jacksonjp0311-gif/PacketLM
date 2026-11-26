@@ -21,20 +21,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: G37 test
-        run: python -m packetlm.g37_test
-      - name: Evolution pass
-        if: always()
-        run: python -m packetlm.evolve
-      - name: Upload evolve receipt
+      - name: System
+        run: python -m packetlm.system
+      - name: Upload system receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: packetlm-evolve-receipt
-          path: artifacts/evolve_receipt.json
-      - name: Role binding
-        if: always()
-        run: python -m packetlm.bind
-      - name: Unstored walk
-        if: always()
-        run: python -m packetlm.infer
+          name: packetlm-system-receipt
+          path: artifacts/system_receipt.json
