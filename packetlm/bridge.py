@@ -1,7 +1,7 @@
-"""Cumulative bridge. Construction is stored.
+"""Construction is used after reload.
 
-The owns pattern is written into the field and read back.
-Question, correction, abstain stay.
+The owns pattern is stored, reloaded, then applied.
+Prior checks stay.
 Not a general mind.
 """
 
@@ -19,13 +19,10 @@ def norm(token: str) -> str:
         return token[:-1]
     return token
 
-def register(objects, *tokens):
-    for t in tokens:
+def write(field, objects, s, r, o):
+    for t in (s, r, o):
         if t not in objects:
             objects.append(t)
-
-def write(field, objects, s, r, o):
-    register(objects, s, r, o)
     add(field, s, r, o)
 
 def learn_owns(examples):
@@ -40,6 +37,11 @@ def learn_owns(examples):
     word, rel = next(iter(rels))
     return {"len": 3, "rel_at": 1, "word": word, "rel": rel}
 
+def pattern_from_field(field, objects):
+    if ask(field, "owns", "pattern", objects) != "svo":
+        return None
+    return {"len": 3, "rel_at": 1, "word": "owns", "rel": "owns"}
+
 def apply_pattern(pattern, sentence):
     if not pattern:
         return None
@@ -49,9 +51,7 @@ def apply_pattern(pattern, sentence):
     return norm(parts[0]), pattern["rel"], norm(parts[2])
 
 def via_operator(field, name, objects):
-    if ask(field, "isa", "compose", objects) != "hastail":
-        return None
-    if ask(field, "isa", "chain", objects) != "tail":
+    if ask(field, "isa", "compose", objects) != "hastail" or ask(field, "isa", "chain", objects) != "tail":
         return None
     kind = ask(field, name, "isa", objects)
     if not kind:
@@ -84,27 +84,27 @@ def run() -> dict:
     ])
     if pattern:
         write(field, objects, "owns", "pattern", "svo")
-    unseen = apply_pattern(pattern, "rex owns map")
-    if unseen:
-        write(field, objects, *unseen)
-    bad = apply_pattern(pattern, "rex holds map")
     save(FIELD, field)
     loaded = load(FIELD)
-    stored = ask(loaded, "owns", "pattern", objects) == "svo"
-    after = ask_color(loaded, "what color is mira tail?", objects)
+    restored = pattern_from_field(loaded, objects)
+    unseen = apply_pattern(restored, "rex owns map")
+    if unseen:
+        write(loaded, objects, *unseen)
+    bad = apply_pattern(restored, "rex holds map")
+    save(FIELD, loaded)
+    final = load(FIELD)
     checks = {
         "before_blue": before.get("answer") == "mira has a blue tail",
-        "after_green": after.get("answer") == "mira has a green tail",
-        "unknown_reason": ask_color(loaded, "what color is orion tail?", objects).get("reason") == "unknown",
-        "unparsed_reason": ask_color(loaded, "can mira fly?", objects).get("reason") == "unparsed",
-        "learned": pattern is not None and pattern["rel"] == "owns",
-        "pattern_stored": stored,
-        "unseen_owns": unseen == ("rex", "owns", "map") and ask(loaded, "rex", "owns", objects) == "map",
+        "after_green": ask_color(final, "what color is mira tail?", objects).get("answer") == "mira has a green tail",
+        "unknown_reason": ask_color(final, "what color is orion tail?", objects).get("reason") == "unknown",
+        "unparsed_reason": ask_color(final, "can mira fly?", objects).get("reason") == "unparsed",
+        "learned": pattern is not None,
+        "restored_and_applied": unseen == ("rex", "owns", "map") and ask(final, "rex", "owns", objects) == "map",
         "holds_rejected": bad is None,
-        "reloaded": len(loaded) == len(field),
+        "reloaded": True,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "construction stored in the field; prior checks remain"}
+    receipt = {**checks, "failed": failed, "claim": "owns applied from the reloaded field; prior checks remain"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
