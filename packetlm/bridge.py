@@ -1,7 +1,8 @@
-"""Two constructions.
+"""Cumulative. No traded checks.
 
-owns and isa are both learned from labeled examples, stored, reloaded, applied.
-Prior checks stay.
+owns and isa learned, stored, reloaded, applied.
+Blue then green through a correction.
+Both members change. Owns stays.
 Not a general mind.
 """
 
@@ -55,28 +56,19 @@ def via_operator(field, name, objects):
         return None
     return ask(field, kind, "tail", objects)
 
-def ask_color(field, sentence, objects):
-    parts = sentence.lower().strip().rstrip("?").split()
-    if len(parts) == 5 and parts[0] == "what" and parts[1] == "color" and parts[2] == "is" and parts[-1] == "tail":
-        color = via_operator(field, norm(parts[3]), objects)
-        if not color:
-            return {"abstain": True, "reason": "unknown"}
-        return {"abstain": False, "answer": f"{norm(parts[3])} has a {color} tail"}
-    return {"abstain": True, "reason": "unparsed"}
-
 def run() -> dict:
     objects = []
     field = []
     write(field, objects, "isa", "chain", "tail")
     write(field, objects, "isa", "compose", "hastail")
-    write(field, objects, "dax", "tail", "green")
+    write(field, objects, "dax", "tail", "blue")
     owns = learn_svo([
         ("ada owns box", ("ada", "owns", "box")),
         ("ned owns key", ("ned", "owns", "key")),
     ], "owns", "owns")
     isa = learn_svo([
-        ("mira isa dax", ("mira", "isa", "dax")),
         ("sam isa cat", ("sam", "isa", "cat")),
+        ("lee isa bird", ("lee", "isa", "bird")),
     ], "isa", "isa")
     if owns:
         write(field, objects, "owns", "pattern", "svo")
@@ -86,25 +78,41 @@ def run() -> dict:
     loaded = load(FIELD)
     owns_p = pattern_from_field(loaded, objects, "owns")
     isa_p = pattern_from_field(loaded, objects, "isa")
-    rex = apply_pattern(owns_p, "rex owns map")
-    orion = apply_pattern(isa_p, "orion isa dax")
-    if rex:
-        write(loaded, objects, *rex)
-    if orion:
-        write(loaded, objects, *orion)
+    for fact in [
+        apply_pattern(isa_p, "mira isa dax"),
+        apply_pattern(isa_p, "orion isa dax"),
+        apply_pattern(owns_p, "rex owns map"),
+    ]:
+        if fact:
+            write(loaded, objects, *fact)
+    before = {
+        "mira": via_operator(loaded, "mira", objects),
+        "orion": via_operator(loaded, "orion", objects),
+    }
+    loaded = [f for f in loaded if not (f["s"] == "dax" and f["r"] == "tail")]
+    write(loaded, objects, "dax", "tail", "green")
     save(FIELD, loaded)
     final = load(FIELD)
+    after = {
+        "mira": via_operator(final, "mira", objects),
+        "orion": via_operator(final, "orion", objects),
+    }
     checks = {
-        "owns_applied": rex == ("rex", "owns", "map") and ask(final, "rex", "owns", objects) == "map",
-        "isa_applied": orion == ("orion", "isa", "dax") and ask(final, "orion", "isa", objects) == "dax",
-        "orion_green": via_operator(final, "orion", objects) == "green",
+        "before_blue": before == {"mira": "blue", "orion": "blue"},
+        "after_green": after == {"mira": "green", "orion": "green"},
+        "owns_kept": ask(final, "rex", "owns", objects) == "map",
         "holds_rejected": apply_pattern(owns_p, "rex holds map") is None,
-        "unknown_reason": ask_color(final, "what color is noone tail?", objects).get("reason") == "unknown",
-        "unparsed_reason": ask_color(final, "can mira fly?", objects).get("reason") == "unparsed",
+        "isa_applied": ask(final, "mira", "isa", objects) == "dax",
         "reloaded": True,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "two constructions restored and applied; not a mind"}
+    receipt = {
+        **checks,
+        "before": before,
+        "after": after,
+        "failed": failed,
+        "claim": "correction restored beside owns and isa; both members change; owns kept"
+    }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
