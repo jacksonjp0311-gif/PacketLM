@@ -1,6 +1,5 @@
-"""Library persists. Selection writes the field.
+"""Six orders, selection, persist. No traded checks.
 
-Reload, select, write. Unknown still abstains.
 Not a general mind.
 """
 
@@ -30,9 +29,7 @@ def induce(examples):
     if len(hits) != 1:
         return None
     order = hits[0]
-    rel_at = order.index("r")
-    word = examples[0][0].split()[rel_at]
-    return {"order": list(order), "rel_at": rel_at, "word": word}
+    return {"order": list(order), "rel_at": order.index("r"), "word": examples[0][0].split()[order.index("r")]}
 
 def select(library, sentence):
     parts = sentence.lower().strip().split()
@@ -45,12 +42,21 @@ def select(library, sentence):
     mapped = {role: parts[i] for i, role in enumerate(c["order"])}
     return mapped["s"], mapped["r"], mapped["o"]
 
+def example_for(order):
+    out = []
+    for s, r, o in [("ada", "vek", "box"), ("ned", "vek", "key")]:
+        roles = {"s": s, "r": r, "o": o}
+        out.append((" ".join(roles[role] for role in order), (s, r, o)))
+    return out
+
 def run() -> dict:
-    library = [
-        induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))]),
-        induce([("box vek ada", ("ada", "vek", "box")), ("key vek ned", ("ned", "vek", "key"))]),
-    ]
-    library = [c for c in library if c]
+    found = {}
+    for order in ORDERS:
+        got = induce(example_for(order))
+        found["".join(order)] = got is not None and tuple(got["order"]) == order
+    owns = induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))])
+    vek = induce([("box vek ada", ("ada", "vek", "box")), ("key vek ned", ("ned", "vek", "key"))])
+    library = [c for c in (owns, vek) if c]
     save(FIELD, library)
     loaded = load(FIELD)
     objects = []
@@ -61,16 +67,16 @@ def run() -> dict:
             if t not in objects:
                 objects.append(t)
         add(field, *chosen)
-    unknown = select(loaded, "rex holds map")
-    save(Path("data/roles_facts.json"), field)
-    facts = load(Path("data/roles_facts.json"))
     checks = {
+        "all_six": all(found.values()) and len(found) == 6,
+        "one_example_abstains": induce([("box vek ada", ("ada", "vek", "box"))]) is None,
         "library_reloaded": len(loaded) == 2,
-        "wrote_owns": chosen == ("rex", "owns", "map") and ask(facts, "rex", "owns", objects) == "map",
-        "unknown_abstain": unknown is None,
+        "wrote_owns": chosen == ("rex", "owns", "map") and ask(field, "rex", "owns", objects) == "map",
+        "unknown_abstain": select(loaded, "rex holds map") is None,
+        "clash_abstain": select([owns, owns], "rex owns map") is None if owns else False,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "library reloaded; selected fact written to the field"}
+    receipt = {**checks, "failed": failed, "claim": "six orders kept; library persists; selection writes the field"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
