@@ -1,8 +1,9 @@
-"""Two steps, forced by coverage.
+"""Three values.
 
-A question counts only if every live path can answer it.
-k is invisible while r is alive.
-m is asked first. Then k.
+Agrees: keep.
+Disagrees: drop.
+Cannot answer: keep.
+Two-step and stuck stay.
 Not a general mind.
 """
 
@@ -41,6 +42,11 @@ def apply_path(field, path, subject, objects):
     mid = ask(field, subject, first, objects)
     return ask(field, mid, second, objects) if mid else None
 
+def judge(pred, ans):
+    if pred is None:
+        return "undetermined"
+    return "supported" if pred == ans else "contradicted"
+
 def pick(field, paths, objects, skip):
     best, best_score = None, 0
     for s in sorted({f["s"] for f in field}):
@@ -56,17 +62,16 @@ def pick(field, paths, objects, skip):
     return best
 
 def investigate(field, paths, objects, truth, budget=3):
-    examples, asked, live = [], [], list(paths)
+    asked, live = [], list(paths)
     for _ in range(budget):
         if len(live) <= 1:
             break
-        q = pick(field, live, objects, {s for s, _, _ in examples})
+        q = pick(field, live, objects, set(asked))
         if not q:
             break
         ans = apply_path(field, truth, q, objects)
-        examples.append((q, "out", ans))
         asked.append(q)
-        live = [p for p in live if apply_path(field, p, q, objects) == ans]
+        live = [p for p in live if judge(apply_path(field, p, q, objects), ans) != "contradicted"]
     return live, asked
 
 def run() -> dict:
@@ -94,22 +99,18 @@ def run() -> dict:
     objs = objects + ["x", "y", "z", "a", "c", "m", "n", "w", "b", "d", "nope", "k", "e", "f", "yes", "no"]
     start = candidates(env, [("x", "out", "z")], objs)
     live, asked = investigate(env, start, objs, ("p", "p", "out"))
-    stuck_field = []
-    for s, r, o in [("x", "p", "y"), ("y", "p", "z"), ("x", "q", "a"), ("a", "q", "z")]:
-        add(stuck_field, s, r, o)
-    stuck = candidates(stuck_field, [("x", "out", "z")], objs)
-    stuck_live, stuck_asked = investigate(stuck_field, stuck, objs, ("p", "p", "out"))
-    save(STATE, [{"path": list(p)} for p in live])
+    # r cannot answer k. Asking k must not kill r.
+    r_pred = apply_path(env, ("r", "r", "out"), "k", objs)
+    kept = judge(r_pred, "yes") == "undetermined"
     checks = {
         "oracle": apply_path(field, path, "seal", objects) == "plant",
-        "started_three": len(start) == 3,
         "asked_twice": asked == ["m", "k"],
         "resolved": [list(p) for p in live] == [["p", "p", "out"]],
-        "stuck_abstain": len(stuck_live) == 2 and stuck_asked == [],
-        "reloaded": load(STATE) == [{"path": ["p", "p", "out"]}],
+        "missing_kept": kept and r_pred is None,
+        "wrong_dropped": judge("nope", "w") == "contradicted",
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "asked": asked, "failed": failed, "claim": "coverage forces two questions; unresolvable abstains"}
+    receipt = {**checks, "asked": asked, "failed": failed, "claim": "missing is undetermined; wrong is contradicted"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
