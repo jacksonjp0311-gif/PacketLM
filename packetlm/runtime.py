@@ -1,7 +1,8 @@
-"""Resolve for real.
+"""Iterative.
 
-Only p predicts w.
-Reload compares lists, not tuples.
+First question kills r. p and q remain.
+The system asks again. One remains.
+If nothing can split them, it abstains.
 Oracle stays.
 Not a general mind.
 """
@@ -45,13 +46,31 @@ def split_score(preds):
     counts = Counter(p for p in preds if p is not None)
     return min(counts.values()) if len(counts) >= 2 else 0
 
-def pick(field, paths, objects):
+def pick(field, paths, objects, skip):
     best, best_score = None, 0
     for s in sorted({f["s"] for f in field}):
+        if s in skip:
+            continue
         score = split_score([apply_path(field, p, s, objects) for p in paths])
         if score > best_score:
             best, best_score = s, score
-    return best, best_score
+    return best
+
+def investigate(field, paths, objects, truth, budget=3):
+    examples = []
+    asked = []
+    live = list(paths)
+    for _ in range(budget):
+        if len(live) <= 1:
+            break
+        q = pick(field, live, objects, {s for s, _, _ in examples})
+        if not q:
+            break
+        ans = apply_path(field, truth, q, objects)
+        examples.append((q, "out", ans))
+        asked.append(q)
+        live = [p for p in live if apply_path(field, p, q, objects) == ans]
+    return live, asked
 
 def run() -> dict:
     objects = ["bearing", "motor", "machine", "gear", "pump", "line", "seal", "valve", "plant"]
@@ -69,25 +88,32 @@ def run() -> dict:
         ("x", "q", "a"), ("a", "q", "z"),
         ("x", "r", "c"), ("c", "r", "z"),
         ("m", "p", "n"), ("n", "p", "w"),
-        ("m", "q", "b"), ("b", "q", "nope"),
-        ("m", "r", "d"), ("d", "r", "other"),
+        ("m", "q", "b"), ("b", "q", "w"),
+        ("m", "r", "d"), ("d", "r", "nope"),
+        ("k", "p", "e"), ("e", "p", "yes"),
+        ("k", "q", "f"), ("f", "q", "no"),
     ]:
         add(env, s, r, o)
-    objs = objects + ["x", "y", "z", "a", "c", "m", "n", "w", "b", "d", "nope", "other"]
-    live = candidates(env, [("x", "out", "z")], objs)
-    chosen, score = pick(env, live, objs)
-    answer = apply_path(env, ("p", "p", "out"), chosen, objs) if chosen else None
-    after = candidates(env, [("x", "out", "z"), (chosen, "out", answer)], objs) if chosen else []
-    save(STATE, [{"path": list(p), "chosen": chosen} for p in after])
-    loaded = load(STATE)
+    objs = objects + ["x", "y", "z", "a", "c", "m", "n", "w", "b", "d", "nope", "k", "e", "f", "yes", "no"]
+    start = candidates(env, [("x", "out", "z")], objs)
+    live, asked = investigate(env, start, objs, ("p", "p", "out"))
+    # unresolvable: p and q agree everywhere we can ask
+    stuck_field = []
+    for s, r, o in [("x", "p", "y"), ("y", "p", "z"), ("x", "q", "a"), ("a", "q", "z")]:
+        add(stuck_field, s, r, o)
+    stuck = candidates(stuck_field, [("x", "out", "z")], objs)
+    stuck_live, stuck_asked = investigate(stuck_field, stuck, objs, ("p", "p", "out"))
+    save(STATE, [{"path": list(p)} for p in live])
     checks = {
         "oracle": apply_path(field, path, "seal", objects) == "plant",
-        "picked_even": chosen == "m",
-        "resolved": [list(p) for p in after] == [["p", "p", "out"]],
-        "reloaded": loaded == [{"path": ["p", "p", "out"], "chosen": "m"}],
+        "started_three": len(start) == 3,
+        "asked_twice": asked == ["m", "k"],
+        "resolved": [list(p) for p in live] == [["p", "p", "out"]],
+        "stuck_abstain": len(stuck_live) == 2 and stuck_asked == [],
+        "reloaded": load(STATE) == [{"path": ["p", "p", "out"]}],
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "after": [list(p) for p in after], "failed": failed, "claim": "only p predicts w; reload matches lists"}
+    receipt = {**checks, "asked": asked, "failed": failed, "claim": "two investigations; unresolvable abstains"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
