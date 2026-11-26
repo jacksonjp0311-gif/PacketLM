@@ -392,5 +392,29 @@
       "dress"
     ],
     "inferred": true
+  },
+  {
+    "question": "what can lily make",
+    "hop1": [
+      "find",
+      "find",
+      "found",
+      "needle",
+      "sew",
+      "needle",
+      "dress"
+    ],
+    "hop2": [
+      "lily",
+      "find",
+      "lily",
+      "find",
+      "needle",
+      "cloth",
+      "lily",
+      "needle",
+      "dress"
+    ],
+    "inferred": true
   }
 ]
