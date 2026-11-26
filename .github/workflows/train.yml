@@ -21,7 +21,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Role binding
+        run: python -m packetlm.bind
+      - name: Upload bind receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-bind-receipt
+          path: artifacts/bind_receipt.json
       - name: Field geometry
+        if: always()
         run: python -m packetlm.geometry
       - name: Upload geometry receipt
         if: always()
@@ -38,14 +47,6 @@ jobs:
         with:
           name: packetlm-speak-receipt
           path: artifacts/speak_receipt.json
-      - name: Commit field and memory
-        if: always()
-        run: |
-          git config user.name "packetlm"
-          git config user.email "packetlm@users.noreply.github.com"
-          git add data/context_packets.json data/mind_memory.json || true
-          git diff --cached --quiet || git commit -m "Persist field and memory"
-          git push || true
       - name: Tiny next-token model
         if: always()
         run: python -m packetlm.tiny
