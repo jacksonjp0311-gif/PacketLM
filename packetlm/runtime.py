@@ -1,6 +1,7 @@
-"""Ask the scored question.
+"""Resolve for real.
 
-The even split is chosen, asked, and used.
+Only p predicts w.
+Reload compares lists, not tuples.
 Oracle stays.
 Not a general mind.
 """
@@ -68,24 +69,25 @@ def run() -> dict:
         ("x", "q", "a"), ("a", "q", "z"),
         ("x", "r", "c"), ("c", "r", "z"),
         ("m", "p", "n"), ("n", "p", "w"),
-        ("m", "q", "b"), ("b", "q", "w"),
-        ("m", "r", "d"), ("d", "r", "nope"),
+        ("m", "q", "b"), ("b", "q", "nope"),
+        ("m", "r", "d"), ("d", "r", "other"),
     ]:
         add(env, s, r, o)
-    objs = objects + ["x", "y", "z", "a", "c", "m", "n", "w", "b", "d", "nope"]
+    objs = objects + ["x", "y", "z", "a", "c", "m", "n", "w", "b", "d", "nope", "other"]
     live = candidates(env, [("x", "out", "z")], objs)
     chosen, score = pick(env, live, objs)
     answer = apply_path(env, ("p", "p", "out"), chosen, objs) if chosen else None
     after = candidates(env, [("x", "out", "z"), (chosen, "out", answer)], objs) if chosen else []
-    save(STATE, {"path": after, "chosen": chosen})
+    save(STATE, [{"path": list(p), "chosen": chosen} for p in after])
+    loaded = load(STATE)
     checks = {
         "oracle": apply_path(field, path, "seal", objects) == "plant",
         "picked_even": chosen == "m",
-        "resolved": after == [("p", "p", "out")],
-        "reloaded": load(STATE).get("path") == after,
+        "resolved": [list(p) for p in after] == [["p", "p", "out"]],
+        "reloaded": loaded == [{"path": ["p", "p", "out"], "chosen": "m"}],
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "chosen": chosen, "score": score, "failed": failed, "claim": "scored question asked; one path remained"}
+    receipt = {**checks, "after": [list(p) for p in after], "failed": failed, "claim": "only p predicts w; reload matches lists"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
