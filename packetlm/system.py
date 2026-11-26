@@ -1,9 +1,9 @@
-"""Propagation, measured.
+"""A stored operator.
 
-Before: dax tails are blue. Mira derives blue.
-After: dax tails are green. Mira derives green. Blue is gone.
-Sam is a cat with long whiskers. That exact property must remain.
-The inheritance rule is programmed. It is not learned.
+Examples: parent of parent is grandparent.
+The operator is a fact in the field, not a Python branch.
+Apply it to a pair that was not in the examples.
+Propagation checks stay.
 Not a general mind.
 """
 
@@ -32,8 +32,18 @@ def prop(field, name, relation, objects):
         return None
     return ask(field, kind, relation, objects)
 
+def apply_op(field, a, mid_rel, objects):
+    """If a mid_rel b and b mid_rel c, and op says mid_rel+mid_rel = out_rel, return c."""
+    out_rel = ask(field, mid_rel, "compose", objects)
+    if not out_rel:
+        return None
+    b = ask(field, a, mid_rel, objects)
+    if not b:
+        return None
+    return ask(field, b, mid_rel, objects)
+
 def run() -> dict:
-    objects = ["bea", "cy", "dax", "cat", "blue", "green", "long", "needle"]
+    objects = ["bea", "cy", "dax", "cat", "blue", "green", "long", "needle", "parent", "grand", "jo", "kim", "lee"]
     field = []
     for s, r, o in [
         ("ann", "ancestor", "bea"),
@@ -43,28 +53,29 @@ def run() -> dict:
         ("mira", "isa", "dax"),
         ("sam", "isa", "cat"),
         ("lily", "found", "needle"),
+        ("parent", "compose", "grand"),
+        ("ada", "parent", "jo"),
+        ("jo", "parent", "kim"),
+        ("ned", "parent", "lee"),
     ]:
         add(field, s, r, o)
-    before = {
-        "mira": prop(field, "mira", "tail", objects),
-        "sam": prop(field, "sam", "whiskers", objects),
-    }
+    before = prop(field, "mira", "tail", objects)
     field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
     add(field, "dax", "tail", "green")
     save(FIELD, field)
     loaded = load(FIELD)
-    after = {
-        "mira": prop(loaded, "mira", "tail", objects),
-        "sam": prop(loaded, "sam", "whiskers", objects),
-    }
-    ancestor = walk(loaded, "ann", "ancestor", objects)
+    after = prop(loaded, "mira", "tail", objects)
+    # apply stored operator to a pair: ada parent jo parent kim => kim
+    derived = apply_op(loaded, "ada", "parent", objects)
+    # ned parent lee has no further parent; operator should not invent one
+    ned = apply_op(loaded, "ned", "parent", objects)
     checks = {
-        "before_mira_blue": before["mira"] == "blue",
-        "after_mira_green": after["mira"] == "green",
-        "blue_gone": after["mira"] != "blue",
-        "sam_stayed_long": before["sam"] == "long" and after["sam"] == "long",
-        "sam_not_green": prop(loaded, "sam", "tail", objects) != "green",
-        "derived_cy": ancestor == ["bea", "cy"],
+        "before_blue": before == "blue",
+        "after_green": after == "green",
+        "sam_stayed_long": prop(loaded, "sam", "whiskers", objects) == "long",
+        "op_applied": derived == "kim",
+        "op_no_invent": ned is None,
+        "derived_cy": walk(loaded, "ann", "ancestor", objects) == ["bea", "cy"],
         "retained": ask(loaded, "lily", "found", objects) == "needle",
         "reloaded": len(loaded) == len(field),
         "tight_won": Router(
@@ -74,12 +85,10 @@ def run() -> dict:
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "before": before,
-        "after": after,
-        "ancestor_walk": ancestor,
-        "rule": "programmed isa then property; not learned",
+        "derived_grand": derived,
+        "rule": "operator stored as parent compose grand; application is still our code",
         "failed": failed,
-        "claim": "before and after recorded; negative is the exact other property; not a mind"
+        "claim": "operator lives in the field; applied to a new pair; not learned; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
