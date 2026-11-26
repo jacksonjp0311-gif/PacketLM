@@ -1,8 +1,8 @@
-"""Eight.
+"""Additive.
 
-Eight paths fit the first example.
-Three binary questions isolate one.
-Missing still is not wrong.
+Eight hypotheses, three questions.
+Seal oracle is back.
+Missing is not wrong.
 Not a general mind.
 """
 
@@ -70,6 +70,17 @@ def investigate(field, paths, objects, truth, budget=6):
     return live, asked
 
 def run() -> dict:
+    # oracle
+    o_objects = ["bearing", "motor", "machine", "gear", "pump", "line", "seal", "valve", "plant"]
+    o_field = []
+    for s, r, o in [
+        ("bearing", "in", "motor"), ("motor", "in", "machine"),
+        ("gear", "in", "pump"), ("pump", "in", "line"),
+        ("seal", "in", "valve"), ("valve", "in", "plant"),
+    ]:
+        add(o_field, s, r, o)
+    o_path = discover(o_field, [("bearing", "part", "machine"), ("gear", "part", "line")], o_objects)
+    # eight
     names = [f"r{i}" for i in range(8)]
     env, objects = [], ["x", "z", "out"]
     for i, name in enumerate(names):
@@ -87,6 +98,7 @@ def run() -> dict:
     live, asked = investigate(env, start, objects, ("r0", "r0", "out"))
     save(STATE, [{"path": list(p)} for p in live])
     checks = {
+        "oracle": apply_path(o_field, o_path, "seal", o_objects) == "plant",
         "eight": len(start) == 8,
         "three_asks": len(asked) == 3,
         "resolved": [list(p) for p in live] == [["r0", "r0", "out"]],
@@ -94,7 +106,7 @@ def run() -> dict:
         "reloaded": load(STATE) == [{"path": ["r0", "r0", "out"]}],
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "asked": asked, "failed": failed, "claim": "eight hypotheses; three questions; missing is not wrong"}
+    receipt = {**checks, "asked": asked, "failed": failed, "claim": "eight kept; oracle restored"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
