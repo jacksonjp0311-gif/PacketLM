@@ -1,8 +1,8 @@
 """Tiny next-token model.
 
 Pure Python. No torch. Trains on the runner.
-Token embeddings, two attention layers, next-token head.
-Context is longer. Embedding update is stronger.
+Token embeddings, two attention layers with residual skip, next-token head.
+Context is longer. Training is longer.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from pathlib import Path
 from .train import load_corpus, window_stories
 
 DIM = 32
-STEPS = 300
+STEPS = 500
 CTX = 12
 
 def tokenize(text: str) -> list[str]:
@@ -74,6 +74,9 @@ class TinyLM:
             for j, w in enumerate(weights):
                 for d in range(DIM):
                     out[i][d] += w * v[j][d]
+            # residual: keep the input token signal
+            for d in range(DIM):
+                out[i][d] += x[i][d]
         return out
 
     def forward(self, token_ids: list[int]) -> list[float]:
@@ -96,7 +99,6 @@ class TinyLM:
             g = probs[j] - (1.0 if j == target else 0.0)
             for d in range(DIM):
                 self.Wo[j][d] -= lr * g * last[d]
-        # stronger update on every context token, not only the last
         err = probs[target] - 1.0
         for tid in token_ids[-CTX:]:
             for d in range(DIM):
@@ -159,6 +161,7 @@ def run() -> dict:
         "dim": DIM,
         "context": CTX,
         "layers": 2,
+        "residual": True,
         "steps": STEPS,
         "mean_loss": round(sum(losses) / max(len(losses), 1), 4),
         "holdout_before": round(before, 3),
@@ -166,7 +169,7 @@ def run() -> dict:
         "improved": after > before,
         "prompt": prompt,
         "generated": gen,
-        "claim": "longer context and stronger embedding update; still tiny, not a general language model"
+        "claim": "residual attention and longer training; still tiny, not a general language model"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/tiny_receipt.json").write_text(json.dumps(receipt, indent=2))
