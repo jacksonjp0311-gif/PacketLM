@@ -1,8 +1,8 @@
-"""G38: retrieve from a partial bind.
+"""G38: three partial queries.
 
-Store full role-bound facts.
-Query with subject and relation only.
-The matching fact should rank first by Bitwork score.
+Each query is subject and relation only.
+The right object must rank first.
+If any miss, the run fails.
 Not a general mind.
 """
 
@@ -30,40 +30,40 @@ def partial(subject: str, relation: str) -> Packet:
     x = int.from_bytes(s.bits, "big") ^ int.from_bytes(r.bits, "big")
     return Packet(bits=x.to_bytes(BITS // 8, "big"), count=bin(x).count("1"))
 
-def as_hex(pkt: Packet) -> str:
-    return pkt.bits.hex()
-
-def from_hex(h: str) -> Packet:
-    raw = bytes.fromhex(h)
-    return Packet(bits=raw, count=bin(int.from_bytes(raw, "big")).count("1"))
-
 def run() -> dict:
     facts = [
         ("alice", "helps", "bob"),
         ("bob", "helps", "alice"),
         ("mira", "has", "tail"),
         ("lily", "found", "needle"),
+        ("needle", "sews", "cloth"),
     ]
-    store = [{"s": s, "r": r, "o": o, "bits": as_hex(bind(s, r, o))} for s, r, o in facts]
-    query = partial("alice", "helps")
-    ranked = []
-    for item in store:
-        pkt = from_hex(item["bits"])
-        ranked.append((item["s"], item["r"], item["o"], pkt.score(query)))
-    ranked.sort(key=lambda x: x[3], reverse=True)
-    top = ranked[0]
-    ok = top[0] == "alice" and top[2] == "bob"
+    store = [(s, r, o, bind(s, r, o)) for s, r, o in facts]
+    queries = [
+        ("alice", "helps", "bob"),
+        ("bob", "helps", "alice"),
+        ("mira", "has", "tail"),
+        ("lily", "found", "needle"),
+    ]
+    rows = []
+    for s, r, expected in queries:
+        q = partial(s, r)
+        ranked = sorted(store, key=lambda item: item[3].score(q), reverse=True)
+        top = ranked[0]
+        ok = top[0] == s and top[2] == expected
+        rows.append({"q": f"{s} {r} ?", "got": top[2], "expected": expected, "ok": ok, "score": top[3].score(q)})
+    failed = [row["q"] for row in rows if not row["ok"]]
     receipt = {
-        "query": "alice helps ?",
-        "top": {"subject": top[0], "object": top[2], "score": top[3]},
-        "ranked": [{"s": a, "o": c, "score": s} for a, _, c, s in ranked],
-        "retrieved_bob": ok,
-        "claim": "partial bind retrieves the object by score; not a mind"
+        "queries": len(queries),
+        "passed": len(failed) == 0,
+        "failed": failed,
+        "rows": rows,
+        "claim": "partial binds retrieve the object by score; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bind_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
-    if not ok:
+    if failed:
         raise SystemExit(1)
     return receipt
 
