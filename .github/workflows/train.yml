@@ -21,7 +21,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Node router
+        run: python -m packetlm.nodes
+      - name: Upload nodes receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-nodes-receipt
+          path: artifacts/nodes_receipt.json
       - name: Tiny next-token model
+        if: always()
         run: python -m packetlm.tiny
       - name: Upload tiny receipt
         if: always()
