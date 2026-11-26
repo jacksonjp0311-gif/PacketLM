@@ -1,9 +1,8 @@
-"""Language on the route, held to the fact.
+"""Train harder.
 
-The walk picks the packet.
-The packet generates.
-If the generation misses the surplus, the surplus is spoken.
-The route decides. The fact is what is said. Not a general mind.
+More facts. More questions. Three epochs in one run.
+The walk picks the packet. The packet speaks the surplus if generation misses.
+Hits strengthen. Misses weaken. Not a general mind.
 """
 
 from __future__ import annotations
@@ -15,11 +14,36 @@ from .train import load_corpus, window_stories
 from .context import load_store, save_store, bump, activate, write_back, train_on_query
 from .geometry import ensure, walk
 
-def speak(store, name, prompt, vocab, inv, surplus) -> tuple[list[str], bool]:
+FACTS = [
+    ("lily", ["lily", "found", "needle"], "lily found a needle"),
+    ("needle", ["needle", "sew", "cloth"], "a needle can sew cloth"),
+    ("infer-sew", ["lily", "sew"], "lily can sew"),
+    ("dress", ["sew", "dress"], "sew makes a dress"),
+    ("river", ["river", "cold", "stones"], "the river is cold and has stones"),
+    ("dusk", ["dusk", "dark", "night"], "dusk is dark before night"),
+    ("traveler", ["traveler", "shelter", "night"], "a traveler needed shelter before night"),
+    ("mom", ["mom", "thanked", "lily"], "lily thanked her mom"),
+    ("button", ["button", "lost", "coat"], "the button was lost from the coat"),
+    ("fish", ["fish", "river", "swim"], "a fish swims in the river"),
+]
+
+QUESTIONS = [
+    ("what can lily make", "dress"),
+    ("what can lily do with a needle", "sew"),
+    ("what is in the river", "stones"),
+    ("what is dusk", "dark"),
+    ("what did the traveler need", "shelter"),
+    ("what did lily find", "needle"),
+    ("who did lily thank", "mom"),
+    ("what was lost", "button"),
+    ("what swims in the river", "fish"),
+    ("what can sew cloth", "needle"),
+]
+
+def speak(store, name, prompt, vocab, inv, surplus):
     model = activate(store, name)
     preferred = " ".join(store["packets"][name].get("preferred") or [])
-    for _ in range(3):
-        train_on_query(model, preferred or prompt, vocab, steps=24)
+    train_on_query(model, preferred or prompt, vocab, steps=16)
     gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(prompt), vocab) or [1], steps=6)]
     write_back(store, name, model)
     if any(t in gen for t in surplus):
@@ -27,57 +51,38 @@ def speak(store, name, prompt, vocab, inv, surplus) -> tuple[list[str], bool]:
     return surplus[:6], True
 
 def run() -> dict:
-    random.seed(25)
+    random.seed(26)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
     store = load_store(len(vocab), ["language"])
-    facts = [
-        ("lily", ["lily", "found", "needle"], "lily found a needle"),
-        ("needle", ["needle", "sew", "cloth"], "a needle can sew cloth"),
-        ("infer-sew", ["lily", "sew"], "lily can sew"),
-        ("dress", ["sew", "dress"], "sew makes a dress"),
-        ("river", ["river", "cold", "stones"], "the river is cold and has stones"),
-        ("dusk", ["dusk", "dark", "night"], "dusk is dark before night"),
-        ("traveler", ["traveler", "shelter", "night"], "a traveler needed shelter before night"),
-    ]
-    for name, keys, text in facts:
+    for name, keys, text in FACTS:
         ensure(store, name, keys, tokenize(text))
     inv = {i: t for t, i in vocab.items()}
-    questions = [
-        ("what can lily make", "dress"),
-        ("what can lily do with a needle", "sew"),
-        ("what is in the river", "stones"),
-        ("what is dusk", "dark"),
-        ("what did the traveler need", "shelter"),
-        ("what did lily find", "needle"),
-    ]
-    results = []
-    for q, expected in questions:
-        path = walk(q, store)
-        if not path:
-            results.append({"q": q, "hit": False})
-            continue
-        name = path[0]["packet"]
-        surplus = path[0]["surplus"]
-        spoken, held = speak(store, name, q, vocab, inv, surplus)
-        hit = expected in spoken or expected in surplus
-        bump(store, name, 0.1 if hit else -0.05)
-        results.append({
-            "q": q,
-            "packet": name,
-            "surplus": surplus,
-            "spoke": spoken,
-            "held": held,
-            "hit": hit,
-        })
+    epochs = []
+    for epoch in range(3):
+        hits = 0
+        rows = []
+        for q, expected in QUESTIONS:
+            path = walk(q, store)
+            if not path:
+                rows.append({"q": q, "hit": False})
+                continue
+            name = path[0]["packet"]
+            surplus = path[0]["surplus"]
+            spoken, held = speak(store, name, q, vocab, inv, surplus)
+            hit = expected in spoken or expected in surplus
+            hits += int(hit)
+            bump(store, name, 0.1 if hit else -0.05)
+            rows.append({"q": q, "packet": name, "spoke": spoken, "held": held, "hit": hit})
+        epochs.append({"epoch": epoch, "hits": hits, "of": len(QUESTIONS)})
     save_store(store)
     receipt = {
-        "questions": len(questions),
-        "hits": sum(1 for r in results if r.get("hit")),
-        "held": sum(1 for r in results if r.get("held")),
-        "results": results,
-        "claim": "packet speaks surplus when generation misses; not a general mind"
+        "facts": len(FACTS),
+        "questions": len(QUESTIONS),
+        "epochs": epochs,
+        "final_hits": epochs[-1]["hits"] if epochs else 0,
+        "claim": "three epochs, ten questions; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/speak_receipt.json").write_text(json.dumps(receipt, indent=2))
