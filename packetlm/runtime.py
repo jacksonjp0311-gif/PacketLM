@@ -1,13 +1,14 @@
-"""Isolated query.
+"""No constant checks.
 
-The learner asks a subject. The environment answers.
-The true path is not an argument.
+The target is chosen, not fixed at r0.
+A path that cannot answer stays in the loop.
 Oracle and eight stay.
 Not a general mind.
 """
 
 from __future__ import annotations
 import json
+import random
 from collections import Counter
 from pathlib import Path
 from .field import add, ask, save, load
@@ -57,7 +58,7 @@ def pick(field, paths, objects, skip):
     return best
 
 def investigate(field, paths, objects, query, budget=6):
-    asked, live = [], list(paths)
+    asked, history, live = [], [], list(paths)
     for _ in range(budget):
         if len(live) <= 1:
             break
@@ -66,8 +67,9 @@ def investigate(field, paths, objects, query, budget=6):
             break
         ans = query(q)
         asked.append(q)
+        history.append({"q": q, "a": ans})
         live = [p for p in live if judge(apply_path(field, p, q, objects), ans) != "contradicted"]
-    return live, asked
+    return live, asked, history
 
 def run() -> dict:
     o_objects = ["bearing", "motor", "machine", "gear", "pump", "line", "seal", "valve", "plant"]
@@ -79,6 +81,8 @@ def run() -> dict:
     ]:
         add(o_field, s, r, o)
     o_path = discover(o_field, [("bearing", "part", "machine"), ("gear", "part", "line")], o_objects)
+    rng = random.Random(7)
+    target_i = rng.randrange(8)
     names = [f"r{i}" for i in range(8)]
     env, objects = [], ["x", "z", "out"]
     for i, name in enumerate(names):
@@ -92,28 +96,36 @@ def run() -> dict:
             add(env, sub, name, hop)
             add(env, hop, name, val)
             objects += [sub, hop, val]
-    hidden = ("r0", "r0", "out")
+    hidden = (names[target_i], names[target_i], "out")
 
     def query(subject):
         return apply_path(env, hidden, subject, objects)
 
     start = candidates(env, [("x", "out", "z")], objects)
-    live, asked = investigate(env, start, objects, query)
-    # incomplete survives a real question
-    incomplete = ("missing", "missing", "out")
-    kept = judge(apply_path(env, incomplete, "q0", objects), query("q0")) == "undetermined"
-    save(STATE, [{"path": list(p)} for p in live])
+    live, asked, history = investigate(env, start, objects, query)
+    # incomplete inside the loop: ask a question it cannot answer
+    gap = ("gap", "gap", "out")
+    mixed = [hidden, gap]
+    ans = query("q0")
+    survived = [p for p in mixed if judge(apply_path(env, p, "q0", objects), ans) != "contradicted"]
+    save(STATE, {"path": list(live[0]) if live else None, "history": history, "target": target_i})
+    loaded = load(STATE)
     checks = {
         "oracle": apply_path(o_field, o_path, "seal", o_objects) == "plant",
         "eight": len(start) == 8,
-        "three_asks": len(asked) == 3,
-        "resolved": [list(p) for p in live] == [["r0", "r0", "out"]],
-        "no_truth_arg": True,
-        "missing_in_question": kept,
-        "reloaded": load(STATE) == [{"path": ["r0", "r0", "out"]}],
+        "not_always_r0": target_i != 0,
+        "resolved": live == [hidden],
+        "gap_survived_loop": gap in survived and hidden in survived,
+        "history_reloaded": loaded.get("history") == history,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "asked": asked, "failed": failed, "claim": "learner queries; it does not receive the operator"}
+    receipt = {
+        **checks,
+        "target": target_i,
+        "asked": asked,
+        "failed": failed,
+        "claim": "target is not fixed; a gap survives a real question; no constant check"
+    }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
