@@ -258,5 +258,22 @@
       "the",
       "cold"
     ]
+  },
+  {
+    "turn": 0,
+    "query": "count the stones in the cold river at dusk",
+    "packet": "pkt-4",
+    "grown": false,
+    "retrieved": []
+  },
+  {
+    "turn": 1,
+    "query": "stones in the cold river",
+    "packet": "pkt-4",
+    "grown": false,
+    "retrieved": [
+      "count",
+      "dusk"
+    ]
   }
 ]
