@@ -25,6 +25,15 @@ jobs:
         with:
           name: packetlm-tiny-receipt
           path: artifacts/tiny_receipt.json
+      - name: Self-edit
+        if: always()
+        run: python -m packetlm.selfedit
+      - name: Upload self-edit receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-selfedit-receipt
+          path: artifacts/selfedit_receipt.json
       - name: Language-phase measurement
         if: always()
         run: python -m packetlm.train
