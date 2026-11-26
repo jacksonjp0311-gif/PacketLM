@@ -1,9 +1,9 @@
-"""Two types.
+"""Propagation, measured.
 
-Dax tails go green. Cat whiskers go long.
-Mira inherits green, not long.
-Sam inherits long, not green.
-Ancestor still reaches cy.
+Before: dax tails are blue. Mira derives blue.
+After: dax tails are green. Mira derives green. Blue is gone.
+Sam is a cat with long whiskers. That exact property must remain.
+The inheritance rule is programmed. It is not learned.
 Not a general mind.
 """
 
@@ -33,26 +33,37 @@ def prop(field, name, relation, objects):
     return ask(field, kind, relation, objects)
 
 def run() -> dict:
-    objects = ["bea", "cy", "dax", "cat", "green", "long", "needle"]
+    objects = ["bea", "cy", "dax", "cat", "blue", "green", "long", "needle"]
     field = []
     for s, r, o in [
         ("ann", "ancestor", "bea"),
         ("bea", "ancestor", "cy"),
-        ("dax", "tail", "green"),
+        ("dax", "tail", "blue"),
         ("cat", "whiskers", "long"),
         ("mira", "isa", "dax"),
         ("sam", "isa", "cat"),
         ("lily", "found", "needle"),
     ]:
         add(field, s, r, o)
+    before = {
+        "mira": prop(field, "mira", "tail", objects),
+        "sam": prop(field, "sam", "whiskers", objects),
+    }
+    field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
+    add(field, "dax", "tail", "green")
     save(FIELD, field)
     loaded = load(FIELD)
+    after = {
+        "mira": prop(loaded, "mira", "tail", objects),
+        "sam": prop(loaded, "sam", "whiskers", objects),
+    }
     ancestor = walk(loaded, "ann", "ancestor", objects)
     checks = {
-        "mira_tail": prop(loaded, "mira", "tail", objects) == "green",
-        "mira_not_whiskers": prop(loaded, "mira", "whiskers", objects) != "long",
-        "sam_whiskers": prop(loaded, "sam", "whiskers", objects) == "long",
-        "sam_not_tail": prop(loaded, "sam", "tail", objects) != "green",
+        "before_mira_blue": before["mira"] == "blue",
+        "after_mira_green": after["mira"] == "green",
+        "blue_gone": after["mira"] != "blue",
+        "sam_stayed_long": before["sam"] == "long" and after["sam"] == "long",
+        "sam_not_green": prop(loaded, "sam", "tail", objects) != "green",
         "derived_cy": ancestor == ["bea", "cy"],
         "retained": ask(loaded, "lily", "found", objects) == "needle",
         "reloaded": len(loaded) == len(field),
@@ -63,9 +74,12 @@ def run() -> dict:
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
+        "before": before,
+        "after": after,
         "ancestor_walk": ancestor,
+        "rule": "programmed isa then property; not learned",
         "failed": failed,
-        "claim": "two types; each member inherits only its own; not a mind"
+        "claim": "before and after recorded; negative is the exact other property; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
