@@ -47,3 +47,12 @@ jobs:
         with:
           name: packetlm-bridge-receipt
           path: artifacts/bridge_receipt.json
+      - name: Role induction
+        if: always()
+        run: python -m packetlm.roles
+      - name: Upload roles receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-roles-receipt
+          path: artifacts/roles_receipt.json
