@@ -29,15 +29,15 @@ jobs:
         with:
           name: packetlm-geometry-receipt
           path: artifacts/geometry_receipt.json
-      - name: Field mind
+      - name: Speak from route
         if: always()
-        run: python -m packetlm.mind
-      - name: Upload mind receipt
+        run: python -m packetlm.speak
+      - name: Upload speak receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: packetlm-mind-receipt
-          path: artifacts/mind_receipt.json
+          name: packetlm-speak-receipt
+          path: artifacts/speak_receipt.json
       - name: Commit field and memory
         if: always()
         run: |
@@ -55,21 +55,3 @@ jobs:
         with:
           name: packetlm-tiny-receipt
           path: artifacts/tiny_receipt.json
-      - name: Intelligence probe
-        if: always()
-        run: python -m packetlm.iq
-      - name: Upload iq receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-iq-receipt
-          path: artifacts/iq_receipt.json
-      - name: Self-edit
-        if: always()
-        run: python -m packetlm.selfedit
-      - name: Upload self-edit receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-selfedit-receipt
-          path: artifacts/selfedit_receipt.json
