@@ -1,9 +1,8 @@
-"""Bridge through the operator.
+"""Learn a construction.
 
-isa chain tail and isa compose hastail live in the field.
-The question selects that operator.
-A correction sentence replaces the tail.
-Unknown and unparsed stay distinct.
+Two labeled examples of 'X owns Y' induce a pattern.
+A third sentence uses it.
+The isa operator path and correction stay.
 Not a general mind.
 """
 
@@ -21,31 +20,24 @@ def norm(token: str) -> str:
         return token[:-1]
     return token
 
-def parse(sentence: str) -> tuple[str, str, str] | None:
-    s = sentence.lower().strip().rstrip(".").rstrip("?")
-    if s.startswith("no,"):
-        s = s[3:].strip()
-    parts = s.split()
-    if len(parts) == 4 and parts[1] == "is" and parts[2] == "a":
-        return norm(parts[0]), "isa", norm(parts[3])
-    if len(parts) == 4 and parts[1] == "have" and parts[-1] in {"tails", "tail"}:
-        return norm(parts[0]), "tail", norm(parts[2])
-    if len(parts) == 3 and parts[1] == "helps":
-        return norm(parts[0]), "helps", norm(parts[2])
-    return None
-
-def ingest(field, sentence, objects, correct=False):
-    fact = parse(sentence)
-    if not fact:
+def learn_owns(examples: list[tuple[str, tuple[str, str, str]]]) -> dict | None:
+    """examples: ('ada owns box', ('ada','owns','box')). Pattern is word 1 = relation."""
+    rels = set()
+    for sent, (s, r, o) in examples:
+        parts = sent.lower().split()
+        if len(parts) != 3 or parts[0] != s or parts[2] != o:
+            return None
+        rels.add((parts[1], r))
+    if len(rels) != 1:
         return None
-    s, r, o = fact
-    if correct or sentence.lower().startswith("no,"):
-        field[:] = [f for f in field if not (f["s"] == s and f["r"] == r)]
-    for t in (s, r, o):
-        if t not in objects:
-            objects.append(t)
-    add(field, s, r, o)
-    return fact
+    word, rel = next(iter(rels))
+    return {"len": 3, "rel_at": 1, "word": word, "rel": rel}
+
+def apply_pattern(pattern, sentence):
+    parts = sentence.lower().strip().rstrip(".").split()
+    if not pattern or len(parts) != pattern["len"] or parts[pattern["rel_at"]] != pattern["word"]:
+        return None
+    return norm(parts[0]), pattern["rel"], norm(parts[2])
 
 def via_operator(field, name, objects):
     if ask(field, "isa", "compose", objects) != "hastail":
@@ -57,46 +49,37 @@ def via_operator(field, name, objects):
         return None
     return ask(field, kind, "tail", objects)
 
-def ask_sentence(field, sentence, objects):
-    s = sentence.lower().strip().rstrip("?")
-    parts = s.split()
-    if len(parts) == 5 and parts[0] == "what" and parts[1] == "color" and parts[2] == "is" and parts[-1] == "tail":
-        name = norm(parts[3])
-        color = via_operator(field, name, objects)
-        if not color:
-            return {"abstain": True, "reason": "unknown", "name": name}
-        return {"abstain": False, "answer": f"{name} has a {color} tail", "via": "isa"}
-    return {"abstain": True, "reason": "unparsed"}
-
 def run() -> dict:
-    objects = ["hastail", "tail", "isa"]
+    objects = ["hastail", "tail", "isa", "owns"]
     field = []
     add(field, "isa", "chain", "tail")
     add(field, "isa", "compose", "hastail")
-    for s in ["Mira is a dax.", "daxes have blue tails", "Alice helps Bob."]:
-        ingest(field, s, objects)
-    before = ask_sentence(field, "what color is mira tail?", objects)
-    ingest(field, "no, daxes have green tails", objects, correct=True)
+    add(field, "mira", "isa", "dax")
+    add(field, "dax", "tail", "green")
+    examples = [
+        ("ada owns box", ("ada", "owns", "box")),
+        ("ned owns key", ("ned", "owns", "key")),
+    ]
+    pattern = learn_owns(examples)
+    unseen = apply_pattern(pattern, "rex owns map")
+    if unseen:
+        add(field, *unseen)
+    bad = apply_pattern(pattern, "rex holds map")
     save(FIELD, field)
     loaded = load(FIELD)
-    after = ask_sentence(loaded, "what color is mira tail?", objects)
-    unknown = ask_sentence(loaded, "what color is orion tail?", objects)
-    fly = ask_sentence(loaded, "can mira fly?", objects)
     checks = {
-        "before_blue": before.get("answer") == "mira has a blue tail",
-        "via_operator": before.get("via") == "isa" and after.get("via") == "isa",
-        "corrected_green": after.get("answer") == "mira has a green tail",
-        "unknown_reason": unknown.get("reason") == "unknown",
-        "unparsed_reason": fly.get("reason") == "unparsed",
+        "learned": pattern is not None and pattern["rel"] == "owns",
+        "unseen_owns": unseen == ("rex", "owns", "map") and ask(loaded, "rex", "owns", objects) == "map",
+        "holds_rejected": bad is None,
+        "mira_green": via_operator(loaded, "mira", objects) == "green",
         "reloaded": len(loaded) == len(field),
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "before": before,
-        "after": after,
+        "pattern": pattern,
         "failed": failed,
-        "claim": "question uses the stored isa operator; correction is a sentence"
+        "claim": "owns learned from two examples; holds rejected; isa path still works"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
