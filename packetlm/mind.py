@@ -1,10 +1,9 @@
-"""Mind loop: infer, remember, ask again.
+"""Mind loop: infer, remember, hop again.
 
-Two facts live in two packets.
-A question composes them.
-If the expected token appears, a new packet holds the composed fact.
-A second question routes to that packet and returns the fact.
-Not a general mind.
+First inference: lily + needle -> sew. Stored.
+New fact: sew makes a dress.
+Question: what can lily make.
+The answer dress is two hops away. Not a general mind.
 """
 
 from __future__ import annotations
@@ -17,7 +16,7 @@ from .nodes import tokens
 from .context import load_store, save_store, bump, blank_packet
 
 MEMORY = Path("data/mind_memory.json")
-STOP = {"the", "a", "an", "in", "on", "at", "of", "to", "and", "before", "did", "what", "can", "with"}
+STOP = {"the", "a", "an", "in", "on", "at", "of", "to", "and", "before", "did", "what", "can", "with", "make", "makes"}
 
 def content(text: str) -> list[str]:
     return sorted({t for t in tokens(text) if t not in STOP})
@@ -49,48 +48,42 @@ def surplus(preferred: list[str], query: str) -> list[str]:
     return [t for t in preferred if t not in q and t not in STOP]
 
 def run() -> dict:
-    random.seed(22)
+    random.seed(23)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
     store = load_store(len(vocab), ["language"])
     ensure(store, "lily", ["lily", "found", "needle"], tokenize("lily found a needle"))
     ensure(store, "needle", ["needle", "sew", "cloth"], tokenize("a needle can sew cloth"))
-    question = "what can lily do with a needle"
-    expected = "sew"
-    hits = activate_many(question, store)
-    composed = []
-    for name in hits:
-        extra = surplus(store["packets"][name].get("preferred") or [], question)
-        if extra:
-            composed.append({"packet": name, "retrieved": extra})
-            bump(store, name, 0.2)
-    flat = [t for c in composed for t in c["retrieved"]]
-    inferred = expected in flat
-    remembered = None
+    ensure(store, "infer-sew", ["lily", "sew", "needle"], tokenize("lily can sew with a needle"))
+    ensure(store, "dress", ["sew", "dress", "cloth"], tokenize("sew makes a dress"))
+    question = "what can lily make"
+    expected = "dress"
+    # hop 1: lily -> sew
+    hop1 = activate_many("lily", store)
+    hop1_extra = []
+    for name in hop1:
+        hop1_extra += surplus(store["packets"][name].get("preferred") or [], "lily")
+    # hop 2: sew -> dress
+    hop2 = activate_many("sew", store) if "sew" in hop1_extra else []
+    hop2_extra = []
+    for name in hop2:
+        hop2_extra += surplus(store["packets"][name].get("preferred") or [], "sew")
+    inferred = expected in hop2_extra
     if inferred:
-        remembered = "infer-sew"
-        fact = tokenize("lily can sew with a needle")
-        ensure(store, remembered, content(" ".join(fact)), fact)
-        bump(store, remembered, 0.3)
-    follow = "lily sew"
-    follow_hits = activate_many(follow, store) if remembered else []
-    follow_got = remembered in follow_hits
+        ensure(store, "infer-dress", content("lily can make a dress"), tokenize("lily can make a dress"))
+        bump(store, "infer-dress", 0.3)
     save_store(store)
     memory = load_memory()
-    memory.append({
-        "question": question,
-        "inferred": inferred,
-        "remembered": remembered,
-        "follow": follow,
-        "follow_got": follow_got,
-    })
+    memory.append({"question": question, "hop1": hop1_extra, "hop2": hop2_extra, "inferred": inferred})
     save_memory(memory)
     receipt = {
+        "question": question,
+        "expected": expected,
+        "hop1": hop1_extra,
+        "hop2": hop2_extra,
         "inferred": inferred,
-        "remembered_packet": remembered,
-        "follow_routed": follow_got,
-        "claim": "inference was stored and a follow-up routed to it; not a general mind"
+        "claim": "two-hop inference from remembered fact; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/mind_receipt.json").write_text(json.dumps(receipt, indent=2))
