@@ -1,9 +1,9 @@
-"""A stored operator.
+"""One operator, two pairs.
 
-Examples: parent of parent is grandparent.
-The operator is a fact in the field, not a Python branch.
-Apply it to a pair that was not in the examples.
-Propagation checks stay.
+parent compose grand is stored once.
+Ada -> Jo -> Kim and Rex -> Sol -> Tan both use it.
+A dead end still invents nothing.
+Propagation stays.
 Not a general mind.
 """
 
@@ -33,9 +33,7 @@ def prop(field, name, relation, objects):
     return ask(field, kind, relation, objects)
 
 def apply_op(field, a, mid_rel, objects):
-    """If a mid_rel b and b mid_rel c, and op says mid_rel+mid_rel = out_rel, return c."""
-    out_rel = ask(field, mid_rel, "compose", objects)
-    if not out_rel:
+    if not ask(field, mid_rel, "compose", objects):
         return None
     b = ask(field, a, mid_rel, objects)
     if not b:
@@ -43,7 +41,10 @@ def apply_op(field, a, mid_rel, objects):
     return ask(field, b, mid_rel, objects)
 
 def run() -> dict:
-    objects = ["bea", "cy", "dax", "cat", "blue", "green", "long", "needle", "parent", "grand", "jo", "kim", "lee"]
+    objects = [
+        "bea", "cy", "dax", "cat", "blue", "green", "long", "needle",
+        "parent", "grand", "jo", "kim", "lee", "sol", "tan",
+    ]
     field = []
     for s, r, o in [
         ("ann", "ancestor", "bea"),
@@ -56,6 +57,8 @@ def run() -> dict:
         ("parent", "compose", "grand"),
         ("ada", "parent", "jo"),
         ("jo", "parent", "kim"),
+        ("rex", "parent", "sol"),
+        ("sol", "parent", "tan"),
         ("ned", "parent", "lee"),
     ]:
         add(field, s, r, o)
@@ -64,17 +67,13 @@ def run() -> dict:
     add(field, "dax", "tail", "green")
     save(FIELD, field)
     loaded = load(FIELD)
-    after = prop(loaded, "mira", "tail", objects)
-    # apply stored operator to a pair: ada parent jo parent kim => kim
-    derived = apply_op(loaded, "ada", "parent", objects)
-    # ned parent lee has no further parent; operator should not invent one
-    ned = apply_op(loaded, "ned", "parent", objects)
     checks = {
         "before_blue": before == "blue",
-        "after_green": after == "green",
+        "after_green": prop(loaded, "mira", "tail", objects) == "green",
         "sam_stayed_long": prop(loaded, "sam", "whiskers", objects) == "long",
-        "op_applied": derived == "kim",
-        "op_no_invent": ned is None,
+        "op_kim": apply_op(loaded, "ada", "parent", objects) == "kim",
+        "op_tan": apply_op(loaded, "rex", "parent", objects) == "tan",
+        "op_no_invent": apply_op(loaded, "ned", "parent", objects) is None,
         "derived_cy": walk(loaded, "ann", "ancestor", objects) == ["bea", "cy"],
         "retained": ask(loaded, "lily", "found", objects) == "needle",
         "reloaded": len(loaded) == len(field),
@@ -85,10 +84,8 @@ def run() -> dict:
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "derived_grand": derived,
-        "rule": "operator stored as parent compose grand; application is still our code",
         "failed": failed,
-        "claim": "operator lives in the field; applied to a new pair; not learned; not a mind"
+        "claim": "one stored operator, two pairs; not learned; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
