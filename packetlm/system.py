@@ -1,9 +1,8 @@
-"""Mixed-relation operator.
+"""Truth maintenance.
 
-isa chain tail, isa compose hastail.
-Mira isa dax, dax tail green => mira hastail green.
-The two input relations are different.
-Same-relation operators stay.
+A derived fact records its premises.
+If a premise changes, the derived fact is dropped and recomputed.
+Older checks stay: ancestor, needle, sibling blocked, two operators.
 Not a general mind.
 """
 
@@ -26,18 +25,15 @@ def walk(field, start, relation, objects, steps=3):
         cur = nxt
     return out
 
-def apply_same(field, a, mid_rel, objects):
-    out_rel = ask(field, mid_rel, "compose", objects)
-    if not out_rel:
-        return None
-    b = ask(field, a, mid_rel, objects)
-    if not b:
-        return None
-    c = ask(field, b, mid_rel, objects)
-    if not c:
-        return None
+def derive(field, a, out_rel, c, premises):
     add(field, a, out_rel, c)
-    return out_rel, c
+    field[-1]["premises"] = premises
+    field[-1]["derived"] = True
+
+def invalidate(field, subject, relation):
+    """Drop derived facts whose premises include this fact."""
+    key = f"{subject}:{relation}"
+    return [f for f in field if key not in f.get("premises", [])]
 
 def apply_mixed(field, a, first_rel, objects):
     second = ask(field, first_rel, "chain", objects)
@@ -50,13 +46,26 @@ def apply_mixed(field, a, first_rel, objects):
     c = ask(field, b, second, objects)
     if not c:
         return None
-    add(field, a, out_rel, c)
+    derive(field, a, out_rel, c, [f"{a}:{first_rel}", f"{b}:{second}"])
+    return out_rel, c
+
+def apply_same(field, a, mid_rel, objects):
+    out_rel = ask(field, mid_rel, "compose", objects)
+    if not out_rel:
+        return None
+    b = ask(field, a, mid_rel, objects)
+    if not b:
+        return None
+    c = ask(field, b, mid_rel, objects)
+    if not c:
+        return None
+    derive(field, a, out_rel, c, [f"{a}:{mid_rel}", f"{b}:{mid_rel}"])
     return out_rel, c
 
 def run() -> dict:
     objects = [
-        "bea", "cy", "dax", "cat", "green", "long", "needle",
-        "parent", "grand", "tail", "hastail", "jo", "kim",
+        "bea", "cy", "dax", "cat", "blue", "green", "long", "needle",
+        "parent", "grand", "sibling", "tail", "hastail", "jo", "kim",
     ]
     field = []
     for s, r, o in [
@@ -72,17 +81,28 @@ def run() -> dict:
         ("isa", "compose", "hastail"),
         ("ada", "parent", "jo"),
         ("jo", "parent", "kim"),
+        ("ada", "sibling", "kim"),
     ]:
         add(field, s, r, o)
     parent_out = apply_same(field, "ada", "parent", objects)
+    sibling = apply_same(field, "ada", "sibling", objects)
     mixed = apply_mixed(field, "mira", "isa", objects)
-    sam_mixed = apply_mixed(field, "sam", "isa", objects)
+    before = ask(field, "mira", "hastail", objects)
+    # correct the premise
+    field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
+    add(field, "dax", "tail", "blue")
+    field = invalidate(field, "dax", "tail")
+    stale = ask(field, "mira", "hastail", objects)
+    recomputed = apply_mixed(field, "mira", "isa", objects)
     save(FIELD, field)
     loaded = load(FIELD)
     checks = {
         "wrote_grand": parent_out == ("grand", "kim") and ask(loaded, "ada", "grand", objects) == "kim",
-        "wrote_hastail": mixed == ("hastail", "green") and ask(loaded, "mira", "hastail", objects) == "green",
-        "sam_no_tail": sam_mixed is None,
+        "sibling_blocked": sibling is None,
+        "before_green": before == "green",
+        "stale_dropped": stale is None,
+        "recomputed_blue": recomputed == ("hastail", "blue") and ask(loaded, "mira", "hastail", objects) == "blue",
+        "sam_no_tail": apply_mixed(loaded, "sam", "isa", objects) is None,
         "derived_cy": walk(loaded, "ann", "ancestor", objects) == ["bea", "cy"],
         "retained": ask(loaded, "lily", "found", objects) == "needle",
         "reloaded": len(loaded) == len(field),
@@ -93,9 +113,8 @@ def run() -> dict:
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "mixed": mixed,
         "failed": failed,
-        "claim": "mixed operator isa then tail writes hastail; sam has no tail to chain"
+        "claim": "derived fact dropped when its premise changed, then recomputed"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
