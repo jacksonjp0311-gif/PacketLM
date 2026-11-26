@@ -1,9 +1,6 @@
-"""G43 start.
+"""Masks from predictions. Composition with bits.
 
-A mask of live hypotheses.
-Evidence is a mask.
-AND must match the list filter.
-This is bitwise storage, not a proven geometric advantage.
+Not a proven geometric advantage.
 Not a general mind.
 """
 
@@ -11,7 +8,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-def mask_of(ids, n):
+def mask_of(ids):
     m = 0
     for i in ids:
         m |= 1 << i
@@ -20,38 +17,61 @@ def mask_of(ids, n):
 def bits(m):
     return [i for i in range(m.bit_length()) if m & (1 << i)]
 
-def filter_list(live, supported, undetermined):
-    keep = set(supported) | set(undetermined)
-    return [i for i in live if i in keep]
+def classify(preds, answer):
+    supported, undetermined = [], []
+    for i, pred in enumerate(preds):
+        if pred is None:
+            undetermined.append(i)
+        elif pred == answer:
+            supported.append(i)
+    return supported, undetermined
 
-def filter_mask(live_mask, supported_mask, undetermined_mask):
-    return live_mask & (supported_mask | undetermined_mask)
+def filter_mask(live, supported, undetermined):
+    return live & (mask_of(supported) | mask_of(undetermined))
+
+def compose(a_rows, b_rows):
+    """C_i = OR over k of (A_ik and B_k). Rows are bitsets of targets."""
+    out = []
+    for a in a_rows:
+        acc = 0
+        k = 0
+        row = a
+        while row:
+            if row & 1:
+                acc |= b_rows[k]
+            row >>= 1
+            k += 1
+        out.append(acc)
+    return out
 
 def run() -> dict:
-    n = 8
-    live = list(range(n))
-    # evidence: 0,2,4,6 supported; 1 undetermined; rest contradicted
-    supported = [0, 2, 4, 6]
-    undetermined = [1]
-    listed = filter_list(live, supported, undetermined)
-    masked = bits(filter_mask(mask_of(live, n), mask_of(supported, n), mask_of(undetermined, n)))
-    # second evidence kills 2 and 6, 1 still undetermined
-    supported2 = [0, 4]
-    listed2 = filter_list(listed, supported2, undetermined)
-    masked2 = bits(filter_mask(mask_of(listed, n), mask_of(supported2, n), mask_of(undetermined, n)))
+    # predictions for 8 hypotheses on one question
+    preds = ["w", None, "w", "no", "w", "no", "w", "no"]
+    supported, undetermined = classify(preds, "w")
+    live = (1 << 8) - 1
+    after = filter_mask(live, supported, undetermined)
+    # second question
+    preds2 = ["yes", None, "no", "no", "yes", "no", "no", "no"]
+    s2, u2 = classify(preds2, "yes")
+    after2 = filter_mask(after, s2, u2)
+    # composition: in then in
+    # nodes: 0 bearing, 1 motor, 2 machine
+    inn = [1 << 1, 1 << 2, 0]
+    composed = compose(inn, inn)
+    walked = 1 << 2  # bearing -> machine
     checks = {
-        "same": listed == masked == [0, 1, 2, 4, 6],
-        "second": listed2 == masked2 == [0, 1, 4],
-        "undetermined_kept": 1 in masked2,
-        "contradicted_gone": 3 not in masked and 7 not in masked,
+        "from_predictions": bits(after) == [0, 1, 2, 4, 6],
+        "narrowed": bits(after2) == [0, 1, 4],
+        "undetermined_kept": 1 in bits(after2),
+        "composed": composed[0] == walked,
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "masked": masked,
-        "masked2": masked2,
+        "after": bits(after),
+        "after2": bits(after2),
         "failed": failed,
-        "claim": "bitwise filter matches the list; not a proven geometric advantage"
+        "claim": "masks built from predictions; composition matches the walk; not a proven advantage"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
