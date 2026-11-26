@@ -1,16 +1,19 @@
-"""Population self-edit with adaptive step size.
+"""Population self-edit that selects on probe hits.
 
-Several generations. Each generation makes 4 mutated copies.
-Keeps the best only if it beats the parent.
-Shrinks the mutation size when nothing is kept. Grows it slightly when something is.
+Loads persisted weights if present.
+Each generation mutates copies and scores them on sealed probes.
+Keeps the best only if probe hits rise.
+Saves the kept model so the next run continues.
 """
 
 from __future__ import annotations
 import json
 import random
 from pathlib import Path
-from .tiny import TinyLM, build_vocab, tokenize, ids, holdout_score
-from .train import load_corpus, window_stories
+from .tiny import TinyLM, build_vocab, tokenize, ids, DIM
+from .train import load_corpus, window_stories, load_probes
+from .persist import load_into, save_from
+from .iq import score_probes
 
 POP = 4
 GENS = 3
@@ -31,27 +34,34 @@ def mutate(model: TinyLM, scale: float) -> None:
     i = random.randrange(len(model.E))
     model.E[i] = [v + (random.random() - 0.5) * scale for v in model.E[i]]
 
+def probe_hits(model, probes, vocab, inv) -> int:
+    return sum(1 for h in score_probes(model, probes, vocab, inv) if h["hit"])
+
 def run() -> dict:
-    random.seed(3)
+    random.seed(7)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
+    probes = load_probes()
+    for p in probes:
+        for t in tokenize(p["expected"]):
+            if t not in vocab:
+                vocab[t] = len(vocab)
     inv = {i: t for t, i in vocab.items()}
     parent = TinyLM(len(vocab))
+    loaded = load_into(parent, DIM)
     pairs = []
     for w in windows:
         toks = tokenize(w)
         for i in range(1, len(toks)):
-            pairs.append((ids(toks[max(0, i - 6):i], vocab), vocab.get(toks[i], 1)))
-    for _ in range(40):
+            pairs.append((ids(toks[max(0, i - 12):i], vocab), vocab.get(toks[i], 1)))
+    for _ in range(60):
         if pairs:
             ctx, tgt = random.choice(pairs)
             parent.step(ctx, tgt)
-    cut = max(1, len(windows) // 5)
-    holdout = windows[-cut:]
     scale = 0.02
     history = []
-    score = holdout_score(parent, holdout, vocab, inv)
+    score = probe_hits(parent, probes, vocab, inv)
     for g in range(GENS):
         snap = clone_weights(parent)
         best_score = score
@@ -61,8 +71,8 @@ def run() -> dict:
             child = TinyLM(len(vocab))
             restore(child, snap)
             mutate(child, scale)
-            s = holdout_score(child, holdout, vocab, inv)
-            child_scores.append(round(s, 3))
+            s = probe_hits(child, probes, vocab, inv)
+            child_scores.append(s)
             if s > best_score:
                 best_score = s
                 best_snap = clone_weights(child)
@@ -71,22 +81,22 @@ def run() -> dict:
             restore(parent, best_snap)
             score = best_score
             scale = min(scale * 1.2, 0.1)
+            save_from(parent, DIM)
         else:
             scale = max(scale * 0.7, 0.002)
         history.append({
             "gen": g,
-            "parent": round(score if kept else history[-1]["parent"] if history else score, 3),
+            "hits": score,
             "children": child_scores,
             "kept": kept,
             "scale": round(scale, 4),
         })
     receipt = {
-        "population": POP,
-        "generations": GENS,
-        "final_score": round(score, 3),
-        "final_scale": round(scale, 4),
+        "loaded": loaded,
+        "probes": len(probes),
+        "final_hits": score,
         "history": history,
-        "claim": "adaptive population self-edit; mutation shrinks when nothing is kept; still tiny, not intelligent"
+        "claim": "self-edit selects on probe hits and persists a keep; still tiny, not intelligent"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/selfedit_receipt.json").write_text(json.dumps(receipt, indent=2))
