@@ -1,13 +1,13 @@
-"""G37 test.
+"""G37.1 qualification.
 
-Fails the run if a claim is false.
-Score, binding, and speech are separate.
+The score test asserts the tight packet is selected.
+It does not accept 'top score is highest' as a pass.
 """
 
 from __future__ import annotations
 import json
 from pathlib import Path
-from .packets import hash_to_bits, identity_packet
+from .packets import hash_to_bits
 from .router import Router
 from .bind import bind
 
@@ -17,30 +17,30 @@ def test_score() -> dict:
     query = hash_to_bits("lily needle")
     r = Router([tight, wide])
     top = r.select(query, k=2)
-    # tight should score at least as high as wide
-    ok = top[0][0] is tight or top[0][1] >= top[1][1]
-    return {"name": "score", "ok": bool(ok), "top": top[0][1], "second": top[1][1]}
+    winner = top[0][0]
+    ok = winner is tight
+    return {
+        "name": "score",
+        "ok": ok,
+        "winner_is_tight": ok,
+        "tight_score": tight.score(query),
+        "wide_score": wide.score(query),
+    }
 
 def test_bind() -> dict:
     ab = bind("alice", "helps", "bob")
     ba = bind("bob", "helps", "alice")
-    ok = ab.bits != ba.bits
-    return {"name": "bind", "ok": ok, "overlap": ab.overlap(ba)}
-
-def test_speech_split() -> dict:
-    # generation must not be inferred from retrieval
-    retrieved, generated = True, False
-    ok = retrieved and not generated
-    return {"name": "speech_split", "ok": ok, "note": "generation stays false until the model says the token"}
+    ok = ab.bits != ba.bits and ab.hamming(ba) > 0
+    return {"name": "bind", "ok": ok, "hamming": ab.hamming(ba)}
 
 def run() -> dict:
-    tests = [test_score(), test_bind(), test_speech_split()]
+    tests = [test_score(), test_bind()]
     failed = [t["name"] for t in tests if not t["ok"]]
     receipt = {
         "tests": tests,
         "failed": failed,
         "passed": len(failed) == 0,
-        "claim": "G37 claims checked; not a mind"
+        "claim": "G37.1 asserts the tight packet wins; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/g37_receipt.json").write_text(json.dumps(receipt, indent=2))
