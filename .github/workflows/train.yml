@@ -21,14 +21,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Node router
-        run: python -m packetlm.nodes
-      - name: Upload nodes receipt
+      - name: Field mind
+        run: python -m packetlm.mind
+      - name: Upload mind receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: packetlm-nodes-receipt
-          path: artifacts/nodes_receipt.json
+          name: packetlm-mind-receipt
+          path: artifacts/mind_receipt.json
       - name: Context packets
         if: always()
         run: python -m packetlm.context
@@ -38,200 +38,11 @@ jobs:
         with:
           name: packetlm-context-receipt
           path: artifacts/context_receipt.json
-      - name: Commit context packets
+      - name: Commit field
         if: always()
         run: |
           git config user.name "packetlm"
           git config user.email "packetlm@users.noreply.github.com"
-          git add data/context_packets.json data/weights.json || true
-          git diff --cached --quiet || git commit -m "Persist context packets from runner"
+          git add data/context_packets.json || true
+          git diff --cached --quiet || git commit -m "Persist field from runner"
           git push || true
-      - name: Tiny next-token model
-        if: always()
-        run: python -m packetlm.tiny
-      - name: Upload tiny receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-tiny-receipt
-          path: artifacts/tiny_receipt.json
-      - name: Intelligence probe
-        if: always()
-        run: python -m packetlm.iq
-      - name: Upload iq receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-iq-receipt
-          path: artifacts/iq_receipt.json
-      - name: Embed probe targets
-        if: always()
-        run: python -m packetlm.embed
-      - name: Upload embed receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-embed-receipt
-          path: artifacts/embed_receipt.json
-      - name: Held-out probe
-        if: always()
-        run: python -m packetlm.transfer_probe
-      - name: Upload held-out probe receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-transfer-probe-receipt
-          path: artifacts/transfer_probe_receipt.json
-      - name: Self-edit
-        if: always()
-        run: python -m packetlm.selfedit
-      - name: Upload self-edit receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-selfedit-receipt
-          path: artifacts/selfedit_receipt.json
-      - name: Language-phase measurement
-        if: always()
-        run: python -m packetlm.train
-      - name: Upload training receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-language-receipt
-          path: artifacts/receipt.json
-      - name: Receipted continuation demo
-        if: always()
-        run: python -m packetlm.demo
-      - name: Upload demo receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-demo-receipt
-          path: artifacts/demo_receipt.json
-      - name: Strength update
-        if: always()
-        run: python -m packetlm.improve
-      - name: Upload improve receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-improve-receipt
-          path: artifacts/improve_receipt.json
-      - name: Next-token holdout
-        if: always()
-        run: python -m packetlm.nexttoken
-      - name: Upload next-token receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-nexttoken-receipt
-          path: artifacts/nexttoken_receipt.json
-      - name: Pull NOMAD feed packet
-        if: always()
-        run: python -m packetlm.feedpull
-      - name: Upload feed pull receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-feedpull-receipt
-          path: artifacts/feedpull_receipt.json
-      - name: Iterative learning
-        if: always()
-        run: python -m packetlm.learn
-      - name: Upload learn receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-learn-receipt
-          path: artifacts/learn_receipt.json
-      - name: Offer language packet
-        if: always()
-        run: python -m packetlm.feedoffer
-      - name: Upload offer receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-feedoffer-receipt
-          path: artifacts/feedoffer_receipt.json
-      - name: Cross-domain gate
-        if: always()
-        run: python -m packetlm.crossdomain
-      - name: Upload cross-domain receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-crossdomain-receipt
-          path: artifacts/crossdomain_receipt.json
-      - name: Persistent residual memory
-        if: always()
-        run: python -m packetlm.memory
-      - name: Upload memory receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-memory-receipt
-          path: artifacts/memory_receipt.json
-      - name: Gap proposals
-        if: always()
-        run: python -m packetlm.gap
-      - name: Upload gap receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-gap-receipt
-          path: artifacts/gap_receipt.json
-      - name: Gap capability test
-        if: always()
-        run: python -m packetlm.gaptest
-      - name: Upload gap test receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-gaptest-receipt
-          path: artifacts/gaptest_receipt.json
-      - name: Transfer test
-        if: always()
-        run: python -m packetlm.transfer
-      - name: Upload transfer receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-transfer-receipt
-          path: artifacts/transfer_receipt.json
-      - name: Token vocabulary
-        if: always()
-        run: python -m packetlm.vocab
-      - name: Upload vocab receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-vocab-receipt
-          path: artifacts/vocab_receipt.json
-      - name: Token identity training
-        if: always()
-        run: python -m packetlm.tokenid
-      - name: Upload tokenid receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-tokenid-receipt
-          path: artifacts/tokenid_receipt.json
-      - name: Direct token lookup
-        if: always()
-        run: python -m packetlm.direct
-      - name: Upload direct receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-direct-receipt
-          path: artifacts/direct_receipt.json
-      - name: Multi-token generation
-        if: always()
-        run: python -m packetlm.generate
-      - name: Upload generate receipt
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: packetlm-generate-receipt
-          path: artifacts/generate_receipt.json
