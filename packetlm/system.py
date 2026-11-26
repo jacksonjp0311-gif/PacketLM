@@ -1,8 +1,8 @@
-"""One system on the canonical field.
+"""Canonical field plus a composition rule.
 
-Queries run after reload.
-A failed field check exits nonzero.
-Generation is scored apart.
+Ancestor is transitive. A walk may derive an unstored link.
+Helps is not. A walk is not a claim that Alice helps Dee.
+Failed field checks exit nonzero.
 Not a general mind.
 """
 
@@ -16,50 +16,53 @@ from .tiny import TinyLM, tokenize, build_vocab, ids
 from .train import load_corpus, window_stories
 
 FIELD = Path("data/system_field.json")
+TRANSITIVE = {"ancestor"}
 
-def run() -> dict:
-    objects = ["bob", "cara", "dee", "blue", "green", "needle", "shelter"]
-    field = []
-    for s, r, o in [
-        ("alice", "helps", "bob"),
-        ("bob", "helps", "cara"),
-        ("cara", "helps", "dee"),
-        ("mira", "tail", "blue"),
-        ("lily", "found", "needle"),
-        ("traveler", "needed", "shelter"),
-    ]:
-        add(field, s, r, o)
-    before = ask(field, "mira", "tail", objects)
-    field = [f for f in field if not (f["s"] == "mira" and f["r"] == "tail")]
-    add(field, "mira", "tail", "green")
-    save(FIELD, field)
-    loaded = load(FIELD)
-    walked, cur = [], "alice"
-    for _ in range(3):
-        nxt = ask(loaded, cur, "helps", objects)
+def compose(field, start, relation, objects, steps=3) -> list[str]:
+    if relation not in TRANSITIVE:
+        return []
+    walked, cur = [], start
+    for _ in range(steps):
+        nxt = ask(field, cur, relation, objects)
         if not nxt:
             break
         walked.append(nxt)
         cur = nxt
-    after = ask(loaded, "mira", "tail", objects)
+    return walked
+
+def run() -> dict:
+    objects = ["bob", "cara", "dee", "green", "needle", "ann", "bea", "cy"]
+    field = []
+    for s, r, o in [
+        ("ann", "ancestor", "bea"),
+        ("bea", "ancestor", "cy"),
+        ("alice", "helps", "bob"),
+        ("bob", "helps", "cara"),
+        ("lily", "found", "needle"),
+        ("mira", "tail", "green"),
+    ]:
+        add(field, s, r, o)
+    save(FIELD, field)
+    loaded = load(FIELD)
+    derived = compose(loaded, "ann", "ancestor", objects)
+    helps_composed = compose(loaded, "alice", "helps", objects)
     kept = ask(loaded, "lily", "found", objects)
     unknown = ask(loaded, "nope", "nope", objects)
     tight = hash_to_bits("lily needle")
-    wide = hash_to_bits("lily needle river stones dusk night cold")
+    wide = hash_to_bits("lily needle river stones dusk")
     top = Router([tight, wide]).select(hash_to_bits("lily needle"), k=1)[0][0]
     checks = {
-        "reached_dee": walked[-1] == "dee" if walked else False,
-        "corrected": before == "blue" and after == "green",
+        "derived_cy": derived[-1] == "cy" if derived else False,
+        "helps_not_composed": helps_composed == [],
         "retained": kept == "needle",
         "unknown_abstained": unknown is None,
         "tight_won": top is tight,
-        "reloaded": len(loaded) == len(field) and after == "green",
-        "canonical": True,
+        "reloaded": len(loaded) == len(field),
     }
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
-    train_facts = ["alice helps bob", "lily found needle", "mira tail green"]
+    train_facts = ["lily found needle", "mira tail green"]
     for text in train_facts:
         for t in tokenize(text):
             if t not in vocab:
@@ -68,21 +71,21 @@ def run() -> dict:
     inv = {i: t for t, i in vocab.items()}
     for text in train_facts:
         toks = ids(tokenize(text), vocab)
-        for _ in range(40):
+        for _ in range(30):
             for i in range(1, len(toks)):
                 model.step(toks[:i], toks[i], lr=0.25)
     spoken = {}
-    for prompt, expected in [("alice helps", "bob"), ("lily found", "needle"), ("mira tail", "green")]:
+    for prompt, expected in [("lily found", "needle"), ("mira tail", "green")]:
         gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(prompt), vocab), steps=2)]
         spoken[prompt] = {"gen": gen, "hit": expected in gen}
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "walked": walked,
+        "derived": derived,
         "spoken": spoken,
         "generated_hits": sum(1 for v in spoken.values() if v["hit"]),
         "failed": failed,
-        "claim": "canonical field, queried after reload; not a mind"
+        "claim": "only transitive relations compose; helps does not; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
