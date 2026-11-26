@@ -1,8 +1,7 @@
-"""Generate the programs.
+"""Survivors named. Reuse.
 
-Relations come from the facts.
-One and two steps are enumerated.
-A missing prediction is undetermined.
+Supported is not unique while undetermined remain.
+The acquired in-in is reused as a primitive.
 Not a proven advantage. Not a general mind.
 """
 
@@ -10,12 +9,6 @@ from __future__ import annotations
 import json
 from itertools import product
 from pathlib import Path
-
-def mask_of(ids):
-    m = 0
-    for i in ids:
-        m |= 1 << i
-    return m
 
 def bits(m):
     return [i for i in range(m.bit_length()) if m & (1 << i)]
@@ -46,9 +39,9 @@ def walk(facts, start, rels):
     return cur
 
 def run() -> dict:
-    facts = [(0, "in", 1), (1, "in", 2), (0, "near", 3), (3, "near", 4)]
+    facts = [(0, "in", 1), (1, "in", 2), (0, "near", 3), (3, "near", 4), (2, "in", 5)]
     rels = sorted({r for _, r, _ in facts})
-    n = 5
+    n = 6
     base = {rel: rows_from(facts, n, rel) for rel in rels}
     programs = []
     for length in (1, 2):
@@ -57,36 +50,35 @@ def run() -> dict:
             for rel in seq[1:]:
                 rows = compose(rows, base[rel])
             programs.append((seq, rows))
-    start = 0
-    preds = [bits(rows[start]) for _, rows in programs]
-    walks = [sorted(walk(facts, start, seq)) for seq, _ in programs]
-    # bearing part machine = {2}. near-near is {4}. in is {1}.
+    preds = [bits(rows[0]) for _, rows in programs]
+    walks = [sorted(walk(facts, 0, seq)) for seq, _ in programs]
     answer = {2}
-    supported, undetermined, contradicted = [], [], []
+    supported, undetermined = [], []
     for i, pred in enumerate(preds):
         if not pred:
-            undetermined.append(i)
+            undetermined.append(tuple(programs[i][0]))
         elif set(pred) == answer:
-            supported.append(i)
-        else:
-            contradicted.append(i)
-    live = (1 << len(programs)) - 1
-    listed = [i for i in range(len(programs)) if i in supported or i in undetermined]
-    masked = bits(live & (mask_of(supported) | mask_of(undetermined)))
+            supported.append(tuple(programs[i][0]))
+    # reuse: in-in as a primitive, then in
+    acquired = base["in"]
+    for _ in range(1):
+        acquired = compose(acquired, base["in"])
+    reused = compose(acquired, base["in"])
+    reused_walk = sorted(walk(facts, 0, ["in", "in", "in"]))
     checks = {
-        "generated": len(programs) == 6,
         "bits_match_walk": preds == walks,
-        "found_in_in": programs[supported[0]][0] == ("in", "in") if supported else False,
-        "undetermined_present": len(undetermined) >= 0,
-        "list_matches_mask": listed == masked,
+        "supported_exact": supported == [("in", "in")],
+        "undetermined_exact": set(undetermined) == {("in", "near"), ("near", "in")},
+        "not_unique": len(supported) + len(undetermined) > 1,
+        "reused": bits(reused[0]) == reused_walk == [5],
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "programs": [list(seq) for seq, _ in programs],
-        "supported": [list(programs[i][0]) for i in supported],
+        "supported": [list(s) for s in supported],
+        "undetermined": [list(s) for s in undetermined],
         "failed": failed,
-        "claim": "programs generated from relations; bits match the walk"
+        "claim": "survivors named; acquired program reused; not unique while undetermined remain"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
