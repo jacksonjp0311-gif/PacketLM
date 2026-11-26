@@ -1,63 +1,45 @@
 # PacketLM
 
-A language model assembled from routed binary weight packets instead of one dense slab.
+![Field](docs/field.jpg)
 
-**Primary focus**: language learning, understanding, reasoning, and communication.
+A field of weight packets. Not one big model.
 
-Bitwork geometry core: 4096-bit sparse patterns, Hamming-space nearest neighbor (overlap = |q| − H(q, p)), temporal routing that pulls packets per step, eval-gated promotion. CPU-runner trainability. Local-first. Evidence-gated. No auto-promotion.
+Most systems are a single brain. You ask, the whole thing runs, you get an answer. PacketLM is a set of small packets. Each packet holds one piece of knowledge and its own weights. A query wakes only the packets that match. The rest stay closed.
 
-## Current status
+## What it does
 
-See [docs/STATUS.md](docs/STATUS.md). M0 done. M1 (language phase with receipt) in progress.
+1. A query becomes a set of content words.
+2. Overlap picks the packet. Only that packet activates.
+3. If nothing matches, a new packet is grown and seeded with the query.
+4. A repeat holds what the packet already has.
+5. A related query returns the tokens it did not say. That is retrieval.
+6. One query can open more than one packet. That is composition.
+7. If the answer lives in a second packet, the field returns it. That is inference.
+8. A successful inference is written into a new packet, so the field remembers what it composed.
+9. A hit strengthens a packet. A miss weakens it. Unused packets decay. The field scales so one packet cannot dominate.
 
-## What this is
+## What happened
 
-PacketLM trains first on the things that make communication work: syntax, meaning, multi-step reasoning, and the ability to answer or continue a thought without collapsing into noise. The weights are addressable packets. A router selects which packets participate in each residual hop. Memory lives inside the packet store. Every promotion is a sealed twin measurement with an inspectable receipt.
+The field was given two facts in two packets: Lily found a needle, and a needle can sew. Asked what Lily can do with a needle, it opened both and returned sew. The answer was not in the question. It came from the other packet. The inference was then stored as its own packet.
 
-This is not a dense LLM with a side-car memory. The substrate is the same integer Hamming geometry used in Bitwork / Perci. Soft binding is approximated by packet selection + residual hops rather than floating-point attention.
+That is receipted. It is not a mind. It is a field that selects, holds, composes, and keeps what it composed.
 
-## Training focus (in order)
+## Claim
 
-1. **Language** — TinyStories-scale and similar clean, vocabulary-constrained text. Prove the model absorbs syntax and local coherence.
-2. **Understanding** — questions that require retrieving and combining facts already present in the packet store. Sealed holdouts that cold-start cannot answer.
-3. **Reasoning** — multi-step sequences where residual hops must improve accuracy over a single-hop baseline.
-4. **Communication** — continuation, clarification, and simple dialogue turns that stay consistent with prior context.
-
-Only after these loops are measurable do we expand into other domains.
-
-## Architecture (current plan)
-
-1. **Embedding / encoder** — maps tokens to sparse 4096-bit patterns (FNV-1a features + structural cues).
-2. **Packet store** — collection of weight packets (bit sets + counts). Domain packets, learned packets, storage packets.
-3. **Temporal router** — per-step selection of which packets to pull, conditioned on residual state. Must preserve Hamming exactness.
-4. **Residual loop** — AND-NOT the winner’s bits, re-query. Bounded iterations. This is the reasoning substrate.
-5. **Parametric memory** — storage packets that can be written under a governed rule (surprise / residual threshold + sealed gate).
-6. **Readout** — integer overlap scores → next-token distribution (or deterministic argmax for first versions).
-
-## Governance (non-negotiable from day one)
-
-- Seed recorded. Eval gate pre-registered. Promotion only on sealed twin measurement.
-- Every packet pull logged. Every write is a proposal until the gate passes.
-- Claim boundary: this is a packet-routed integer model focused on language and reasoning, not AGI, not consciousness.
-
-## Milestones
-
-- M0: stub router + one dummy packet (done)
-- M1: first language training job on a public runner that produces a loss curve artifact (in progress)
-- M2: eval gate that can reject a run
-- M3: residual loop demonstrably improves multi-step holdout on understanding/reasoning probes
-- M4: public demo of a receipted loop on a communication task
+PacketLM is a packet-routed field focused on language, retrieval, and composition. It is not AGI. It is not conscious. Every keep is gated. Every run leaves a receipt.
 
 ## Run
+
+The field trains and routes on a public GitHub runner.
 
 ```bash
 git clone https://github.com/jacksonjp0311-gif/PacketLM
 cd PacketLM
-python -m packetlm.train
+python -m packetlm.mind
 ```
 
-(Implementation in progress.)
+Receipts land in `artifacts/`. Packets and memory persist in `data/`.
 
 ---
 
-Local-first. Evidence-gated. Receipts stay inspectable.
+Local-first. Evidence-gated. The center is the field.
