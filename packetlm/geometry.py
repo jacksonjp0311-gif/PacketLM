@@ -1,11 +1,9 @@
-"""Field geometry.
+"""Field geometry with a residual walk.
 
-A query and a packet are sets.
-Overlap o(q, p) = |q ∩ p|.
-For indicator vectors this is |q| - H(q, p), the Bitwork form.
-Surplus is what the packet holds that the query did not say.
-A hop takes the highest-overlap surplus token as the next query.
-The walk is the inference. Not a general mind.
+Score is overlap times strength.
+After a hop, the packet's keys are removed from the residual.
+The next hop sees only what is left.
+That is the Bitwork residual. Not a general mind.
 """
 
 from __future__ import annotations
@@ -24,44 +22,47 @@ def content(text: str) -> set[str]:
 def overlap(q: set[str], p: set[str]) -> int:
     return len(q & p)
 
-def hamming(q: set[str], p: set[str]) -> int:
-    return len(q ^ p)
-
-def ensure(store, name, keys, preferred):
+def ensure(store, name, keys, preferred, strength=1.0):
     if name not in store["packets"]:
         store["packets"][name] = blank_packet(store["vocab"])
     store["packets"][name]["keys"] = sorted(keys)
     store["packets"][name]["preferred"] = list(preferred)
+    store["packets"][name]["strength"] = strength
 
-def best(q: set[str], store: dict) -> tuple[str, int]:
-    name, score = "", 0
+def best(q: set[str], store: dict, used: set[str]) -> tuple[str, float]:
+    name, score = "", 0.0
     for n, pkt in store["packets"].items():
-        if n == "language":
+        if n == "language" or n in used:
             continue
-        s = overlap(q, set(pkt.get("keys", [])))
+        o = overlap(q, set(pkt.get("keys", [])))
+        s = o * float(pkt.get("strength", 1.0))
         if s > score:
             name, score = n, s
     return name, score
 
-def surplus(pkt: dict, q: set[str]) -> list[str]:
-    return [t for t in pkt.get("preferred", []) if t not in q and t not in STOP]
-
-def walk(start: str, store: dict, steps: int = 3) -> list[dict]:
-    q = content(start)
-    seen = set()
+def residual_walk(start: str, store: dict, steps: int = 4) -> list[dict]:
+    residual = content(start)
+    used = set()
     path = []
     for _ in range(steps):
-        name, score = best(q, store)
-        if not name or name in seen or score == 0:
+        name, score = best(residual, store, used)
+        if not name or score == 0:
             break
-        seen.add(name)
-        extra = surplus(store["packets"][name], q)
-        path.append({"packet": name, "overlap": score, "surplus": extra})
-        if not extra:
+        pkt = store["packets"][name]
+        keys = set(pkt.get("keys", []))
+        extra = [t for t in pkt.get("preferred", []) if t not in residual and t not in STOP]
+        path.append({
+            "packet": name,
+            "score": round(score, 3),
+            "residual_before": sorted(residual),
+            "surplus": extra,
+        })
+        used.add(name)
+        residual = residual - keys
+        if extra:
+            residual |= content(extra[0])
+        if not residual:
             break
-        # next query is the surplus token with the most packet overlap
-        nxt = max(extra, key=lambda t: best(content(t), store)[1])
-        q = content(nxt) | {nxt}
     return path
 
 def run() -> dict:
@@ -69,18 +70,18 @@ def run() -> dict:
     windows = window_stories(raw)
     vocab = build_vocab(windows)
     store = load_store(len(vocab), ["language"])
-    ensure(store, "lily", {"lily", "found", "needle"}, tokenize("lily found a needle"))
-    ensure(store, "needle", {"needle", "sew", "cloth"}, tokenize("a needle can sew cloth"))
-    ensure(store, "infer-sew", {"lily", "sew", "needle"}, tokenize("lily can sew"))
-    ensure(store, "dress", {"sew", "dress", "cloth"}, tokenize("sew makes a dress"))
-    path = walk("lily", store)
-    tokens_out = [t for step in path for t in step["surplus"]]
+    ensure(store, "lily", {"lily", "found", "needle"}, tokenize("lily found a needle"), 1.2)
+    ensure(store, "needle", {"needle", "sew", "cloth"}, tokenize("a needle can sew cloth"), 1.4)
+    ensure(store, "infer-sew", {"lily", "sew", "needle"}, tokenize("lily can sew"), 1.6)
+    ensure(store, "dress", {"sew", "dress", "cloth"}, tokenize("sew makes a dress"), 1.3)
+    path = residual_walk("what can lily make", store)
+    flat = [t for step in path for t in step["surplus"]]
     receipt = {
-        "start": "lily",
+        "start": "what can lily make",
         "path": path,
-        "reached_dress": "dress" in tokens_out,
-        "identity": "overlap = |q| - H(q, p) on indicators",
-        "claim": "scored walk across packets; not a general mind"
+        "reached_dress": "dress" in flat,
+        "score": "overlap * strength",
+        "claim": "residual walk; used bits removed; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geometry_receipt.json").write_text(json.dumps(receipt, indent=2))
