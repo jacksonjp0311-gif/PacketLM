@@ -1,10 +1,9 @@
-"""The operator means something.
+"""Two operators, two outputs.
 
-parent compose grand is stored.
-The returned value grand is the output relation.
-We write the derived fact under that relation.
-If the operator said something else, the output relation would change.
-Sibling has no operator, so it does not run.
+parent compose grand writes grand.
+owns compose holds writes holds.
+Each value is the output relation.
+A relation with no operator does not run.
 Not a general mind.
 """
 
@@ -49,7 +48,8 @@ def apply_op(field, a, mid_rel, objects):
 def run() -> dict:
     objects = [
         "bea", "cy", "dax", "cat", "blue", "green", "long", "needle",
-        "parent", "grand", "sibling", "jo", "kim", "lee", "sol", "tan",
+        "parent", "grand", "owns", "holds", "sibling",
+        "jo", "kim", "box", "key",
     ]
     field = []
     for s, r, o in [
@@ -61,17 +61,19 @@ def run() -> dict:
         ("sam", "isa", "cat"),
         ("lily", "found", "needle"),
         ("parent", "compose", "grand"),
+        ("owns", "compose", "holds"),
         ("ada", "parent", "jo"),
         ("jo", "parent", "kim"),
-        ("rex", "parent", "sol"),
-        ("sol", "parent", "tan"),
-        ("ada", "sibling", "lee"),
+        ("ada", "owns", "box"),
+        ("box", "owns", "key"),
+        ("ada", "sibling", "kim"),
     ]:
         add(field, s, r, o)
     before = prop(field, "mira", "tail", objects)
     field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
     add(field, "dax", "tail", "green")
-    applied = apply_op(field, "ada", "parent", objects)
+    parent_out = apply_op(field, "ada", "parent", objects)
+    owns_out = apply_op(field, "ada", "owns", objects)
     sibling = apply_op(field, "ada", "sibling", objects)
     save(FIELD, field)
     loaded = load(FIELD)
@@ -79,8 +81,9 @@ def run() -> dict:
         "before_blue": before == "blue",
         "after_green": prop(loaded, "mira", "tail", objects) == "green",
         "sam_stayed_long": prop(loaded, "sam", "whiskers", objects) == "long",
-        "op_wrote_grand": applied == ("grand", "kim"),
-        "readable_as_grand": ask(loaded, "ada", "grand", objects) == "kim",
+        "wrote_grand": parent_out == ("grand", "kim") and ask(loaded, "ada", "grand", objects) == "kim",
+        "wrote_holds": owns_out == ("holds", "key") and ask(loaded, "ada", "holds", objects) == "key",
+        "not_crossed": ask(loaded, "ada", "grand", objects) != "key" and ask(loaded, "ada", "holds", objects) != "kim",
         "sibling_blocked": sibling is None,
         "derived_cy": walk(loaded, "ann", "ancestor", objects) == ["bea", "cy"],
         "retained": ask(loaded, "lily", "found", objects) == "needle",
@@ -92,9 +95,10 @@ def run() -> dict:
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "applied": applied,
+        "parent_out": parent_out,
+        "owns_out": owns_out,
         "failed": failed,
-        "claim": "operator value is the output relation; grand is written and readable"
+        "claim": "two operators write two output relations; values are not interchangeable"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
