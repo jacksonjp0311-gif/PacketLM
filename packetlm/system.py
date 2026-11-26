@@ -1,8 +1,8 @@
-"""A small controller.
+"""Controller plus truth maintenance.
 
-Given a question relation, find the operator that outputs it.
-Apply that operator. Do not call a named procedure by hand.
-Truth maintenance stays.
+The question selects the operator.
+A derived fact records premises.
+A premise change drops the derived fact.
 Not a general mind.
 """
 
@@ -28,8 +28,16 @@ def walk(field, start, relation, objects, steps=3):
 def operators(field):
     return [f for f in field if f["r"] == "compose"]
 
-def answer(field, subject, want, objects):
-    """Select an operator whose output relation is want, then apply it."""
+def derive(field, a, out_rel, c, premises):
+    add(field, a, out_rel, c)
+    field[-1]["premises"] = premises
+    field[-1]["derived"] = True
+
+def invalidate(field, subject, relation):
+    key = f"{subject}:{relation}"
+    return [f for f in field if key not in f.get("premises", [])]
+
+def answer(field, subject, want, objects, write=False):
     for op in operators(field):
         if op["o"] != want:
             continue
@@ -39,13 +47,16 @@ def answer(field, subject, want, objects):
         if not mid:
             continue
         val = ask(field, mid, second, objects)
-        if val:
-            return first, val
+        if not val:
+            continue
+        if write:
+            derive(field, subject, want, val, [f"{subject}:{first}", f"{mid}:{second}"])
+        return first, val
     return None
 
 def run() -> dict:
     objects = [
-        "bea", "cy", "dax", "cat", "blue", "green", "needle",
+        "bea", "cy", "dax", "green", "blue", "needle",
         "parent", "grand", "tail", "hastail", "jo", "kim",
     ]
     field = []
@@ -62,18 +73,21 @@ def run() -> dict:
         ("jo", "parent", "kim"),
     ]:
         add(field, s, r, o)
-    # correct premise, drop nothing yet because we have not derived
+    written = answer(field, "mira", "hastail", objects, write=True)
+    before = ask(field, "mira", "hastail", objects)
     field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
     add(field, "dax", "tail", "blue")
+    field = invalidate(field, "dax", "tail")
+    stale = ask(field, "mira", "hastail", objects)
     save(FIELD, field)
     loaded = load(FIELD)
-    hastail = answer(loaded, "mira", "hastail", objects)
-    grand = answer(loaded, "ada", "grand", objects)
-    missing = answer(loaded, "ada", "sibling", objects)
+    again = answer(loaded, "mira", "hastail", objects)
     checks = {
-        "selected_hastail": hastail == ("isa", "blue"),
-        "selected_grand": grand == ("parent", "kim"),
-        "no_operator": missing is None,
+        "selected_and_wrote": written == ("isa", "green") and before == "green",
+        "stale_dropped": stale is None,
+        "reselected_blue": again == ("isa", "blue"),
+        "selected_grand": answer(loaded, "ada", "grand", objects) == ("parent", "kim"),
+        "no_sibling_op": answer(loaded, "ada", "sibling", objects) is None,
         "derived_cy": walk(loaded, "ann", "ancestor", objects) == ["bea", "cy"],
         "retained": ask(loaded, "lily", "found", objects) == "needle",
         "reloaded": len(loaded) == len(field),
@@ -84,10 +98,8 @@ def run() -> dict:
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "hastail": hastail,
-        "grand": grand,
         "failed": failed,
-        "claim": "controller picks the operator by its output relation; not learned"
+        "claim": "controller selects; derived fact dies with its premise; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
