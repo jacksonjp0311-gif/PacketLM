@@ -1,22 +1,19 @@
-"""Mind loop: grow, hold, transfer.
+"""Mind loop: grow, hold, retrieve.
 
 A novel query grows a packet and seeds it.
-The repeat holds the seed if generation drifts.
-A related query should route to that packet and return what it holds.
-Not a general mind.
+A related query routes to that packet.
+The answer is the held tokens the query did not say.
+That is retrieval, not echo. Not a general mind.
 """
 
 from __future__ import annotations
 import json
 import random
 from pathlib import Path
-from .tiny import tokenize, build_vocab, ids
+from .tiny import tokenize, build_vocab
 from .train import load_corpus, window_stories
 from .nodes import tokens
-from .context import (
-    load_store, save_store, activate, write_back,
-    bump, train_on_query, blank_packet,
-)
+from .context import load_store, save_store, bump, blank_packet
 
 MEMORY = Path("data/mind_memory.json")
 STOP = {"the", "a", "an", "in", "on", "at", "of", "to", "and", "before", "did", "what"}
@@ -50,24 +47,12 @@ def grow(store: dict, query: str) -> str:
     store["packets"][name] = pkt
     return name
 
-def respond(store, name, query, vocab, inv, hold: bool) -> tuple[list[str], bool]:
-    pkt = store["packets"][name]
-    model = activate(store, name)
-    train_on_query(model, query, vocab, steps=12)
-    preferred = pkt.get("preferred") or []
-    if preferred:
-        train_on_query(model, " ".join(preferred), vocab, steps=8)
-    gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(query), vocab) or [1], steps=6)]
-    write_back(store, name, model)
-    overlap = len(set(gen) & set(preferred))
-    held = False
-    if hold and preferred and overlap < 2:
-        gen = preferred[:6]
-        held = True
-    return gen, held
+def surplus(preferred: list[str], query: str) -> list[str]:
+    q = set(tokenize(query))
+    return [t for t in preferred if t not in q and t not in STOP]
 
 def run() -> dict:
-    random.seed(17)
+    random.seed(18)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
@@ -75,41 +60,35 @@ def run() -> dict:
     story = content(" ".join(windows[:8]))
     store["packets"].setdefault("language", blank_packet(len(vocab)))
     store["packets"]["language"]["keys"] = sorted(story)
-    inv = {i: t for t, i in vocab.items()}
     memory = load_memory()
     novel = "count the stones in the cold river at dusk"
     related = "stones in the cold river"
-    queries = [novel, novel, related]
     routes = []
-    for turn, q in enumerate(queries):
+    for turn, q in enumerate([novel, related]):
         name, score = pick(q, store)
         grown = score < 2
         if grown:
             name = grow(store, q)
-        gen, held = respond(store, name, q, vocab, inv, hold=True)
         preferred = store["packets"][name].get("preferred") or []
-        stable = len(set(gen) & set(preferred))
-        bump(store, name, 0.2 if stable >= 2 else 0.05)
+        extra = surplus(preferred, q)
+        bump(store, name, 0.2 if extra else 0.05)
         event = {
             "turn": turn,
             "query": q,
             "packet": name,
             "grown": grown,
-            "held": held,
-            "stable_overlap": stable,
-            "generated": gen,
+            "retrieved": extra,
         }
         memory.append(event)
         routes.append(event)
     save_store(store)
     save_memory(memory)
-    same = len(routes) >= 3 and routes[2]["packet"] == routes[0]["packet"]
+    same = len(routes) == 2 and routes[1]["packet"] == routes[0]["packet"]
     receipt = {
-        "grown": any(r["grown"] for r in routes),
         "related_same_packet": same,
-        "related_stable": routes[2]["stable_overlap"] if len(routes) > 2 else 0,
+        "retrieved": routes[1]["retrieved"] if len(routes) > 1 else [],
         "routes": routes,
-        "claim": "related query routes to the held packet; not a general mind"
+        "claim": "related query returns held tokens it did not say; retrieval, not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/mind_receipt.json").write_text(json.dumps(receipt, indent=2))
