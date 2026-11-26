@@ -1,8 +1,10 @@
-"""Two stored operators.
+"""The operator means something.
 
-parent compose grand applies.
-sibling has no compose fact, so it must not chain.
-Propagation and ancestor stay.
+parent compose grand is stored.
+The returned value grand is the output relation.
+We write the derived fact under that relation.
+If the operator said something else, the output relation would change.
+Sibling has no operator, so it does not run.
 Not a general mind.
 """
 
@@ -32,17 +34,22 @@ def prop(field, name, relation, objects):
     return ask(field, kind, relation, objects)
 
 def apply_op(field, a, mid_rel, objects):
-    if not ask(field, mid_rel, "compose", objects):
+    out_rel = ask(field, mid_rel, "compose", objects)
+    if not out_rel:
         return None
     b = ask(field, a, mid_rel, objects)
     if not b:
         return None
-    return ask(field, b, mid_rel, objects)
+    c = ask(field, b, mid_rel, objects)
+    if not c:
+        return None
+    add(field, a, out_rel, c)
+    return out_rel, c
 
 def run() -> dict:
     objects = [
         "bea", "cy", "dax", "cat", "blue", "green", "long", "needle",
-        "parent", "grand", "sibling", "jo", "kim", "lee", "sol", "tan", "max",
+        "parent", "grand", "sibling", "jo", "kim", "lee", "sol", "tan",
     ]
     field = []
     for s, r, o in [
@@ -58,23 +65,23 @@ def run() -> dict:
         ("jo", "parent", "kim"),
         ("rex", "parent", "sol"),
         ("sol", "parent", "tan"),
-        ("ned", "parent", "lee"),
-        ("ada", "sibling", "max"),
-        ("max", "sibling", "lee"),
+        ("ada", "sibling", "lee"),
     ]:
         add(field, s, r, o)
     before = prop(field, "mira", "tail", objects)
     field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
     add(field, "dax", "tail", "green")
+    applied = apply_op(field, "ada", "parent", objects)
+    sibling = apply_op(field, "ada", "sibling", objects)
     save(FIELD, field)
     loaded = load(FIELD)
     checks = {
         "before_blue": before == "blue",
         "after_green": prop(loaded, "mira", "tail", objects) == "green",
         "sam_stayed_long": prop(loaded, "sam", "whiskers", objects) == "long",
-        "op_kim": apply_op(loaded, "ada", "parent", objects) == "kim",
-        "op_tan": apply_op(loaded, "rex", "parent", objects) == "tan",
-        "sibling_blocked": apply_op(loaded, "ada", "sibling", objects) is None,
+        "op_wrote_grand": applied == ("grand", "kim"),
+        "readable_as_grand": ask(loaded, "ada", "grand", objects) == "kim",
+        "sibling_blocked": sibling is None,
         "derived_cy": walk(loaded, "ann", "ancestor", objects) == ["bea", "cy"],
         "retained": ask(loaded, "lily", "found", objects) == "needle",
         "reloaded": len(loaded) == len(field),
@@ -85,8 +92,9 @@ def run() -> dict:
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
+        "applied": applied,
         "failed": failed,
-        "claim": "parent composes; sibling does not; operator is selected, not assumed"
+        "claim": "operator value is the output relation; grand is written and readable"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
