@@ -1,7 +1,8 @@
-"""Self-edit loop.
+"""Population self-edit.
 
-Proposes a change to the tiny model, measures holdout continuation,
-and keeps the change only if the score rises. Receipt records the decision.
+Makes 4 mutated copies of the tiny model, scores each on holdout
+continuation, and keeps the best only if it beats the parent.
+Receipt records the population and the keep/discard.
 """
 
 from __future__ import annotations
@@ -10,6 +11,9 @@ import random
 from pathlib import Path
 from .tiny import TinyLM, build_vocab, tokenize, ids, holdout_score
 from .train import load_corpus, window_stories
+
+POP = 4
+SCALE = 0.02
 
 def clone_weights(model: TinyLM) -> dict:
     return {
@@ -21,21 +25,19 @@ def restore(model: TinyLM, snap: dict) -> None:
     model.E = [row[:] for row in snap["E"]]
     model.Wo = [row[:] for row in snap["Wo"]]
 
-def propose_nudge(model: TinyLM, scale: float = 0.02) -> None:
-    # nudge a random embedding row
+def mutate(model: TinyLM, scale: float = SCALE) -> None:
     if not model.E:
         return
     i = random.randrange(len(model.E))
     model.E[i] = [v + (random.random() - 0.5) * scale for v in model.E[i]]
 
 def run() -> dict:
-    random.seed(1)
+    random.seed(2)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
     inv = {i: t for t, i in vocab.items()}
-    model = TinyLM(len(vocab))
-    # brief warm-up
+    parent = TinyLM(len(vocab))
     pairs = []
     for w in windows:
         toks = tokenize(w)
@@ -44,21 +46,33 @@ def run() -> dict:
     for _ in range(40):
         if pairs:
             ctx, tgt = random.choice(pairs)
-            model.step(ctx, tgt)
+            parent.step(ctx, tgt)
     cut = max(1, len(windows) // 5)
     holdout = windows[-cut:]
-    before = holdout_score(model, holdout, vocab, inv)
-    snap = clone_weights(model)
-    propose_nudge(model)
-    after = holdout_score(model, holdout, vocab, inv)
-    kept = after > before
-    if not kept:
-        restore(model, snap)
+    parent_score = holdout_score(parent, holdout, vocab, inv)
+    parent_snap = clone_weights(parent)
+    scores = []
+    best_score = parent_score
+    best_snap = parent_snap
+    for _ in range(POP):
+        child = TinyLM(len(vocab))
+        restore(child, parent_snap)
+        mutate(child)
+        s = holdout_score(child, holdout, vocab, inv)
+        scores.append(round(s, 3))
+        if s > best_score:
+            best_score = s
+            best_snap = clone_weights(child)
+    kept = best_score > parent_score
+    if kept:
+        restore(parent, best_snap)
     receipt = {
-        "holdout_before": round(before, 3),
-        "holdout_after": round(after, 3),
+        "population": POP,
+        "parent": round(parent_score, 3),
+        "children": scores,
+        "best": round(best_score, 3),
         "kept": kept,
-        "claim": "self-edit kept only if holdout continuation rose; otherwise discarded; still tiny, not intelligent"
+        "claim": "population self-edit; kept only if best child beat parent on holdout; still tiny, not intelligent"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/selfedit_receipt.json").write_text(json.dumps(receipt, indent=2))
