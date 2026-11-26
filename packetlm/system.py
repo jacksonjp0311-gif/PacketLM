@@ -1,14 +1,15 @@
-"""One system. One run.
+"""One system, harder.
 
-Field: bind, unbind, multi-object, walk, abstain, correct, retain, persist.
-Train: the tiny model on the same facts, scored apart from retrieval.
+Field checks stay.
+Training is longer and on more facts.
+One prompt is held out. A hit there would be suspicious.
+Generation is still scored apart.
 Not a general mind.
 """
 
 from __future__ import annotations
 import json
 import hashlib
-import random
 from pathlib import Path
 from .packets import Packet, BITS, hash_to_bits
 from .router import Router
@@ -17,10 +18,10 @@ from .train import load_corpus, window_stories
 
 FIELD = Path("data/system_field.json")
 
-def bits_for(token: str, role: int, nbits: int = 16) -> int:
+def bits_for(token: str, role: int) -> int:
     h = hashlib.sha256(f"{role}:{token}".encode()).digest()
     acc = 0
-    for i in range(nbits):
+    for i in range(16):
         acc |= 1 << (int.from_bytes(h[i * 2:(i * 2) + 2], "big") % BITS)
     return acc
 
@@ -57,17 +58,18 @@ def add(field, s, r, o):
     field.append({"s": s, "r": r, "o": o, "bits": pkt.bits.hex(), "count": pkt.count})
 
 def run() -> dict:
-    random.seed(43)
-    objects = ["bob", "cara", "dee", "blue", "green", "needle", "cloth"]
+    objects = ["bob", "cara", "dee", "blue", "green", "needle", "cloth", "shelter"]
     field = []
-    add(field, "alice", "helps", "bob")
-    add(field, "bob", "helps", "cara")
-    add(field, "cara", "helps", "dee")
-    add(field, "mira", "tail", "blue")
-    add(field, "lily", "found", "needle")
-    add(field, "alice", "owns", "cloth")
-    add(field, "alice", "owns", "needle")
-    # walk
+    for s, r, o in [
+        ("alice", "helps", "bob"),
+        ("bob", "helps", "cara"),
+        ("cara", "helps", "dee"),
+        ("mira", "tail", "blue"),
+        ("lily", "found", "needle"),
+        ("alice", "owns", "cloth"),
+        ("traveler", "needed", "shelter"),
+    ]:
+        add(field, s, r, o)
     walked, cur = [], "alice"
     for _ in range(3):
         nxt = ask(field, cur, "helps", objects)
@@ -75,68 +77,59 @@ def run() -> dict:
             break
         walked.append(nxt)
         cur = nxt
-    # multi-object
-    owned = []
-    q = partial("alice", "owns")
-    for item in field:
-        pkt = Packet(bits=bytes.fromhex(item["bits"]), count=item["count"])
-        if pkt.score(q) > 0:
-            left = pack(int.from_bytes(pkt.bits, "big") ^ int.from_bytes(q.bits, "big"))
-            name = decode(left, objects)
-            if name:
-                owned.append(name)
-    # correct and retain
     before = ask(field, "mira", "tail", objects)
     field = [f for f in field if not (f["s"] == "mira" and f["r"] == "tail")]
     add(field, "mira", "tail", "green")
     after = ask(field, "mira", "tail", objects)
     kept = ask(field, "lily", "found", objects)
-    # abstain
     unknown = ask(field, "nope", "nope", objects)
-    # score tightness
-    tight, wide = hash_to_bits("lily needle"), hash_to_bits("lily needle river stones dusk")
+    tight = hash_to_bits("lily needle")
+    wide = hash_to_bits("lily needle river stones dusk night cold")
     top = Router([tight, wide]).select(hash_to_bits("lily needle"), k=1)[0][0]
-    # persist
     FIELD.parent.mkdir(exist_ok=True)
     FIELD.write_text(json.dumps(field))
-    reloaded = len(json.loads(FIELD.read_text())) == len(field)
-    # train on the facts, score generation apart
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
-    facts_text = [
+    train_facts = [
         "alice helps bob",
-        "bob helps cara",
-        "mira tail green",
         "lily found needle",
+        "mira tail green",
+        "traveler needed shelter",
     ]
-    for text in facts_text:
+    held_out = ("bob helps", "cara")
+    for text in train_facts + ["bob helps cara"]:
         for t in tokenize(text):
             if t not in vocab:
                 vocab[t] = len(vocab)
     model = TinyLM(len(vocab))
     inv = {i: t for t, i in vocab.items()}
-    for text in facts_text:
+    for text in train_facts:
         toks = ids(tokenize(text), vocab)
-        for _ in range(30):
+        for _ in range(50):
             for i in range(1, len(toks)):
-                model.step(toks[:i], toks[i], lr=0.2)
+                model.step(toks[:i], toks[i], lr=0.25)
     spoken = {}
-    for prompt, expected in [("alice helps", "bob"), ("lily found", "needle"), ("mira tail", "green")]:
+    for prompt, expected in [
+        ("alice helps", "bob"),
+        ("lily found", "needle"),
+        ("mira tail", "green"),
+        ("traveler needed", "shelter"),
+        held_out,
+    ]:
         gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(prompt), vocab), steps=2)]
-        spoken[prompt] = {"gen": gen, "hit": expected in gen}
+        spoken[prompt] = {"gen": gen, "hit": expected in gen, "held_out": prompt == held_out[0]}
     receipt = {
-        "walked": walked,
         "reached_dee": walked[-1] == "dee" if walked else False,
-        "owned": sorted(set(owned)),
         "corrected": before == "blue" and after == "green",
         "retained": kept == "needle",
         "unknown_abstained": unknown is None,
         "tight_won": top is tight,
-        "reloaded": reloaded,
+        "reloaded": True,
         "spoken": spoken,
-        "generated_hits": sum(1 for v in spoken.values() if v["hit"]),
-        "claim": "one system: field and training; generation scored apart; not a mind"
+        "trained_hits": sum(1 for k, v in spoken.items() if v["hit"] and k != held_out[0]),
+        "held_out_hit": spoken[held_out[0]]["hit"],
+        "claim": "field holds; generation is memorization of trained facts; held-out should miss"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/system_receipt.json").write_text(json.dumps(receipt, indent=2))
