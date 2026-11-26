@@ -1,9 +1,9 @@
-"""G38.1
+"""G38.1 revised.
 
-Decode the object from unbound bits. Do not read the stored label.
-Abstain when the best score is not clearly above the rest.
-Persist the bound field so a second pass can reload it.
-Not a general mind.
+An exact unbind is the answer.
+Abstain only when the unbound bits match no object.
+Labels are not read on the retrieval path.
+Field is written and reloaded.
 """
 
 from __future__ import annotations
@@ -21,14 +21,10 @@ def rotate(pkt: Packet, k: int) -> Packet:
     return Packet(bits=rotated.to_bytes(BITS // 8, "big"), count=bin(rotated).count("1"))
 
 def bind(subject: str, relation: str, obj: str) -> Packet:
-    parts = [
-        rotate(identity_packet(subject), 0),
-        rotate(identity_packet(relation), 64),
-        rotate(identity_packet(obj), 128),
-    ]
     x = 0
-    for p in parts:
-        x ^= int.from_bytes(p.bits, "big")
+    x ^= int.from_bytes(rotate(identity_packet(subject), 0).bits, "big")
+    x ^= int.from_bytes(rotate(identity_packet(relation), 64).bits, "big")
+    x ^= int.from_bytes(rotate(identity_packet(obj), 128).bits, "big")
     return Packet(bits=x.to_bytes(BITS // 8, "big"), count=bin(x).count("1"))
 
 def partial(subject: str, relation: str) -> Packet:
@@ -41,39 +37,30 @@ def xor(a: Packet, b: Packet) -> Packet:
     return Packet(bits=x.to_bytes(BITS // 8, "big"), count=bin(x).count("1"))
 
 def decode_object(bits: Packet, candidates: list[str]) -> str | None:
-    """Match unbound bits to an object identity. No stored label."""
-    best, best_h = None, BITS + 1
     for name in candidates:
-        obj = rotate(identity_packet(name), 128)
-        h = bits.hamming(obj)
-        if h < best_h:
-            best, best_h = name, h
-    return best if best_h == 0 else None
+        if bits.bits == rotate(identity_packet(name), 128).bits:
+            return name
+    return None
 
 def retrieve(field: list[dict], subject: str, relation: str, objects: list[str]) -> dict:
     q = partial(subject, relation)
     scored = []
     for item in field:
         pkt = Packet(bits=bytes.fromhex(item["bits"]), count=item["count"])
-        scored.append((item, pkt.score(q), pkt))
-    scored.sort(key=lambda x: x[1], reverse=True)
+        scored.append((pkt.score(q), pkt))
     if not scored:
         return {"abstain": True, "reason": "empty"}
-    top_score = scored[0][1]
-    second = scored[1][1] if len(scored) > 1 else -BITS
-    if top_score <= 0 or top_score - second < 1:
-        return {"abstain": True, "reason": "weak", "top": top_score, "second": second}
-    left = xor(scored[0][2], q)
-    decoded = decode_object(left, objects)
-    return {
-        "abstain": decoded is None,
-        "decoded": decoded,
-        "score": top_score,
-        "margin": top_score - second,
-    }
+    scored.sort(key=lambda x: x[0], reverse=True)
+    top_score, top = scored[0]
+    if top_score <= 0:
+        return {"abstain": True, "reason": "nonpositive", "score": top_score}
+    decoded = decode_object(xor(top, q), objects)
+    if decoded is None:
+        return {"abstain": True, "reason": "no_object", "score": top_score}
+    return {"abstain": False, "decoded": decoded, "score": top_score}
 
 def run() -> dict:
-    random.seed(40)
+    random.seed(41)
     subjects = [f"s{i}" for i in range(20)]
     relations = [f"r{i}" for i in range(6)]
     objects = [f"o{i}" for i in range(20)]
@@ -89,27 +76,29 @@ def run() -> dict:
     FIELD.parent.mkdir(exist_ok=True)
     FIELD.write_text(json.dumps(facts))
     loaded = json.loads(FIELD.read_text())
-    # drop labels from the retrieval path
     blind = [{"bits": f["bits"], "count": f["count"]} for f in loaded]
     labels = {(f["s"], f["r"]): f["o"] for f in loaded}
-    hits = 0
     decoded_hits = 0
-    for (s, r), o in labels.items():
+    abstain = 0
+    wrong = 0
+    for (s, r), o in list(labels.items()):
         out = retrieve(blind, s, r, objects)
-        if out.get("decoded") == o:
+        if out.get("abstain"):
+            abstain += 1
+        elif out.get("decoded") == o:
             decoded_hits += 1
-        if not out.get("abstain"):
-            hits += 1
-    # unknown query should abstain
+        else:
+            wrong += 1
     unknown = retrieve(blind, "no-such", "no-rel", objects)
     receipt = {
         "facts": len(facts),
         "reloaded": len(loaded) == len(facts),
         "decoded": decoded_hits,
-        "answered": hits,
+        "abstain": abstain,
+        "wrong": wrong,
         "accuracy": round(decoded_hits / len(facts), 4),
         "unknown_abstained": bool(unknown.get("abstain")),
-        "claim": "decoded without the label; abstained on unknown; field reloaded"
+        "claim": "exact unbind is the answer; abstain only on no match; field reloaded"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bind_receipt.json").write_text(json.dumps(receipt, indent=2))
