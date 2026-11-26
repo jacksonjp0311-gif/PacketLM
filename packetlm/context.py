@@ -1,9 +1,10 @@
 """Context packets.
 
-Each node is a packet of weights, not one shared file.
+Each node is a packet of weights.
 The router picks a node by overlap.
-Only that node's weights are used to answer.
-A successful use raises the node's strength.
+Only that node's weights are used.
+The activated packet trains on the query, then answers.
+A successful use raises strength and writes the improved weights.
 """
 
 from __future__ import annotations
@@ -18,7 +19,7 @@ STORE = Path("data/context_packets.json")
 
 def blank_packet(vocab_size: int) -> dict:
     model = TinyLM(vocab_size)
-    return {"E": model.E, "Wo": model.Wo, "strength": 1.0}
+    return {"E": model.E, "Wo": model.Wo, "strength": 1.0, "uses": 0}
 
 def load_store(vocab_size: int, names: list[str]) -> dict:
     if STORE.exists():
@@ -42,13 +43,27 @@ def activate(store: dict, name: str) -> TinyLM:
     model.Wo = pkt["Wo"]
     return model
 
+def write_back(store: dict, name: str, model: TinyLM) -> None:
+    store["packets"][name]["E"] = model.E
+    store["packets"][name]["Wo"] = model.Wo
+
 def strengthen(store: dict, name: str, amount: float = 0.1) -> None:
-    store["packets"][name]["strength"] = round(
-        store["packets"][name].get("strength", 1.0) + amount, 3
-    )
+    pkt = store["packets"][name]
+    pkt["strength"] = round(pkt.get("strength", 1.0) + amount, 3)
+    pkt["uses"] = pkt.get("uses", 0) + 1
+
+def train_on_query(model: TinyLM, query: str, vocab: dict, steps: int = 8) -> None:
+    toks = tokenize(query)
+    if len(toks) < 2:
+        return
+    for _ in range(steps):
+        i = random.randrange(1, len(toks))
+        ctx = ids(toks[max(0, i - 6):i], vocab)
+        tgt = vocab.get(toks[i], 1)
+        model.step(ctx, tgt)
 
 def run() -> dict:
-    random.seed(8)
+    random.seed(9)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
@@ -66,30 +81,32 @@ def run() -> dict:
         "what did Lily find",
         "how did they feel",
     ]
+    inv = {i: t for t, i in vocab.items()}
     routes = []
     for q in queries:
         node, score = route(q, nodes)
         model = activate(store, node.name)
-        gen_ids = model.generate(ids(tokenize(q), vocab) or [1], steps=4)
-        inv = {i: t for t, i in vocab.items()}
-        gen = [inv.get(i, "<unk>") for i in gen_ids]
-        # a use that overlaps the node's keys strengthens the pathway
+        train_on_query(model, q, vocab)
+        gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(q), vocab) or [1], steps=4)]
+        write_back(store, node.name, model)
         if score > 0:
             strengthen(store, node.name)
         routes.append({
             "query": q,
             "node": node.name,
             "overlap": score,
-            "activated": True,
+            "trained": True,
             "generated": gen,
             "strength": store["packets"][node.name]["strength"],
+            "uses": store["packets"][node.name]["uses"],
         })
     save_store(store)
     receipt = {
         "packets": list(store["packets"].keys()),
         "strengths": {k: v["strength"] for k, v in store["packets"].items()},
+        "uses": {k: v.get("uses", 0) for k, v in store["packets"].items()},
         "routes": routes,
-        "claim": "weights live in nodes; router activates one packet; use strengthens it; not an intelligence"
+        "claim": "activated packet trains on the query and writes improved weights; not an intelligence"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/context_receipt.json").write_text(json.dumps(receipt, indent=2))
