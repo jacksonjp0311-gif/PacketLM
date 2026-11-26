@@ -83,3 +83,12 @@ jobs:
         with:
           name: packetlm-qualify-receipt
           path: artifacts/qualify_receipt.json
+      - name: Geometric filter
+        if: always()
+        run: python -m packetlm.geom
+      - name: Upload geom receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-geom-receipt
+          path: artifacts/geom_receipt.json
