@@ -1,9 +1,7 @@
-"""Path discovery.
+"""Both relations discovered.
 
-Facts and expected conclusions are given.
-The operator is not.
-One path that fits both examples is kept.
-Valid, invalid, and unknown are different.
+The search is not told isa.
+An oracle triple is held out of discovery.
 Not a general mind.
 """
 
@@ -15,73 +13,56 @@ from .field import add, ask, save, load
 STATE = Path("data/runtime_state.json")
 
 def discover(field, examples, objects):
-    """examples: (subject, out_rel, expected). Search isa-then-property paths."""
-    candidates = []
-    kinds = {ask(field, s, "isa", objects) for s, _, _ in examples}
-    kinds.discard(None)
-    props = set()
-    for k in kinds:
-        for f in field:
-            if f["s"] == k:
-                props.add(f["r"])
-    for prop in props:
-        ok = True
-        for s, out_rel, expected in examples:
-            kind = ask(field, s, "isa", objects)
-            val = ask(field, kind, prop, objects) if kind else None
-            if val != expected:
-                ok = False
-                break
-        if ok:
-            candidates.append(("isa", prop, examples[0][1]))
-    return candidates[0] if len(candidates) == 1 else None
+    rels = sorted({f["r"] for f in field})
+    hits = []
+    for first in rels:
+        for second in rels:
+            ok = True
+            out_rel = examples[0][1]
+            for s, _, expected in examples:
+                mid = ask(field, s, first, objects)
+                val = ask(field, mid, second, objects) if mid else None
+                if val != expected:
+                    ok = False
+                    break
+            if ok:
+                hits.append((first, second, out_rel))
+    return hits[0] if len(hits) == 1 else None
 
 def apply_path(field, path, subject, objects):
     if not path:
         return None
-    first, second, out = path
+    first, second, _ = path
     mid = ask(field, subject, first, objects)
-    if not mid:
-        return None
-    return ask(field, mid, second, objects)
-
-def status(value, colors, lengths):
-    if value in colors:
-        return "valid"
-    if value in lengths:
-        return "invalid"
-    return "unknown"
+    return ask(field, mid, second, objects) if mid else None
 
 def run() -> dict:
-    objects = ["dax", "cat", "green", "blue", "red", "long", "mira", "sam", "orion"]
+    objects = ["bearing", "motor", "machine", "gear", "pump", "line"]
     field = []
     for s, r, o in [
-        ("mira", "isa", "dax"),
-        ("dax", "tail", "green"),
-        ("sam", "isa", "cat"),
-        ("cat", "tail", "blue"),
-        ("orion", "isa", "dax"),
+        ("bearing", "in", "motor"),
+        ("motor", "in", "machine"),
+        ("gear", "in", "pump"),
+        ("pump", "in", "line"),
     ]:
         add(field, s, r, o)
-    examples = [("mira", "hastail", "green"), ("sam", "hastail", "blue")]
+    examples = [("bearing", "part", "machine"), ("gear", "part", "line")]
     path = discover(field, examples, objects)
-    unseen = apply_path(field, path, "orion", objects)
-    colors = {"green", "blue"}
-    lengths = {"long"}
-    before = status("red", colors, lengths)
-    colors.add("red")
-    after = status("red", colors, lengths)
+    # oracle: a pair never used in discovery
+    add(field, "seal", "in", "valve")
+    add(field, "valve", "in", "plant")
+    objects += ["seal", "valve", "plant"]
+    got = apply_path(field, path, "seal", objects)
+    oracle = "plant"
     save(STATE, field)
     checks = {
-        "discovered": path == ("isa", "tail", "hastail"),
-        "unseen": unseen == "green",
-        "red_unknown": before == "unknown",
-        "red_valid_after": after == "valid",
-        "long_invalid": status("long", colors, lengths) == "invalid",
+        "both_discovered": path == ("in", "in", "part"),
+        "oracle": got == oracle,
+        "not_told_isa": path is None or path[0] != "isa",
         "reloaded": len(load(STATE)) == len(field),
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "path": path, "failed": failed, "claim": "path discovered from conclusions; red starts unknown"}
+    receipt = {**checks, "path": path, "got": got, "failed": failed, "claim": "both relations discovered; oracle held out"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
