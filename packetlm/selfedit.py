@@ -1,8 +1,8 @@
-"""Population self-edit.
+"""Population self-edit with adaptive step size.
 
-Makes 4 mutated copies of the tiny model, scores each on holdout
-continuation, and keeps the best only if it beats the parent.
-Receipt records the population and the keep/discard.
+Several generations. Each generation makes 4 mutated copies.
+Keeps the best only if it beats the parent.
+Shrinks the mutation size when nothing is kept. Grows it slightly when something is.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from .tiny import TinyLM, build_vocab, tokenize, ids, holdout_score
 from .train import load_corpus, window_stories
 
 POP = 4
-SCALE = 0.02
+GENS = 3
 
 def clone_weights(model: TinyLM) -> dict:
     return {
@@ -25,14 +25,14 @@ def restore(model: TinyLM, snap: dict) -> None:
     model.E = [row[:] for row in snap["E"]]
     model.Wo = [row[:] for row in snap["Wo"]]
 
-def mutate(model: TinyLM, scale: float = SCALE) -> None:
+def mutate(model: TinyLM, scale: float) -> None:
     if not model.E:
         return
     i = random.randrange(len(model.E))
     model.E[i] = [v + (random.random() - 0.5) * scale for v in model.E[i]]
 
 def run() -> dict:
-    random.seed(2)
+    random.seed(3)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
@@ -49,30 +49,44 @@ def run() -> dict:
             parent.step(ctx, tgt)
     cut = max(1, len(windows) // 5)
     holdout = windows[-cut:]
-    parent_score = holdout_score(parent, holdout, vocab, inv)
-    parent_snap = clone_weights(parent)
-    scores = []
-    best_score = parent_score
-    best_snap = parent_snap
-    for _ in range(POP):
-        child = TinyLM(len(vocab))
-        restore(child, parent_snap)
-        mutate(child)
-        s = holdout_score(child, holdout, vocab, inv)
-        scores.append(round(s, 3))
-        if s > best_score:
-            best_score = s
-            best_snap = clone_weights(child)
-    kept = best_score > parent_score
-    if kept:
-        restore(parent, best_snap)
+    scale = 0.02
+    history = []
+    score = holdout_score(parent, holdout, vocab, inv)
+    for g in range(GENS):
+        snap = clone_weights(parent)
+        best_score = score
+        best_snap = snap
+        child_scores = []
+        for _ in range(POP):
+            child = TinyLM(len(vocab))
+            restore(child, snap)
+            mutate(child, scale)
+            s = holdout_score(child, holdout, vocab, inv)
+            child_scores.append(round(s, 3))
+            if s > best_score:
+                best_score = s
+                best_snap = clone_weights(child)
+        kept = best_score > score
+        if kept:
+            restore(parent, best_snap)
+            score = best_score
+            scale = min(scale * 1.2, 0.1)
+        else:
+            scale = max(scale * 0.7, 0.002)
+        history.append({
+            "gen": g,
+            "parent": round(score if kept else history[-1]["parent"] if history else score, 3),
+            "children": child_scores,
+            "kept": kept,
+            "scale": round(scale, 4),
+        })
     receipt = {
         "population": POP,
-        "parent": round(parent_score, 3),
-        "children": scores,
-        "best": round(best_score, 3),
-        "kept": kept,
-        "claim": "population self-edit; kept only if best child beat parent on holdout; still tiny, not intelligent"
+        "generations": GENS,
+        "final_score": round(score, 3),
+        "final_scale": round(scale, 4),
+        "history": history,
+        "claim": "adaptive population self-edit; mutation shrinks when nothing is kept; still tiny, not intelligent"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/selfedit_receipt.json").write_text(json.dumps(receipt, indent=2))
