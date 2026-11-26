@@ -1,7 +1,8 @@
-"""Questions read the field.
+"""Language bridge.
 
-Statements write facts.
-A question returns the derived answer or abstains.
+The question checks the last token, not a fixed index.
+Unknown means the question parsed and the field has no answer.
+Unparsed means the sentence was not understood.
 Not a general mind.
 """
 
@@ -22,13 +23,13 @@ def norm(token: str) -> str:
 def parse(sentence: str) -> tuple[str, str, str] | None:
     s = sentence.lower().strip().rstrip(".").rstrip("?")
     parts = s.split()
-    if len(parts) >= 4 and parts[1] == "is" and parts[2] == "a":
+    if len(parts) == 4 and parts[1] == "is" and parts[2] == "a":
         return norm(parts[0]), "isa", norm(parts[3])
-    if len(parts) >= 4 and parts[1] == "have" and parts[-1] in {"tails", "tail"}:
+    if len(parts) == 4 and parts[1] == "have" and parts[-1] in {"tails", "tail"}:
         return norm(parts[0]), "tail", norm(parts[2])
     if len(parts) == 3 and parts[1] == "helps":
         return norm(parts[0]), "helps", norm(parts[2])
-    if len(parts) >= 5 and parts[1] == "is" and parts[2] == "helped" and parts[3] == "by":
+    if len(parts) == 5 and parts[1] == "is" and parts[2] == "helped" and parts[3] == "by":
         return norm(parts[4]), "helps", norm(parts[0])
     return None
 
@@ -52,14 +53,11 @@ def color_of(field, name, objects):
 def ask_sentence(field, sentence, objects):
     s = sentence.lower().strip().rstrip("?")
     parts = s.split()
-    if len(parts) >= 5 and parts[0] == "what" and parts[1] == "color" and parts[3] == "tail":
-        name = norm(parts[4]) if parts[2] == "is" else norm(parts[2])
-        # what color is mira tail / what color mira tail
-        if "is" in parts:
-            name = norm(parts[parts.index("is") + 1])
+    if len(parts) == 5 and parts[0] == "what" and parts[1] == "color" and parts[2] == "is" and parts[-1] == "tail":
+        name = norm(parts[3])
         color = color_of(field, name, objects)
         if not color:
-            return {"abstain": True, "name": name}
+            return {"abstain": True, "reason": "unknown", "name": name}
         return {"abstain": False, "answer": f"{name} has a {color} tail"}
     return {"abstain": True, "reason": "unparsed"}
 
@@ -79,8 +77,8 @@ def run() -> dict:
     checks = {
         "before_blue": before.get("answer") == "mira has a blue tail",
         "after_green": after.get("answer") == "mira has a green tail",
-        "unknown_abstain": unknown.get("abstain") is True,
-        "unparsed_abstain": fly.get("abstain") is True,
+        "unknown_reason": unknown.get("reason") == "unknown",
+        "unparsed_reason": fly.get("reason") == "unparsed",
         "not_reversed": ask(loaded, "bob", "helps", objects) is None,
         "reloaded": len(loaded) == len(field),
     }
@@ -90,8 +88,9 @@ def run() -> dict:
         "before": before,
         "after": after,
         "unknown": unknown,
+        "fly": fly,
         "failed": failed,
-        "claim": "question reads the field; unknown and unparsed abstain"
+        "claim": "tail is the last token; unknown and unparsed are different"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bridge_receipt.json").write_text(json.dumps(receipt, indent=2))
