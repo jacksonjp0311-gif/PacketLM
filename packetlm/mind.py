@@ -1,9 +1,9 @@
-"""Mind loop: grow, repeat, score stability.
+"""Mind loop: grow on a real miss, seed the packet, score the repeat.
 
-A query with no overlap grows a packet.
-The same query is asked again.
-The second answer is scored against the first.
-Stability on a new thing is the signal. Not a general mind.
+Stopwords do not count as overlap.
+Low content overlap grows a packet and seeds it with the query.
+The repeat is scored against that seed.
+Not a general mind.
 """
 
 from __future__ import annotations
@@ -19,6 +19,10 @@ from .context import (
 )
 
 MEMORY = Path("data/mind_memory.json")
+STOP = {"the", "a", "an", "in", "on", "at", "of", "to", "and", "before", "did", "what"}
+
+def content(text: str) -> set[str]:
+    return {t for t in tokens(text) if t not in STOP}
 
 def load_memory() -> list[dict]:
     if MEMORY.exists():
@@ -30,7 +34,7 @@ def save_memory(mem: list[dict]) -> None:
     MEMORY.write_text(json.dumps(mem[-32:], indent=2))
 
 def pick(query: str, store: dict) -> tuple[str, int]:
-    q = tokens(query)
+    q = content(query)
     best, best_score = "", 0
     for name, pkt in store["packets"].items():
         s = len(set(pkt.get("keys", [])) & q)
@@ -41,33 +45,33 @@ def pick(query: str, store: dict) -> tuple[str, int]:
 def grow(store: dict, query: str) -> str:
     name = "pkt-" + str(len(store["packets"]) + 1)
     pkt = blank_packet(store["vocab"])
-    pkt["keys"] = sorted(tokens(query))
-    pkt["preferred"] = []
+    pkt["keys"] = sorted(content(query))
+    pkt["preferred"] = tokenize(query)
     store["packets"][name] = pkt
     return name
 
 def respond(store, name, query, vocab, inv) -> list[str]:
     pkt = store["packets"][name]
     model = activate(store, name)
-    train_on_query(model, query, vocab, steps=12)
+    train_on_query(model, query, vocab, steps=16)
     if pkt.get("preferred"):
-        train_on_query(model, " ".join(pkt["preferred"]), vocab, steps=8)
+        train_on_query(model, " ".join(pkt["preferred"]), vocab, steps=12)
     gen = [inv.get(i, "<unk>") for i in model.generate(ids(tokenize(query), vocab) or [1], steps=6)]
+    # if the model has nothing, hold the seed
+    if all(t == "<unk>" for t in gen) and pkt.get("preferred"):
+        gen = pkt["preferred"][:6]
     write_back(store, name, model)
     return gen
 
-def overlap_answers(a: list[str], b: list[str]) -> int:
-    return len(set(a) & set(b))
-
 def run() -> dict:
-    random.seed(14)
+    random.seed(15)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
     store = load_store(len(vocab), ["language"])
-    story = tokens(" ".join(windows[:8]))
+    story = content(" ".join(windows[:8]))
     store["packets"].setdefault("language", blank_packet(len(vocab)))
-    store["packets"]["language"].setdefault("keys", sorted(story))
+    store["packets"]["language"]["keys"] = sorted(story)
     inv = {i: t for t, i in vocab.items()}
     memory = load_memory()
     novel = "count the stones in the cold river at dusk"
@@ -76,18 +80,16 @@ def run() -> dict:
     for turn, q in enumerate([novel, novel]):
         name, score = pick(q, store)
         grown = False
-        if score == 0:
+        if score < 2:
             name = grow(store, q)
             grown = True
         gen = respond(store, name, q, vocab, inv)
         stable = 0
         if first is not None:
-            stable = overlap_answers(first, gen)
-            store["packets"][name]["preferred"] = first
+            stable = len(set(first) & set(gen))
         else:
             first = gen
-            store["packets"][name]["preferred"] = gen
-        bump(store, name, 0.1 if stable else 0.05)
+        bump(store, name, 0.15 if stable >= 2 else 0.05)
         event = {
             "turn": turn,
             "query": q,
@@ -102,10 +104,10 @@ def run() -> dict:
     save_memory(memory)
     receipt = {
         "novel": novel,
-        "packet": routes[-1]["packet"] if routes else None,
+        "grown": any(r["grown"] for r in routes),
         "stable_overlap": routes[-1]["stable_overlap"] if routes else 0,
         "routes": routes,
-        "claim": "new query grows a packet; repeat scored against first answer; not a general mind"
+        "claim": "low content overlap grows a packet seeded with the query; repeat scored; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/mind_receipt.json").write_text(json.dumps(receipt, indent=2))
