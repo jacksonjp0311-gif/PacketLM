@@ -210,5 +210,53 @@
       "cold"
     ],
     "stable_overlap": 5
+  },
+  {
+    "turn": 0,
+    "query": "count the stones in the cold river at dusk",
+    "packet": "pkt-4",
+    "grown": false,
+    "held": true,
+    "stable_overlap": 5,
+    "generated": [
+      "count",
+      "the",
+      "stones",
+      "in",
+      "the",
+      "cold"
+    ]
+  },
+  {
+    "turn": 1,
+    "query": "count the stones in the cold river at dusk",
+    "packet": "pkt-4",
+    "grown": false,
+    "held": true,
+    "stable_overlap": 5,
+    "generated": [
+      "count",
+      "the",
+      "stones",
+      "in",
+      "the",
+      "cold"
+    ]
+  },
+  {
+    "turn": 2,
+    "query": "stones in the cold river",
+    "packet": "pkt-4",
+    "grown": false,
+    "held": true,
+    "stable_overlap": 5,
+    "generated": [
+      "count",
+      "the",
+      "stones",
+      "in",
+      "the",
+      "cold"
+    ]
   }
 ]
