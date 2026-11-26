@@ -1,12 +1,13 @@
-"""Generate the question.
+"""Score the question.
 
-Subjects come from the field, not a handed list.
-The oracle is back.
+A question that splits evenly beats one that barely splits.
+Oracle stays.
 Not a general mind.
 """
 
 from __future__ import annotations
 import json
+from collections import Counter
 from pathlib import Path
 from .field import add, ask
 
@@ -37,55 +38,55 @@ def apply_path(field, path, subject, objects):
     mid = ask(field, subject, first, objects)
     return ask(field, mid, second, objects) if mid else None
 
-def subjects_of(field):
-    return sorted({f["s"] for f in field})
+def split_score(preds):
+    counts = Counter(p for p in preds if p is not None)
+    if len(counts) < 2:
+        return 0
+    return min(counts.values())
 
 def pick(field, paths, objects):
-    for s in subjects_of(field):
-        preds = {apply_path(field, p, s, objects) for p in paths}
-        preds.discard(None)
-        if len(preds) > 1:
-            return s
-    return None
+    best, best_score = None, 0
+    for s in sorted({f["s"] for f in field}):
+        preds = [apply_path(field, p, s, objects) for p in paths]
+        score = split_score(preds)
+        if score > best_score:
+            best, best_score = s, score
+    return best, best_score
 
 def run() -> dict:
     objects = ["bearing", "motor", "machine", "gear", "pump", "line", "seal", "valve", "plant"]
     field = []
     for s, r, o in [
         ("bearing", "in", "motor"), ("motor", "in", "machine"),
-        ("bearing", "near", "bench"), ("bench", "near", "wall"),
         ("gear", "in", "pump"), ("pump", "in", "line"),
         ("seal", "in", "valve"), ("valve", "in", "plant"),
     ]:
         add(field, s, r, o)
     path = discover(field, [("bearing", "part", "machine"), ("gear", "part", "line")], objects)
-    # generated question on the tie field
     env = []
     for s, r, o in [
         ("x", "p", "y"), ("y", "p", "z"),
         ("x", "q", "a"), ("a", "q", "z"),
+        ("x", "r", "c"), ("c", "r", "z"),
         ("m", "p", "n"), ("n", "p", "w"),
-        ("m", "q", "b"), ("b", "q", "nope"),
+        ("m", "q", "b"), ("b", "q", "w"),
+        ("m", "r", "d"), ("d", "r", "nope"),
+        ("weak", "p", "e"), ("e", "p", "same"),
+        ("weak", "q", "f"), ("f", "q", "same"),
+        ("weak", "r", "g"), ("g", "r", "other"),
     ]:
         add(env, s, r, o)
-    objs = objects + ["x", "y", "z", "a", "m", "n", "w", "b", "nope"]
+    objs = objects + ["x", "y", "z", "a", "c", "m", "n", "w", "b", "d", "nope", "weak", "e", "f", "g", "same", "other"]
     live = candidates(env, [("x", "out", "z")], objs)
-    chosen = pick(env, live, objs)
-    answer = apply_path(env, ("p", "p", "out"), chosen, objs) if chosen else None
-    after = candidates(env, [("x", "out", "z"), (chosen, "out", answer)], objs) if chosen else []
+    chosen, score = pick(env, live, objs)
     checks = {
         "oracle": apply_path(field, path, "seal", objects) == "plant",
-        "generated": chosen == "m" and "m" in subjects_of(env),
-        "resolved": after == [("p", "p", "out")],
-        "not_handed": chosen in subjects_of(env),
+        "three": len(live) == 3,
+        "picked_even": chosen == "m" and score == 1,
+        "not_weak": chosen != "weak",
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {
-        **checks,
-        "chosen": chosen,
-        "failed": failed,
-        "claim": "question generated from the field; oracle restored"
-    }
+    receipt = {**checks, "chosen": chosen, "score": score, "failed": failed, "claim": "even split preferred; oracle kept"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
