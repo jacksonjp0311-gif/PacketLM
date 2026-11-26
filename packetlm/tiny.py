@@ -1,8 +1,7 @@
 """Tiny next-token model.
 
-Pure Python. No torch. Trains on the runner.
-Token embeddings, two attention layers with residual skip, next-token head.
-Loads saved weights if present and saves after training so runs accumulate.
+Holdout windows are cut before pairs are built.
+The model never trains on the material used to score it.
 """
 
 from __future__ import annotations
@@ -140,15 +139,16 @@ def run() -> dict:
     inv = {i: t for t, i in vocab.items()}
     model = TinyLM(len(vocab))
     loaded = load_into(model, DIM)
+    cut = max(1, len(windows) // 5)
+    train_windows = windows[:-cut]
+    holdout = windows[-cut:]
     pairs = []
-    for w in windows:
+    for w in train_windows:
         toks = tokenize(w)
         for i in range(1, len(toks)):
             pairs.append((ids(toks[max(0, i - CTX):i], vocab), vocab.get(toks[i], 1)))
     if not pairs:
         pairs = [([1], 1)]
-    cut = max(1, len(windows) // 5)
-    holdout = windows[-cut:]
     before = holdout_score(model, holdout, vocab, inv)
     losses = []
     for _ in range(STEPS):
@@ -157,14 +157,13 @@ def run() -> dict:
     after = holdout_score(model, holdout, vocab, inv)
     if after >= before:
         save_from(model, DIM)
-    prompt = tokenize(windows[0])[:4] if windows else ["one"]
+    prompt = tokenize(train_windows[0])[:4] if train_windows else ["one"]
     gen = [inv.get(i, "<unk>") for i in model.generate(ids(prompt, vocab), steps=8)]
     receipt = {
         "vocab": len(vocab),
-        "dim": DIM,
-        "context": CTX,
-        "layers": 2,
-        "residual": True,
+        "train_windows": len(train_windows),
+        "holdout_windows": len(holdout),
+        "holdout_excluded": True,
         "loaded": loaded,
         "saved": after >= before,
         "steps": STEPS,
@@ -172,9 +171,8 @@ def run() -> dict:
         "holdout_before": round(before, 3),
         "holdout_after": round(after, 3),
         "improved": after > before,
-        "prompt": prompt,
         "generated": gen,
-        "claim": "weights persist across runs when holdout does not fall; still tiny, not a general language model"
+        "claim": "holdout windows never enter training pairs; still tiny, not a general language model"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/tiny_receipt.json").write_text(json.dumps(receipt, indent=2))
