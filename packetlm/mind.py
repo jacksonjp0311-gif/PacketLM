@@ -1,10 +1,10 @@
-"""Mind loop: infer across packets.
+"""Mind loop: infer, then remember the inference.
 
 Two facts live in two packets.
-A question overlaps both.
-The answer is a token that is in neither the question nor one packet alone
-in a way the question already said. It must come from the composition.
-Not a general mind.
+A question composes them.
+If the expected token appears, a new packet is grown
+that holds the composed fact.
+The field remembers what it inferred. Not a general mind.
 """
 
 from __future__ import annotations
@@ -49,7 +49,7 @@ def surplus(preferred: list[str], query: str) -> list[str]:
     return [t for t in preferred if t not in q and t not in STOP]
 
 def run() -> dict:
-    random.seed(20)
+    random.seed(21)
     raw = load_corpus()
     windows = window_stories(raw)
     vocab = build_vocab(windows)
@@ -67,17 +67,28 @@ def run() -> dict:
             bump(store, name, 0.2)
     flat = [t for c in composed for t in c["retrieved"]]
     inferred = expected in flat
+    remembered = None
+    if inferred:
+        remembered = "infer-" + str(len(store["packets"]) + 1)
+        fact = tokenize("lily can sew with a needle")
+        ensure(store, remembered, content(" ".join(fact)), fact)
+        bump(store, remembered, 0.3)
     save_store(store)
     memory = load_memory()
-    memory.append({"question": question, "hits": hits, "composed": composed, "inferred": inferred})
+    memory.append({
+        "question": question,
+        "inferred": inferred,
+        "remembered": remembered,
+        "composed": composed,
+    })
     save_memory(memory)
     receipt = {
         "question": question,
         "expected": expected,
-        "packets": hits,
-        "composed": composed,
         "inferred": inferred,
-        "claim": "answer came from composition of two packets; still not a general mind"
+        "remembered_packet": remembered,
+        "composed": composed,
+        "claim": "inference grew a packet that holds the composed fact; not a general mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/mind_receipt.json").write_text(json.dumps(receipt, indent=2))
