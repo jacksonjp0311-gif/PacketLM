@@ -1,19 +1,15 @@
 # State
 
-## Held in one run
+## Gates
 
-- G37: tight packet wins.
-- System: agreement induces, disagreement blocks, recursive drop.
-- Bridge: blue then green, unknown vs unparsed, owns learned, holds rejected, every written token registered.
+- Retain: a new capability must not drop an old check.
+- Acquire: the new thing comes from evidence.
+- Compose: it has to work with what is already there.
 
-## What this is
+## Drift
 
-A geometric field with bind, unbind, abstain, stored operators, a small controller, truth maintenance, and a few language patterns that write and read the field.
+The blue-to-green correction was dropped when isa was added. That failed Retain. It is being restored in the same run as owns and isa.
 
-## What this is not
+## Claim
 
-Not acquired reasoning. Not a learned grammar. Not speech from a general decoder. Not a mind.
-
-## Drift to avoid
-
-Replacing a working check with a new demo. Leaving a token unregistered. Treating a programmed rule as learning.
+Cumulative competence, not cumulative demos. Not a mind.
