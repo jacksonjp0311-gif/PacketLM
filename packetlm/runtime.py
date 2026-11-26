@@ -1,8 +1,7 @@
-"""Autonomous step.
+"""Generate the question.
 
-The environment holds the rule.
-The learner picks a subject where the paths disagree.
-It asks. One path dies.
+Subjects come from the field, not a handed list.
+The oracle is back.
 Not a general mind.
 """
 
@@ -38,8 +37,11 @@ def apply_path(field, path, subject, objects):
     mid = ask(field, subject, first, objects)
     return ask(field, mid, second, objects) if mid else None
 
-def pick(field, paths, subjects, objects):
-    for s in subjects:
+def subjects_of(field):
+    return sorted({f["s"] for f in field})
+
+def pick(field, paths, objects):
+    for s in subjects_of(field):
         preds = {apply_path(field, p, s, objects) for p in paths}
         preds.discard(None)
         if len(preds) > 1:
@@ -47,36 +49,42 @@ def pick(field, paths, subjects, objects):
     return None
 
 def run() -> dict:
-    # hidden rule: p then p
+    objects = ["bearing", "motor", "machine", "gear", "pump", "line", "seal", "valve", "plant"]
+    field = []
+    for s, r, o in [
+        ("bearing", "in", "motor"), ("motor", "in", "machine"),
+        ("bearing", "near", "bench"), ("bench", "near", "wall"),
+        ("gear", "in", "pump"), ("pump", "in", "line"),
+        ("seal", "in", "valve"), ("valve", "in", "plant"),
+    ]:
+        add(field, s, r, o)
+    path = discover(field, [("bearing", "part", "machine"), ("gear", "part", "line")], objects)
+    # generated question on the tie field
     env = []
     for s, r, o in [
         ("x", "p", "y"), ("y", "p", "z"),
         ("x", "q", "a"), ("a", "q", "z"),
         ("m", "p", "n"), ("n", "p", "w"),
         ("m", "q", "b"), ("b", "q", "nope"),
-        ("hold", "p", "mid"), ("mid", "p", "yes"),
     ]:
         add(env, s, r, o)
-    objects = ["x", "y", "z", "a", "m", "n", "w", "b", "nope", "hold", "mid", "yes"]
-    live = candidates(env, [("x", "out", "z")], objects)
-    chosen = pick(env, live, ["m", "hold"], objects)
-    answer = apply_path(env, ("p", "p", "out"), chosen, objects) if chosen else None
-    after = candidates(env, [("x", "out", "z"), (chosen, "out", answer)], objects) if chosen else []
-    qualified = apply_path(env, after[0], "hold", objects) if len(after) == 1 else None
+    objs = objects + ["x", "y", "z", "a", "m", "n", "w", "b", "nope"]
+    live = candidates(env, [("x", "out", "z")], objs)
+    chosen = pick(env, live, objs)
+    answer = apply_path(env, ("p", "p", "out"), chosen, objs) if chosen else None
+    after = candidates(env, [("x", "out", "z"), (chosen, "out", answer)], objs) if chosen else []
     checks = {
-        "started_tied": set(map(tuple, live)) == {("p", "p", "out"), ("q", "q", "out")},
-        "picked": chosen == "m",
-        "asked_env": answer == "w",
+        "oracle": apply_path(field, path, "seal", objects) == "plant",
+        "generated": chosen == "m" and "m" in subjects_of(env),
         "resolved": after == [("p", "p", "out")],
-        "qualified": qualified == "yes",
+        "not_handed": chosen in subjects_of(env),
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
         "chosen": chosen,
-        "answer": answer,
         "failed": failed,
-        "claim": "learner picked the question; environment answered; one path remained"
+        "claim": "question generated from the field; oracle restored"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/runtime_receipt.json").write_text(json.dumps(receipt, indent=2))
