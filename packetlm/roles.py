@@ -1,8 +1,8 @@
-"""Equivalence.
+"""Correction through the same field.
 
-owns and vek both write the same fact.
-An isa sentence plus a type fact answers a derived question.
-Six orders and the real clash stay.
+Two sentences still write one owns fact.
+Dax tails go from blue to green. Mira's answer changes.
+Owns stays.
 Not a general mind.
 """
 
@@ -58,6 +58,12 @@ def example_for(order):
         out.append((" ".join(roles[role] for role in order), (s, "owns", o)))
     return out
 
+def color(field, name, objects):
+    kind = ask(field, name, "isa", objects)
+    if not kind:
+        return None
+    return ask(field, kind, "tail", objects)
+
 def run() -> dict:
     applied = {}
     for order in ORDERS:
@@ -72,7 +78,7 @@ def run() -> dict:
     library = [c for c in (vek, owns, isa) if c]
     save(FIELD, library)
     loaded = load(FIELD)
-    objects = []
+    objects = ["isa", "tail", "hastail", "blue", "green", "dax"]
     field = []
     for sent in ("rex owns map", "map vek rex", "mira isa dax"):
         fact = select(loaded, sent)
@@ -81,25 +87,23 @@ def run() -> dict:
                 if t not in objects:
                     objects.append(t)
             add(field, *fact)
-    for t in ("isa", "tail", "hastail", "green", "dax"):
-        if t not in objects:
-            objects.append(t)
-    add(field, "isa", "chain", "tail")
-    add(field, "isa", "compose", "hastail")
+    add(field, "dax", "tail", "blue")
+    before = color(field, "mira", objects)
+    field = [f for f in field if not (f["s"] == "dax" and f["r"] == "tail")]
     add(field, "dax", "tail", "green")
-    kind = ask(field, "mira", "isa", objects)
-    color = ask(field, kind, "tail", objects) if kind else None
+    after = color(field, "mira", objects)
     checks = {
         "all_six_applied": all(applied.values()) and len(applied) == 6,
         "one_fact": sum(1 for f in field if f["s"] == "rex" and f["r"] == "owns") == 1,
-        "vek_and_owns": ask(field, "rex", "owns", objects) == "map",
-        "derived_green": color == "green",
+        "before_blue": before == "blue",
+        "after_green": after == "green",
+        "owns_kept": ask(field, "rex", "owns", objects) == "map",
         "real_clash": select([vek, other], "map vek rex") is None if vek else False,
         "unknown_abstain": select(loaded, "rex holds map") is None,
         "library_reloaded": len(loaded) == 3,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "two sentences, one fact; operator answers from it"}
+    receipt = {**checks, "failed": failed, "claim": "correction changes the derived answer; owns stays"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/roles_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
