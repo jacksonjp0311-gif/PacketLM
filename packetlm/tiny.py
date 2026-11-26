@@ -1,9 +1,9 @@
 """Tiny next-token model.
 
 Pure Python. No torch. Trains on the runner.
-Token embeddings, one attention layer, next-token head.
-Trained by prediction error on the corpus windows.
-Generates by argmax. Receipt records loss and holdout continuation score.
+Token embeddings, two attention layers, next-token head.
+Trained by prediction error. Generates by argmax.
+Receipt records loss and holdout continuation score.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from pathlib import Path
 from .train import load_corpus, window_stories
 
 DIM = 16
-STEPS = 120
+STEPS = 200
 
 def tokenize(text: str) -> list[str]:
     return [t for t in text.lower().split() if t]
@@ -49,20 +49,23 @@ class TinyLM:
     def __init__(self, vocab_size: int):
         self.V = vocab_size
         self.E = rand_mat(vocab_size, DIM, 0.2)
-        self.Wq = rand_mat(DIM, DIM, 0.1)
-        self.Wk = rand_mat(DIM, DIM, 0.1)
-        self.Wv = rand_mat(DIM, DIM, 0.1)
-        # Wo[token] is a DIM vector so logits can index by vocab
+        self.layers = []
+        for _ in range(2):
+            self.layers.append({
+                "Wq": rand_mat(DIM, DIM, 0.1),
+                "Wk": rand_mat(DIM, DIM, 0.1),
+                "Wv": rand_mat(DIM, DIM, 0.1),
+            })
         self.Wo = rand_mat(vocab_size, DIM, 0.1)
 
     def embed(self, token_ids: list[int]) -> list[list[float]]:
         return [self.E[i][:] for i in token_ids]
 
-    def attn(self, x: list[list[float]]) -> list[list[float]]:
+    def attn(self, x: list[list[float]], layer: dict) -> list[list[float]]:
         n = len(x)
-        q = [[dot(row, self.Wq[j]) for j in range(DIM)] for row in x]
-        k = [[dot(row, self.Wk[j]) for j in range(DIM)] for row in x]
-        v = [[dot(row, self.Wv[j]) for j in range(DIM)] for row in x]
+        q = [[dot(row, layer["Wq"][j]) for j in range(DIM)] for row in x]
+        k = [[dot(row, layer["Wk"][j]) for j in range(DIM)] for row in x]
+        v = [[dot(row, layer["Wv"][j]) for j in range(DIM)] for row in x]
         out = zeros(n, DIM)
         scale = math.sqrt(DIM)
         for i in range(n):
@@ -73,15 +76,19 @@ class TinyLM:
                     out[i][d] += w * v[j][d]
         return out
 
+    def forward(self, token_ids: list[int]) -> list[float]:
+        x = self.embed(token_ids)
+        for layer in self.layers:
+            x = self.attn(x, layer)
+        return x[-1]
+
     def logits(self, hidden: list[float]) -> list[float]:
         return [dot(hidden, self.Wo[j]) for j in range(self.V)]
 
     def step(self, token_ids: list[int], target: int, lr: float = 0.05) -> float:
         if not token_ids:
             return 0.0
-        x = self.embed(token_ids)
-        h = self.attn(x)
-        last = h[-1]
+        last = self.forward(token_ids)
         logits = self.logits(last)
         probs = softmax(logits)
         loss = -math.log(max(probs[target], 1e-9))
@@ -97,9 +104,7 @@ class TinyLM:
     def predict(self, token_ids: list[int]) -> int:
         if not token_ids:
             return 1
-        x = self.embed(token_ids)
-        h = self.attn(x)
-        logits = self.logits(h[-1])
+        logits = self.logits(self.forward(token_ids))
         return max(range(self.V), key=lambda j: logits[j])
 
     def generate(self, prompt_ids: list[int], steps: int = 8) -> list[int]:
@@ -146,21 +151,18 @@ def run() -> dict:
         losses.append(model.step(ctx, tgt))
     after = holdout_score(model, holdout, vocab, inv)
     prompt = tokenize(windows[0])[:4] if windows else ["one"]
-    gen_ids = model.generate(ids(prompt, vocab), steps=8)
-    gen = [inv.get(i, "<unk>") for i in gen_ids]
-    mean_loss = sum(losses) / max(len(losses), 1)
+    gen = [inv.get(i, "<unk>") for i in model.generate(ids(prompt, vocab), steps=8)]
     receipt = {
         "vocab": len(vocab),
-        "pairs": len(pairs),
+        "layers": 2,
         "steps": STEPS,
-        "mean_loss": round(mean_loss, 4),
-        "final_loss": round(losses[-1], 4) if losses else None,
+        "mean_loss": round(sum(losses) / max(len(losses), 1), 4),
         "holdout_before": round(before, 3),
         "holdout_after": round(after, 3),
         "improved": after > before,
         "prompt": prompt,
         "generated": gen,
-        "claim": "tiny next-token model; output matrix fixed; trained longer; continuation scored on holdout; still tiny, not a general language model"
+        "claim": "two-layer tiny next-token model; still tiny, not a general language model"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/tiny_receipt.json").write_text(json.dumps(receipt, indent=2))
