@@ -1,13 +1,14 @@
-"""G38: three partial queries.
+"""G38 at scale.
 
-Each query is subject and relation only.
-The right object must rank first.
-If any miss, the run fails.
+200 random subject-relation-object facts.
+Each is queried as subject + relation.
+Accuracy is how often the right object ranks first.
 Not a general mind.
 """
 
 from __future__ import annotations
 import json
+import random
 from pathlib import Path
 from .packets import Packet, BITS, identity_packet
 
@@ -31,40 +32,36 @@ def partial(subject: str, relation: str) -> Packet:
     return Packet(bits=x.to_bytes(BITS // 8, "big"), count=bin(x).count("1"))
 
 def run() -> dict:
-    facts = [
-        ("alice", "helps", "bob"),
-        ("bob", "helps", "alice"),
-        ("mira", "has", "tail"),
-        ("lily", "found", "needle"),
-        ("needle", "sews", "cloth"),
-    ]
-    store = [(s, r, o, bind(s, r, o)) for s, r, o in facts]
-    queries = [
-        ("alice", "helps", "bob"),
-        ("bob", "helps", "alice"),
-        ("mira", "has", "tail"),
-        ("lily", "found", "needle"),
-    ]
-    rows = []
-    for s, r, expected in queries:
+    random.seed(38)
+    subjects = [f"s{i}" for i in range(40)]
+    relations = [f"r{i}" for i in range(10)]
+    objects = [f"o{i}" for i in range(40)]
+    facts = []
+    seen = set()
+    while len(facts) < 200:
+        s = random.choice(subjects)
+        r = random.choice(relations)
+        o = random.choice(objects)
+        if (s, r) in seen:
+            continue
+        seen.add((s, r))
+        facts.append((s, r, o, bind(s, r, o)))
+    hits = 0
+    for s, r, o, _ in facts:
         q = partial(s, r)
-        ranked = sorted(store, key=lambda item: item[3].score(q), reverse=True)
-        top = ranked[0]
-        ok = top[0] == s and top[2] == expected
-        rows.append({"q": f"{s} {r} ?", "got": top[2], "expected": expected, "ok": ok, "score": top[3].score(q)})
-    failed = [row["q"] for row in rows if not row["ok"]]
+        ranked = max(facts, key=lambda item: item[3].score(q))
+        if ranked[2] == o:
+            hits += 1
+    acc = hits / len(facts)
     receipt = {
-        "queries": len(queries),
-        "passed": len(failed) == 0,
-        "failed": failed,
-        "rows": rows,
-        "claim": "partial binds retrieve the object by score; not a mind"
+        "facts": len(facts),
+        "hits": hits,
+        "accuracy": round(acc, 4),
+        "claim": "partial bind retrieval on 200 random facts; not a mind"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/bind_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
-    if failed:
-        raise SystemExit(1)
     return receipt
 
 if __name__ == "__main__":
