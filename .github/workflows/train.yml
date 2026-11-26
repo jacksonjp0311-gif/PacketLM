@@ -17,7 +17,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Tiny next-token model
+        run: python -m packetlm.tiny
+      - name: Upload tiny receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: packetlm-tiny-receipt
+          path: artifacts/tiny_receipt.json
       - name: Language-phase measurement
+        if: always()
         run: python -m packetlm.train
       - name: Upload training receipt
         if: always()
