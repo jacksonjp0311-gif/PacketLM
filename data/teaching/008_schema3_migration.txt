@@ -1,0 +1,3 @@
+# Session 008: no new teaching. Opens the trained state on engine v4 (schema 3):
+# the schema-2 file is fully checked (every stored packet must bind), migrated explicitly,
+# and the load report records the migration. All earlier probes are re-asked.

@@ -106,3 +106,58 @@ reported as the `+maint` variant.
 **Pre-registered limitation.** The harness's own retention measurement touches every earlier
 family at each family end. That counts as real use, and it forces restores. The result is
 therefore specific to this usage pattern.
+
+## Results (registered seeds 11/22/33, engine 205d0829…, unchanged during the run; evidence in docs/evidence/aret/)
+
+**H-R1, no harm: PASS.** In both curricula and all seeds, arm A matches arm C exactly:
+- per-task acquisition, sealed correctness and every sealed reply;
+- every family record;
+- 0 wrong-qualified answers and no aborts.
+
+### Task CPU in seconds (seeds 11 / 22 / 33)
+
+| | C (static) | A (adaptive) | B (empty) |
+|---|---|---|---|
+| G46 | 7.01 / 7.18 / 6.38 | **3.64 / 3.66 / 3.32** | 4.80 / 4.62 / 4.70 |
+| G46-U | 2.10 / 1.98 / 2.05 | **1.18 / 1.25 / 1.29** | 0.19 / 0.17 / 0.19 |
+| G46 maintenance | 1.38 / 1.41 / 1.59 | 1.03 / 0.99 / 1.05 | n/a |
+| G46-U maintenance | 4.91 / 4.62 / 4.73 | 3.69 / 3.72 / 3.63 | n/a |
+
+### Instrument results (pinned 70297af, unmodified, 5000 bootstrap draws)
+
+| contrast | G46 (36 tasks) | G46-U (24 tasks) |
+|---|---|---|
+| `A(A‖C)` | **+0.484 [+0.481, +0.490]**, break-even 8 | **+0.394 [+0.369, +0.439]**, break-even 4 |
+| `A(A+maint‖C+maint)` | +0.452 [+0.443, +0.459] | +0.276 [+0.247, +0.305] |
+| `A(A‖B)` | **+0.249 [+0.208, +0.295]**, break-even 24 | −5.74 [−6.35, −5.26] |
+| `A(C‖B)`, same run | −0.457 [−0.553, −0.358] | −10.12 [−10.65, −9.62] |
+
+- **H-R2** (G46-U, lower bound > 0): **PASS**, with lower bound +0.369.
+- **H-R3** (G46, lower bound > −0.05): **PASS**, with lower bound +0.481.
+- **Censoring.** G46: A and C are censored on 1 task each, B on 11. B's censoring makes
+  `A(A‖B)` a lower bound, by the instrument's rule. G46-U has no censoring.
+
+**State sizes:**
+- Mean hot state at task time: G46 211 KB (C) vs 57.5 KB (A); G46-U 284 KB vs 54 KB.
+- The archive holds 378–387 KB in 5 files (G46) and about 542 KB in 23 files (G46-U). It is
+  never deleted, and re-archiving reused files.
+- The final hot state of A is about the size of C's. The last family-end retention probe
+  restores everything, and A also carries its use records (+3% on G46, +6% on G46-U).
+
+**Byte proxy:** per-process task CPU against hot bytes at task time gives Pearson r = 0.854
+(G46) and 0.822 (G46-U), with slopes of about 0.10 ms per KB. Bytes are a reasonable proxy
+here, but not the whole cost.
+
+### Reading
+
+- On the compositional curriculum, with adaptive retention the continual learner is the first
+  arm in this program to cost less than learning each task from an empty state at matched
+  accuracy: `A_36(A‖B)` = +0.25, a lower bound. It also solves 36/36/35 tasks against B's
+  32/32/31.
+- On the unrelated curriculum, retention halves the gap but does not close it.
+  - With nothing to reuse, any retained state is overhead.
+  - Every family-end retention probe touches all history, which forces a restore each time.
+- The utility problem is reduced by a measured, evidence-gated policy with no change to any
+  answer. It is not solved:
+  - G46-U `A(A‖B)` is still −5.7;
+  - the gate's constants were chosen once, on dev seed 999, and were not tuned on these seeds.

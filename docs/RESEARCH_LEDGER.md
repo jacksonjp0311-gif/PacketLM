@@ -318,3 +318,35 @@ items 1–3.
 - **Next:**
   1. v4: exact persistence work, in progress on ops-dev.
   2. The ARET adaptive-retention experiment, pre-registered before any run.
+
+- teaching `008_schema3_migration.txt` 2026-11-26T22:20:17-05:00: facts 44→44, capabilities 7→7 {'qualified': 5, 'provisional': 2}, constructions 8→8; retention 19/19, new probes 0/0; cpu 0.06s; engine 205d0829533f
+
+## 2026-11-26 22:20 — v4 re-measurement and ARET adaptive retention (registered runs; docs/G46_V4.md, docs/ARET.md)
+
+- **Engine v4** (schema 3, 205d0829…):
+  - Packets are derived on demand and never stored. A schema-2 state is checked in full,
+    migrated explicitly and reported.
+  - Checks: g44 77/77, suite 164/164, 33/33 mutations killed, G45 18/18 with decisions
+    identical.
+- **v4 results:** decisions are identical to v3 everywhere, so G46 is still **not passed
+  (26/27)**.
+  - G46 `A_36(C‖B)`: −7.00 (v2) → −2.15 (v3) → **−0.448**.
+  - `A^reuse(C‖P)` = **+0.280**.
+  - G46-U `A_24(C‖B)` = −9.78.
+  - G47: H3 and H5 still true; the H5 margin is small.
+- **ARET** (pre-registered at 813697c before any registered run):
+  - **H-R1 (no harm): pass.** Every reply and every family record is identical to the static arm.
+  - **H-R2: pass.** G46-U `A_24(A‖C)` = +0.394 [+0.369, +0.439].
+  - **H-R3: pass.** G46 `A_36(A‖C)` = +0.484 [+0.481, +0.490].
+  - **First positive `A` against an empty-state learner:** G46 `A_36(A‖B)` = **+0.249
+    [+0.208, +0.295]**, a lower bound because B is censored on 11 tasks.
+  - G46-U `A(A‖B)` is still −5.74: on unrelated knowledge, retention halves the overhead
+    but cannot remove it.
+  - Byte proxy against CPU: r = 0.85 / 0.82.
+- **Audit and LA response:** this is the "evidence-gated adaptive retention vs static" experiment
+  the LA feedback asked for: archive, never delete, measured with the unmodified instrument.
+  Gate constants were set on dev seed 999 only (GUARD 2 → 1, recorded in ARET.md) and not tuned
+  on the registered seeds.
+- **Teaching session 008** (schema-3 migration, no new teaching): the load report records
+  "44 stored packets checked and dropped". Retention is 19/19. The v2 file is kept as
+  state.json.bak.
