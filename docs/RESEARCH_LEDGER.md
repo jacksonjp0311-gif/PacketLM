@@ -1276,3 +1276,19 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   representation; next is an alternative mathematical approach under the same instrument and
   verification, not further engine optimization. Not started (G59 stops here).
 - Emergence log line appended (all fields of INVARIANTS.md §2). Evidence: `docs/evidence/g59/`.
+
+
+## 2026-11-27 12:55: Switch decision (G59 §8) — James chose fixed-width HDC / VSA codes; G60H registered
+
+- **Decision:** G59 HOLD triggered the switch rule. On 2026-11-27 James chose the route: fixed-width
+  sparse hyperdimensional / vector-symbolic codes (bind, bundle, permutation, cleanup memory; learned
+  capabilities as composed hypervectors), keeping the sparse binary geometric spirit. The existing
+  engine is not optimized further; the HDC engine is a new module (`packetlm/hdc/`), existing engine
+  untouched (g44 191/191, G45 18/18, suite 279/0 at registration).
+- **G60H registered** (docs/G60H.md): small prototype on the unchanged G59 gate protocol and instrument
+  70297af, fresh seeds (gate 401–447, part S 451–457), part S at 1 worker with local exponents and the
+  P‖B / C‖P / maintenance decomposition (from verify-80cfb17 M1, M2, L1), margin-2 robustness run,
+  capacity/accuracy sweep, accuracy kill criterion, worth-scaling rule.
+- Stated before the run: G60H's qualification horizon (n + margin in each arm's own primitive
+  language) is weaker than G59's (deepen primitives); dev shows the result depends on it (margin 1:
+  comp A ≈ +0.54; margin 2: ≈ +0.02, only depth 5 positive). Predictions in docs/G60H.md §7.

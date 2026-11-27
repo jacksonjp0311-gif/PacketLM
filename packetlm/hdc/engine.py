@@ -17,8 +17,8 @@ Search (identical for every arm; `--no-library` only removes capabilities from t
   X = the observed subjects + Omega (up to OMEGA subjects of s1's relations, in the order told); equal
   tuples are equal functions on X and are expanded once; a tuple empty at a value-observed subject is
   pruned. Supported = matches every observation (value, !none, !several). At the first depth n with
-  support: several distinct tuples -> `ambiguous`; one -> candidate, searched one level further (n+1):
-  a new supported tuple there blocks (-> `provisional`), else `qualified`. Answers are qualified only on
+  support: several distinct tuples -> `ambiguous`; one -> candidate, searched `margin` levels further (registered
+  margin 1: n+1): a new supported tuple there blocks (-> `provisional`), else `qualified`. Answers are qualified only on
   X (the decided domain); elsewhere [provisional].
 """
 from __future__ import annotations
@@ -29,8 +29,8 @@ NONE, SEVERAL = "!none", "!several"
 
 
 class HEngine:
-    def __init__(self, library=True, deepen=5):
-        self.library, self.deepen = library, deepen
+    def __init__(self, library=True, deepen=5, margin=1):
+        self.library, self.deepen, self.margin = library, deepen, margin
         self.ent = C.Codebook()      # entities
         self.prim = C.Codebook()     # relations and capabilities (the primitive codebook)
         self.rel = C.Codebook()      # relations only (signature cleanup)
@@ -252,8 +252,9 @@ class HEngine:
                     if len(sup) > 1:
                         break
             else:
-                blockers = sup
-                break
+                blockers += sup
+                if n >= found + self.margin:
+                    break
             if not frontier:
                 break
         rec = {"searched_len": searched, "pruned": pruned, "evaluated": self.stats["evaluations"]}

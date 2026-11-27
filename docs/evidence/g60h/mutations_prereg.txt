@@ -1,0 +1,13 @@
+library_ignored killed
+no_blocking killed
+no_prune killed
+no_dedupe killed
+domain_ignored killed
+decode_unchecked killed
+touched_check_off killed
+full_check_off killed
+capidx_not_rebuilt killed
+investigate_first SURVIVED
+correct_keeps_old killed
+journal_not_replayed killed
+11 / 12

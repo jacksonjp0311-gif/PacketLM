@@ -27,10 +27,12 @@ def _cpu():
 
 
 def parse(flags):
-    kw = {"library": True, "deepen": 5}
+    kw = {"library": True, "deepen": 5, "margin": 1}
     for f in flags:
         if f == "--no-library":
             kw["library"] = False
+        elif f.startswith("--margin="):
+            kw["margin"] = int(f.split("=", 1)[1])
         elif f.startswith("--deepen="):
             kw["deepen"] = int(f.split("=", 1)[1])
         elif f not in KNOWN:

@@ -93,7 +93,9 @@ def hdc_counters(out, cur, seeds, arm):
 
 def analyses(raw, seeds, csvs, n):
     primary = [("Ch+maint", "Bh"), ("Ch+maint", "Ph+maint")]
-    secondary = [("Ch", "Bh"), ("Ch", "Ph"), ("Ph+maint", "Bh")]
+    # decomposition (docs/G60H.md §6c, verifier M1 of 80cfb17): state carriage without a library (P||B),
+    # library use (C||P), the total (C||B), each with and without maintenance, and maintenance alone
+    secondary = [("Ch", "Bh"), ("Ch", "Ph"), ("Ph", "Bh"), ("Ph+maint", "Bh"), ("Ch+maint", "Ch"), ("Ph+maint", "Ph")]
     out = {"primary": [instrument(csvs["cpu_total_s"], a, b, n) for a, b in primary],
            "secondary": [instrument(csvs["cpu_total_s"], a, b, n) for a, b in secondary],
            "resources": {res: [instrument(csvs[res], a, b, n) for a, b in [("Ch+maint", "Bh"), ("Ch+maint", "Ph+maint")]]
@@ -102,6 +104,8 @@ def analyses(raw, seeds, csvs, n):
     out["parsed_resources"] = {res: {f"{x['cont']}||{x['base']}": G.parse(x["report"]) for x in v} for res, v in out["resources"].items()}
     out["work_split"] = {w: {"vs_B": G.work_split(raw, seeds, "Ch+maint", "Bh", w), "vs_P": G.work_split(raw, seeds, "Ch+maint", "Ph+maint", w)}
                          for w in ("evaluations", "executions", "row_ops")}
+    out["maintenance_share"] = {a: round(sum(sum(f.get("cost", {}).get("cpu_total_s", 0) for f in raw[f"{s_}:{a}"]["families"]) for s_ in seeds)
+                                         / sum(raw[f"{s_}:{a}"]["cpu_total_all_s"] for s_ in seeds), 4) for a in ("Ch", "Ph")}
     out["strata_B_depth"] = G.strata(raw, seeds, "Ch", "Bh")
     out["censoring"] = G.censoring(raw, seeds, "Ch", "Bh")
     out["rate_ratio"] = G.rate_ratio(raw, seeds, "Ch", "Bh")
@@ -155,6 +159,9 @@ def main(argv):
     only = argv[argv.index("--only") + 1].split(",") if "--only" in argv else list(CURRICULA)
     seeds = {c: ([int(x) for x in argv[argv.index(f"--seeds-{c}") + 1].split(",")] if f"--seeds-{c}" in argv else SEEDS[c]) for c in only}
     name = argv[argv.index("--out") + 1] if "--out" in argv else "g60h"
+    margin = int(argv[argv.index("--margin") + 1]) if "--margin" in argv else 1  # docs/G60H.md §6: 1 primary, 2 robustness
+    for r_ in g56.BASEF:
+        g56.BASEF[r_] = g56.BASEF[r_] + [f"--margin={margin}"]
     OUT = ROOT / "artifacts" / name
     OUT.mkdir(parents=True, exist_ok=True)
     sha0 = engine_hash()
@@ -174,7 +181,7 @@ def main(argv):
     runs = {(r["curriculum"], r["seed"], r["arm"]): r for r in res}
     rep = {"started": started, "head": head, "git_status_porcelain": dirty, "harness_sha256": harness,
            "instrument": {"path": str(INSTRUMENT), "head": pin, "pinned": pin == PIN, "unmodified": idirty == ""},
-           "seeds": seeds, "engine_sha256": sha0, "curricula": {}}
+           "seeds": seeds, "engine_sha256": sha0, "margin": margin, "curricula": {}}
     for c in only:
         raw = {f"{s}:{a}": {**runs[(c, s, a)], "arm": a} for s in seeds[c] for a in arms[c]}
         (OUT / f"{c}_raw.json").write_text(json.dumps(raw, default=str))
