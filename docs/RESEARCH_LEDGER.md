@@ -1257,3 +1257,22 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - Predictions (dev, not evidence): part S not bounded in time (α_task ≈ 0.37), bounded in work
   (α_work ≈ 0.10, rising); gate HOLD → switch rule triggered; deepest-first holds in comp without any
   stratum qualifying; long: no crossover (slope(y) > 0, o/s ≈ 1.9).
+
+
+## 2026-11-27 12:10: G59 registered results — HOLD, switch rule triggered
+
+- Run at 80cda1a (clean) under the lock 11:19:23–11:52:37 EST, 4 workers, instrument 70297af pinned;
+  all guards held (part S: r, k = 33565b0 replies and state at every (seed, N); gate: Xk = Xr replies
+  and state bytes everywhere; 0 wrong-qualified; 0 retention changes).
+- **Gate HOLD:** A(Ck+maint‖Bk) comp −0.518 [−0.611, −0.434], comprep −0.782, unrel −1.500 (Q3 floor
+  −0.949 not met), mixed −0.820, long −1.632. Q2 held. No depth stratum qualifies; deepest-first holds
+  (comp depth 5 −0.011 [−0.104, +0.066], the only CI holding 0).
+- **Part S:** k α_task 0.51 [0.40, 0.60] — not bounded (primary), α_charged-prop 0.49 — not bounded
+  (co-primary); α_work 0.08 — bounded in work; material vs r0 (α 1.32; 64k task 36.3 → 9.0 ms).
+- **Work vs time:** A_work(evaluations) +0.87…+0.91 on every compositional curriculum, ρ 12.9 (comp)
+  → 29.8 (long). **Rate ratio (long):** o/s = 2.10, slope(y) > 0, no crossover, diverging below zero.
+- Every registered prediction held except the part S point (0.51 vs dev 0.37; verdict unchanged).
+- **Switch rule triggered** (James, G58 §8 / G59 §8): evidence that the limit is the core
+  representation; next is an alternative mathematical approach under the same instrument and
+  verification, not further engine optimization. Not started (G59 stops here).
+- Emergence log line appended (all fields of INVARIANTS.md §2). Evidence: `docs/evidence/g59/`.
