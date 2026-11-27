@@ -13,3 +13,4 @@
 - flagged comp tasks: B-depth 4: 31/63, depth 5: 18/21; carry 1.715 of Bh's 3.08 s task CPU; C saved 1.42 of 1.85 s total task saving (77%) on them. All use the library.
 - (3) decode audit: 105/105 reply streams equal registered, both margins; capidx decode filtered by exact list; cap decode checked vs exact copy (HDC never load-bearing for correctness).
 - (5) g44 191/191, G45 18/18, suite 11/11 mods 279/0, hdc 13/13, builder mutations 11/12 (investigate_first equivalent: best is None <=> score_b==0). Extra: margin_ignored SURVIVED (equiv at margin 1 only; margin 2 untested), ambiguity_ignored SURVIVED (real gap), 3 others killed.
+- DONE: VERIFY_69b5b26.md written (H1 unequal certificate; cc run HOLD comp +0.070, lib -0.005).
