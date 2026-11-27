@@ -30,5 +30,9 @@ for raw in sorted((ROOT / "docs/evidence").glob("g48*/g48*_raw.json")):
     for v in json.loads(raw.read_text()).values():
         for t in v["tasks"]:
             toks |= {r["s"] for r in t["rows"]}
+for raw in sorted((ROOT / "docs/evidence").glob("px*/px*_raw.json")):  # PX part A uses G48 worlds
+    for v in json.loads(raw.read_text())["A"].values():
+        for t in v["tasks"]:
+            toks |= {r["s"] for r in t["rows"]}
 (ROOT / "benchmarks/sealed_tokens_g48.json").write_text(json.dumps(sorted(toks)) + "\n")
 print("g48", len(toks))

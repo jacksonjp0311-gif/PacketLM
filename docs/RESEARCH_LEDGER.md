@@ -562,3 +562,23 @@ extension (PX).
   and passes threshold 6.
 
 **Pre-registered thresholds:** PXA1–3 and PXB1–2 (seed 33 threshold 6; no harm on 1–6).
+
+## 2026-11-26 23:50 — PX registered results (docs/PX.md): all thresholds PASS
+
+- **PXA1 (no wrong-qualified answers), PXA2 (V ≡ R) and PXA3 (spurious answers) pass.**
+  Spurious answers: R 2.39% vs P 5.79%.
+- **PXB1: seed 33 threshold 6 passes under E.** `bbtwyr` adopted the hidden program
+  (provisional) with 4/4 sealed correct. C reproduced the registered failure.
+- **PXB2 (no harm on G46 thresholds 1–6, seeds 11–55) passes.**
+- **Reported:** R loses G48 T1 entirely (0.000; 14/14 suspended), as predicted. P's T1 rested
+  on a reflexive program that is wrong where the truth has no value. Depth ≥ 3 behaviour is not
+  identifiable from depth ≤ 2 answers.
+- **Qualification gain: none.** G48 has 0 qualified tasks in both arms (the scan budget). G46
+  has 18 qualified in both arms.
+- The registered G46 result (26/27) stands. PX is a separate experiment.
+- **Next:**
+  - an exact, pruned program scan, so that G48 qualification is decidable;
+  - a teacher "facts complete for s" statement, pre-registered as closed-world evidence, so
+    that less-defined blockers can be refuted;
+  - a T1 design where depth 3 is answerable and depth ≥ 4 sealed, to test whether recursion is
+    identifiable with negative evidence.

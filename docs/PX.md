@@ -106,4 +106,77 @@ Engine: the commit of this file. Cost is reported as whole-process CPU (`cpu_tot
 
 ## Results
 
-(Written after the registered run.)
+**Registered run:** pre-registration commit ae1f92d. Evidence is in `docs/evidence/px/`.
+Source unchanged.
+
+**Verdict: every PX threshold PASSES.**
+
+| id | result |
+|---|---|
+| PXA1 | **pass**: R has 0 wrong-qualified answers |
+| PXA2 | **pass**: V ≡ R on 7/7 seeds |
+| PXA3 | **pass**: spurious-answer rate on no-value items is R 2.39% (33/1383) vs P 5.79% (78/1346) |
+| PXB1 | **pass**: on seed 33, E passes threshold 6. C reproduces the registered failure. |
+| PXB2 | **pass**: E passes every threshold 1–6 that C passes on seeds 11–55, with 0 wrong-qualified answers |
+
+**Seed 33, task `bbtwyr`** (the registered G46 failure):
+- **C:** ambiguous, nothing adopted, 3/4 sealed correct. It asked `ozvihs` and `lumuyl`, which
+  were both unanswered (identical to G46).
+- **E:** asked `kypodt`, `vngduk`, `epwzki` and `bpapsg`.
+  - The teacher stated `kypodt -> !several` and `vngduk -> !several`.
+  - `epwzki` and `bpapsg` were withheld, because the harness refuses them.
+  - Result: the hidden program `cap:dditje@1 + cap:vomvnu@1` was adopted (**provisional**),
+    with **4/4 sealed correct**.
+- This is the mechanism predicted in G46_SEED33.md: negative evidence that a withholding
+  teacher cannot give.
+
+**G48 worlds, accuracy on items with a value (reported):**
+
+| class | P | R and V |
+|---|---|---|
+| T1 | 1.000 (n 434) | **0.000** |
+| T2 | 1.000 | 1.000 |
+| T3 | 1.000 | 1.000 |
+| T4 | 1.000 | 1.000 |
+
+- All 14 R T1 tasks end suspended, unadopted, as the dev mechanism predicted. `!none` at the
+  roots refutes the reflexive program. The recursive and depth-bounded programs then tie on the
+  answerable depths 1–2, and depth ≥ 3 is sealed.
+- R's T4 is acquired without the library (0/14 library uses), as a recursive primitive
+  program, and is still 1.000.
+- Spurious answers on no-value items:
+
+  | class | P | R |
+  |---|---|---|
+  | T1 | 42/182 | 0/168 |
+  | T4 | 36/170 | 33/179 |
+  | T2 | 0 | 0 |
+  | T3 | 0 | 0 |
+
+**Qualification: no gain.**
+- G48 worlds: P and R have 0 qualified tasks; the program scan cannot complete within its budget.
+- G46: C and E have 18 qualified on every seed, and E's 18 non-qualified tasks are provisional
+  where C's were.
+- The statements removed one *ambiguity*: seed 33 went from ambiguous to an adopted provisional
+  program. They did not remove open-world *blockers*. As stated in advance, the blockers that
+  remain are less defined than the truth, and no answer can refute them without closed-world
+  evidence.
+
+**Cost** (whole-process CPU):
+- G48 worlds: P 27.2 s, R 73.8 s, V 72.1 s.
+- G46: E is about 1.35–1.45× C per seed (e.g. seed 33: 19.60 vs 14.02 s).
+- The cost comes from more acquisitions after each statement, and from searches that find
+  nothing.
+
+**Reading.**
+1. `!none`/`!several` fix the seed-33 failure without weakening the open world.
+2. They improve abstention.
+3. They expose that P's perfect T1 score partly rested on a program that is wrong where the
+   truth has no value.
+4. Once that program is refuted, depth generalization in T1 is **not identifiable** from depth
+   ≤ 2 answers. P's 1.000 came from an Occam accident, not from evidence.
+5. Moving provisional to qualified needs one of two things, neither of which PX provides:
+   - a scan that completes: an exact pruned program scan, analogous to the base engine's
+     prefix-shared walk;
+   - a principled source of closed-world evidence (e.g. a teacher statement that an item's
+     relevant facts are complete).
