@@ -2554,6 +2554,89 @@ def g59_checks(tmp: Path) -> dict:
         return res[0][0] == res[1.0][0] and res[0][1] == res[1.0][1] and res[1.0][2] < res[0][2] \
             and res[0][3] and res[1.0][3]
     guarded("g59_proportional_policy_same_replies_and_state", proportional)
+
+    def tight_witness():
+        # the partition bound's tight case (§2a): |p| = 42 = SMALL_PART, |q| = 32, so k = 7, and the
+        # triple's second-largest code overlap with q is exactly 7 (A: 16, R2: 7, B: 6, with three
+        # outside bits of R2 and B cancelling); p ^ q is the code of the name X, so the triple adds X to
+        # the recall of (S, R) and must be a candidate
+        m = lambda bits: sum(1 << b for b in bits)  # noqa: E731
+        E500 = list(range(500, 516))
+        codes = {("S", 0): m(range(100, 116)), ("R", 1): m(range(0, 16)), ("A", 0): m(range(100, 116)),
+                 ("R2", 1): m(list(range(0, 7)) + E500[0:9]), ("B", 2): m(list(range(7, 13)) + E500[6:16]),
+                 ("X", 2): m([13, 14, 15] + E500[0:6] + E500[9:16])}
+
+        def body():
+            a, b = eng("tight"), eng("tight_ref", part=False)
+            for e_ in (a, b):
+                e_.tell("A", "R2", "B")
+                e_.tell("u", "v", "X")
+                e_._idx()
+            t = ("A", "R2", "B")
+            p, q = a.memo.packet_of(t), codes[("S", 0)] ^ codes[("R", 1)]
+            k = a.memo.part_threshold(q)
+            ov = sorted(((codes[c] & q).bit_count() for c in (("A", 0), ("R2", 1), ("B", 2))), reverse=True)
+            got_a, got_b = a.ask("S", "R"), b.ask("S", "R")
+            out["_tight_witness"] = {"p": p.bit_count(), "k": k, "overlaps": ov, "ask": str(got_b)[:80]}
+            return p.bit_count() == E.SMALL_PART and k == 7 and ov[1] == 7 and (p ^ q) == codes[("X", 2)] \
+                and 2 * (p & q).bit_count() > p.bit_count() and t in a.memo.recall_partitioned("S", "R", q, k) \
+                and got_a == got_b and "X" in str(got_b)
+        real = E.bits_for
+        fake = lambda tok, role: codes.get((tok, role)) or real(tok, role)  # noqa: E731
+        return with_codes(fake, body)
+    guarded("g59_partition_bound_tight_case", tight_witness)
+
+    def serve_checks_fire():
+        # the periodic checks run where registered: (i) a corrupted capability index is caught by the
+        # full validation of a call (fixed policy); (ii) with the proportional policy the snapshot is the
+        # only periodic check and catches a corrupted fact index; (iii) closing after a call that ran the
+        # full validation (no snapshot in it) still checks
+        calls = g58_session()
+        res = []
+        srv = serve.Server(snapshot_every=10 ** 6, full_every=10 ** 6)
+        path = tmp / "g59_fire1.json"
+        for c in calls:
+            srv.call(path, g59_diff.BASE, c)
+        e = srv._engine(srv.cur)
+        e._cx()
+        X = srv.cur.memo.cx
+        del X["order"][0], X["order_p"][0]
+        srv.full_every = 1
+        try:
+            srv.call(path, g59_diff.BASE, ["fact zq1 zr zq2"])
+            res.append(False)
+        except SE:
+            res.append(True)
+        srv.cur = None
+        srv = serve.Server(snapshot_every=1, snapshot_ratio=1.0)
+        path = tmp / "g59_fire2.json"
+        for c in calls[:6]:
+            srv.call(path, g59_diff.NEW, c)
+        srv.cur.memo.ix["by_rel"].setdefault("zz_none", []).append(("a", "zz_none", "b"))
+        srv.cur.snap_bytes = 0  # the next call is a snapshot call
+        try:
+            for i in range(3):
+                srv.call(path, g59_diff.NEW, [f"fact zp{i} zr zp{i + 1}"])
+            res.append(False)
+        except SE:
+            res.append(True)
+        srv.cur = None
+        srv = serve.Server(snapshot_every=10 ** 6, full_every=10 ** 6)
+        path = tmp / "g59_fire3.json"
+        for c in calls[:6]:
+            srv.call(path, g59_diff.NEW, c)
+        srv.full_every = 1
+        srv.call(path, g59_diff.NEW, ["fact zz1 zr zz2"])  # runs the full validation, no snapshot
+        srv.cur.memo.ix["by_rel"].setdefault("zz_none", []).append(("a", "zz_none", "b"))
+        try:
+            srv.close()
+            res.append(False)
+        except SE:
+            res.append(True)
+        srv.cur = None
+        out["_serve_checks_fire"] = res
+        return res == [True, True, True]
+    guarded("g59_periodic_checks_fire_in_serve", serve_checks_fire)
     return out
 
 

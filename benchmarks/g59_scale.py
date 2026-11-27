@@ -239,7 +239,11 @@ def main(argv):
     rep["summary"] = summ
     if "k" in arms and 16000 in sizes and 64000 in sizes:
         ak = summ["k"]["alpha_16000_64000"]
-        rep["bounded_k"] = ak[1][1] < BOUND  # registered (docs/G59.md §4)
+        rep["bounded_k"] = ak[1][1] < BOUND  # registered primary (docs/G59.md §4)
+        rep["bounded_charged_k"] = summ["k"]["alpha_charged_prop_16000_64000"][1][1] < BOUND  # registered co-primary
+        if "alpha_work_16000_64000" in summ["k"]:
+            rep["bounded_work_k"] = summ["k"]["alpha_work_16000_64000"][1][1] < BOUND  # secondary
+        rep["bounded_charged_fixed_k"] = summ["k"]["alpha_charged_fixed_16000_64000"][1][1] < BOUND  # secondary
         if ref in summ and ref != "k":
             # registered anti-circling stop rule: k's growth ratio 16k -> 64k (upper CI) at most half of r0's point
             rep["material_k_vs_ref"] = ak[2]["ratio"][1][1] <= summ[ref]["alpha_16000_64000"][2]["ratio"][0] / 2

@@ -1235,3 +1235,25 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - Tests at registration: g44 174/174, suite 262/262, G45 18/18, mutations 169/170 (survivor: the
   documented equivalent `g57b_drop_keeps_scope`). Evidence: `docs/evidence/g58/`. Next: G59 (not
   started).
+
+
+## 2026-11-27 11:05: G59 pre-registration (second builder; the first was interrupted mid-G59)
+
+- The first builder's uncommitted G59 work (partitioned recall, stamps order, seeds in step, gc.freeze,
+  g59 harness, g59_diff, tests) was committed as found (1d7322d), then continued; nothing rebuilt.
+- verify-33565b0 (b3fc410) weighed and folded (G59 §2f): Med accepted (one full check per call, cached
+  code bits, maintenance charged in part S; G58.md erratum for the 5.48 paragraph); Low 1 accepted for the
+  capability and seeds indexes, **not** for the review fingerprint map (its entries legitimately lag until
+  the next review, so a runtime equality check would be wrong; the test audit covers it) — disagreement
+  recorded; Low 2 accepted; Low 3 accepted (4 workers); INFO: `_lib_key` removed, late detection
+  documented, Mr comp borderline noted (G59 does not re-claim Mr).
+- New: proportional maintenance policy (serve, off by default) so that charged snapshot/validation
+  work per call need not grow with the state; trade-off: corruption detection latency grows (stated).
+- Dev finding recorded before the run: on comp, C's CPU gap to B is the scan (dev profile: 137 scans,
+  1.5 M steps vs B 38 scans, 0.18 M), over a primitive set that grows with every accumulated relation;
+  the scan's visited counts are state bytes, so byte-exact modes cannot skip it. A_work(evaluations) is
+  ≈ +0.84 while A_cpu ≈ −1.07 (ρ ≈ 12): the utility problem in this engine is search breadth from
+  accumulated relations, not recall.
+- Predictions (dev, not evidence): part S not bounded in time (α_task ≈ 0.37), bounded in work
+  (α_work ≈ 0.10, rising); gate HOLD → switch rule triggered; deepest-first holds in comp without any
+  stratum qualifying; long: no crossover (slope(y) > 0, o/s ≈ 1.9).
