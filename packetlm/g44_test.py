@@ -14,7 +14,7 @@ import sys
 import tempfile
 from itertools import product
 from pathlib import Path
-from .engine import Engine, StateError, judge, _checksum, SCHEMA
+from .engine import Engine, StateError, judge, _checksum, SCHEMA, SCHEMA_V2
 from .field import add as field_add, ask as field_ask, bind
 from . import reference
 
@@ -216,13 +216,20 @@ def persistence_checks(tmp) -> dict:
     roundtrip = re1.state == eng.state and re1.report == {"loaded": "primary"}
     backup_is_prior = bak.read_text() == gen1
     doc = json.loads(path.read_text())
+    f0 = dict(doc["state"]["facts"][0])
     doc["state"]["facts"][0]["o"] = "zzz"
     path.write_text(json.dumps(doc))
     r_sum = Engine.open(path)
     doc["state"]["facts"][0]["id"] = "p0 parent zzz"
+    doc = as_schema2(doc)  # stored packets (schema 2) of the ORIGINAL fact, then the tamper above
+    doc["state"]["facts"][0]["bits"] = bind(f0["s"], f0["r"], f0["o"]).bits.hex()
     doc["checksum"] = _checksum(doc["state"])
     path.write_text(json.dumps(doc))
     r_bind = Engine.open(path)
+    good_bak = bak.read_text()
+    r_bind.save()  # loaded from backup: the tampered primary must not become the backup
+    corrupt_not_backed_up = bak.read_text() == good_bak and Engine.open(path).report == {"loaded": "primary"}
+    bak.write_text(good_bak)  # the truncation steps below start from the good backup either way
     path.write_text("{not json")
     r_trunc = Engine.open(path)
     bak.write_text("{also bad")
@@ -237,6 +244,7 @@ def persistence_checks(tmp) -> dict:
         "no_temp_left": not any(p.suffix == ".tmp" for p in tmp.iterdir()),
         "checksum_tamper_recovers_loudly": r_sum.report.get("recovered") is True and "checksum" in r_sum.report["primary_error"],
         "binding_tamper_recovers_loudly": r_bind.report.get("recovered") is True and "bind" in r_bind.report["primary_error"],
+        "corrupt_primary_not_backed_up": corrupt_not_backed_up,
         "truncated_recovers": r_trunc.report.get("loaded") == "backup" and len(r_trunc.state["facts"]) == 9,
         "both_corrupt_raises": both == "raised",
     }
@@ -272,6 +280,127 @@ def fresh_process_checks(tmp) -> dict:
         "p5_sees_corrections": p5.get("replies") == ["rex owns key", "ann grand eve [no construction for grand] [provisional]", "bea parent eve"],
         "p6_recovery_reported": p6.get("load", {}).get("recovered") is True and p6["replies"] == ["rex owns key"],
         "_replies": {"p1": p1, "p2": p2, "p3": p3, "p4": p4, "p5": p5, "p6": p6},
+    }
+
+
+def retention_script(seed=5, families=8):
+    """Calls (lists of lines) over unrelated families, with fillers that age old families,
+    retention probes that touch all of them, a late correction, a relation shared by two
+    entity-disjoint families, a construction sentence and a full listing."""
+    rng = random.Random(seed)
+    calls = [["construct owns: ada owns box = ada box; ned owns key = ned key"]]
+    asked = []
+    for k in range(families):
+        ra = "f0a" if k == families - 1 else f"f{k}a"  # last family shares a relation with family 0
+        rb = f"f{k}b"
+        L = [[f"e{k}_{l}_{j}" for j in range(4)] for l in range(3)]
+        facts = []
+        for j in range(4):
+            facts.append((L[0][j], ra, L[1][rng.randrange(4)]))
+            facts.append((L[1][j], rb, L[2][rng.randrange(4)]))
+        val = {s: next(o2 for s1, r1, o1 in facts if s1 == s and r1 == ra
+                       for s2, r2, o2 in facts if s2 == o1 and r2 == rb) for s in L[0]}
+        t = f"t{k}"
+        calls.append([f"fact {a} {b} {c}" for a, b, c in facts] +
+                     [f"example {t}: {L[0][0]} -> {val[L[0][0]]}", f"example {t}: {L[0][1]} -> {val[L[0][1]]}"])
+        calls.append([f"investigate {t}"])
+        calls.append([f"example {t}: {L[0][2]} -> {val[L[0][2]]}", f"investigate {t}"])
+        calls.append([f"what is {L[0][3]} {t}", f"what is {L[0][0]} {ra}"])
+        if k == 2:
+            calls.append([f"{L[0][0]} owns cup2", f"what is {L[0][0]} owns"])
+        for _ in range(9):
+            calls.append([f"what is {L[1][rng.randrange(4)]} {rb}"])
+        asked.append((L[0][3], t))
+        if k == 4:
+            calls.append([f"correct {L0_1} {r1a} {L1_1}" for L0_1, r1a, L1_1 in [("e1_0_3", "f1a", "e1_1_0")]] +
+                         ["what is e1_0_3 t1"])
+        if k % 3 == 2:
+            calls.append([f"what is {s} {t}" for s, t in asked])
+    calls.append(["capabilities"])
+    calls.append(["show t0", "why e0_0_0 t0", "what is e3_0_3 t3"])
+    return calls
+
+
+def retention_checks(tmp) -> dict:
+    """Adaptive retention must be invisible in every reply (differential against static),
+    must actually archive and restore (not vacuous), and must never delete an archive file."""
+    calls = retention_script()
+    st, ad = tmp / "ret_static.json", tmp / "ret_adaptive.json"
+    same, archived, restored, smallest = True, 0, 0, 1.0
+    diffs = []
+    for lines in calls:
+        e1 = Engine.open(st, deepen=3)
+        r1 = [e1.turn(x) for x in lines]
+        e1.save()
+        e2 = Engine.open(ad, deepen=3, retention="adaptive")
+        r2 = [e2.turn(x) for x in lines]
+        e2.save()
+        archived += e2.stats.get("archived", 0)
+        restored += e2.stats.get("restored", 0)
+        smallest = min(smallest, ad.stat().st_size / st.stat().st_size)
+        if r1 != r2:
+            same = False
+            diffs.append({"lines": lines, "static": r1, "adaptive": r2})
+    folder = ad.with_name(ad.name + ".archive")
+    files = sorted(p.name for p in folder.glob("*.json"))
+    events = [json.loads(x) for x in (folder / "events.jsonl").read_text().splitlines()] if folder.exists() else []
+    ever = {e["archived"] for e in events if "archived" in e}
+    from .retention import GUARD, line_tokens
+    recent_ok = True
+    for e in events:
+        if "archived" in e:
+            i = e["call"] - 1  # adaptive call k is script call k-1
+            seen = set().union(*(line_tokens(x, {"lexicon": {}, "library": []}) for c in calls[max(0, i - GUARD + 1):i + 1] for x in c))
+            recent_ok = recent_ok and not (seen & set(e["tokens"]))
+    from .retention import refs, refs_walk
+    st_doc = json.loads(st.read_text())["state"]
+    refs_ok = all(sorted(refs(v)) == sorted(refs_walk(v)) for key in ("capabilities", "hypotheses", "observations")
+                  for v in st_doc[key].values()) and len(st_doc["hypotheses"]) >= 8
+    final = Engine.open(ad)  # static open restores everything, loudly
+    return {
+        "adaptive_matches_static": same,
+        "adaptive_archives_and_restores": archived >= 3 and restored >= 3,
+        "archive_never_deleted": all(f"{sha}.json" in files for sha in ever) and len(ever) >= 3,
+        "adaptive_hot_state_smaller": smallest < 0.6,
+        "refs_regex_matches_walk": refs_ok,
+        "rearchive_reuses_file": len(files) < archived,
+        "gate_keeps_recently_touched": recent_ok and any("archived" in e for e in events),
+        "static_open_restores_all": "restored_all" in final.report and not final.state["retention"]["archived"]
+            and sorted(final.state["capabilities"]) == sorted(Engine.open(st).state["capabilities"]),
+        "_retention": {"archived": archived, "restored": restored, "smallest_ratio": round(smallest, 3),
+                       "calls": len(calls), "diffs": diffs[:3]},
+    }
+
+
+def as_schema2(doc) -> dict:
+    """Test-side writer of the old format: every fact carries its stored packet."""
+    doc = copy.deepcopy(doc)
+    for f in doc["state"]["facts"]:
+        pkt = bind(f["s"], f["r"], f["o"])
+        f["bits"], f["count"] = pkt.bits.hex(), pkt.count
+    doc["schema"] = SCHEMA_V2
+    doc["checksum"] = _checksum(doc["state"])
+    return doc
+
+
+def migration_checks(tmp) -> dict:
+    """A schema-2 state is checked in full, migrated explicitly and reported; answers do not change."""
+    path = tmp / "m.json"
+    eng = grand_engine(path)
+    eng.save()
+    before = [eng.turn(q) for q in ("what is p0 grand", "what is p1 parent", "what is p9 parent")]
+    path.write_text(json.dumps(as_schema2(json.loads(path.read_text()))))
+    m = Engine.open(path)
+    after = [m.turn(q) for q in ("what is p0 grand", "what is p1 parent", "what is p9 parent")]
+    m.save()
+    again = Engine.open(path)
+    return {
+        "v2_migrates_reported": "migrated" in m.report and m.report["loaded"] == "primary",
+        "v2_migration_same_answers": before == after and after[0] != "unknown",
+        "v3_saved_without_packets": json.loads(path.read_text())["schema"] == SCHEMA
+            and all("bits" not in f for f in json.loads(path.read_text())["state"]["facts"])
+            and again.report == {"loaded": "primary"},
+        "v2_kept_as_backup": json.loads((tmp / "m.json.bak").read_text())["schema"] == SCHEMA_V2,
     }
 
 
@@ -512,7 +641,7 @@ def audit_checks(tmp) -> dict:
     def checksum(st):
         st["turn"] += 1
 
-    def binding(st):
+    def binding(st):  # schema 3 must not carry a stored packet at all
         st["facts"][0]["bits"] = bind("a", "b", "c").bits.hex()
 
     errs = {k: corrupt(tmp, k, fn) for k, fn in [("dangling", dangling), ("missing_dep", missing_dep), ("dup", dup),
@@ -558,6 +687,8 @@ def run() -> dict:
             "discovery": discovery_checks(tmp),
             "persistence": persistence_checks(tmp),
             "fresh_process": fresh_process_checks(tmp),
+            "migration": migration_checks(tmp),
+            "retention": retention_checks(tmp),
             "audit": audit_checks(tmp),
         }
     checks = {f"{sec}.{k}": bool(v) for sec, c in sections.items() for k, v in c.items() if not k.startswith("_")}
