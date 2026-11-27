@@ -1,7 +1,7 @@
-"""Speak through the saved construction.
+"""Generic question.
 
-The color is found. The sentence needs the construction.
-Without it, no sentence.
+what is X Y applies the found sequence.
+The sentence still needs the construction.
 Not a general mind.
 """
 
@@ -72,9 +72,9 @@ def turn(field, objects, library, seq, line):
             if t not in objects:
                 objects.append(t)
         return f"recorded {fact[0]} {fact[1]} {fact[2]}"
-    if len(parts) == 5 and parts[0] == "what" and parts[1] == "color" and parts[-1] == "tail":
-        color = apply_seq(field, seq, parts[3], objects)
-        spoken = express(choose(library, "hastail"), (parts[3], "hastail", color)) if color else None
+    if len(parts) == 4 and parts[0] == "what" and parts[1] == "is":
+        value = apply_seq(field, seq, parts[2], objects)
+        spoken = express(choose(library, "hastail"), (parts[2], "hastail", value)) if value else None
         return spoken or "unknown"
     if len(parts) == 4 and parts[0] == "what" and parts[1] == "does" and parts[3] == "own":
         owned = ask(field, parts[2], "owns", objects)
@@ -98,16 +98,17 @@ def run() -> dict:
     replies = [turn(field, objects, lib, seq, line) for line in lines]
     save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None, "library": lib})
     loaded = load(STATE)
-    spoken = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], tuple(loaded["seq"]), "what color is orion tail")
+    spoken = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], tuple(loaded["seq"]), "what is orion tail")
     no_lang = [c for c in loaded["library"] if c.get("meaning") != "hastail"]
-    muted = turn(list(loaded["field"]), list(loaded["objects"]), no_lang, tuple(loaded["seq"]), "what color is orion tail")
+    muted = turn(list(loaded["field"]), list(loaded["objects"]), no_lang, tuple(loaded["seq"]), "what is orion tail")
     checks = {
         "spoken": spoken == "orion hastail red",
         "muted": muted == "unknown",
+        "generic": replies[7] == "orion hastail green",
         "saved_interprets": turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], tuple(loaded["seq"]), "luna isa dax") == "recorded luna isa dax",
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "color sentence needs the saved construction"}
+    receipt = {**checks, "failed": failed, "claim": "what is X Y; sentence still needs the construction"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
