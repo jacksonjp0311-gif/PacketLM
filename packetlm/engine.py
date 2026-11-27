@@ -160,12 +160,13 @@ def _write_atomic(path: Path, data: bytes) -> None:
 
 
 class Engine:
-    def __init__(self, path, state=None, report=None, geometry=True, use_library=True):
+    def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None):
         self.path = Path(path)
         self.state = state if state is not None else empty_state()
         self.report = report or {"loaded": "new"}
         self.geometry = geometry
         self.use_library = use_library
+        self.deepen = deepen  # None: fixed depth 2. int: iterative deepening up to this length
         self.stats = {"evaluations": 0, "executions": 0, "row_ops": 0, "asks": 0}
         self._cache = None
 
@@ -576,10 +577,11 @@ class Engine:
                 prims.append(f"cap:{n}@{ver['v']}")
         return prims
 
-    def hypotheses(self, name, max_len=2):
+    def hypotheses(self, name, max_len=2, min_len=1, seen=None):
         obs = self.state["observations"].get(name, [])
-        out, seen, evaluated, contradicted = [], set(), 0, 0
-        for n in range(1, max_len + 1):
+        out, evaluated, contradicted = [], 0, 0
+        seen = set() if seen is None else seen
+        for n in range(min_len, max_len + 1):
             for seq in product(self.primitives(name), repeat=n):
                 base = self.expand(seq)
                 if base is None or tuple(base) in seen:
@@ -600,10 +602,22 @@ class Engine:
             out[e] = next(iter(r)) if r and len(r) == 1 else None
         return out
 
-    def acquire(self, name, max_len=2) -> dict:
-        live, evaluated, contradicted = self.hypotheses(name, max_len)
+    def acquire(self, name, max_len=None) -> dict:
+        if max_len is None and self.deepen:
+            live, evaluated, contradicted, seen = [], 0, 0, set()
+            for n in range(1, self.deepen + 1):
+                lv, ev, co = self.hypotheses(name, n, n, seen)
+                live += lv
+                evaluated += ev
+                contradicted += co
+                if sum(h["status"] == "supported" for h in live) == 1:
+                    break
+            searched = n
+        else:
+            searched = max_len or 2
+            live, evaluated, contradicted = self.hypotheses(name, searched)
         supported = [h for h in live if h["status"] == "supported"]
-        record = {"turn": self.state["turn"], "evaluated": evaluated, "contradicted": contradicted,
+        record = {"turn": self.state["turn"], "evaluated": evaluated, "contradicted": contradicted, "searched_len": searched,
                   "live": live, "observations": len(self.state["observations"].get(name, []))}
         prior = self.state["hypotheses"].get(name, {})
         if prior.get("unanswered"):
@@ -810,6 +824,13 @@ class Engine:
         if head == "observe" and len(rest) == 3:
             events = self.observe(*rest)
             return f"observed {' '.join(rest)}" + (f"; {'; '.join(events)}" if events else "")
+        if head == "unanswered" and ":" in raw:
+            name = raw.split(":", 1)[0].split()[-1]
+            subj = raw.split(":", 1)[1].split()
+            if len(subj) != 1 or name not in self.state["hypotheses"]:
+                return "unparsed"
+            self.state["hypotheses"][name].setdefault("unanswered", []).append(subj[0])
+            return f"noted: no answer for {subj[0]} {name}"
         if head in ("learn", "acquire", "requalify") and len(rest) == 1:
             got = self.acquire(rest[0])
             return f"{got['result']} {rest[0]}" + (f" {'+'.join(got['seq'])}" if "seq" in got else "")
@@ -866,7 +887,10 @@ def main(argv) -> int:
     t0 = time.process_time()
     flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False)}
     kw = dict(flags[a] for a in argv if a in flags)
-    argv = [a for a in argv if a not in flags]
+    for a in argv:
+        if a.startswith("--deepen="):
+            kw["deepen"] = int(a.split("=", 1)[1])
+    argv = [a for a in argv if a not in flags and not a.startswith("--deepen=")]
     eng = Engine.open(argv[0], **kw)
     replies = [eng.turn(line) for line in argv[1:]]
     eng.save()
