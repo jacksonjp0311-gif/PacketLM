@@ -819,3 +819,21 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - **G53 dev rerun with the fixes (951–954, not evidence):** exact on every seed. Compositional
   C 62.9, Cb 30.9, Bb 15.4, Pb 26.1 s; A(Cb+maint ‖ C+maint) = +0.509, A(Cb+maint ‖ Bb) = −1.006
   (2.01×). Unrelated A(Cb+maint ‖ Bb) = −5.070.
+
+## 2026-11-27 02:20: G53 registered results (pre-registration 1932326)
+
+- Seeds comp 121–127, unrel 131–137, S = 7, instrument 70297af. All guards held, including Cb
+  reply streams hash-equal to C on all 14 seeds and 0 wrong-qualified.
+- Whole CPU with maintenance (s): comp C 213.1, Cb 99.3, Bb 52.7, Pb 85.6, Fb 32.8; unrel C 77.7,
+  Cb 76.9, Bb 12.7, Pb 76.9.
+- **M (comp): claimed.** A(Cb+maint ‖ C+maint) = +0.534 [+0.519, +0.551].
+- **M (unrel): no claim.** +0.010 [−0.004, +0.023].
+- **L1: no claim.** A(Cb+maint ‖ Bb) = −0.885 [−0.981, −0.790] (1.89×; G51 3.87×).
+- **L2: no claim.** A(Cb+maint ‖ Pb+maint) = −0.160 [−0.208, −0.110] (1.16×; G51 1.77×).
+- **L3: utility problem persists.** A(Cb+maint ‖ Bb) = −5.065 [−5.456, −4.666] (6.06×).
+- C and Cb: 252/252 acquired, 251 qualified, 147 via library (146 qualified). All predictions held.
+- Sealed registry extended: `benchmarks/sealed_tokens_g53.json` (8235 tokens, G53 registered and
+  dev seeds); 0 in `data/`.
+- **Next priority:** the state-proportional per-call cost and maintenance re-asks (F3), which now
+  dominate both curricula's remaining gap; pre-register before any change. Option 3 (guard budget
+  independent of observations) was not started in this chunk.

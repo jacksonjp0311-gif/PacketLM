@@ -58,3 +58,11 @@ for raw in [ROOT / "docs/evidence/g50/g50a_raw.json", ROOT / "docs/evidence/g52/
             toks |= set(t.get("abstain", {}).get("items", []))
 (ROOT / "benchmarks/sealed_tokens_g50_g52.json").write_text(json.dumps(sorted(toks)) + "\n")
 print("g50-g52", len(toks))
+# G53 (G46 worlds 121-127, G46-U worlds 131-137; dev seeds 951-954 are also sealed)
+toks = set()
+for s in list(range(121, 128)) + [951, 952]:
+    toks |= g46.sealed_tokens(g46.world(s))
+for s in list(range(131, 138)) + [953, 954]:
+    toks |= g46.sealed_tokens(g46u.world_unrelated(s))
+(ROOT / "benchmarks/sealed_tokens_g53.json").write_text(json.dumps(sorted(toks)) + "\n")
+print("g53", len(toks))
