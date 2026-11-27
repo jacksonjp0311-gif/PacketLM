@@ -1,0 +1,50 @@
+== I3/I4 part S scaling (per-seed log-log fits)
+  g57 Xi: mean ms [  2.256  11.6    47.293 206.611]; loglog slope 1k..16k 1.039 (sd 0.016); local exponent of excess 4k->16k 1.091; excess per padding fact at 16k 12.772 us; pad_cpu_s 4k->16k exponent 2.02
+  g57 Xs: mean ms [  2.407  20.176  85.984 375.201]; loglog slope 1k..16k 1.055 (sd 0.033); local exponent of excess 4k->16k 1.079; excess per padding fact at 16k 23.300 us; pad_cpu_s 4k->16k exponent 2.05
+  g57b Xi: mean ms [  2.297  11.784  47.343 205.643]; loglog slope 1k..16k 1.031 (sd 0.026); local exponent of excess 4k->16k 1.087; excess per padding fact at 16k 12.709 us; pad_cpu_s 4k->16k exponent 2.03; snapshot_cpu_s 4k->16k exponent 1.22
+  g57b Xj: mean ms [2.343 3.034 3.704 8.607]; loglog slope 1k..16k 0.379 (sd 0.063); local exponent of excess 4k->16k 1.101; excess per padding fact at 16k 0.392 us; pad_cpu_s 4k->16k exponent 1.69; snapshot_cpu_s 4k->16k exponent 1.16
+  g57b Xs: mean ms [  2.397  19.484  85.696 381.799]; loglog slope 1k..16k 1.073 (sd 0.017); local exponent of excess 4k->16k 1.094; excess per padding fact at 16k 23.713 us; pad_cpu_s 4k->16k exponent 2.04; snapshot_cpu_s 4k->16k exponent 1.13
+== I1 logical work identical across modes (i vs j); I5/I6 interaction and evaluation ratios
+  g57b comp: family counters identical i vs j 126/126; run-level (interactions, processes, state bytes) identical 28/28
+  g53 comp: C probe asks 11592; lines minus probe asks C/B 0.328;  lines C/B 29448/54446 = 0.541; evaluations C/P 0.270
+  g53 unrel: C probe asks 22008; lines minus probe asks C/B 1.676;  lines C/B 44500/13420 = 3.316; evaluations C/P nan
+  g54 comp: C probe asks 11592; lines minus probe asks C/B 0.326;  lines C/B 29379/54517 = 0.539; evaluations C/P 0.267
+  g54 unrel: C probe asks 22008; lines minus probe asks C/B 1.676;  lines C/B 44493/13413 = 3.317; evaluations C/P nan
+  g56 comp: C probe asks 11592; lines minus probe asks C/B 0.328;  lines C/B 29505/54541 = 0.541; evaluations C/P 0.271
+  g56 unrel: C probe asks 22008; lines minus probe asks C/B 1.677;  lines C/B 44488/13408 = 3.318; evaluations C/P nan
+  g57 comp: C probe asks 11592; lines minus probe asks C/B 0.328;  lines C/B 29460/54482 = 0.541; evaluations C/P 0.264
+  g57 unrel: C probe asks 22008; lines minus probe asks C/B 1.676;  lines C/B 44491/13411 = 3.318; evaluations C/P nan
+  g57b comp: C probe asks 11592; lines minus probe asks C/B 0.328;  lines C/B 29365/54171 = 0.542; evaluations C/P 0.255
+  g57b unrel: C probe asks 22008; lines minus probe asks C/B 1.675;  lines C/B 44525/13445 = 3.312; evaluations C/P nan
+== I7 per-shape cost ratios (C+maint/B, C+maint/P+maint), comp
+   ('A', 'ab') {'g54': (1.17, 1.07), 'g56': (1.17, 0.98), 'g57': (1.19, 0.97), 'g57b': (1.3, 1.01)}
+   ('A', 'abc') {'g54': (1.2, 1.11), 'g56': (1.31, 1.19), 'g57': (1.08, 1.25), 'g57b': (0.88, 1.22)}
+   ('A', 'abca') {'g54': (1.08, 1.02), 'g56': (0.73, 0.65), 'g57': (0.67, 0.69), 'g57b': (0.52, 0.54)}
+   ('A', 'bb') {'g54': (1.21, 1.12), 'g56': (1.51, 1.37), 'g57': (1.06, 1.3), 'g57b': (1.07, 1.48)}
+   ('A', 'bbab') {'g54': (1.24, 1.15), 'g56': (1.6, 1.41), 'g57': (1.28, 1.31), 'g57b': (1.27, 1.37)}
+   ('A', 'dab') {'g54': (4.1, 1.1), 'g56': (10.95, 1.07), 'g57': (8.69, 1.08), 'g57b': (8.28, 1.07)}
+   ('B', 'ab') {'g54': (1.35, 1.03), 'g56': (1.36, 1.01), 'g57': (1.65, 1.02), 'g57b': (1.64, 0.98)}
+   ('B', 'abc') {'g54': (1.69, 1.4), 'g56': (2.48, 2.11), 'g57': (2.63, 2.22), 'g57b': (2.19, 2.16)}
+   ('B', 'cd') {'g54': (2.64, 2.14), 'g56': (4.02, 3.44), 'g57': (3.22, 2.87), 'g57b': (3.45, 3.68)}
+   ('B', 'cdabc') {'g54': (1.91, 1.23), 'g56': (1.65, 1.21), 'g57': (1.28, 1.06), 'g57b': (1.22, 1.03)}
+   ('B', 'ef') {'g54': (1.65, 1.33), 'g56': (1.82, 1.55), 'g57': (1.82, 1.6), 'g57b': (1.82, 1.96)}
+   ('B', 'efab') {'g54': (2.31, 1.91), 'g56': (3.92, 3.12), 'g57': (3.5, 2.81), 'g57b': (3.37, 3.09)}
+== E search depth by shape (searched_len), g57b comp
+   Cj [(('ab', 2), 42), (('abc', 2), 42), (('abca', 2), 21), (('bb', 2), 21), (('bbab', 2), 21), (('cd', 2), 21), (('cdabc', 2), 21), (('dab', 2), 21), (('ef', 2), 21), (('efab', 2), 21)]
+   Bj [(('ab', 2), 42), (('abc', 3), 42), (('abca', 4), 21), (('bb', 2), 21), (('bbab', 4), 21), (('cd', 2), 21), (('cdabc', 5), 21), (('dab', 3), 21), (('ef', 2), 21), (('efab', 4), 21)]
+== I8 within-run trend of per-task log(C+maint/B) (summed over seeds)
+  g54 comp: slope +0.0170/task; C/B by thirds [1.36 1.9  1.94]
+  g54 unrel: slope +0.0505/task; C/B by thirds [2.75 3.88 5.92]
+  g56 comp: slope +0.0245/task; C/B by thirds [1.52 2.65 2.14]
+  g56 unrel: slope +0.1437/task; C/B by thirds [ 3.   16.7  41.36]
+  g57 comp: slope +0.0260/task; C/B by thirds [1.22 2.6  1.75]
+  g57 unrel: slope +0.0970/task; C/B by thirds [ 2.08  7.39 13.65]
+  g57b comp: slope +0.0246/task; C/B by thirds [1.3  2.57 1.64]
+  g57b unrel: slope +0.0696/task; C/B by thirds [1.42 3.54 5.15]
+== E1 capability reuse distribution (Cj, g57b comp)
+  uses->caps [(1, 105), (2, 21), (3, 21)]; distinct per-seed profiles 1
+== E3/E5 corrections and retention (g57b)
+   comp {'affected': 12, 'propagated': 12, 'ret_n': 9450, 'ret_changed': 0}
+   unrel {'affected': 0, 'propagated': 0, 'ret_n': 21000, 'ret_changed': 0}
+== R1 packet density (simulation, 20000 random triples)
+  popcount mean 47.55 sd 0.90 min 41; P(two codes share >=2 bits) 0.00166 (theory ~C(16,2)/256^2 = 0.00183)
