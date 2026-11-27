@@ -746,11 +746,76 @@ Pre-registration ad1bc03, instrument pinned at 70297af, S = 7, all guards pass.
 - A(Q+maint ‖ C+maint) = +0.015 [−0.010, +0.039].
 
 **Decisions:**
-- **L1: no claim.** The persistent learner is about 18× costlier than the empty-state learner.
-- **L2: no claim.** Reuse costs about 2.2× more.
+- **L1: no claim.** The persistent learner is 3.87× costlier than the empty-state learner (215.8 / 55.7 s). *Corrected 01:34 (verify-cdb4828 G1): first written "about 18×", a misreading of A_n = 1 − C_cont/C_base.*
+- **L2: no claim.** Reuse costs 1.77× more. *Corrected 01:34: first written "about 2.2×".*
+- Unrelated: 6.08× (74.8 / 12.3 s); 65% of that is maintenance (verify-cdb4828 G2).
 - **L3: the utility problem persists.**
 - **L4: no difference.**
 
 **Other results:**
 - C and Q solve 252/252 tasks and pass every G46 threshold, with 0 wrong-qualified answers.
 - 144 tasks were acquired through qualified library capabilities.
+
+## 2026-11-27 01:12: open limitation, the question budget (decision: no third tie-break now)
+
+Two pre-registered runs failed D1 for the same root cause: sealed nodes use up the investigate
+question budget.
+- G49: name tie-break.
+- G52: smallest-closure tie-break, which favours deeper chain nodes.
+
+Under the anti-circling rule, no third tie-break is pre-registered now. This is recorded as an
+open limitation: R's T1 accuracy at depth ≥ 4 can drop to 0.93 on some seeds. Work moves to the
+central learning-to-learn question.
+
+## 2026-11-27 01:45: G53 diagnosis and pre-registration (docs/G53.md)
+
+**Profile** (docs/evidence/g53):
+- **Compositional:** C's extra CPU is the open-world qualification scan. The library expands
+  the alternative space: C's scan time 220.0 against P's 90.2, while its search time is 6.8
+  against P's 56.2.
+- **`complete`:** re-acquisition of already-qualified versions accounts for about 60% of C's
+  teach time.
+- **Unrelated:** the cost is per-call load, validation and save, plus the geometric `ask`
+  (state-proportional). It is not the library. *Revised 02:05 (verify-cdb4828 G2): about 68% of
+  it is maintenance, the 48 retention re-ask calls; library search is 0.3 s of 19.7 s.*
+
+**Mechanism `--bounded`** (exact): memoized primitive images, a first-relation index, sparse
+fronts, and no re-scan of settled versions when the basis is unchanged.
+- Checks: 2; mutations: 4. A fifth mutation was an equivalent mutant and was removed along with
+  its redundant guard.
+- Dev (S = 2): exact reply streams on every seed.
+  - Compositional: A(Cb+maint ‖ C+maint) = +0.52; A(Cb+maint ‖ Bb) = −0.89 (1.89×), against
+    −2.87 (3.87×) for G51. *Superseded by the dev rerun after S1/L1 (02:05 entry).*
+  - Unrelated: A(Cb+maint ‖ Bb) = −4.69.
+
+**Registered design:** comp seeds 121–127, unrel seeds 131–137, rules M, L1, L2 and L3.
+
+## 2026-11-27 02:05: verify-cdb4828 response (S1, G1, L1, G2, L2)
+
+- **S1 (High), fixed.** A told fact added or removed whose subject was already a known entity
+  in a qualified version's region (the component of its recorded domain and observed subjects)
+  now re-acquires that version, which re-runs the scan on current facts. Batched before the next
+  non-`fact` line and before saving. The verifier's repro now answers `m hq c [provisional]`.
+  Check `s1_growth_in_region_requalifies`; mutations `s1_growth_ignored`,
+  `s1_region_is_domain_only`.
+  - Facts at new entities do not trigger: no value at a known entity changes. Answers there stay
+    scoped provisional (M2), so chat `generic` keeps its expected reply.
+  - **Changed expectation, G45 t5.** On all three G45 seeds a later domain built on D1's world
+    now demotes D1 to provisional (e.g. seed 101: blockers such as `rel:zrdhxg>rel:kkabje`).
+    The strict "identical replies" reading fails; t5 is restated as identical values, with every
+    changed reply the same value marked provisional by a re-scan with blockers. The strict result
+    is kept in the receipt (`retention_strict_identical` false on 101/202/303).
+- **L1 (Low), fixed.** Qualified requires every pinned `cap:` dependency to be qualified;
+  demotion propagates. Check `l1_qualified_needs_qualified_deps`; 2 mutations.
+- **L2 (Low), fixed.** The identity check asserts the positive case.
+- **G1 (Medium), corrected.** A_n = 1 − C_cont/C_base: G51 is 3.87× (not 18×), 1.77× (not 2.2×),
+  unrelated 6.08×. Corrected in G51.md, this ledger, G53.md and the PR text. Decisions unchanged.
+- **G2 (Low), folded into G53 F3.** Unrelated cost is about two-thirds maintenance; library search
+  is negligible there.
+- **Info:** near-zero contrasts are noise; unrelated Q ‖ C break-even n = 14 noted in G51.md.
+- **Mutation sites repaired:** `prune_on_evidence_only`, `fc_no_requalify`,
+  `m1_no_review_on_complete` (G53 edits had moved their lines).
+- **Tests:** g44 128/128, suite 216/216 (11/11 modules), G45 18/18, mutations 77/77.
+- **G53 dev rerun with the fixes (951–954, not evidence):** exact on every seed. Compositional
+  C 62.9, Cb 30.9, Bb 15.4, Pb 26.1 s; A(Cb+maint ‖ C+maint) = +0.509, A(Cb+maint ‖ Bb) = −1.006
+  (2.01×). Unrelated A(Cb+maint ‖ Bb) = −5.070.

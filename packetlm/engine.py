@@ -228,9 +228,11 @@ def _write_atomic(path: Path, data: bytes) -> None:
 
 class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
-                 operators=False, retention="static", programs=False, answers=False, qualified_library=False):
+                 operators=False, retention="static", programs=False, answers=False, qualified_library=False,
+                 bounded=False):
         self.path = Path(path)
         self.qualified_library = qualified_library  # G51: library offers only qualified capabilities
+        self.bounded = bounded  # G53: exact cost bounds (memoized scan images; no re-scan of settled versions)
         self.state = state if state is not None else empty_state()
         self.report = report or {"loaded": "new"}
         self.geometry = geometry
@@ -303,6 +305,8 @@ class Engine:
         raise StateError(f"no valid state: {errors}")
 
     def save(self) -> None:
+        if getattr(self, "_grown", None):
+            self._flush_growth()
         if self.retention == "adaptive":
             for comp, why in ret_mod.decide(self.state, self.state["retention"]):
                 ret_mod.archive(self.state, self.state["retention"], self._archive_dir, comp, why)
@@ -384,7 +388,13 @@ class Engine:
         fact = {"id": f"{s} {r} {o}", "s": s, "r": r, "o": o, "supports": [support]}
         if kind == "told" and not r.startswith("cap:") and self.state.get("complete"):
             self._fc_violated(s, f"new fact {s} {r} {o}")
+        ents = self._known_entities()
+        was_known = s in ents  # S1 of cdb4828: known before this fact?
+        ents.update((s, o))
         self.state["facts"].append(fact)
+        self.state["fact_epoch"] = self.state.get("fact_epoch", 0) + 1  # G53: any fact change
+        if kind == "told" and not r.startswith("cap:"):
+            self._grow(s, was_known)
         self._dirty()
         return fact
 
@@ -398,6 +408,11 @@ class Engine:
                 f = byid.get(i)
                 if f and not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]):
                     self._fc_violated(f["s"], f"removed fact {i}")
+        byid = {f["id"]: f for f in self.state["facts"]}
+        for i in removed:
+            f = byid.get(i)
+            if f and not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]):
+                self._grow(f["s"])
         dropped_proofs = 0
         changed = True
         while changed:
@@ -414,6 +429,8 @@ class Engine:
                     if not keep:
                         removed.add(f["id"])
         self.state["facts"] = [f for f in self.state["facts"] if f["id"] not in removed]
+        if removed:
+            self.state["fact_epoch"] = self.state.get("fact_epoch", 0) + 1  # G53: any fact change
         turn = self._tick()
         for key in sorted(removed):
             self.state["log"].append({"id": key, "turn": turn, "reason": reason})
@@ -481,7 +498,7 @@ class Engine:
         ver["domain"] = scan.pop("domain_set")
         rec = self.state["hypotheses"].setdefault(name, {"live": []})
         rec.update({"candidate": ver["seq"], "blocking": blocking, "scan": scan})
-        status = "provisional" if blocking else "qualified"
+        status = "provisional" if blocking or self._deps_unqualified(ver["seq"]) else "qualified"
         return self._set_status(name, ver["v"], status,
                                 f"requalified on {len(obs)} active examples after evidence retirement ({scan['blocking_n']} blocking)")
 
@@ -645,6 +662,15 @@ class Engine:
                     out.append((n, ver["v"]))
         return out
 
+    def _deps_unqualified(self, seq):
+        out = []
+        for d in _deps_of(seq):
+            dn, dv = _split_cap(d)
+            dver = self.version(dn, dv)
+            if not dver or dver["status"] != "qualified":
+                out.append(d)
+        return out
+
     def _set_status(self, name, v, status, reason):
         ver = self.version(name, v)
         if ver["status"] == status:
@@ -660,6 +686,8 @@ class Engine:
             dep = self.version(dn, dv)
             if status in ("suspended", "revoked") and dep["status"] in EXEC_OK:
                 events += self._set_status(dn, dv, "suspended", f"dependency {name}@{v} {status}")
+            elif status == "provisional" and dep["status"] == "qualified":
+                events += self._set_status(dn, dv, "provisional", f"dependency {name}@{v} provisional")
             elif status == "superseded":
                 dep.setdefault("history", []).append({"turn": self.state["turn"], "status": dep["status"],
                                                       "reason": f"still pinned to {name}@{v}; requalify to adopt the new version"})
@@ -1080,6 +1108,7 @@ class Engine:
         result.update({"result": status, "seq": cand["seq"], "blocking": blocking, "scan": scan})
         result["version"], result["events"] = self._adopt(name, cand, status, blocking, scan,
                                                           domain=scan.pop("domain_set", None))
+        result["result"] = self.version(name)["status"]  # L1 of cdb4828: may be capped by a dependency
         return result
 
     def _acquire_programs(self, name) -> dict:
@@ -1167,6 +1196,7 @@ class Engine:
         result.update({"result": status, "seq": h["seq"], "blocking": blocking, "scan": scan,
                        "evaluated": record["evaluated"]})
         result["version"], result["events"] = self._adopt(name, h, status, blocking, scan, domain=dom)
+        result["result"] = self.version(name)["status"]  # L1 of cdb4828: may be capped by a dependency
         return result
 
     ASSUMPTION = ("open world over current knowledge, horizon H: every non-contradicted program of length <= H is "
@@ -1194,13 +1224,37 @@ class Engine:
         closed_at = {pos[x] for x in self._closed() if x in pos}  # G49: closed-world at `complete` subjects
         jf = lambda i, o, v: judge_closed(o, v) if i in closed_at else judge_set(o, v)  # noqa: E731
         prims = [(p, self.expand([p])) for p in self.primitives(name)]
-        prims = [(p, b) for p, b in prims if b is not None]
+        prims = [(p, tuple(b) if self.bounded else b) for p, b in prims if b is not None]
         P = len(prims)
         out = {"horizon": horizon, "domain": len(D), "domain_set": sorted(D), "scanned": 0, "evaluated": 0, "contradicted": 0,
                "compatible": 0, "pruned_compatible": 0, "blocking_n": 0, "conflicts": 0, "assumption": self.ASSUMPTION}
         blocking = []
 
+        img = {}
+
         def step(front, base):
+            if self.bounded:
+                # G53: the image of a set under a primitive is the union of its nodes' images
+                # (relation steps and until steps both act node by node), so per-(primitive, node)
+                # images are cached for the whole scan. Exact: same fronts as the uncached walk.
+                # Fronts are sparse ({domain index: non-empty set}); a missing index is empty.
+                new = {}
+                for i, cur in front.items():
+                    out = set()
+                    for x in cur:
+                        k = (base, x)
+                        r = img.get(k)
+                        if r is None:
+                            r = {x}
+                            for t in base:
+                                if not r:
+                                    break
+                                r = self._step_set(r, t)
+                            img[k] = r
+                        out |= r
+                    if out:
+                        new[i] = out
+                return new
             new = []
             for cur in front:
                 for r in base:
@@ -1216,17 +1270,31 @@ class Engine:
         # BLOCK_KEEP blockers are found: the status (any blocker -> provisional) is decided,
         # and the counts are then lower bounds (`truncated`).
         out.update({"duplicates": 0, "truncated": False})
-        level, seen = [([], [{e} for e in D], ())], {()}
+        level, seen = [([], ({i: {e} for i, e in enumerate(D)} if self.bounded else [{e} for e in D]), ())], {()}
+        E0 = set()
         first = {p: (pb[0].split(":")[1] if pb[0].startswith("until:") else pb[0]) for p, pb in prims}
         outrel = self._idx()["out"]
+        by_first = {}
+        if self.bounded:
+            # G53: primitives indexed by their first base relation; a node visits only those that
+            # leave its frontier, in the original primitive order. The skipped ones are exactly the
+            # relevance-pruned ones (empty image whatever the path), so no decision changes; only
+            # the pruned_compatible count is no longer kept for them.
+            for i, (p, pb) in enumerate(prims):
+                by_first.setdefault(first[p], []).append(i)
+            out["pruned_counting"] = "visited nodes only (--bounded)"
         for depth in range(1, horizon + 1):
             nxt_level = []
             for prefix, front, bseq in level:
                 here = set()
-                for f in front:
+                for f in (front.values() if self.bounded else front):
                     for x in f:
                         here |= outrel.get(x, set())
-                for p, pb in prims:
+                if self.bounded:
+                    visit = [prims[i] for i in sorted(i for r in here for i in by_first.get(r, ()))]
+                else:
+                    visit = prims
+                for p, pb in visit:
                     key = bseq + tuple(pb)
                     if first[p] not in here:  # relevance index: nothing leaves the frontier (exact)
                         if key not in seen:
@@ -1238,19 +1306,26 @@ class Engine:
                         continue
                     seen.add(key)
                     nf = step(front, pb)
-                    if not any(nf):
+                    if not (nf if self.bounded else any(nf)):
                         out["pruned_compatible"] += 1  # a distinct-base node, standing for its whole subtree
                         continue
                     seq = prefix + [p]
                     out["scanned"] += 1
                     if key != cand_base:
-                        vals = [next(iter(f)) if len(f) == 1 else None for f in nf]
                         out["evaluated"] += len(obs_at)
-                        if any(jf(i, nf[i], v) == "contradicted" for i, v in obs_at):
+                        if self.bounded:
+                            at = lambda i: nf.get(i, E0)  # noqa: E731
+                        else:
+                            at = nf.__getitem__
+                        if any(jf(i, at(i), v) == "contradicted" for i, v in obs_at):
                             out["contradicted"] += 1
                         else:
-                            support = sum(jf(i, nf[i], v) == "supported" for i, v in obs_at)
-                            conflict = any(x is not None and x != w for x, w in zip(vals, want))
+                            support = sum(jf(i, at(i), v) == "supported" for i, v in obs_at)
+                            if self.bounded:
+                                conflict = any(len(f) == 1 and next(iter(f)) != want[i] for i, f in nf.items())
+                            else:
+                                vals = [next(iter(f)) if len(f) == 1 else None for f in nf]
+                                conflict = any(x is not None and x != w for x, w in zip(vals, want))
                             if conflict or (support >= 1 and self._differs(seq, mine)):
                                 out["blocking_n"] += 1
                                 out["conflicts"] += conflict
@@ -1266,10 +1341,15 @@ class Engine:
         return {**out, "blocking": blocking}
 
     def _adopt(self, name, h, status, blocking, scan=None, domain=None):
+        if status == "qualified" and self._deps_unqualified(h["seq"]):
+            # verification L1 of cdb4828: a qualified capability cannot rest on a dependency that
+            # is not itself qualified; its closed or open judgment is only relative to that version
+            status = "provisional"
         cap = self.state["capabilities"].setdefault(name, {"current": None, "versions": [], "express": None})
         cur = self.version(name)
         evidence = {"observations": len(self.state["observations"].get(name, [])),
                     "support": h["support"], "blocking": len(blocking), "turn": self._tick()}
+        evidence["basis"] = self._basis(name)  # G53: what the decision was made on
         if scan:
             evidence.update({"horizon": scan["horizon"], "blocking_total": scan["blocking_n"],
                              "compatible": scan["compatible"], "pruned_compatible": scan["pruned_compatible"]})
@@ -1483,7 +1563,40 @@ class Engine:
                 self._archived_tok = None
         ret_mod.touch(ret, toks)
 
+    def _known_entities(self):
+        if getattr(self, "_ents", None) is None:
+            self._ents = {x for f in self.state["facts"] for x in (f["s"], f["o"])}
+        return self._ents
+
+    def _grow(self, s, was_known=True):
+        # A told fact changes program values only at its subject's outgoing edges. If the subject
+        # was not a known entity before the fact, no value at any previously known entity changes,
+        # so no earlier scan decision rests on it (answers there stay scoped by M2 of b2bb9b8).
+        if was_known:
+            self._grown = getattr(self, "_grown", set()) | {s}
+
+    def _flush_growth(self):
+        """verification S1 of cdb4828: a qualified version's uniqueness was decided on the facts
+        of its region (the component of its recorded domain and observed subjects) as they were.
+        When told facts with a subject in that region are added or removed, the version is
+        re-acquired, which re-runs the scan on current facts. Batched: pending growth is handled
+        before the next line that is not a `fact` line, and before saving."""
+        grown, self._grown = getattr(self, "_grown", set()), set()
+        if not grown:
+            return
+        for n in sorted(self.state["capabilities"]):
+            ver = self.version(n)
+            obs = self.state["observations"].get(n, [])
+            if not ver or ver["status"] != "qualified" or not obs:
+                continue
+            region = self._component(set(ver.get("domain", [])) | {s_ for s_, _ in obs})
+            if grown & region:
+                self.stats["grown_requalified"] = self.stats.get("grown_requalified", 0) + 1
+                self.acquire(n)
+
     def turn(self, line: str) -> str:
+        if getattr(self, "_grown", None) and not line.strip().lower().startswith("fact "):
+            self._flush_growth()
         reply = self._turn(line)
         if getattr(self, "_fc_names", None):
             self._fc_requalify()
@@ -1542,6 +1655,13 @@ class Engine:
         self._fc_touch({n for n, obs in self.state["observations"].items() if any(s_ == x for s_, _ in obs)})
         return f"complete {x} ({len(clo)} entities)"
 
+    def _basis(self, name):
+        """G53: digest of everything an acquisition decision depends on apart from the closed
+        set: the facts (epoch), the offered primitives, the observations and the horizon."""
+        key = json.dumps([self.state.get("fact_epoch", 0), self.primitives(name),
+                          self.state["observations"].get(name, []), self.deepen, self.use_library])
+        return hashlib.sha256(key.encode()).hexdigest()[:16]
+
     def _fc_touch(self, names):
         self._fc_names = getattr(self, "_fc_names", set()) | set(names)
 
@@ -1565,8 +1685,22 @@ class Engine:
                 # verification M1 of b2bb9b8: review the current version under the new judgment
                 # first (as `observe` does); a contradicted version is suspended whatever `acquire` finds
                 ver = self.version(n)
-                if ver and ver["status"] in EXEC_OK and self.evaluate(ver["seq"], obs)["status"] == "contradicted":
+                h = self.evaluate(ver["seq"], obs) if ver and ver["status"] in EXEC_OK else None
+                if h and h["status"] == "contradicted":
                     self._set_status(n, ver["v"], "suspended", "contradicted by its observations (complete)")
+                if (self.bounded and not self.programs and h
+                        and h["status"] == "supported" and ver["status"] == "qualified"
+                        and ver.get("evidence", {}).get("basis") == self._basis(n)):
+                    # G53 (base engine): a new `complete` statement only adds closed judgments, which
+                    # shrink both the supported set and the non-contradicted alternatives. A qualified
+                    # version still supported stays the unique shortest supported program with no
+                    # blocker, so re-acquiring cannot change it (exact) -- provided nothing else the
+                    # decision rests on (facts, offered primitives, observations) changed since it
+                    # was made (`basis`). A retraction always follows a told-fact change, so it always
+                    # changes the basis and is never skipped. Programs mode is excluded:
+                    # there `complete` also changes the guard space (H1 rule of b2bb9b8).
+                    self.stats["fc_skipped"] = self.stats.get("fc_skipped", 0) + 1
+                    continue
                 self.acquire(n)
 
     def _turn(self, line: str) -> str:
@@ -1684,7 +1818,8 @@ def main(argv) -> int:
     flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False),
              "--no-activation": ("activation", False), "--operators": ("operators", True),
              "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True), "--answers": ("answers", True),
-             "--qualified-library": ("qualified_library", True)}
+             "--qualified-library": ("qualified_library", True),
+             "--bounded": ("bounded", True)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):

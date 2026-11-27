@@ -201,8 +201,25 @@ def run_seed(seed, tmp, shuffled=False):
     items = [(r["s"], r["name"], r["truth"]) for d in report for r in d["rows"]] + [(r["s"], r["name"], r["truth"]) for r in trows]
     final = evaluate(T, items)
     before = [r["reply"] for d in report for r in d["rows"]] + [r["reply"] for r in trows]
+    after = [r["reply"] for r in final]
+    # S1 of cdb4828: told facts added inside a qualified capability's region re-run its scan, so a
+    # later domain built on an earlier one's world can demote it to provisional (a real alternative
+    # appeared). Retention then means: every value identical, and every changed reply is the same
+    # value now marked provisional, of a capability whose current version was re-scanned to
+    # provisional with blockers on current facts.
+    st = json.loads(state.read_text())["state"]
+    strip = lambda x: x.replace(" [provisional]", "")
+    changed = [(it[1], b, a) for it, b, a in zip(items, before, after) if b != a]
+
+    def demoted(name):
+        cap = st["capabilities"][name]
+        ver = cap["versions"][cap["current"] - 1]
+        return ver["status"] == "provisional" and "qualified" in [h["status"] for h in ver["history"]] \
+            and ver["history"][-1]["reason"] == "requalified" and int(ver["evidence"].get("blocking", 0)) > 0
+    retention_ok = all(strip(b) == strip(a) and a.endswith("[provisional]") and demoted(n) for n, b, a in changed)
     return {"seed": seed, "shuffled": shuffled, "domains": report, "transfer": score(trows),
-            "retention_identical": [r["reply"] for r in final] == before, "retention_items": len(final),
+            "retention_identical": retention_ok, "retention_strict_identical": not changed,
+            "retention_demoted": sorted({n for n, _, _ in changed}), "retention_items": len(final),
             "processes": T.calls, "engine_cpu_s": round(T.cpu, 3), "state_bytes": state.stat().st_size,
             "sessions": T.log}
 
@@ -251,7 +268,8 @@ def run() -> dict:
     failed = [k for k, v in checks.items() if not v]
     summary = [{"seed": r["seed"], "domains": [{k: d[k] for k in ("domain", "shape", "status", "match", "examples", "evaluations")}
                                               | {"eval": d["eval"]} for d in r["domains"]],
-                "transfer": r["transfer"], "retention_items": r["retention_items"], "processes": r["processes"],
+                "transfer": r["transfer"], "retention_items": r["retention_items"],
+                "retention_strict_identical": r["retention_strict_identical"], "retention_demoted": r["retention_demoted"], "processes": r["processes"],
                 "engine_cpu_s": r["engine_cpu_s"], "state_bytes": r["state_bytes"]} for r in runs]
     shuf_summary = [{"seed": r["seed"], "matches": sum(d["match"] for d in r["domains"]),
                      "statuses": [d["status"] for d in r["domains"]],

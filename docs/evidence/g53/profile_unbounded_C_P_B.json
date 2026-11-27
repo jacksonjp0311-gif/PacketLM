@@ -1,0 +1,812 @@
+{
+ "seeds": {
+  "comp": [
+   941,
+   942
+  ],
+  "unrel": [
+   943
+  ]
+ },
+ "arms": [
+  "C",
+  "P",
+  "B"
+ ],
+ "summary": {
+  "comp:C": {
+   "seeds": 2,
+   "calls": 308,
+   "cpu_total_s": 196.048,
+   "startup_s": 8.53,
+   "by_kind": {
+    "teach": {
+     "calls": 198,
+     "cpu_total_s": 181.528
+    },
+    "eval": {
+     "calls": 102,
+     "cpu_total_s": 11.465
+    },
+    "maint": {
+     "calls": 8,
+     "cpu_total_s": 3.056
+    }
+   },
+   "funcs": {
+    "tell": [
+     0.173,
+     4328
+    ],
+    "execute": [
+     10.303,
+     285521
+    ],
+    "import_engine": [
+     2.327,
+     0
+    ],
+    "open": [
+     5.368,
+     308
+    ],
+    "_idx": [
+     7.859,
+     38858212
+    ],
+    "save": [
+     7.937,
+     308
+    ],
+    "expand": [
+     2.696,
+     710896
+    ],
+    "review": [
+     1.143,
+     210
+    ],
+    "evaluate": [
+     5.953,
+     48336
+    ],
+    "primitives": [
+     1.648,
+     1264
+    ],
+    "hypotheses": [
+     6.778,
+     882
+    ],
+    "acquire": [
+     231.79,
+     439
+    ],
+    "json_dumps": [
+     3.453,
+     1846
+    ],
+    "json_loads": [
+     0.65,
+     306
+    ],
+    "investigate": [
+     4.594,
+     110
+    ],
+    "_scan": [
+     220.029,
+     382
+    ],
+    "_adopt": [
+     0.032,
+     378
+    ],
+    "_predictions": [
+     0.559,
+     382
+    ],
+    "answer": [
+     6.272,
+     3636
+    ],
+    "ask": [
+     5.934,
+     3636
+    ],
+    "_fc_requalify": [
+     145.144,
+     87
+    ],
+    "_drop": [
+     0.01,
+     10
+    ],
+    "_retire": [
+     0.008,
+     6
+    ],
+    "correct": [
+     0.278,
+     6
+    ],
+    "_requalify": [
+     0.23,
+     4
+    ]
+   },
+   "state_bytes_max": 459102,
+   "cpu_total_all_s_unprofiled_equiv": 0.0,
+   "funcs_share": {
+    "acquire": 1.1823,
+    "_scan": 1.1223,
+    "_fc_requalify": 0.7403,
+    "execute": 0.0526,
+    "save": 0.0405,
+    "_idx": 0.0401,
+    "hypotheses": 0.0346,
+    "answer": 0.032,
+    "evaluate": 0.0304,
+    "ask": 0.0303,
+    "open": 0.0274,
+    "investigate": 0.0234,
+    "json_dumps": 0.0176,
+    "expand": 0.0138,
+    "import_engine": 0.0119,
+    "primitives": 0.0084,
+    "review": 0.0058,
+    "json_loads": 0.0033,
+    "_predictions": 0.0029,
+    "correct": 0.0014,
+    "_requalify": 0.0012,
+    "tell": 0.0009,
+    "_adopt": 0.0002,
+    "_drop": 0.0001,
+    "_retire": 0.0
+   }
+  },
+  "comp:P": {
+   "seeds": 2,
+   "calls": 308,
+   "cpu_total_s": 118.791,
+   "startup_s": 8.651,
+   "by_kind": {
+    "teach": {
+     "calls": 198,
+     "cpu_total_s": 105.625
+    },
+    "eval": {
+     "calls": 102,
+     "cpu_total_s": 11.569
+    },
+    "maint": {
+     "calls": 8,
+     "cpu_total_s": 1.597
+    }
+   },
+   "funcs": {
+    "tell": [
+     0.25,
+     4328
+    ],
+    "execute": [
+     49.129,
+     1069712
+    ],
+    "import_engine": [
+     2.509,
+     0
+    ],
+    "open": [
+     5.832,
+     308
+    ],
+    "_idx": [
+     6.336,
+     18742393
+    ],
+    "save": [
+     9.082,
+     308
+    ],
+    "expand": [
+     7.748,
+     1777332
+    ],
+    "review": [
+     1.134,
+     210
+    ],
+    "evaluate": [
+     47.487,
+     310381
+    ],
+    "primitives": [
+     1.879,
+     1598
+    ],
+    "hypotheses": [
+     56.219,
+     1295
+    ],
+    "acquire": [
+     147.047,
+     439
+    ],
+    "json_dumps": [
+     3.788,
+     1846
+    ],
+    "json_loads": [
+     0.752,
+     306
+    ],
+    "investigate": [
+     5.064,
+     110
+    ],
+    "_scan": [
+     90.242,
+     303
+    ],
+    "_adopt": [
+     0.022,
+     299
+    ],
+    "_predictions": [
+     0.345,
+     303
+    ],
+    "answer": [
+     8.107,
+     3636
+    ],
+    "ask": [
+     7.768,
+     3636
+    ],
+    "_fc_requalify": [
+     80.697,
+     87
+    ],
+    "_retire": [
+     0.007,
+     6
+    ],
+    "correct": [
+     0.148,
+     6
+    ],
+    "_drop": [
+     0.003,
+     6
+    ],
+    "_requalify": [
+     0.107,
+     4
+    ]
+   },
+   "state_bytes_max": 455025,
+   "cpu_total_all_s_unprofiled_equiv": 0.0,
+   "funcs_share": {
+    "acquire": 1.2379,
+    "_scan": 0.7597,
+    "_fc_requalify": 0.6793,
+    "hypotheses": 0.4733,
+    "execute": 0.4136,
+    "evaluate": 0.3998,
+    "save": 0.0765,
+    "answer": 0.0682,
+    "ask": 0.0654,
+    "expand": 0.0652,
+    "_idx": 0.0533,
+    "open": 0.0491,
+    "investigate": 0.0426,
+    "json_dumps": 0.0319,
+    "import_engine": 0.0211,
+    "primitives": 0.0158,
+    "review": 0.0095,
+    "json_loads": 0.0063,
+    "_predictions": 0.0029,
+    "tell": 0.0021,
+    "correct": 0.0012,
+    "_requalify": 0.0009,
+    "_adopt": 0.0002,
+    "_retire": 0.0001,
+    "_drop": 0.0
+   }
+  },
+  "comp:B": {
+   "seeds": 2,
+   "calls": 260,
+   "cpu_total_s": 52.397,
+   "startup_s": 7.345,
+   "by_kind": {
+    "teach": {
+     "calls": 186,
+     "cpu_total_s": 48.996
+    },
+    "eval": {
+     "calls": 72,
+     "cpu_total_s": 3.282
+    },
+    "maint": {
+     "calls": 2,
+     "cpu_total_s": 0.119
+    }
+   },
+   "funcs": {
+    "tell": [
+     0.122,
+     14700
+    ],
+    "execute": [
+     34.453,
+     766117
+    ],
+    "import_engine": [
+     1.937,
+     0
+    ],
+    "open": [
+     0.659,
+     260
+    ],
+    "_idx": [
+     1.714,
+     7193902
+    ],
+    "save": [
+     2.156,
+     260
+    ],
+    "expand": [
+     5.52,
+     1346435
+    ],
+    "review": [
+     0.0,
+     204
+    ],
+    "evaluate": [
+     35.882,
+     259602
+    ],
+    "primitives": [
+     0.174,
+     732
+    ],
+    "hypotheses": [
+     43.15,
+     660
+    ],
+    "acquire": [
+     61.064,
+     204
+    ],
+    "json_dumps": [
+     0.497,
+     1488
+    ],
+    "json_loads": [
+     0.068,
+     188
+    ],
+    "investigate": [
+     1.135,
+     110
+    ],
+    "_scan": [
+     17.864,
+     72
+    ],
+    "_adopt": [
+     0.002,
+     72
+    ],
+    "_predictions": [
+     0.084,
+     72
+    ],
+    "answer": [
+     0.323,
+     324
+    ],
+    "ask": [
+     0.277,
+     324
+    ]
+   },
+   "state_bytes_max": 49581,
+   "cpu_total_all_s_unprofiled_equiv": 0.0,
+   "funcs_share": {
+    "acquire": 1.1654,
+    "hypotheses": 0.8235,
+    "evaluate": 0.6848,
+    "execute": 0.6575,
+    "_scan": 0.3409,
+    "expand": 0.1053,
+    "save": 0.0411,
+    "import_engine": 0.037,
+    "_idx": 0.0327,
+    "investigate": 0.0217,
+    "open": 0.0126,
+    "json_dumps": 0.0095,
+    "answer": 0.0062,
+    "ask": 0.0053,
+    "primitives": 0.0033,
+    "tell": 0.0023,
+    "_predictions": 0.0016,
+    "json_loads": 0.0013,
+    "_adopt": 0.0,
+    "review": 0.0
+   }
+  },
+  "unrel:C": {
+   "seeds": 1,
+   "calls": 133,
+   "cpu_total_s": 19.658,
+   "startup_s": 3.819,
+   "by_kind": {
+    "teach": {
+     "calls": 61,
+     "cpu_total_s": 6.223
+    },
+    "eval": {
+     "calls": 72,
+     "cpu_total_s": 13.436
+    }
+   },
+   "funcs": {
+    "tell": [
+     0.166,
+     3024
+    ],
+    "execute": [
+     1.155,
+     15852
+    ],
+    "import_engine": [
+     1.018,
+     0
+    ],
+    "open": [
+     3.507,
+     133
+    ],
+    "_idx": [
+     2.516,
+     64897
+    ],
+    "save": [
+     5.101,
+     133
+    ],
+    "expand": [
+     0.064,
+     27976
+    ],
+    "review": [
+     0.701,
+     54
+    ],
+    "evaluate": [
+     0.755,
+     1746
+    ],
+    "primitives": [
+     0.27,
+     158
+    ],
+    "hypotheses": [
+     0.335,
+     126
+    ],
+    "acquire": [
+     0.556,
+     54
+    ],
+    "json_dumps": [
+     2.323,
+     797
+    ],
+    "json_loads": [
+     0.458,
+     132
+    ],
+    "investigate": [
+     0.228,
+     12
+    ],
+    "_scan": [
+     0.217,
+     32
+    ],
+    "_adopt": [
+     0.001,
+     32
+    ],
+    "_predictions": [
+     0.02,
+     32
+    ],
+    "answer": [
+     11.227,
+     3240
+    ],
+    "ask": [
+     10.901,
+     3240
+    ]
+   },
+   "state_bytes_max": 577763,
+   "cpu_total_all_s_unprofiled_equiv": 0.0,
+   "funcs_share": {
+    "answer": 0.5711,
+    "ask": 0.5545,
+    "save": 0.2595,
+    "open": 0.1784,
+    "_idx": 0.128,
+    "json_dumps": 0.1182,
+    "execute": 0.0588,
+    "import_engine": 0.0518,
+    "evaluate": 0.0384,
+    "review": 0.0357,
+    "acquire": 0.0283,
+    "json_loads": 0.0233,
+    "hypotheses": 0.017,
+    "primitives": 0.0138,
+    "investigate": 0.0116,
+    "_scan": 0.011,
+    "tell": 0.0084,
+    "expand": 0.0032,
+    "_predictions": 0.001,
+    "_adopt": 0.0
+   }
+  },
+  "unrel:P": {
+   "seeds": 1,
+   "calls": 133,
+   "cpu_total_s": 19.535,
+   "startup_s": 3.829,
+   "by_kind": {
+    "teach": {
+     "calls": 61,
+     "cpu_total_s": 6.145
+    },
+    "eval": {
+     "calls": 72,
+     "cpu_total_s": 13.391
+    }
+   },
+   "funcs": {
+    "tell": [
+     0.167,
+     3024
+    ],
+    "execute": [
+     1.229,
+     15852
+    ],
+    "import_engine": [
+     1.012,
+     0
+    ],
+    "open": [
+     3.495,
+     133
+    ],
+    "_idx": [
+     2.454,
+     64897
+    ],
+    "save": [
+     4.997,
+     133
+    ],
+    "evaluate": [
+     0.786,
+     1746
+    ],
+    "expand": [
+     0.057,
+     24416
+    ],
+    "review": [
+     0.733,
+     54
+    ],
+    "primitives": [
+     0.259,
+     158
+    ],
+    "hypotheses": [
+     0.314,
+     126
+    ],
+    "acquire": [
+     0.525,
+     54
+    ],
+    "json_dumps": [
+     2.205,
+     797
+    ],
+    "json_loads": [
+     0.455,
+     132
+    ],
+    "investigate": [
+     0.212,
+     12
+    ],
+    "_scan": [
+     0.203,
+     32
+    ],
+    "_adopt": [
+     0.001,
+     32
+    ],
+    "_predictions": [
+     0.023,
+     32
+    ],
+    "answer": [
+     11.362,
+     3240
+    ],
+    "ask": [
+     10.995,
+     3240
+    ]
+   },
+   "state_bytes_max": 577754,
+   "cpu_total_all_s_unprofiled_equiv": 0.0,
+   "funcs_share": {
+    "answer": 0.5816,
+    "ask": 0.5628,
+    "save": 0.2558,
+    "open": 0.1789,
+    "_idx": 0.1256,
+    "json_dumps": 0.1129,
+    "execute": 0.0629,
+    "import_engine": 0.0518,
+    "evaluate": 0.0403,
+    "review": 0.0375,
+    "acquire": 0.0269,
+    "json_loads": 0.0233,
+    "hypotheses": 0.0161,
+    "primitives": 0.0132,
+    "investigate": 0.0109,
+    "_scan": 0.0104,
+    "tell": 0.0085,
+    "expand": 0.0029,
+    "_predictions": 0.0012,
+    "_adopt": 0.0
+   }
+  },
+  "unrel:B": {
+   "seeds": 1,
+   "calls": 61,
+   "cpu_total_s": 2.667,
+   "startup_s": 1.741,
+   "by_kind": {
+    "teach": {
+     "calls": 37,
+     "cpu_total_s": 1.677
+    },
+    "eval": {
+     "calls": 24,
+     "cpu_total_s": 0.99
+    }
+   },
+   "funcs": {
+    "tell": [
+     0.007,
+     1728
+    ],
+    "execute": [
+     0.155,
+     3530
+    ],
+    "import_engine": [
+     0.677,
+     0
+    ],
+    "open": [
+     0.06,
+     61
+    ],
+    "_idx": [
+     0.104,
+     31271
+    ],
+    "save": [
+     0.432,
+     61
+    ],
+    "evaluate": [
+     0.098,
+     1142
+    ],
+    "expand": [
+     0.012,
+     6754
+    ],
+    "review": [
+     0.001,
+     54
+    ],
+    "primitives": [
+     0.01,
+     158
+    ],
+    "hypotheses": [
+     0.197,
+     126
+    ],
+    "acquire": [
+     0.382,
+     54
+    ],
+    "json_dumps": [
+     0.059,
+     342
+    ],
+    "json_loads": [
+     0.005,
+     37
+    ],
+    "investigate": [
+     0.037,
+     12
+    ],
+    "_scan": [
+     0.183,
+     32
+    ],
+    "_adopt": [
+     0.001,
+     32
+    ],
+    "_predictions": [
+     0.036,
+     32
+    ],
+    "answer": [
+     0.092,
+     96
+    ],
+    "ask": [
+     0.076,
+     96
+    ]
+   },
+   "state_bytes_max": 15159,
+   "cpu_total_all_s_unprofiled_equiv": 0.0,
+   "funcs_share": {
+    "import_engine": 0.254,
+    "save": 0.162,
+    "acquire": 0.1434,
+    "hypotheses": 0.0738,
+    "_scan": 0.0687,
+    "execute": 0.0581,
+    "_idx": 0.039,
+    "evaluate": 0.0368,
+    "answer": 0.0344,
+    "ask": 0.0286,
+    "open": 0.0224,
+    "json_dumps": 0.0221,
+    "investigate": 0.0137,
+    "_predictions": 0.0134,
+    "expand": 0.0044,
+    "primitives": 0.0038,
+    "tell": 0.0026,
+    "json_loads": 0.0019,
+    "_adopt": 0.0002,
+    "review": 0.0002
+   }
+  }
+ }
+}

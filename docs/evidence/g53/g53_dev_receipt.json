@@ -1,0 +1,407 @@
+{
+ "started": "2026-11-27T01:57:20-0500",
+ "head": "cdb4828bae12510b5dfe63eab0342913d25c1413",
+ "git_status_porcelain": "M docs/G51.md\n M docs/RESEARCH_LEDGER.md\n M packetlm/engine.py\n M packetlm/g44_test.py\n M packetlm/g45_test.py\n M packetlm/mutations.py\n?? benchmarks/g53.py\n?? benchmarks/prof_engine.py\n?? benchmarks/profile_g53.py\n?? docs/G53.md\n?? docs/evidence/g53/",
+ "harness_sha256": "935c2053896e0943b12400b3e54b6d067dadc2e6ada2b253218e62646d8de738",
+ "instrument": {
+  "path": "/workspace/vendor/learning-amortization",
+  "head": "70297af",
+  "pinned": true,
+  "unmodified": true
+ },
+ "seeds": {
+  "comp": [
+   951,
+   952
+  ],
+  "unrel": [
+   953,
+   954
+  ]
+ },
+ "source_sha256": "1b937149b1aa65e7866c40439f61209569f9d2a0410be6d54a48bf58881e59cd",
+ "engine_sha256": "29a742c212f2b6cbfb5bd70a3075a21fcf9ca116c8ab155fc07e9079b325eadb",
+ "curricula": {
+  "comp": {
+   "n": 36,
+   "per_seed": {
+    "951": {
+     "C": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 30.1563,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "a54cbef46bf68c53cba4e87c9f73f92c8855a7db3e138850342afbeea575bfa8"
+     },
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 15.1197,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "a54cbef46bf68c53cba4e87c9f73f92c8855a7db3e138850342afbeea575bfa8"
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.6812,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "900894d5d4a2df317333aed1fefabba132a6511966fc7ed91693109023c4a183"
+     },
+     "Pb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.091,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "7175ba43d3bd69f1a62c428822781e6d4ec608a606f44b3d27d9121ea111f41a"
+     },
+     "Fb": {
+      "tasks": 36,
+      "solved": 19,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.936,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "5d394a86ff004c83016a3c6568bb5f9501a1dcdbc7456b91d5b826c83aa6e32a"
+     }
+    },
+    "952": {
+     "C": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 32.7,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "1841a8f6906ec855d5a7a37f74ceb5eb68b91e4bbb41e818620f032023b65de5"
+     },
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 15.7303,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "1841a8f6906ec855d5a7a37f74ceb5eb68b91e4bbb41e818620f032023b65de5"
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.6999,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "97174cad760bb134d2394fa89a854a1bb8cf03ad614f64fff6670cb7f8e34dc8"
+     },
+     "Pb": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.0203,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "6e5433f4766a8c1522a87595e41da28311c8662045e713a6fc7f97d9c1e0393c"
+     },
+     "Fb": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.7198,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "16144cf2aa288efe24d88f8671f52f474e55841bdd9c6e495d0245f9cc471cc3"
+     }
+    }
+   },
+   "instrument": [
+    {
+     "cont": "Cb+maint",
+     "base": "Bb",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -1.0057  [-1.0429, -0.9684] (95% paired bootstrap, S=2); delta-SE=0.0373; sign-flip p=0.5; geometric-mean form=-1.0053\ncensored tasks: Cb+maint=0, Bb=1\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0221 per task  [-0.0231, -0.0211]\nA_n curve (seed-mean costs): [-0.094 -0.06   0.013 -0.003 -0.04  -0.446 -0.425 -0.41  -0.38  -0.374\n -0.338 -0.571 -0.563 -0.556 -0.543 -0.537 -0.54  -0.734 -0.703 -0.72\n -0.706 -0.783 -0.816 -0.822 -0.813 -0.835 -0.835 -0.918 -0.951 -0.978\n -0.977 -0.988 -0.989 -1.004 -1.03  -1.006]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cb+maint",
+     "base": "Pb+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.1815  [-0.2081, -0.1550] (95% paired bootstrap, S=2); delta-SE=0.0266; sign-flip p=0.5; geometric-mean form=-0.1813\ncensored tasks: Cb+maint=0, Pb+maint=1\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0092 per task  [-0.0107, -0.0077]\nA_n curve (seed-mean costs): [-0.068 -0.088  0.006 -0.004 -0.033 -0.046 -0.041 -0.042 -0.034 -0.036\n -0.035 -0.036 -0.032 -0.031 -0.037 -0.038 -0.048 -0.043 -0.04  -0.088\n -0.09  -0.158 -0.183 -0.18  -0.171 -0.181 -0.183 -0.235 -0.251 -0.224\n -0.219 -0.219 -0.213 -0.221 -0.238 -0.181]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cb+maint",
+     "base": "C+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = +0.5092  [+0.4986, +0.5190] (95% paired bootstrap, S=2); delta-SE=0.0101; sign-flip p=0.5; geometric-mean form=+0.5089\ncensored tasks: Cb+maint=0, C+maint=0\ntrend of per-task log ratio: +0.0266 per task  [+0.0259, +0.0273]\nA_n curve (seed-mean costs): [0.062 0.093 0.107 0.126 0.126 0.127 0.124 0.118 0.122 0.128 0.131 0.136\n 0.132 0.128 0.126 0.132 0.129 0.136 0.142 0.179 0.236 0.314 0.394 0.466\n 0.461 0.463 0.469 0.482 0.502 0.504 0.501 0.498 0.501 0.502 0.514 0.509]\nbreak-even n (seed-mean costs): 1",
+     "err": ""
+    },
+    {
+     "cont": "Cb",
+     "base": "Pb",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.2211  [-0.2562, -0.1863] (95% paired bootstrap, S=2); delta-SE=0.0350; sign-flip p=0.5; geometric-mean form=-0.2207\ncensored tasks: Cb=0, Pb=1\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0082 per task  [-0.0097, -0.0067]\nA_n curve (seed-mean costs): [-0.068 -0.088  0.006 -0.004 -0.033 -0.067 -0.057 -0.057 -0.044 -0.046\n -0.044 -0.051 -0.044 -0.042 -0.049 -0.05  -0.061 -0.065 -0.059 -0.118\n -0.119 -0.202 -0.23  -0.225 -0.212 -0.221 -0.222 -0.282 -0.299 -0.278\n -0.272 -0.269 -0.26  -0.267 -0.287 -0.221]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cb+maint",
+     "base": "Fb+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -2.1950  [-2.3328, -2.0631] (95% paired bootstrap, S=2); delta-SE=0.1348; sign-flip p=0.5; geometric-mean form=-2.1951\ncensored tasks: Cb+maint=0, Fb+maint=35\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0862 per task  [-0.0884, -0.0840]\nA_n curve (seed-mean costs): [-6.654e-02 -8.048e-02 -6.325e-02 -4.560e-02 -3.994e-02 -3.609e-02\n -3.236e-02 -3.188e-02 -3.306e-02 -3.118e-02 -3.232e-02 -2.670e-02\n -2.031e-02 -1.738e-02 -5.628e-03 -6.305e-04 -5.271e-03 -5.711e-04\n -5.521e-02 -2.223e-01 -2.883e-01 -4.628e-01 -5.657e-01 -9.375e-01\n -9.657e-01 -1.061e+00 -1.111e+00 -1.337e+00 -1.429e+00 -1.745e+00\n -1.762e+00 -1.807e+00 -1.865e+00 -1.958e+00 -2.031e+00 -2.195e+00]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    }
+   ],
+   "exact_Cb_equals_C": true
+  },
+  "unrel": {
+   "n": 24,
+   "per_seed": {
+    "953": {
+     "C": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.9523,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "5a27f0ae84e946f4cafe0a6129df13ebeb886759461cf43cb4d220187323f277"
+     },
+     "Cb": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 12.004,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "5a27f0ae84e946f4cafe0a6129df13ebeb886759461cf43cb4d220187323f277"
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.9245,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "2065851c0251c9b4da63f09b72051ac852ecf36e036ba98ce7ffce51d47e4beb"
+     },
+     "Pb": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.8265,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "5a27f0ae84e946f4cafe0a6129df13ebeb886759461cf43cb4d220187323f277"
+     }
+    },
+    "954": {
+     "C": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.9407,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0c56e0eda63336f7a5a2e0e7878921e32a717d60c5e1094e211855258fcb1f12"
+     },
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.6072,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0c56e0eda63336f7a5a2e0e7878921e32a717d60c5e1094e211855258fcb1f12"
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.9653,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "ef8319314989b7c3af6bcc144d1333a52e18d0746611fece898e58c5db7649d5"
+     },
+     "Pb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.678,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0c56e0eda63336f7a5a2e0e7878921e32a717d60c5e1094e211855258fcb1f12"
+     }
+    }
+   },
+   "instrument": [
+    {
+     "cont": "Cb+maint",
+     "base": "Bb",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -5.0700  [-5.2375, -4.9061] (95% paired bootstrap, S=2); delta-SE=0.1657; sign-flip p=0.5; geometric-mean form=-5.0695\ncensored tasks: Cb+maint=1, Bb=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0669 per task  [-0.0707, -0.0631]\nA_n curve (seed-mean costs): [-0.87  -1.292 -1.511 -1.728 -1.901 -1.987 -2.116 -2.35  -2.456 -2.535\n -2.723 -2.888 -3.07  -3.11  -3.277 -3.498 -3.653 -3.852 -3.992 -4.197\n -4.425 -4.682 -4.917 -5.07 ]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cb+maint",
+     "base": "Pb+maint",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -0.0045  [-0.0150, +0.0061] (95% paired bootstrap, S=2); delta-SE=0.0105; sign-flip p=1; geometric-mean form=-0.0044\ncensored tasks: Cb+maint=1, Pb+maint=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0040 per task  [-0.0058, -0.0022]\nA_n curve (seed-mean costs): [ 0.012  0.001  0.029  0.039  0.032  0.047  0.073  0.05   0.038  0.045\n  0.043  0.038  0.033  0.03   0.023  0.017  0.013  0.007  0.007  0.008\n  0.006 -0.002 -0.002 -0.005]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cb+maint",
+     "base": "C+maint",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = +0.0118  [-0.0043, +0.0279] (95% paired bootstrap, S=2); delta-SE=0.0161; sign-flip p=1; geometric-mean form=+0.0119\ncensored tasks: Cb+maint=1, C+maint=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0001 per task  [-0.0008, +0.0011]\nA_n curve (seed-mean costs): [ 0.022  0.015  0.038  0.029  0.023  0.014 -0.    -0.008  0.014  0.015\n  0.011  0.009  0.011  0.012  0.016  0.013  0.012  0.001  0.004  0.007\n  0.009  0.006  0.006  0.012]\nbreak-even n (seed-mean costs): 9",
+     "err": ""
+    },
+    {
+     "cont": "Cb",
+     "base": "Pb",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = +0.0137  [-0.0127, +0.0399] (95% paired bootstrap, S=2); delta-SE=0.0263; sign-flip p=1; geometric-mean form=+0.0139\ncensored tasks: Cb=1, Pb=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0033 per task  [-0.0059, -0.0007]\nA_n curve (seed-mean costs): [-0.057  0.01   0.013  0.025  0.023  0.052  0.117  0.098  0.09   0.082\n  0.062  0.05   0.048  0.043  0.035  0.028  0.025  0.019  0.021  0.019\n  0.02   0.017  0.02   0.014]\nbreak-even n (seed-mean costs): 2",
+     "err": ""
+    }
+   ],
+   "exact_Cb_equals_C": true
+  }
+ },
+ "guards": {
+  "exact_Cb_replies_equal_C": true,
+  "no_wrong_qualified_C_Cb": true,
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ }
+}

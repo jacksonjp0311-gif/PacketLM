@@ -1042,8 +1042,8 @@ def g49_checks(tmp) -> dict:
     for x in ("e7", "e9", "e0", "e3", "e1"):  # truth: not:k:ca|... with no k ca told = identity
         l21 += [f"example kk: {x} -> {x}", f"complete {x}"]
     _, r21 = run_lines("h1b.json", l21 + ["what is e4 kk"], programs=True)
-    out["h1_identity_expressible_under_complete"] = r21[-1].startswith("e4 kk e4") or "[provisional]" in r21[-1] \
-        or r21[-1].startswith("unknown")
+    # L2 of cdb4828: the positive case, the identity truth is answered (e4 -> e4)
+    out["h1_identity_expressible_under_complete"] = r21[-1].startswith("e4 kk e4")
     m1p = ["fact a p b", "fact x q w", "example k1: a -> b", "complete a", "example k1: x -> y", "complete x"]
     em, _ = run_lines("m1p.json", m1p, programs=True)
     base7 = ["fact a p b", "fact b p c", "fact c k top", "fact b k mid", "fact x p y", "fact y k top", "fact z p a"]
@@ -1064,6 +1064,73 @@ def g49_checks(tmp) -> dict:
                                      "fact n1 r1 n2", "what is n1 g", "what is a g"], deepen=2)
     out["m2_qualified_scoped_to_domain"] = e2_.version("g")["status"] == "qualified" \
         and "[provisional]" in r2_[-2] and r2_[-2].startswith("n1") and "[provisional]" not in r2_[-1]
+    # S1 of cdb4828: facts growing inside a qualified version's region re-run its scan
+    s1 = ["fact a r1 c", "fact c r1 c", "fact c r2 c", "fact m r1 c", "example hq: a -> c", "complete a",
+          "example hq: c -> c", "complete c", "what is m hq"]
+    es1, rs1 = run_lines("s1.json", s1 + ["fact u r3 z", "what is m hq", "fact m r3 z", "what is m hq"], programs=True)
+    out["s1_growth_in_region_requalifies"] = "[provisional]" not in rs1[8] and "[provisional]" not in rs1[10] \
+        and "[provisional]" in rs1[12] and es1.stats.get("grown_requalified") == 1
+    # L1 of cdb4828: qualified only on qualified dependencies; a demoted dependency demotes dependents
+    el1 = Engine(tmp / "l1dep.json", deepen=2)
+    for t in [("p1", "s", "v1"), ("p2", "s", "v2"), ("v1", "t", "w1"), ("v2", "t", "w2")]:
+        el1.tell(*t)
+    el1.observe("y", "p1", "v1")
+    el1.observe("y", "p2", "v2")
+    el1.acquire("y")
+    el1._set_status("y", 1, "provisional", "test")
+    el1._adopt("k", {"seq": ["cap:y@1", "rel:t"], "support": 2}, "qualified", [])
+    k_cap = el1.version("k")["status"]
+    el1._set_status("y", 1, "qualified", "test")
+    el1._adopt("k2", {"seq": ["cap:y@1", "rel:t"], "support": 2}, "qualified", [])
+    k2_q = el1.version("k2")["status"]
+    el1._set_status("y", 1, "provisional", "test")
+    out["l1_qualified_needs_qualified_deps"] = k_cap == "provisional" and k2_q == "qualified" \
+        and el1.version("k2")["status"] == "provisional"
+    # G53 (docs/G53.md): --bounded is exact. Scan outputs equal the unbounded scan's, with a library
+    def g53_world(bd):
+        e_ = Engine(tmp / f"g53w{bd}.json", deepen=3, answers=True, bounded=bd)
+        ents = [f"n{i}" for i in range(14)]
+        for i in range(14):
+            e_.tell(ents[i], "a", ents[(i + 1) % 14])
+            e_.tell(ents[i], "b", ents[(i * 3 + 2) % 14])
+            if i % 2:
+                e_.tell(ents[i], "c", ents[(i + 5) % 14])
+        for nm, sq, subs in (("ab", ["rel:a", "rel:b"], ents[:3]), ("ba", ["rel:b", "rel:a"], ents[3:6])):
+            for s_ in subs:
+                o_ = e_.execute(sq, s_)
+                e_.turn(f"example {nm}: {s_} -> {next(iter(o_))}")
+        e_.observe("nx", "n1", "n5")
+        return e_
+    scans = {}
+    for bd in (False, True):
+        e_ = g53_world(bd)
+        keep = ("scanned", "evaluated", "contradicted", "compatible", "blocking_n", "conflicts", "blocking", "domain")
+        scans[bd] = [{k: v for k, v in e_._scan(n, sq, 3).items() if k in keep}
+                     for n, sq in (("ab", e_.version("ab")["seq"]), ("ba", e_.version("ba")["seq"]), ("nx", ["rel:a", "rel:a", "rel:a", "rel:a"]),
+                                   ("nx", ["cap:ab@1", "rel:c"]))]
+        scans[bd].append([e_.version(n)["status"] for n in ("ab", "ba")])
+    out["g53_bounded_scan_equals_unbounded"] = scans[False] == scans[True] and any(x["blocking_n"] for x in scans[True][:4]) \
+        and sum(x["scanned"] for x in scans[True][:4]) > 50
+    # G53: a new `complete` statement does not re-scan a settled (qualified, still supported,
+    # unchanged basis) version; a changed basis or a retraction does
+    sk = {}
+    for bd in (False, True):
+        e_ = Engine(tmp / f"g53fc{bd}.json", deepen=2, bounded=bd)
+        for t in [("p1", "s", "v1"), ("p2", "s", "v2"), ("p4", "s", "v4")]:
+            e_.tell(*t)
+        e_.turn("example good: p1 -> v1")
+        e_.turn("example good: p2 -> v2")
+        st0 = e_.version("good")["status"]
+        e_.turn("complete p1")
+        n1 = e_.stats.get("fc_skipped", 0)
+        e_.turn("fact p3 s v3")  # basis changes (fact epoch)
+        e_.turn("complete p2")
+        n2 = e_.stats.get("fc_skipped", 0)
+        e_.turn("fact p1 t z")  # inside p1's closure: retracts the statement -> re-acquired
+        n3 = e_.stats.get("fc_skipped", 0)
+        sk[bd] = (st0, n1, n2, n3, e_.version("good")["status"], len(e_.state.get("complete_log", [])))
+    out["g53_fc_skip_only_settled"] = sk[True][0] == "qualified" and sk[True][1:4] == (1, 1, 1) \
+        and sk[False][1:4] == (0, 0, 0) and sk[True][4] == sk[False][4] and sk[True][5] == sk[False][5] == 1
     ea = Engine(tmp / "fcret.json", deepen=2, retention="adaptive")
     out["fc_refused_with_adaptive_retention"] = ea.turn("complete b").startswith("complete is not supported")
     return out
