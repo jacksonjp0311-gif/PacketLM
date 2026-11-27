@@ -10,6 +10,7 @@ import json
 import sys
 from itertools import product
 from pathlib import Path
+from .engine import choose, express
 from .field import add, ask, save, load
 from .roles import induce, select
 
@@ -45,16 +46,6 @@ def apply_seq(field, seq, subject, objects):
             return None
     return cur
 
-def choose(library, meaning):
-    hits = [c for c in library if c and c.get("meaning") == meaning]
-    return hits[0] if len(hits) == 1 else None
-
-def express(construction, fact):
-    if not construction:
-        return None
-    s, r, o = fact
-    roles = {"s": s, "r": construction["word"], "o": o}
-    return " ".join(roles[role] for role in construction["order"])
 
 def acquire(field, objects, labeled):
     operators = []

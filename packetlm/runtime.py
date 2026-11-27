@@ -11,6 +11,7 @@ import json
 import random
 from collections import Counter
 from pathlib import Path
+from .engine import judge
 from .field import add, ask, save, load
 
 STATE = Path("data/runtime_state.json")
@@ -38,10 +39,6 @@ def apply_path(field, path, subject, objects):
     mid = ask(field, subject, a, objects)
     return ask(field, mid, b, objects) if mid else None
 
-def judge(pred, ans):
-    if pred is None:
-        return "undetermined"
-    return "supported" if pred == ans else "contradicted"
 
 def pick(field, paths, objects, skip):
     best, best_score = None, 0

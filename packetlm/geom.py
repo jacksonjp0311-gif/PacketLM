@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 from itertools import product
 from pathlib import Path
+from .engine import choose, express
 from .field import save, load
 from .roles import induce, select
 
@@ -57,16 +58,6 @@ def classify(facts, n, answer):
                 supported.append(seq)
     return supported, undetermined
 
-def choose(library, meaning):
-    hits = [c for c in library if c and c["meaning"] == meaning]
-    return hits[0] if len(hits) == 1 else None
-
-def express(construction, fact):
-    if not construction:
-        return None
-    s, r, o = fact
-    roles = {"s": s, "r": construction["word"], "o": o}
-    return " ".join(roles[role] for role in construction["order"])
 
 def run() -> dict:
     complete = [
