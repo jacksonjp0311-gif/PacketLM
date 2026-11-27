@@ -1270,6 +1270,146 @@ def g49_checks(tmp) -> dict:
     return out
 
 
+SERVE_FLAGS = ["--answers", "--bounded", "--lean", "--deepen=3"]
+SERVE_SCRIPT = [
+    ["fact a1 p b1", "fact b1 q c1", "fact a2 p b2", "fact b2 q c2", "fact a3 p b3", "fact b3 q c3",
+     "fact a4 p b4", "fact b4 q c4"],
+    ["example pq: a1 -> c1", "example pq: a2 -> c2"],
+    ["investigate pq"],
+    ["what is a3 pq", "what is a4 pq"],
+    ["correct b4 q c9"],
+    ["what is a4 pq", "capabilities"],
+    ["fact a5 p b5", "fact b5 q c5", "what is a5 pq"],
+    ["retract b1 q c1"],
+    ["what is a1 pq", "why a5 pq", "show pq"],
+]
+
+
+def _per_process(path, script):
+    """The per-process protocol in-process: open, turn, save per call (as `python -m packetlm.engine`)."""
+    from .engine import parse_cli
+    kw = parse_cli(SERVE_FLAGS)[0]
+    out = []
+    for lines in script:
+        e = Engine.open(path, **kw)
+        out.append([e.turn(x) for x in lines])
+        e.save()
+    return out
+
+
+def serve_checks(tmp: Path) -> dict:
+    """G56: the long-lived protocol (packetlm/serve.py) gives the per-process replies and state, its
+    journal recovers every returned call, replay is verified, and a new path starts empty.
+    Each check is guarded: an exception fails that check by name, not the section."""
+    from . import serve
+    from .engine import StateError as SE, parse_cli
+    out = {}
+
+    def guarded(name, fn):
+        try:
+            out[name] = bool(fn())
+        except Exception as exc:  # noqa: BLE001
+            out[name] = False
+            out["_" + name + "_error"] = f"{type(exc).__name__}: {exc}"[:200]
+
+    ref = _per_process(tmp / "s_ref.json", SERVE_SCRIPT)
+    ref_state = json.loads((tmp / "s_ref.json").read_text())["state"]
+
+    def equal():
+        srv = serve.Server(snapshot_every=5)  # 9 calls: the closing snapshot carries calls 6-9
+        got = [srv.call(tmp / "s_srv.json", SERVE_FLAGS, lines)["replies"] for lines in SERVE_SCRIPT]
+        srv.close()
+        srv_state = json.loads((tmp / "s_srv.json").read_text())["state"]
+        return got == ref and srv_state == ref_state and len(ref) == len(SERVE_SCRIPT) \
+            and any("qualified" in " ".join(r) for r in ref)
+    guarded("g56_serve_replies_and_state_equal", equal)
+
+    # crash after 5 calls (snapshot after call 3, journal holds calls 4-5): nothing returned is lost
+    p = tmp / "s_crash.json"
+    jp, bakp = p.with_name(p.name + ".journal"), p.with_name(p.name + ".bak")
+    srv = serve.Server(snapshot_every=3)
+    for lines in SERVE_SCRIPT[:5]:
+        srv.call(p, SERVE_FLAGS, lines)
+    srv.cur.jfh.close()
+    srv.cur = None  # killed: no closing snapshot
+    jcopy, pcopy = jp.read_bytes(), p.read_bytes()
+    bcopy = bakp.read_bytes() if bakp.exists() else None
+
+    def restore(jbytes):
+        p.write_bytes(pcopy)
+        if bcopy is None:
+            bakp.unlink(missing_ok=True)
+        else:
+            bakp.write_bytes(bcopy)
+        jp.write_bytes(jbytes)
+
+    def recovers():
+        restore(jcopy)
+        s1 = serve.Server(snapshot_every=3)
+        r6 = s1.call(p, SERVE_FLAGS, SERVE_SCRIPT[5])
+        rest = [r6["replies"]] + [s1.call(p, SERVE_FLAGS, lines)["replies"] for lines in SERVE_SCRIPT[6:]]
+        s1.close()
+        return r6["load"].get("journal_replayed") == 2 and rest == ref[5:] \
+            and json.loads(p.read_text())["state"] == ref_state
+    guarded("g56_serve_journal_recovers", recovers)
+
+    def reopen(jbytes):
+        restore(jbytes)
+        s2 = serve.Server(snapshot_every=3)
+        try:
+            return s2.call(p, SERVE_FLAGS, SERVE_SCRIPT[5])
+        except SE as exc:
+            return {"error": str(exc)}
+
+    def replay_verified():
+        head, *recs = jcopy.splitlines()
+        bad = json.loads(recs[0])
+        bad["replies_sha256"] = "0" * 64
+        tampered = reopen(b"\n".join([head, json.dumps(bad).encode(), *recs[1:]]) + b"\n")
+        torn = reopen(jcopy + b'{"flags": ["--ans')
+        wrong_base = reopen(b"\n".join([json.dumps({"schema": serve.JOURNAL_SCHEMA, "base": "f" * 64}).encode(),
+                                        *recs]) + b"\n")
+        return len(recs) == 2 and "diverged" in tampered.get("error", "") and torn.get("replies") == ref[5] \
+            and torn["load"].get("journal_replayed") == 2 and "does not extend" in wrong_base.get("error", "")
+    guarded("g56_serve_replay_verified", replay_verified)
+
+    def contained():
+        # crash between a snapshot and the journal restart: the old journal is in the primary; dropped
+        restore(jcopy)
+        s3 = serve.Server(snapshot_every=3)
+        s3.call(p, SERVE_FLAGS, ["capabilities"])  # replays and snapshots (old primary becomes the backup)
+        s3.cur.jfh.close()
+        s3.cur = None
+        jp.write_bytes(jcopy)  # the old journal reappears
+        s4 = serve.Server(snapshot_every=3)
+        r = s4.call(p, SERVE_FLAGS, SERVE_SCRIPT[5])
+        s4.close()
+        return "journal_dropped" in r["load"] and r["replies"] == ref[5]
+    guarded("g56_serve_contained_journal_dropped", contained)
+
+    def starts_empty():
+        # B: a new path starts from a fresh empty state, never the open one
+        s5 = serve.Server()
+        s5.call(tmp / "s_b1.json", SERVE_FLAGS, SERVE_SCRIPT[0] + SERVE_SCRIPT[1])
+        fresh = s5.call(tmp / "s_b2.json", SERVE_FLAGS, ["what is a1 pq", "capabilities"])["replies"]
+        s5.close()
+        e0 = Engine(tmp / "s_b0.json", **parse_cli(SERVE_FLAGS)[0])
+        return fresh == [e0.turn("what is a1 pq"), e0.turn("capabilities")] and fresh[1] == "none"
+    guarded("g56_serve_new_path_starts_empty", starts_empty)
+
+    def validated():
+        # the state after every call is validated in memory, as before every per-process save
+        s6 = serve.Server()
+        s6.call(tmp / "s_v.json", SERVE_FLAGS, SERVE_SCRIPT[0])
+        s6.cur.state["retired"] = []
+        try:
+            s6.handle({"op": "call", "state": str(tmp / "s_v.json"), "flags": SERVE_FLAGS, "lines": ["capabilities"]})
+            return False
+        except SE as exc:
+            return "retired" in str(exc) and s6.cur is None
+    guarded("g56_serve_memory_state_validated", validated)
+    return out
+
 def progs_max_guards():
     from . import programs
     return programs.MAX_GUARDS
@@ -1283,7 +1423,8 @@ def run() -> dict:
                         ("acquisition", acquisition_checks), ("discovery", discovery_checks),
                         ("persistence", persistence_checks), ("fresh_process", fresh_process_checks),
                         ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks),
-                        ("programs", program_checks), ("px", px_checks), ("g49", g49_checks)]:
+                        ("programs", program_checks), ("px", px_checks), ("g49", g49_checks),
+                        ("serve", serve_checks)]:
             # a section that raises is a failed check (named), not a crash that hides the other sections
             try:
                 sections[sec] = fn(tmp)  # no pseudo-check when it completes (verification L3 of 82dd0a2)

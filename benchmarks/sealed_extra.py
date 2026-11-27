@@ -66,3 +66,11 @@ for s in list(range(131, 138)) + [953, 954]:
     toks |= g46.sealed_tokens(g46u.world_unrelated(s))
 (ROOT / "benchmarks/sealed_tokens_g53.json").write_text(json.dumps(sorted(toks)) + "\n")
 print("g53", len(toks))
+# G54 (G46 141-147, G46-U 151-157) and G56 (G46 161-167 + dev 961-962, G46-U 171-177 + dev 963-964)
+toks = set()
+for s in list(range(141, 148)) + list(range(161, 168)) + [961, 962]:
+    toks |= g46.sealed_tokens(g46.world(s))
+for s in list(range(151, 158)) + list(range(171, 178)) + [963, 964]:
+    toks |= g46.sealed_tokens(g46u.world_unrelated(s))
+(ROOT / "benchmarks/sealed_tokens_g54_g56.json").write_text(json.dumps(sorted(toks)) + "\n")
+print("g54-g56", len(toks))

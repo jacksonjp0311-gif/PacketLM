@@ -141,15 +141,24 @@ def ask(T, items):
     return [classify(r, s, n, t) for (s, n, t), r in zip(items, replies)]
 
 
+def load_state(state_path):
+    """The state document's state and file size, or (None, 0) if there is none (measurement only).
+    G56 replaces this to read the long-lived server's open state (packetlm/serve.py `inspect`)."""
+    p = Path(state_path)
+    return (json.loads(p.read_text())["state"], p.stat().st_size) if p.exists() else (None, 0)
+
+
 def cap_of(state_path, name):
-    st = json.loads(Path(state_path).read_text())["state"]
+    st, size = load_state(state_path)
+    if st is None:
+        return None, {}, 0
     cap = st["capabilities"].get(name)
     ver = cap["versions"][cap["current"] - 1] if cap and cap.get("current") else None
-    return ver, st["hypotheses"].get(name, {}), Path(state_path).stat().st_size
+    return ver, st["hypotheses"].get(name, {}), size
 
 
 def expand_base(state_path, seq):
-    st = json.loads(Path(state_path).read_text())["state"]
+    st = load_state(state_path)[0]
 
     def ex(sq):
         out = []
@@ -285,7 +294,7 @@ def _arm_body(seed, arm, fams, sealed_all, d, persistent, flags, rng, log, tasks
             items = [(s, name, truth(triples, task["hidden"], s)) for s in fam["sealed"]]
             rows = ask(T, items)
             a1 = len(log)
-            ver, hyp, size = cap_of(state, name) if state.exists() else (None, {}, 0)
+            ver, hyp, size = cap_of(state, name)
             base = expand_base(state, ver["seq"]) if ver else None
             acquired = bool(ver) and ver["status"] in ("qualified", "provisional") and base == task["hidden"]
             for r in rows:

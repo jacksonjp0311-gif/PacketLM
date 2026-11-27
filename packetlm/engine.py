@@ -420,7 +420,10 @@ class Engine:
             return eng
         raise StateError(f"no valid state: {errors}")
 
-    def save(self) -> None:
+    def finish(self) -> None:
+        """End-of-call work that changes the state (pending growth re-scans, adaptive archiving).
+        `save` runs it first; the G56 long-lived protocol (packetlm/serve.py) runs it after every
+        call and persists by journal instead of a full write."""
         if getattr(self, "_grown", None):
             self._flush_growth()
         if self.retention == "adaptive":
@@ -429,6 +432,9 @@ class Engine:
                 self.stats["archived"] = self.stats.get("archived", 0) + 1
                 self._dirty()
                 self._archived_tok = None
+
+    def save(self) -> None:
+        self.finish()
         if self.lean:
             return self._save_lean()
         validate({"schema": SCHEMA, "checksum": _checksum(self.state), "state": self.state})
@@ -2000,11 +2006,8 @@ class Engine:
         return "unparsed"
 
 
-def main(argv) -> int:
-    if len(argv) < 2:
-        print("usage: python -m packetlm.engine STATE 'line' ['line' ...]")
-        return 2
-    t0 = time.process_time()
+def parse_cli(argv):
+    """Engine keyword arguments from CLI flags; returns (kw, remaining args). Shared with serve.py."""
     flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False),
              "--no-activation": ("activation", False), "--operators": ("operators", True),
              "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True), "--answers": ("answers", True),
@@ -2017,6 +2020,15 @@ def main(argv) -> int:
         if a.startswith("--closed-guards="):
             kw["closed_guards"] = int(a.split("=", 1)[1])
     argv = [a for a in argv if a not in flags and not a.startswith(("--deepen=", "--closed-guards="))]
+    return kw, argv
+
+
+def main(argv) -> int:
+    if len(argv) < 2:
+        print("usage: python -m packetlm.engine STATE 'line' ['line' ...]")
+        return 2
+    t0 = time.process_time()
+    kw, argv = parse_cli(argv)
     eng = Engine.open(argv[0], **kw)
     replies = [eng.turn(line) for line in argv[1:]]
     eng.save()

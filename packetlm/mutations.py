@@ -104,6 +104,13 @@ MUTATIONS = {
     "g54_lean_decode_wrong_role": ('            idx["decode"] = {pack(bits_for(t, 2)).bits: t for t in idx["names"]}', '            idx["decode"] = {pack(bits_for(t, 1)).bits: t for t in idx["names"]}'),
     "n1_no_candidate_keeps_qualified": ('            if cur and cur["status"] == "qualified":\n                self._set_status(name, cur["v"], "provisional",', '            if cur and cur["status"] == "qualified" and reps:\n                self._set_status(name, cur["v"], "provisional",'),
     "g55_budget_ignored": ('            if gap and len(allp) <= self.closed_guards:', '            if gap and len(allp) <= progs.MAX_GUARDS:'),
+    # G56: the long-lived protocol (packetlm/serve.py)
+    "g56_serve_no_journal_record": ('        o.jfh.write((json.dumps({"flags": list(flags), "lines": list(lines), "replies_sha256": _rhash(replies)})\n                     + "\\n").encode())', '        pass', "serve.py"),
+    "g56_serve_replay_unverified": ('                    _need(_rhash(got) == rec["replies_sha256"], f"journal replay diverged at record {k}")', '                    pass', "serve.py"),
+    "g56_serve_new_path_reuses_state": ('        if o is None or o.path != path or o.flags != list(flags):', '        if o is None:', "serve.py"),
+    "g56_serve_memory_unvalidated": ('        validate_lean({"schema": SCHEMA, "checksum": None, "state": eng.state}, checksum_ok=True)', '        pass', "serve.py"),
+    "g56_serve_journal_base_ignored": ('            if head["base"] == have:', '            if True:', "serve.py"),
+    "g56_serve_no_snapshot_on_close": ('        if o.since or not o.path.exists():\n            self._snapshot(o)', '        if False:\n            self._snapshot(o)', "serve.py"),
     "scan_short_horizon": ('        horizon = self.deepen if (max_len is None and self.deepen) else searched', '        horizon = searched'),
     "deepen_past_ambiguity": ('                if any(h["status"] == "supported" for h in live):', '                if sum(h["status"] == "supported" for h in live) == 1:'),
     "compose_skips_bit": ('            acc |= b_rows[low.bit_length() - 1]\n            row ^= low', '            acc |= b_rows[low.bit_length() - 1]\n            row ^= low\n            row &= row - 1', "geom.py"),

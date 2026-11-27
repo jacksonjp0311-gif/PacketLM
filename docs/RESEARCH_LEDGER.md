@@ -938,3 +938,32 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   Report the new protocol's contrasts, with the old per-process accounting as a secondary
   descriptive line. Evidence-gated re-asks are allowed only if their soundness is preserved and
   pre-registered. Design to be pre-registered as G56 before any measurement.
+
+## 2026-11-27 04:45: G56 pre-registration (long-lived engine protocol, equal charging)
+
+- **Mechanism:** `packetlm/serve.py`.
+  - One process serves many calls. A fresh `Engine` handles each call over an in-memory state.
+  - The in-memory state is validated after every call, as before every save.
+  - Durability is an fsync'd journal per call plus lean snapshots (every 64 calls, and on close).
+  - Recovery replays the journal under reply-hash verification; there is no silent
+    reconstruction.
+  - A new path starts empty (B).
+- **Engine refactor** (no behaviour change): `Engine.finish` and `parse_cli`. `benchmarks/g46.py`
+  reads state through a `load_state` hook (measurement only).
+- **Tests:** 6 checks (section `serve`) and 6 mutations, all killed. g44 139/139, suite 227/227,
+  G45 18/18, mutations 98/98.
+- **Control rule (03:59):** every role runs under both protocols on the same seeds (Xl per-process,
+  Xs long-lived), and contrasts are taken within a protocol. Evidence-gated re-asks are not part of
+  G56.
+- **Registered:** comp 161–167, unrel 171–177. Rules Ms, L1s/L3s, L2s and guard E (Xs replies equal
+  Xl). Per-process contrasts are a secondary, descriptive line.
+- **Dev (not evidence; 2 pairs, loaded box):**
+  - Ms is about +0.43 (comp) and +0.71 (unrel).
+  - The protocol cuts B the most (A(Bs‖Bl) about +0.58 / +0.92). Under equal charging, the C ‖ B
+    gap widens: comp 1.8× → 2.4×, unrel 4.3× → 16–18×.
+  - What remains is state-proportional per-call work and maintenance re-asks (77% of Cs on unrel).
+- **Predictions:** Ms claimed on both curricula; L1s, L2s and L3s no claim; E holds.
+- **Sealed registry:** extended with `sealed_tokens_g54_g56.json`: G54 seeds (missed earlier), G56
+  seeds and G56 dev seeds.
+- **G55 registered run:** still running. Its L32 calls take minutes each on the shared box. G56 may
+  run concurrently; load is recorded.
