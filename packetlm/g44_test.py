@@ -1181,7 +1181,8 @@ def g49_checks(tmp) -> dict:
     bak_ok = (tmp / "leanp.json.bak").exists() and (tmp / "leanp.json.bak").read_bytes() == first
     plain_reads = Engine.open(pl).report == {"loaded": "primary"} and Engine.open(pl, lean=True).report == {"loaded": "primary"}
     import re as _re
-    tampered = _re.sub(rb'"turn": \d+}$', b'"turn": 999}', second[:-1]) + b"}"  # structurally valid edit
+    # structurally valid edit of the state's turn counter (the first key in insertion order since M1)
+    tampered = _re.sub(rb'"state": \{"turn": \d+', b'"state": {"turn": 999', second, count=1)
     pl.write_bytes(tampered)
     try:
         tam = Engine.open(pl, lean=True).report
@@ -1410,6 +1411,71 @@ def serve_checks(tmp: Path) -> dict:
     guarded("g56_serve_memory_state_validated", validated)
     return out
 
+def verify_3e2783c_checks(tmp: Path) -> dict:
+    """verify-3e2783c: M1 (dict order is observable, so every protocol keeps insertion order),
+    N1b (base re-acquisition with no candidate caps qualified), Low 1 (lean load: exactly one JSON
+    value after the prefix)."""
+    from . import serve
+    import hashlib
+    from .engine import parse_cli, _read_doc, _lean_prefix, empty_state, StateError as SE
+    out = {}
+    script = [["fact a r b", "fact c r d", "example zz: a -> b", "example zz: c -> d",
+               "example aa: a -> b", "example aa: c -> d"],  # zz taught before aa
+              ["correct a r q"], ["capabilities", "show zz", "show aa"]]
+
+    def per_process(path, flags_by_call):
+        res = []
+        for lines, flags in zip(script, flags_by_call):
+            e = Engine.open(path, **parse_cli(flags)[0])
+            res.append([e.turn(x) for x in lines])
+            e.save()
+        return res
+    plain = per_process(tmp / "o_plain.json", [["--answers"]] * 3)
+    lean = per_process(tmp / "o_lean.json", [["--answers", "--lean"]] * 3)
+    mixed = per_process(tmp / "o_mixed.json", [["--answers", "--lean"], ["--answers"], ["--answers", "--lean"]])
+    srv = serve.Server()
+    served = [srv.call(tmp / "o_srv.json", ["--answers", "--lean"], lines)["replies"] for lines in script]
+    srv.close()
+    corr = plain[1][0]
+    out["m1_insertion_order_exact"] = plain == lean == mixed == served \
+        and "retired example zz" in corr and corr.index("retired example zz") < corr.index("retired example aa")
+    # N1b: base mode (no --programs)
+    e = Engine(tmp / "o_n1b.json", answers=True)
+    for x in ["fact a ra b", "fact c ra d", "fact e ra f", "example kk: a -> b", "example kk: c -> d"]:
+        e.turn(x)
+    before = e.version("kk")["status"]
+    e.turn("fact a ra x")  # ra(a) = {b, x}: no program is supported on kk's own example
+    shown = e.turn("show kk")  # a non-fact line flushes the growth re-scan
+    v = e.version("kk")
+    out["n1b_base_no_candidate_caps_at_provisional"] = before == "qualified" and v["status"] == "provisional" \
+        and v["history"][-1]["reason"] == "re-acquisition found no candidate" \
+        and e.state["hypotheses"]["kk"].get("candidate") is None and "provisional" in shown
+    # Low 1: a duplicate top-level "state" after the hashed text is refused by lean and non-lean loads
+    one = empty_state()
+    e1 = Engine(tmp / "o_two.json")
+    e1.turn("fact a r b")
+    e1.turn("fact c r d")
+    two = e1.state
+    body = (json.dumps(two) + ', "state": ' + json.dumps(one)).encode()
+    raw = _lean_prefix(SCHEMA, hashlib.sha256(body).hexdigest()) + body + b"}"
+    bad = tmp / "o_dup.json"
+    bad.write_bytes(raw)
+    refused = []
+    for kw in ({"lean": True}, {}):
+        try:
+            Engine.open(bad, **kw)
+            refused.append(False)
+        except SE:
+            refused.append(True)
+    good = tmp / "o_good.json"
+    e2 = Engine(good, lean=True)
+    e2.turn("fact a r b")
+    e2.save()
+    out["low1_single_value_after_prefix"] = refused == [True, True] and _read_doc(raw)[1] is False \
+        and _read_doc(good.read_bytes())[1] is True and Engine.open(good, lean=True).state["facts"] == e2.state["facts"]
+    return out
+
+
 def progs_max_guards():
     from . import programs
     return programs.MAX_GUARDS
@@ -1424,7 +1490,7 @@ def run() -> dict:
                         ("persistence", persistence_checks), ("fresh_process", fresh_process_checks),
                         ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks),
                         ("programs", program_checks), ("px", px_checks), ("g49", g49_checks),
-                        ("serve", serve_checks)]:
+                        ("serve", serve_checks), ("verify_3e2783c", verify_3e2783c_checks)]:
             # a section that raises is a failed check (named), not a crash that hides the other sections
             try:
                 sections[sec] = fn(tmp)  # no pseudo-check when it completes (verification L3 of 82dd0a2)

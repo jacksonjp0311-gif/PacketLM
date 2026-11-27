@@ -967,3 +967,49 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   seeds and G56 dev seeds.
 - **G55 registered run:** still running. Its L32 calls take minutes each on the shared box. G56 may
   run concurrently; load is recorded.
+
+## 2026-11-27 04:45: G55 registered run failed; G56 first start aborted; verify-3e2783c response
+
+- **G55 registered run FAILED** at 04:22:14 EST.
+  - Cause: an L32 call exceeded the 600 s per-call wall limit (L32_562). Load average was up to
+    about 13 from overlapping verifier and builder jobs.
+  - The pool's results, held in memory, were lost: no receipt, and no rule (Q, C) is decided.
+  - Seeds 561–567 are consumed.
+  - What survives is descriptive only. F8 and F32 finished; every final version is provisional
+    (56/56 each). Kept blockers per seed: F32 96–99, F8 32–35.
+  - Final states and blocker programs are in `docs/evidence/g55/`, as are the dev blocker programs
+    (verify-3e2783c Info).
+  - A re-run needs a fresh pre-registration: new seeds, run alone, per-arm results written as they
+    finish, and an L32 wall limit. It is not started in this chunk.
+- **G56 first start (ca9f3a1) aborted** at 04:20:31, 17 s after starting, when verify-3e2783c
+  arrived. Its artifacts were deleted unread. Seeds 161–167 / 171–177 are consumed and sealed.
+  Amendment 1 in docs/G56.md moves to new seeds 181–187 / 191–197.
+- **verify-3e2783c (dde32a2) response:**
+  - **M1 (Medium), fixed.**
+    - A lean save keeps insertion order, and the checksum covers exactly the written text. One
+      parse, `_read_doc`, serves lean and non-lean loads.
+    - Check `m1_insertion_order_exact`: plain, lean, mixed and long-lived protocols, with `zz`
+      taught before `aa`. Mutation `m1_lean_sorted_keys`.
+    - G54's 77 registered arm×seed reply hashes and process counts are identical on the fixed
+      engine (`docs/evidence/g56/g54_hash_recheck.json`). No registered hash changed.
+  - **N1b (Medium), fixed.** Base re-acquisition with no candidate caps a qualified version at
+    provisional. The verifier's repro now ends `[provisional]`, "re-acquisition found no
+    candidate". Check `n1b_base_no_candidate_caps_at_provisional`; mutation
+    `n1b_base_no_candidate_keeps_qualified`.
+    - A cap on the "no value example" path was tried, but no reachable case was found (a contrary
+      correction suspends first), so it was removed rather than left unchecked.
+  - **Low 1, fixed.** Exactly one JSON value must follow the prefix; the duplicate-key file is
+    refused by both loads. Check `low1_single_value_after_prefix`; mutation
+    `low1_trailing_text_accepted`.
+  - **Low 2.** f0 is restated in G54.md: mostly engine import cost, not a protocol constant, and
+    "structural" means the maintenance re-ask processes (comp 168, unrel 504).
+  - **Low 3.** The G54 unrel Cl+maint‖Pl+maint interval wording is corrected: entirely below 0.
+  - **Low 4.** The G55.md §2 sentence is corrected: at N = 16 the h1gap world is qualified, gap 0,
+    0 blockers.
+  - **Info.**
+    - Blocker programs are now kept in the G55 evidence.
+    - Load is disclosed (G55.md).
+    - From now on, no dev jobs run beside registered timing runs.
+  - The `g54_lean_persistence_guarantees` tamper edit was re-anchored to the new key order; its
+    intent is unchanged.
+- **Tests:** g44 142/142, suite 230/230 (11/11), G45 18/18, mutations 101/101 (0 crash kills).

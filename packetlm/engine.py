@@ -23,6 +23,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import resource
 import sys
 import time
@@ -147,7 +148,7 @@ def validate(doc, checksum_ok=False) -> dict:
     """Full nested validation. Schema 3 facts carry no packet (bind is derived on demand);
     a schema-2 document is accepted only for migration and its stored packets must bind.
     `checksum_ok`: the caller has already verified the checksum against the exact bytes the state
-    was parsed from (G54 `--lean`, see `_lean_checksum_ok`); every other check still runs."""
+    was parsed from (see `_read_doc`); every other check still runs."""
     _need(isinstance(doc, dict) and doc.get("schema") in (SCHEMA, SCHEMA_V2), "schema mismatch")
     v2 = doc["schema"] == SCHEMA_V2
     state = doc.get("state")
@@ -316,18 +317,31 @@ def _lean_prefix(schema, checksum) -> bytes:
     return ('{"schema": ' + json.dumps(schema) + ', "checksum": ' + json.dumps(checksum) + ', "state": ').encode()
 
 
-def _lean_checksum_ok(raw: bytes, doc) -> bool:
-    """G54 `--lean`: a lean save writes the state as its canonical text (sort_keys) after a fixed
-    prefix, and the checksum is sha256 of exactly those bytes. If the bytes the state was parsed
-    from hash to the stored checksum, the old check (sha256 of the canonical re-serialization of
-    the parsed state) holds too: canonical text round-trips, and a non-canonical text with the
-    same hash would be a SHA-256 collision. Any other file falls back to the old check."""
-    if not (isinstance(doc, dict) and isinstance(doc.get("checksum"), str) and "schema" in doc):
-        return False
-    pre = _lean_prefix(doc["schema"], doc["checksum"])
-    if not (raw.startswith(pre) and raw.endswith(b"}")):
-        return False
-    return hashlib.sha256(raw[len(pre):-1]).hexdigest() == doc["checksum"]
+_DOC_PREFIX = re.compile(rb'\{"schema": ("[^"\\]*"), "checksum": ("[0-9a-f]{64}"), "state": ')
+_DECODER = json.JSONDecoder()
+
+
+def _read_doc(raw: bytes):
+    """Parse a state document once; returns (doc, checksum_ok).
+
+    checksum_ok is True exactly when the file is `prefix + T + "}"` (the layout every save writes),
+    T parses as one JSON value that ends right before the closing brace (so nothing, such as a
+    duplicate top-level key, follows it: verification Low 1 of 3e2783c), and sha256(T) equals the
+    stored checksum. A G54/G56 lean save writes T as the state's insertion-order text and stores
+    sha256(T); a non-lean save stores the canonical checksum, for which this test is usually False
+    and `validate` recomputes it. Any other file is parsed by json.loads with checksum_ok False."""
+    m = _DOC_PREFIX.match(raw)
+    if m and raw.endswith(b"}"):
+        try:
+            text = raw.decode()
+            state, end = _DECODER.raw_decode(text, m.end())  # the prefix is ASCII: byte = char offset
+        except ValueError:
+            state, end = None, -1
+        if end == len(text) - 1:
+            doc = {"schema": json.loads(m.group(1)), "checksum": json.loads(m.group(2)), "state": state}
+            ok = hashlib.sha256(raw[m.end():-1]).hexdigest() == doc["checksum"]
+            return doc, ok
+    return json.loads(raw), False
 
 
 def _write_atomic(path: Path, data: bytes) -> None:
@@ -401,8 +415,8 @@ class Engine:
                 continue
             try:
                 raw = p.read_bytes()
-                doc = json.loads(raw)
-                state = validate_lean(doc, _lean_checksum_ok(raw, doc)) if kw.get("lean") else validate(doc)
+                doc, ok = _read_doc(raw)
+                state = validate_lean(doc, ok) if kw.get("lean") else validate(doc, ok)
             except (ValueError, StateError) as exc:
                 errors[label] = str(exc)
                 continue
@@ -443,7 +457,7 @@ class Engine:
             try:
                 cur = self.path.read_bytes()
                 if hashlib.sha256(cur).hexdigest() != self._known_bytes:  # bytes this process did not validate
-                    validate(json.loads(cur))
+                    validate(*_read_doc(cur))
                 _write_atomic(self.path.with_name(self.path.name + ".bak"), cur)
             except (ValueError, StateError):
                 pass  # never back up a corrupt primary over a good backup
@@ -461,10 +475,12 @@ class Engine:
     def _save_lean(self) -> None:
         """G54: the same guarantees as `save` -- full validation before writing, the previous good
         primary kept as the backup, atomic replace, fsync -- with the state serialized once. The
-        checksum is sha256 of the canonical state text, which is exactly what `_checksum` computes,
-        so a non-lean engine opens the file unchanged. The backup is a hard link to the previous
+        checksum is sha256 of the written state text (insertion order since verification M1 of
+        3e2783c; `_read_doc` checks it for lean and non-lean engines alike). The backup is a hard link to the previous
         primary's inode (the primary is then replaced by a new inode), not a byte copy."""
-        text = json.dumps(self.state, sort_keys=True).encode()
+        # insertion-order text, as a non-lean save writes it: dict order is observable in replies
+        # (verification M1 of 3e2783c), so the saved order must be the in-memory order
+        text = json.dumps(self.state).encode()
         chk = hashlib.sha256(text).hexdigest()
         validate_lean({"schema": SCHEMA, "checksum": chk, "state": self.state}, checksum_ok=True)
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -473,8 +489,7 @@ class Engine:
             try:
                 cur = self.path.read_bytes()
                 if hashlib.sha256(cur).hexdigest() != self._known_bytes:  # bytes this process did not validate
-                    doc0 = json.loads(cur)
-                    validate_lean(doc0, _lean_checksum_ok(cur, doc0))
+                    validate_lean(*_read_doc(cur))
                 tmpb = self.path.with_name(self.path.name + ".bak.tmp")
                 if tmpb.exists():
                     tmpb.unlink()
@@ -1283,8 +1298,11 @@ class Engine:
             result["result"] = "ambiguous" if supported else "none"
             result["supported"] = [h["seq"] for h in supported]
             cur = self.version(name)
-            if cur and cur["status"] == "qualified" and supported:
-                self._set_status(name, cur["v"], "provisional", "several supported programs")
+            # verification N1b of 3e2783c: as in programs mode (N1 of 050bebd), a base re-acquisition
+            # that does not return the current version (none found, or several) caps it at provisional
+            if cur and cur["status"] == "qualified":
+                self._set_status(name, cur["v"], "provisional",
+                                 "several supported programs" if supported else "re-acquisition found no candidate")
             return result
         cand = supported[0]
         horizon = self.deepen if (max_len is None and self.deepen) else searched

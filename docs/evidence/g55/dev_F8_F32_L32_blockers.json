@@ -1,0 +1,2741 @@
+{
+ "F32_9101.json": {
+  "mtime": "03:26:11",
+  "turn": 811,
+  "capabilities": {
+   "dlsrvt": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:xazgfh"
+      ],
+      "history": [
+       {
+        "turn": 128,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 130,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "superseded",
+      "seq": [
+       "prog:is:ttgxoa:hdygao|rel:xazgfh>self"
+      ],
+      "history": [
+       {
+        "turn": 137,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 142,
+        "status": "superseded",
+        "reason": "replaced by v3"
+       }
+      ]
+     },
+     {
+      "v": 3,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:xazgfh>is:rvwnka:nvvlzl|rel:xazgfh>self"
+      ],
+      "history": [
+       {
+        "turn": 141,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 3,
+    "candidate": [
+     "prog:rel:xazgfh>is:rvwnka:nvvlzl|rel:xazgfh>self"
+    ],
+    "scan": {
+     "guard_gap": 64,
+     "combos": 124668,
+     "complete": true,
+     "blocking_n": 1,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|not:rvwnka:pmogdd>rel:xazgfh>self"
+     ]
+    ]
+   },
+   "nqqbwd": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:cap:dlsrvt@3>rel:ttgxoa"
+      ],
+      "history": [
+       {
+        "turn": 182,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:cap:dlsrvt@3>rel:ttgxoa"
+    ],
+    "scan": {
+     "guard_gap": 63,
+     "combos": 196587,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:rvwnka:vwjtuw|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:rvwnka:vwjtuw>rel:rvwnka|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:egsaph:gfhhxw>is:rvwnka:orspva|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:rvwnka:pmogdd>is:xazgfh:eqittn|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:xazgfh:eqittn>rel:egsaph|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:xazgfh:eqittn>not:rvwnka:isooxc|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:egsaph>is:rvwnka:pmogdd>is:xazgfh:eqittn|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>rel:egsaph>is:rvwnka:orspva|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>rel:xazgfh>is:egsaph:gfhhxw|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:isooxc>is:xazgfh:eqittn|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:pmogdd>rel:egsaph|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:pmogdd>not:xazgfh:eqittn|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:cap:dlsrvt@3>rel:ttgxoa>is:rvwnka:vwjtuw|not:rvwnka:nvvlzl>rel:rvwnka"
+     ],
+     [
+      "prog:is:egsaph:ayrrlh>rel:xazgfh>is:rvwnka:pmogdd|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:egsaph:gfhhxw>rel:xazgfh>is:rvwnka:nvvlzl|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:egsaph:gfhhxw>is:rvwnka:orspva>rel:rvwnka|cap:dlsrvt@3>rel:ttgxoa"
+     ]
+    ]
+   },
+   "cavnoq": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:owvcyw"
+      ],
+      "history": [
+       {
+        "turn": 274,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 278,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "provisional",
+      "seq": [
+       "prog:is:eonmbz:bkqhpv>rel:migrag|rel:owvcyw"
+      ],
+      "history": [
+       {
+        "turn": 280,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 2,
+    "candidate": [
+     "prog:is:eonmbz:bkqhpv>rel:migrag|rel:owvcyw"
+    ],
+    "scan": {
+     "guard_gap": 0,
+     "combos": 291339,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 39,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:eonmbz:bkqhpv>rel:migrag|not:migrag:bhalur>rel:owvcyw"
+     ],
+     [
+      "prog:is:eonmbz:bkqhpv>rel:migrag|not:migrag:ejqtyd>rel:owvcyw"
+     ],
+     [
+      "prog:is:eonmbz:bkqhpv>rel:migrag|not:migrag:opyqvi>rel:owvcyw"
+     ],
+     [
+      "prog:is:eonmbz:bkqhpv>rel:migrag|not:migrag:qrnzli>rel:owvcyw"
+     ],
+     [
+      "prog:is:eonmbz:yhvuyv>rel:owvcyw|not:migrag:dvragl>rel:migrag"
+     ],
+     [
+      "prog:is:eonmbz:yhvuyv>rel:owvcyw|not:migrag:ekwyfb>rel:migrag"
+     ],
+     [
+      "prog:is:eonmbz:yhvuyv>rel:owvcyw|not:migrag:esuyzx>rel:migrag"
+     ],
+     [
+      "prog:is:eonmbz:yhvuyv>rel:owvcyw|not:migrag:imnngb>rel:migrag"
+     ],
+     [
+      "prog:is:eonmbz:bkqhpv>not:migrag:dvragl>rel:migrag|rel:owvcyw"
+     ],
+     [
+      "prog:is:eonmbz:bkqhpv>not:migrag:ekwyfb>rel:migrag|rel:owvcyw"
+     ],
+     [
+      "prog:is:eonmbz:bkqhpv>not:migrag:esuyzx>rel:migrag|rel:owvcyw"
+     ],
+     [
+      "prog:is:eonmbz:bkqhpv>not:migrag:imnngb>rel:migrag|rel:owvcyw"
+     ],
+     [
+      "prog:is:eonmbz:yhvuyv>not:migrag:bhalur>rel:owvcyw|rel:migrag"
+     ],
+     [
+      "prog:is:eonmbz:yhvuyv>not:migrag:ejqtyd>rel:owvcyw|rel:migrag"
+     ],
+     [
+      "prog:is:eonmbz:yhvuyv>not:migrag:opyqvi>rel:owvcyw|rel:migrag"
+     ],
+     [
+      "prog:is:eonmbz:yhvuyv>not:migrag:qrnzli>rel:owvcyw|rel:migrag"
+     ]
+    ]
+   },
+   "nsnylp": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:tdiiwu>is:ipvrad:pdkiku"
+      ],
+      "history": [
+       {
+        "turn": 372,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:rel:tdiiwu>is:ipvrad:pdkiku"
+    ],
+    "scan": {
+     "guard_gap": 0,
+     "combos": 149277,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 40,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:not:tdiiwu:arqags>rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:not:tdiiwu:balxdc>rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:not:tdiiwu:bmcasp>rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:not:tdiiwu:fifjzl>rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:not:tdiiwu:gtxpyz>rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:not:tdiiwu:nmwmtm>rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:is:tdiiwu:arqags|rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:is:tdiiwu:balxdc|rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:is:tdiiwu:bmcasp|rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:is:tdiiwu:fifjzl|rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:is:tdiiwu:gtxpyz|rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:is:tdiiwu:nmwmtm|rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:is:tdiiwu:arqags|not:tdiiwu:balxdc>rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:is:tdiiwu:arqags|not:tdiiwu:bmcasp>rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:is:tdiiwu:arqags|not:tdiiwu:fifjzl>rel:tdiiwu>is:ipvrad:pdkiku"
+     ],
+     [
+      "prog:is:tdiiwu:arqags|not:tdiiwu:gtxpyz>rel:tdiiwu>is:ipvrad:pdkiku"
+     ]
+    ]
+   },
+   "xvwiie": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:adcplg"
+      ],
+      "history": [
+       {
+        "turn": 538,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 540,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "suspended",
+      "seq": [
+       "prog:is:adcplg:ctcgrr|rel:adcplg>self"
+      ],
+      "history": [
+       {
+        "turn": 543,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 557,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 3,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:adcplg>is:adcplg:ctcgrr|rel:adcplg>self"
+      ],
+      "history": [
+       {
+        "turn": 559,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 3,
+    "candidate": [
+     "prog:rel:adcplg>is:adcplg:ctcgrr|rel:adcplg>self"
+    ],
+    "scan": {
+     "guard_gap": 65,
+     "combos": 114606,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "rsormm": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:cap:xvwiie@3>rel:fwgbwj"
+      ],
+      "history": [
+       {
+        "turn": 594,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:cap:xvwiie@3>rel:fwgbwj"
+    ],
+    "scan": {
+     "guard_gap": 64,
+     "combos": 170057,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:slxczi:viufqu|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:elbyea:asozuw|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:elbyea>is:adcplg:eeebtf|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:elbyea>is:elbyea:asozuw|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:is:slxczi:viufqu>rel:slxczi|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:is:adcplg:eeebtf>is:slxczi:bbhkvh|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:is:elbyea:asozuw>is:slxczi:eerklg|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:is:slxczi:bbhkvh>not:elbyea:asozuw|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>rel:adcplg>is:slxczi:jqyktr|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>rel:elbyea>is:elbyea:asozuw|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>rel:elbyea>is:slxczi:eerklg|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:elbyea:asozuw>rel:adcplg|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:elbyea:asozuw>rel:elbyea|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:elbyea:asozuw>rel:slxczi|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:elbyea:asozuw>cap:xvwiie@3|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:slxczi:jqyktr>not:adcplg:eeebtf|cap:xvwiie@3>rel:fwgbwj"
+     ]
+    ]
+   },
+   "ulczhm": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:gzoabc"
+      ],
+      "history": [
+       {
+        "turn": 676,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 680,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "provisional",
+      "seq": [
+       "prog:is:hloraz:alibhx>rel:gzoabc|rel:iiexgy"
+      ],
+      "history": [
+       {
+        "turn": 682,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 2,
+    "candidate": [
+     "prog:is:hloraz:alibhx>rel:gzoabc|rel:iiexgy"
+    ],
+    "scan": {
+     "guard_gap": 0,
+     "combos": 291339,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 39,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:hloraz:alibhx>rel:gzoabc|not:gzoabc:hcidyt>rel:iiexgy"
+     ],
+     [
+      "prog:is:hloraz:alibhx>rel:gzoabc|not:gzoabc:nsrjrq>rel:iiexgy"
+     ],
+     [
+      "prog:is:hloraz:alibhx>rel:gzoabc|not:gzoabc:wbccgl>rel:iiexgy"
+     ],
+     [
+      "prog:is:hloraz:alibhx>rel:gzoabc|not:gzoabc:xuwyja>rel:iiexgy"
+     ],
+     [
+      "prog:is:hloraz:ynpvlc>rel:iiexgy|not:gzoabc:awesib>rel:gzoabc"
+     ],
+     [
+      "prog:is:hloraz:ynpvlc>rel:iiexgy|not:gzoabc:luhcoo>rel:gzoabc"
+     ],
+     [
+      "prog:is:hloraz:ynpvlc>rel:iiexgy|not:gzoabc:ndkpao>rel:gzoabc"
+     ],
+     [
+      "prog:is:hloraz:ynpvlc>rel:iiexgy|not:gzoabc:zqzxhe>rel:gzoabc"
+     ],
+     [
+      "prog:is:hloraz:alibhx>not:gzoabc:awesib>rel:gzoabc|rel:iiexgy"
+     ],
+     [
+      "prog:is:hloraz:alibhx>not:gzoabc:luhcoo>rel:gzoabc|rel:iiexgy"
+     ],
+     [
+      "prog:is:hloraz:alibhx>not:gzoabc:ndkpao>rel:gzoabc|rel:iiexgy"
+     ],
+     [
+      "prog:is:hloraz:alibhx>not:gzoabc:zqzxhe>rel:gzoabc|rel:iiexgy"
+     ],
+     [
+      "prog:is:hloraz:ynpvlc>not:gzoabc:hcidyt>rel:iiexgy|rel:gzoabc"
+     ],
+     [
+      "prog:is:hloraz:ynpvlc>not:gzoabc:nsrjrq>rel:iiexgy|rel:gzoabc"
+     ],
+     [
+      "prog:is:hloraz:ynpvlc>not:gzoabc:wbccgl>rel:iiexgy|rel:gzoabc"
+     ],
+     [
+      "prog:is:hloraz:ynpvlc>not:gzoabc:xuwyja>rel:iiexgy|rel:gzoabc"
+     ]
+    ]
+   },
+   "mqxadf": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:lhixvq>is:yhnhrr:hzstej"
+      ],
+      "history": [
+       {
+        "turn": 774,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:rel:lhixvq>is:yhnhrr:hzstej"
+    ],
+    "scan": {
+     "guard_gap": 0,
+     "combos": 154737,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 40,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:not:lhixvq:djzdsb>rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:not:lhixvq:efmgxr>rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:not:lhixvq:hzoujg>rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:not:lhixvq:hzpvbt>rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:not:lhixvq:ipbved>rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:not:lhixvq:vnfffu>rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:is:lhixvq:djzdsb|rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:is:lhixvq:efmgxr|rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:is:lhixvq:hzoujg|rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:is:lhixvq:hzpvbt|rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:is:lhixvq:ipbved|rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:is:lhixvq:vnfffu|rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:is:yhnhrr:poclct|rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:is:lhixvq:djzdsb|not:lhixvq:efmgxr>rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:is:lhixvq:djzdsb|not:lhixvq:hzoujg>rel:lhixvq>is:yhnhrr:hzstej"
+     ],
+     [
+      "prog:is:lhixvq:djzdsb|not:lhixvq:hzpvbt>rel:lhixvq>is:yhnhrr:hzstej"
+     ]
+    ]
+   }
+  }
+ },
+ "F32_9102.json": {
+  "mtime": "03:26:17",
+  "turn": 832,
+  "capabilities": {
+   "qddskc": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:ifgtgd"
+      ],
+      "history": [
+       {
+        "turn": 124,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 126,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "suspended",
+      "seq": [
+       "prog:is:ifgtgd:hiqkcd|rel:ifgtgd>self"
+      ],
+      "history": [
+       {
+        "turn": 133,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 145,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 3,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:ifgtgd>is:ifgtgd:hiqkcd|rel:ifgtgd>self"
+      ],
+      "history": [
+       {
+        "turn": 147,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 3,
+    "candidate": [
+     "prog:rel:ifgtgd>is:ifgtgd:hiqkcd|rel:ifgtgd>self"
+    ],
+    "scan": {
+     "guard_gap": 63,
+     "combos": 167174,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "meifli": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:cap:qddskc@3>rel:yvkogg"
+      ],
+      "history": [
+       {
+        "turn": 186,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:cap:qddskc@3>rel:yvkogg"
+    ],
+    "scan": {
+     "guard_gap": 65,
+     "combos": 67289,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:rel:cuttgd>rel:ifgtgd>is:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:rel:ifgtgd>is:ifgtgd:xtibkp>is:rvvidg:ozhlno|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:rel:ifgtgd>is:rvvidg:ozhlno>rel:cuttgd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:ifgtgd:xtibkp>rel:cuttgd>not:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:ifgtgd:xtibkp>not:rvvidg:ozhlno>not:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:rvvidg:ozhlno>rel:cuttgd>is:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:rvvidg:ozhlno>rel:cuttgd>not:rvvidg:ozhlno|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:rvvidg:ozhlno>rel:ifgtgd>rel:cuttgd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:rvvidg:ozhlno>rel:ifgtgd>is:ifgtgd:xtibkp|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:rvvidg:ozhlno>rel:ifgtgd>is:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:ifgtgd:xtibkp>rel:cuttgd>is:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:ifgtgd:xtibkp>rel:ifgtgd>is:ifgtgd:hiqkcd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:rvvidg:ozhlno>not:rvvidg:smrtyd>rel:cuttgd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:rvvidg:ozhlno>not:rvvidg:smrtyd>cap:qddskc@3|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:rvvidg:smrtyd>rel:cuttgd>not:rvvidg:ozhlno|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:rvvidg:smrtyd>rel:ifgtgd>rel:cuttgd|cap:qddskc@3>rel:yvkogg"
+     ]
+    ]
+   },
+   "kujaan": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:vxsrwc"
+      ],
+      "history": [
+       {
+        "turn": 277,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 281,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "provisional",
+      "seq": [
+       "prog:is:khxvsm:jpgtta>rel:aahaqi|rel:vxsrwc"
+      ],
+      "history": [
+       {
+        "turn": 283,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 2,
+    "candidate": [
+     "prog:is:khxvsm:jpgtta>rel:aahaqi|rel:vxsrwc"
+    ],
+    "scan": {
+     "guard_gap": 0,
+     "combos": 291339,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 39,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:khxvsm:jpgtta>rel:aahaqi|not:aahaqi:afzlaa>rel:vxsrwc"
+     ],
+     [
+      "prog:is:khxvsm:jpgtta>rel:aahaqi|not:aahaqi:lfklhf>rel:vxsrwc"
+     ],
+     [
+      "prog:is:khxvsm:jpgtta>rel:aahaqi|not:aahaqi:pztdvj>rel:vxsrwc"
+     ],
+     [
+      "prog:is:khxvsm:jpgtta>rel:aahaqi|not:aahaqi:tmycsi>rel:vxsrwc"
+     ],
+     [
+      "prog:is:khxvsm:siwscm>rel:vxsrwc|not:aahaqi:jgejeo>rel:aahaqi"
+     ],
+     [
+      "prog:is:khxvsm:siwscm>rel:vxsrwc|not:aahaqi:jthchw>rel:aahaqi"
+     ],
+     [
+      "prog:is:khxvsm:siwscm>rel:vxsrwc|not:aahaqi:luxssx>rel:aahaqi"
+     ],
+     [
+      "prog:is:khxvsm:siwscm>rel:vxsrwc|not:aahaqi:qsrnti>rel:aahaqi"
+     ],
+     [
+      "prog:is:khxvsm:jpgtta>not:aahaqi:jgejeo>rel:aahaqi|rel:vxsrwc"
+     ],
+     [
+      "prog:is:khxvsm:jpgtta>not:aahaqi:jthchw>rel:aahaqi|rel:vxsrwc"
+     ],
+     [
+      "prog:is:khxvsm:jpgtta>not:aahaqi:luxssx>rel:aahaqi|rel:vxsrwc"
+     ],
+     [
+      "prog:is:khxvsm:jpgtta>not:aahaqi:qsrnti>rel:aahaqi|rel:vxsrwc"
+     ],
+     [
+      "prog:is:khxvsm:siwscm>not:aahaqi:afzlaa>rel:vxsrwc|rel:aahaqi"
+     ],
+     [
+      "prog:is:khxvsm:siwscm>not:aahaqi:lfklhf>rel:vxsrwc|rel:aahaqi"
+     ],
+     [
+      "prog:is:khxvsm:siwscm>not:aahaqi:pztdvj>rel:vxsrwc|rel:aahaqi"
+     ],
+     [
+      "prog:is:khxvsm:siwscm>not:aahaqi:tmycsi>rel:vxsrwc|rel:aahaqi"
+     ]
+    ]
+   },
+   "hrroxz": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:fylcln>is:wfzvny:tbwnqs"
+      ],
+      "history": [
+       {
+        "turn": 375,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:rel:fylcln>is:wfzvny:tbwnqs"
+    ],
+    "scan": {
+     "guard_gap": 0,
+     "combos": 157467,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 40,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:not:fylcln:adzyiv>rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:not:fylcln:anhhdt>rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:not:fylcln:ecybrf>rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:not:fylcln:fagbfa>rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:not:fylcln:gxwukz>rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:not:fylcln:hihpow>rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:is:fylcln:adzyiv|rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:is:fylcln:anhhdt|rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:is:fylcln:ecybrf|rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:is:fylcln:fagbfa|rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:is:fylcln:gxwukz|rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:is:fylcln:hihpow|rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:is:wfzvny:bowfti|rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:is:fylcln:adzyiv|not:fylcln:anhhdt>rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:is:fylcln:adzyiv|not:fylcln:ecybrf>rel:fylcln>is:wfzvny:tbwnqs"
+     ],
+     [
+      "prog:is:fylcln:adzyiv|not:fylcln:fagbfa>rel:fylcln>is:wfzvny:tbwnqs"
+     ]
+    ]
+   },
+   "tgpwnl": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:mcwdlu"
+      ],
+      "history": [
+       {
+        "turn": 541,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 543,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "suspended",
+      "seq": [
+       "prog:is:mcwdlu:uhzogy|rel:mcwdlu>self"
+      ],
+      "history": [
+       {
+        "turn": 545,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 565,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 3,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:mcwdlu>is:mcwdlu:uhzogy|rel:mcwdlu>self"
+      ],
+      "history": [
+       {
+        "turn": 567,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 3,
+    "candidate": [
+     "prog:rel:mcwdlu>is:mcwdlu:uhzogy|rel:mcwdlu>self"
+    ],
+    "scan": {
+     "guard_gap": 63,
+     "combos": 196482,
+     "complete": true,
+     "blocking_n": 1,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:rel:mcwdlu>is:mcwdlu:uhzogy|rel:mcwdlu>not:mcwdlu:nmhpdc>self"
+     ]
+    ]
+   },
+   "bnrekv": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:cap:tgpwnl@3>rel:irbrfc"
+      ],
+      "history": [
+       {
+        "turn": 602,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:cap:tgpwnl@3>rel:irbrfc"
+    ],
+    "scan": {
+     "guard_gap": 63,
+     "combos": 136728,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:xzikzv:ihlgwc|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>is:vtuodi:okxyzw|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:vtuodi>is:vtuodi:pkvatl|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:is:xzikzv:ihlgwc>rel:xzikzv|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:is:mcwdlu:dyzqbd>is:xzikzv:grfpir|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:is:vtuodi:oewvqf>not:mcwdlu:dyzqbd|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:is:vtuodi:okxyzw>not:xzikzv:grfpir|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:mcwdlu>is:vtuodi:oewvqf|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:mcwdlu>is:vtuodi:okxyzw|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:mcwdlu>is:vtuodi:pkvatl|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:vtuodi>is:mcwdlu:dyzqbd|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:vtuodi>is:vtuodi:oewvqf|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:vtuodi>is:vtuodi:pkvatl|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>is:mcwdlu:dyzqbd>rel:vtuodi|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>is:mcwdlu:dyzqbd>is:vtuodi:oewvqf|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>is:vtuodi:okxyzw>rel:mcwdlu|cap:tgpwnl@3>rel:irbrfc"
+     ]
+    ]
+   },
+   "bjtgch": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:tbgudl"
+      ],
+      "history": [
+       {
+        "turn": 693,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 697,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "provisional",
+      "seq": [
+       "prog:is:jdnyxv:rwzahw>rel:tbgudl|rel:nkmrsv"
+      ],
+      "history": [
+       {
+        "turn": 699,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 2,
+    "candidate": [
+     "prog:is:jdnyxv:rwzahw>rel:tbgudl|rel:nkmrsv"
+    ],
+    "scan": {
+     "guard_gap": 0,
+     "combos": 291339,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 39,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:jdnyxv:rwzahw>rel:tbgudl|not:nkmrsv:bfgnwj>rel:nkmrsv"
+     ],
+     [
+      "prog:is:jdnyxv:rwzahw>rel:tbgudl|not:nkmrsv:fayffc>rel:nkmrsv"
+     ],
+     [
+      "prog:is:jdnyxv:rwzahw>rel:tbgudl|not:nkmrsv:lvkyzu>rel:nkmrsv"
+     ],
+     [
+      "prog:is:jdnyxv:rwzahw>rel:tbgudl|not:nkmrsv:qpvixa>rel:nkmrsv"
+     ],
+     [
+      "prog:is:jdnyxv:xrpsmy>rel:nkmrsv|not:nkmrsv:abiutz>rel:tbgudl"
+     ],
+     [
+      "prog:is:jdnyxv:xrpsmy>rel:nkmrsv|not:nkmrsv:atbkkp>rel:tbgudl"
+     ],
+     [
+      "prog:is:jdnyxv:xrpsmy>rel:nkmrsv|not:nkmrsv:axstzi>rel:tbgudl"
+     ],
+     [
+      "prog:is:jdnyxv:xrpsmy>rel:nkmrsv|not:nkmrsv:hxgjsz>rel:tbgudl"
+     ],
+     [
+      "prog:is:jdnyxv:rwzahw>not:nkmrsv:abiutz>rel:tbgudl|rel:nkmrsv"
+     ],
+     [
+      "prog:is:jdnyxv:rwzahw>not:nkmrsv:atbkkp>rel:tbgudl|rel:nkmrsv"
+     ],
+     [
+      "prog:is:jdnyxv:rwzahw>not:nkmrsv:axstzi>rel:tbgudl|rel:nkmrsv"
+     ],
+     [
+      "prog:is:jdnyxv:rwzahw>not:nkmrsv:hxgjsz>rel:tbgudl|rel:nkmrsv"
+     ],
+     [
+      "prog:is:jdnyxv:xrpsmy>not:nkmrsv:bfgnwj>rel:nkmrsv|rel:tbgudl"
+     ],
+     [
+      "prog:is:jdnyxv:xrpsmy>not:nkmrsv:fayffc>rel:nkmrsv|rel:tbgudl"
+     ],
+     [
+      "prog:is:jdnyxv:xrpsmy>not:nkmrsv:lvkyzu>rel:nkmrsv|rel:tbgudl"
+     ],
+     [
+      "prog:is:jdnyxv:xrpsmy>not:nkmrsv:qpvixa>rel:nkmrsv|rel:tbgudl"
+     ]
+    ]
+   },
+   "bmihev": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:nooxff>is:flyfvc:ounqwf"
+      ],
+      "history": [
+       {
+        "turn": 791,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:rel:nooxff>is:flyfvc:ounqwf"
+    ],
+    "scan": {
+     "guard_gap": 0,
+     "combos": 153372,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 40,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:not:nooxff:ctnarr>rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:not:nooxff:evfvxj>rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:not:nooxff:fpmght>rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:not:nooxff:gmycso>rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:not:nooxff:hcfkqa>rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:not:nooxff:hfqszp>rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:is:nooxff:ctnarr|rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:is:nooxff:evfvxj|rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:is:nooxff:fpmght|rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:is:nooxff:gmycso|rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:is:nooxff:hcfkqa|rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:is:nooxff:hfqszp|rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:is:nooxff:ctnarr|not:nooxff:evfvxj>rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:is:nooxff:ctnarr|not:nooxff:fpmght>rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:is:nooxff:ctnarr|not:nooxff:gmycso>rel:nooxff>is:flyfvc:ounqwf"
+     ],
+     [
+      "prog:is:nooxff:ctnarr|not:nooxff:hcfkqa>rel:nooxff>is:flyfvc:ounqwf"
+     ]
+    ]
+   }
+  }
+ },
+ "F8_9101.json": {
+  "mtime": "03:26:00",
+  "turn": 815,
+  "capabilities": {
+   "dlsrvt": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:xazgfh"
+      ],
+      "history": [
+       {
+        "turn": 128,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 130,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "superseded",
+      "seq": [
+       "prog:is:ttgxoa:hdygao|rel:xazgfh>self"
+      ],
+      "history": [
+       {
+        "turn": 137,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 142,
+        "status": "superseded",
+        "reason": "replaced by v3"
+       }
+      ]
+     },
+     {
+      "v": 3,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:xazgfh>is:rvwnka:nvvlzl|rel:xazgfh>self"
+      ],
+      "history": [
+       {
+        "turn": 141,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 3,
+    "candidate": [
+     "prog:rel:xazgfh>is:rvwnka:nvvlzl|rel:xazgfh>self"
+    ],
+    "scan": {
+     "guard_gap": 64,
+     "combos": 124668,
+     "complete": true,
+     "blocking_n": 1,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|not:rvwnka:pmogdd>rel:xazgfh>self"
+     ]
+    ]
+   },
+   "nqqbwd": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:cap:dlsrvt@3>rel:ttgxoa"
+      ],
+      "history": [
+       {
+        "turn": 182,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:cap:dlsrvt@3>rel:ttgxoa"
+    ],
+    "scan": {
+     "guard_gap": 63,
+     "combos": 196587,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:rvwnka:vwjtuw|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:rvwnka:vwjtuw>rel:rvwnka|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:egsaph:gfhhxw>is:rvwnka:orspva|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:rvwnka:pmogdd>is:xazgfh:eqittn|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:xazgfh:eqittn>rel:egsaph|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:xazgfh:eqittn>not:rvwnka:isooxc|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:egsaph>is:rvwnka:pmogdd>is:xazgfh:eqittn|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>rel:egsaph>is:rvwnka:orspva|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>rel:xazgfh>is:egsaph:gfhhxw|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:isooxc>is:xazgfh:eqittn|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:pmogdd>rel:egsaph|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:pmogdd>not:xazgfh:eqittn|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:cap:dlsrvt@3>rel:ttgxoa>is:rvwnka:vwjtuw|not:rvwnka:nvvlzl>rel:rvwnka"
+     ],
+     [
+      "prog:is:egsaph:ayrrlh>rel:xazgfh>is:rvwnka:pmogdd|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:egsaph:gfhhxw>rel:xazgfh>is:rvwnka:nvvlzl|cap:dlsrvt@3>rel:ttgxoa"
+     ],
+     [
+      "prog:is:egsaph:gfhhxw>is:rvwnka:orspva>rel:rvwnka|cap:dlsrvt@3>rel:ttgxoa"
+     ]
+    ]
+   },
+   "cavnoq": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:owvcyw"
+      ],
+      "history": [
+       {
+        "turn": 274,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 278,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "provisional",
+      "seq": [
+       "prog:is:eonmbz:bkqhpv>rel:migrag|rel:owvcyw"
+      ],
+      "history": [
+       {
+        "turn": 280,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 2,
+    "candidate": [
+     "prog:is:eonmbz:bkqhpv>rel:migrag|rel:owvcyw"
+    ],
+    "scan": {
+     "guard_gap": 25,
+     "combos": 2738,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 39,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "nsnylp": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:tdiiwu>is:ipvrad:pdkiku"
+      ],
+      "history": [
+       {
+        "turn": 372,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:rel:tdiiwu>is:ipvrad:pdkiku"
+    ],
+    "scan": {
+     "guard_gap": 28,
+     "combos": 5080,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 40,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "xvwiie": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:adcplg"
+      ],
+      "history": [
+       {
+        "turn": 538,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 540,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "suspended",
+      "seq": [
+       "prog:is:adcplg:ctcgrr|rel:adcplg>self"
+      ],
+      "history": [
+       {
+        "turn": 543,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 557,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 3,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:adcplg>is:adcplg:ctcgrr|rel:adcplg>self"
+      ],
+      "history": [
+       {
+        "turn": 559,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 3,
+    "candidate": [
+     "prog:rel:adcplg>is:adcplg:ctcgrr|rel:adcplg>self"
+    ],
+    "scan": {
+     "guard_gap": 65,
+     "combos": 114606,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "rsormm": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:cap:xvwiie@3>rel:fwgbwj"
+      ],
+      "history": [
+       {
+        "turn": 594,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:cap:xvwiie@3>rel:fwgbwj"
+    ],
+    "scan": {
+     "guard_gap": 64,
+     "combos": 170057,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:slxczi:viufqu|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:elbyea:asozuw|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:elbyea>is:adcplg:eeebtf|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:elbyea>is:elbyea:asozuw|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:is:slxczi:viufqu>rel:slxczi|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:is:adcplg:eeebtf>is:slxczi:bbhkvh|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:is:elbyea:asozuw>is:slxczi:eerklg|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:is:slxczi:bbhkvh>not:elbyea:asozuw|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>rel:adcplg>is:slxczi:jqyktr|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>rel:elbyea>is:elbyea:asozuw|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>rel:elbyea>is:slxczi:eerklg|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:elbyea:asozuw>rel:adcplg|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:elbyea:asozuw>rel:elbyea|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:elbyea:asozuw>rel:slxczi|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:elbyea:asozuw>cap:xvwiie@3|cap:xvwiie@3>rel:fwgbwj"
+     ],
+     [
+      "prog:rel:adcplg>is:slxczi:jqyktr>not:adcplg:eeebtf|cap:xvwiie@3>rel:fwgbwj"
+     ]
+    ]
+   },
+   "ulczhm": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:gzoabc"
+      ],
+      "history": [
+       {
+        "turn": 676,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 680,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "provisional",
+      "seq": [
+       "prog:is:hloraz:alibhx>rel:gzoabc|rel:iiexgy"
+      ],
+      "history": [
+       {
+        "turn": 682,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 2,
+    "candidate": [
+     "prog:is:hloraz:alibhx>rel:gzoabc|rel:iiexgy"
+    ],
+    "scan": {
+     "guard_gap": 25,
+     "combos": 2738,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 39,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "mqxadf": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:lhixvq>is:yhnhrr:hzstej"
+      ],
+      "history": [
+       {
+        "turn": 774,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:rel:lhixvq>is:yhnhrr:hzstej"
+    ],
+    "scan": {
+     "guard_gap": 28,
+     "combos": 5080,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 40,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   }
+  }
+ },
+ "F8_9102.json": {
+  "mtime": "03:26:06",
+  "turn": 836,
+  "capabilities": {
+   "qddskc": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:ifgtgd"
+      ],
+      "history": [
+       {
+        "turn": 124,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 126,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "suspended",
+      "seq": [
+       "prog:is:ifgtgd:hiqkcd|rel:ifgtgd>self"
+      ],
+      "history": [
+       {
+        "turn": 133,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 145,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 3,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:ifgtgd>is:ifgtgd:hiqkcd|rel:ifgtgd>self"
+      ],
+      "history": [
+       {
+        "turn": 147,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 3,
+    "candidate": [
+     "prog:rel:ifgtgd>is:ifgtgd:hiqkcd|rel:ifgtgd>self"
+    ],
+    "scan": {
+     "guard_gap": 63,
+     "combos": 167174,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "meifli": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:cap:qddskc@3>rel:yvkogg"
+      ],
+      "history": [
+       {
+        "turn": 186,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:cap:qddskc@3>rel:yvkogg"
+    ],
+    "scan": {
+     "guard_gap": 65,
+     "combos": 67289,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:rel:cuttgd>rel:ifgtgd>is:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:rel:ifgtgd>is:ifgtgd:xtibkp>is:rvvidg:ozhlno|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:rel:ifgtgd>is:rvvidg:ozhlno>rel:cuttgd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:ifgtgd:xtibkp>rel:cuttgd>not:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:ifgtgd:xtibkp>not:rvvidg:ozhlno>not:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:rvvidg:ozhlno>rel:cuttgd>is:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:rvvidg:ozhlno>rel:cuttgd>not:rvvidg:ozhlno|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:rvvidg:ozhlno>rel:ifgtgd>rel:cuttgd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:rvvidg:ozhlno>rel:ifgtgd>is:ifgtgd:xtibkp|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:is:rvvidg:ozhlno>rel:ifgtgd>is:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:ifgtgd:xtibkp>rel:cuttgd>is:rvvidg:smrtyd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:ifgtgd:xtibkp>rel:ifgtgd>is:ifgtgd:hiqkcd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:rvvidg:ozhlno>not:rvvidg:smrtyd>rel:cuttgd|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:rvvidg:ozhlno>not:rvvidg:smrtyd>cap:qddskc@3|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:rvvidg:smrtyd>rel:cuttgd>not:rvvidg:ozhlno|cap:qddskc@3>rel:yvkogg"
+     ],
+     [
+      "prog:not:rvvidg:smrtyd>rel:ifgtgd>rel:cuttgd|cap:qddskc@3>rel:yvkogg"
+     ]
+    ]
+   },
+   "kujaan": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:vxsrwc"
+      ],
+      "history": [
+       {
+        "turn": 277,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 281,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "provisional",
+      "seq": [
+       "prog:is:khxvsm:jpgtta>rel:aahaqi|rel:vxsrwc"
+      ],
+      "history": [
+       {
+        "turn": 283,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 2,
+    "candidate": [
+     "prog:is:khxvsm:jpgtta>rel:aahaqi|rel:vxsrwc"
+    ],
+    "scan": {
+     "guard_gap": 25,
+     "combos": 2738,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 39,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "hrroxz": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:fylcln>is:wfzvny:tbwnqs"
+      ],
+      "history": [
+       {
+        "turn": 375,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:rel:fylcln>is:wfzvny:tbwnqs"
+    ],
+    "scan": {
+     "guard_gap": 28,
+     "combos": 5080,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 40,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "tgpwnl": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:mcwdlu"
+      ],
+      "history": [
+       {
+        "turn": 545,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 547,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "suspended",
+      "seq": [
+       "prog:is:mcwdlu:uhzogy|rel:mcwdlu>self"
+      ],
+      "history": [
+       {
+        "turn": 549,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 569,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 3,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:mcwdlu>is:mcwdlu:uhzogy|rel:mcwdlu>self"
+      ],
+      "history": [
+       {
+        "turn": 571,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 3,
+    "candidate": [
+     "prog:rel:mcwdlu>is:mcwdlu:uhzogy|rel:mcwdlu>self"
+    ],
+    "scan": {
+     "guard_gap": 63,
+     "combos": 196482,
+     "complete": true,
+     "blocking_n": 1,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:rel:mcwdlu>is:mcwdlu:uhzogy|rel:mcwdlu>not:mcwdlu:nmhpdc>self"
+     ]
+    ]
+   },
+   "bnrekv": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:cap:tgpwnl@3>rel:irbrfc"
+      ],
+      "history": [
+       {
+        "turn": 606,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:cap:tgpwnl@3>rel:irbrfc"
+    ],
+    "scan": {
+     "guard_gap": 63,
+     "combos": 136728,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:xzikzv:ihlgwc|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>is:vtuodi:okxyzw|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:vtuodi>is:vtuodi:pkvatl|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:is:xzikzv:ihlgwc>rel:xzikzv|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:is:mcwdlu:dyzqbd>is:xzikzv:grfpir|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:is:vtuodi:oewvqf>not:mcwdlu:dyzqbd|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:is:vtuodi:okxyzw>not:xzikzv:grfpir|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:mcwdlu>is:vtuodi:oewvqf|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:mcwdlu>is:vtuodi:okxyzw|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:mcwdlu>is:vtuodi:pkvatl|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:vtuodi>is:mcwdlu:dyzqbd|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:vtuodi>is:vtuodi:oewvqf|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>rel:vtuodi>is:vtuodi:pkvatl|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>is:mcwdlu:dyzqbd>rel:vtuodi|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>is:mcwdlu:dyzqbd>is:vtuodi:oewvqf|cap:tgpwnl@3>rel:irbrfc"
+     ],
+     [
+      "prog:rel:mcwdlu>is:vtuodi:okxyzw>rel:mcwdlu|cap:tgpwnl@3>rel:irbrfc"
+     ]
+    ]
+   },
+   "bjtgch": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:tbgudl"
+      ],
+      "history": [
+       {
+        "turn": 697,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 701,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "provisional",
+      "seq": [
+       "prog:is:jdnyxv:rwzahw>rel:tbgudl|rel:nkmrsv"
+      ],
+      "history": [
+       {
+        "turn": 703,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 2,
+    "candidate": [
+     "prog:is:jdnyxv:rwzahw>rel:tbgudl|rel:nkmrsv"
+    ],
+    "scan": {
+     "guard_gap": 25,
+     "combos": 2738,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 39,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "bmihev": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:nooxff>is:flyfvc:ounqwf"
+      ],
+      "history": [
+       {
+        "turn": 795,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:rel:nooxff>is:flyfvc:ounqwf"
+    ],
+    "scan": {
+     "guard_gap": 28,
+     "combos": 5080,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 40,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   }
+  }
+ },
+ "L32_9101.json": {
+  "mtime": "03:35:41",
+  "turn": 290,
+  "capabilities": {
+   "dlsrvt": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:xazgfh"
+      ],
+      "history": [
+       {
+        "turn": 125,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 127,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "superseded",
+      "seq": [
+       "prog:is:ttgxoa:hdygao|rel:xazgfh>self"
+      ],
+      "history": [
+       {
+        "turn": 134,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 143,
+        "status": "superseded",
+        "reason": "replaced by v3"
+       }
+      ]
+     },
+     {
+      "v": 3,
+      "status": "superseded",
+      "seq": [
+       "prog:rel:xazgfh>is:xazgfh:owujdr|rel:xazgfh>self"
+      ],
+      "history": [
+       {
+        "turn": 142,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 164,
+        "status": "superseded",
+        "reason": "replaced by v4"
+       }
+      ]
+     },
+     {
+      "v": 4,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:xazgfh>is:rvwnka:nvvlzl|rel:xazgfh>self"
+      ],
+      "history": [
+       {
+        "turn": 163,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 4,
+    "candidate": [
+     "prog:rel:xazgfh>is:rvwnka:nvvlzl|rel:xazgfh>self"
+    ],
+    "scan": {
+     "guard_gap": 63,
+     "combos": 166702,
+     "complete": true,
+     "blocking_n": 10,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|rel:xazgfh>rel:xazgfh>is:rvwnka:nvvlzl"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|rel:xazgfh>rel:xazgfh>not:rvwnka:isooxc"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|is:rvwnka:isooxc>rel:xazgfh>rel:xazgfh"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|not:egsaph:fdfscp>rel:xazgfh>rel:xazgfh"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|not:rvwnka:orspva>rel:xazgfh>rel:xazgfh"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|rel:xazgfh>not:egsaph:fdfscp>self"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|is:rvwnka:isooxc>rel:xazgfh>self"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|not:egsaph:fdfscp>rel:xazgfh>self"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|not:rvwnka:orspva>rel:xazgfh>self"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:nvvlzl|not:rvwnka:pmogdd>rel:xazgfh>self"
+     ]
+    ]
+   },
+   "nqqbwd": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "provisional",
+      "seq": [
+       "prog:cap:dlsrvt@4>rel:ttgxoa"
+      ],
+      "history": [
+       {
+        "turn": 194,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": [
+     "prog:cap:dlsrvt@4>rel:ttgxoa"
+    ],
+    "scan": {
+     "guard_gap": 63,
+     "combos": 196587,
+     "complete": true,
+     "blocking_n": 16,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:rvwnka:vwjtuw|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:is:rvwnka:vwjtuw>rel:rvwnka|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:is:egsaph:gfhhxw>is:rvwnka:orspva|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:is:rvwnka:pmogdd>is:xazgfh:eqittn|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:is:xazgfh:eqittn>rel:egsaph|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:is:xazgfh:eqittn>not:rvwnka:isooxc|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:egsaph>is:rvwnka:pmogdd>is:xazgfh:eqittn|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>rel:egsaph>is:rvwnka:orspva|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>rel:xazgfh>is:egsaph:gfhhxw|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:isooxc>is:xazgfh:eqittn|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:pmogdd>rel:egsaph|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:rel:xazgfh>is:rvwnka:pmogdd>not:xazgfh:eqittn|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:cap:dlsrvt@4>rel:ttgxoa>is:rvwnka:vwjtuw|not:rvwnka:nvvlzl>rel:rvwnka"
+     ],
+     [
+      "prog:is:egsaph:ayrrlh>rel:xazgfh>is:rvwnka:pmogdd|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:is:egsaph:gfhhxw>rel:xazgfh>is:rvwnka:nvvlzl|cap:dlsrvt@4>rel:ttgxoa"
+     ],
+     [
+      "prog:is:egsaph:gfhhxw>is:rvwnka:orspva>rel:rvwnka|cap:dlsrvt@4>rel:ttgxoa"
+     ]
+    ]
+   },
+   "cavnoq": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:owvcyw"
+      ],
+      "history": [
+       {
+        "turn": 281,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 284,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": null,
+    "scan": {
+     "guard_gap": null,
+     "combos": null,
+     "complete": null,
+     "blocking_n": null,
+     "domain": null,
+     "method": null,
+     "budget": null
+    },
+    "blocking_programs": null
+   }
+  }
+ },
+ "L32_9102.json": {
+  "mtime": "03:43:52",
+  "turn": 328,
+  "capabilities": {
+   "qddskc": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:ifgtgd"
+      ],
+      "history": [
+       {
+        "turn": 121,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 123,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     }
+    ],
+    "current": 1,
+    "candidate": null,
+    "scan": {
+     "guard_gap": null,
+     "combos": null,
+     "complete": null,
+     "blocking_n": null,
+     "domain": null,
+     "method": null,
+     "budget": null
+    },
+    "blocking_programs": null
+   },
+   "meifli": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "superseded",
+      "seq": [
+       "prog:rel:ifgtgd>rel:yvkogg"
+      ],
+      "history": [
+       {
+        "turn": 159,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 162,
+        "status": "superseded",
+        "reason": "replaced by v2"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:yvkogg>is:rvvidg:vjrhrh|rel:ifgtgd>self"
+      ],
+      "history": [
+       {
+        "turn": 161,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 172,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 3,
+      "status": "provisional",
+      "seq": [
+       "prog:rel:ifgtgd>rel:yvkogg>is:rvvidg:vjrhrh|rel:ifgtgd>self"
+      ],
+      "history": [
+       {
+        "turn": 174,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 3,
+    "candidate": [
+     "prog:rel:ifgtgd>rel:yvkogg>is:rvvidg:vjrhrh|rel:ifgtgd>self"
+    ],
+    "scan": {
+     "guard_gap": 65,
+     "combos": 50308,
+     "complete": true,
+     "blocking_n": 0,
+     "domain": 71,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": []
+   },
+   "kujaan": {
+    "versions": [
+     {
+      "v": 1,
+      "status": "suspended",
+      "seq": [
+       "prog:rel:vxsrwc"
+      ],
+      "history": [
+       {
+        "turn": 234,
+        "status": "provisional",
+        "reason": "acquired"
+       },
+       {
+        "turn": 237,
+        "status": "suspended",
+        "reason": "contradicted by its observations"
+       }
+      ]
+     },
+     {
+      "v": 2,
+      "status": "provisional",
+      "seq": [
+       "prog:is:khxvsm:jpgtta>rel:aahaqi|rel:vxsrwc"
+      ],
+      "history": [
+       {
+        "turn": 248,
+        "status": "provisional",
+        "reason": "acquired"
+       }
+      ]
+     }
+    ],
+    "current": 2,
+    "candidate": [
+     "prog:is:khxvsm:jpgtta>rel:aahaqi|rel:vxsrwc"
+    ],
+    "scan": {
+     "guard_gap": 0,
+     "combos": 2738,
+     "complete": true,
+     "blocking_n": 10,
+     "domain": 39,
+     "method": "exact",
+     "budget": 4000000
+    },
+    "blocking_programs": [
+     [
+      "prog:is:khxvsm:jpgtta>rel:aahaqi"
+     ],
+     [
+      "prog:is:khxvsm:siwscm>rel:vxsrwc"
+     ],
+     [
+      "prog:is:khxvsm:tgkods|is:khxvsm:jpgtta>rel:aahaqi"
+     ],
+     [
+      "prog:is:khxvsm:tgkods|is:khxvsm:siwscm>rel:vxsrwc"
+     ],
+     [
+      "prog:is:khxvsm:tgkods>rel:khxvsm|is:khxvsm:jpgtta>rel:aahaqi"
+     ],
+     [
+      "prog:is:khxvsm:tgkods>rel:khxvsm|is:khxvsm:siwscm>rel:vxsrwc"
+     ],
+     [
+      "prog:not:khxvsm:jpgtta>not:khxvsm:siwscm|is:khxvsm:jpgtta>rel:aahaqi"
+     ],
+     [
+      "prog:not:khxvsm:jpgtta>not:khxvsm:siwscm|is:khxvsm:siwscm>rel:vxsrwc"
+     ],
+     [
+      "prog:not:khxvsm:tgkods>not:khxvsm:jpgtta>not:khxvsm:siwscm|is:khxvsm:jpgtta>rel:aahaqi"
+     ],
+     [
+      "prog:not:khxvsm:tgkods>not:khxvsm:jpgtta>not:khxvsm:siwscm|is:khxvsm:siwscm>rel:vxsrwc"
+     ]
+    ]
+   }
+  }
+ }
+}

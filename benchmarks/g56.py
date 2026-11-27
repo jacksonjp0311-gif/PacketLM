@@ -34,8 +34,9 @@ from g51 import instrument, INSTRUMENT, PIN  # noqa: E402
 BASEF = {"C": ["--answers", "--bounded", "--lean"], "B": ["--answers", "--no-library", "--bounded", "--lean"],
          "P": ["--answers", "--no-library", "--bounded", "--lean"], "F": ["--answers", "--bounded", "--lean"]}
 CURRICULA = {"comp": (g46.world, ["C", "B", "P", "F"]), "unrel": (g46u.world_unrelated, ["C", "B", "P"])}
-COMP_SEEDS = [161, 162, 163, 164, 165, 166, 167]
-UNREL_SEEDS = [171, 172, 173, 174, 175, 176, 177]
+# amendment 1 (docs/G56.md): 161-167 / 171-177 were consumed by the aborted first start
+COMP_SEEDS = [181, 182, 183, 184, 185, 186, 187]
+UNREL_SEEDS = [191, 192, 193, 194, 195, 196, 197]
 HARNESS = ["benchmarks/g56.py", "benchmarks/g46.py", "benchmarks/g46u.py", "benchmarks/g51.py",
            "benchmarks/la_export.py", "benchmarks/px.py"]
 
