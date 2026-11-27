@@ -6,3 +6,8 @@ prereg 80cda1a 11:19:14 EST; lock 11:19:23–11:52:37; scale receipt head 80cda1
 ## (1) part_diff.py (from routed_diff) arms REF,XR64,XK,XK64,XKP(q=1); dense/block codes; deep pairs/small_part rebuild. runs a/b/c started ~12:20 (run_adv.sh)
 math check of §2a: sound (p ⊆ union of 3 codes ≤16 bits; two largest overlaps ≥ k; ≤4 groups ⇒ pigeonhole for k≥5; decode needs |p^q|≤16). memo ent differs (only |p^q|≤16 triples) but only used for decode.
 rv exclusion: rv holds fingerprints only; lag legit; only full eval can check → Info.
+(correction: adv runs started 12:05, not 12:20)
+## (3) recompute — gate_recompute.py, scale_recompute.py: ALL point values reproduce exactly (A per curriculum, strata, rho, rate o/s 2.1049, Q1-4 -> HOLD; part S k 0.507[0.397,0.598], prop 0.494, work 0.082, fixed 1.045; r0 1.319/work 1.246). guards reproduce.
+extra: P||B comp -0.13, long -1.05, unrel -1.48 (accumulation w/o library); C||P comp -0.34; maint share Ck unrel 48% (retention probes grow linearly per family); task-only: comp -0.41, unrel -0.30 (Q3 would pass task-only, but Q3 registered +maint & same as G58 L3r), long -1.29.
+Ck||Cr unrel -0.148 CI<0: k slower on small states. k at N=0 2.70 vs r 2.36 ms.
+cpu_per_call alpha k 0.42; work metric = call+c_call events (1 per builtin regardless of size; py3.13 comprehensions inlined) -> probe work_probe.py pending (wait for load).
