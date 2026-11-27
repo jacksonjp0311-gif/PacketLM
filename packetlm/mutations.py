@@ -170,7 +170,7 @@ MUTATIONS = {
     "g58_observe_not_recorded": ('    def observe(self, name, subject, value) -> list[str]:\n        obs = self.state["observations"].setdefault(name, [])\n        if self.memo is not None:\n            self.memo.rv_obs.add(name)  # G58', '    def observe(self, name, subject, value) -> list[str]:\n        obs = self.state["observations"].setdefault(name, [])\n        if self.memo is not None:\n            pass'),
     "g58_closed_delta_ignored": ('            for x in X["closed"] ^ closed:', '            for x in ():'),
     "g58_entity_delta_ignored": ('            for x in new:\n                fast |= X["subj"].get(x, set())\n            X["pos"]', '            for x in ():\n                fast |= X["subj"].get(x, set())\n            X["pos"]'),
-    "g58_changed_stamps_ignored": ('                if t > X["tick"]:', '                if False:'),
+    "g58_changed_stamps_ignored": ('                if memo.stamp[r] <= X["tick"]:\n                    break', '                if True:\n                    break'),  # re-anchored in G59 (stamps in order)
     "g58_dependents_not_followed": ('                fast |= X["dep"].get((dn, dv), set()) if dv is not None else X["depn"].get(dn, set())', '                pass'),
     "g58_pruned_count_wrong": ('                pruned += (P - len(ii)) * P ** (n - len(prefix) - 1)', '                pruned += (P - len(ii))'),
     "g58_reach_ignores_told": ('                        if z not in seen and any(sp["kind"] == "told" for sp in f["supports"]):', '                        if z not in seen:'),
@@ -192,6 +192,22 @@ MUTATIONS = {
     "g58_cx_library_off": ('        offer = self.use_library and ver["status"] in EXEC_OK and \\', '        offer = ver["status"] in EXEC_OK and \\'),
     "g58_cx_qualified_library_ignored": ('            (not self.qualified_library or ver["status"] == "qualified")', '            True'),
     "g58_scoped_validation_skips_caps": ('*((sc.get("caps", set()),', '*((set(),', "serve.py"),
+    # G59 (`--partitioned`, docs/G59.md): one mechanism of the partitioned recall at a time
+    "g59_pair_dropped": ('                    for k in _code_pairs(pos):\n                        pairs.setdefault(k, []).append(code)', '                    for k in _code_pairs(pos)[1:]:\n                        pairs.setdefault(k, []).append(code)'),
+    "g59_small_part_dropped": ('        if pairs is not None and pc < SMALL_PART:\n            ix["small_part"].append(t)', '        if False:\n            ix["small_part"].append(t)'),
+    "g59_threshold_one_too_high": ('        k = -(-(m - 16) // 2)\n', '        k = -(-(m - 16) // 2) + 1\n'),
+    "g59_pigeonhole_ignored": ('        return k if k >= PAIR_GROUPS + 1 else None', '        return k if k >= 1 else None'),
+    "g59_hit_filter_strict": ('        H = {X for X in hit if (_code_bits(X)[0] & qi).bit_count() >= k}', '        H = {X for X in hit if (_code_bits(X)[0] & qi).bit_count() > k}'),
+    "g59_sr_pairs_skipped": ('                for f in by_sr.get((s0, r1), ()):', '                for f in ():'),
+    "g59_so_pairs_skipped": ('                cand.update(t for t in (a if len(a) <= len(b) else b) if t[0] == s0 and t[2] == o2)', '                pass'),
+    "g59_ro_pairs_skipped": ('                cand.update(t for t in (a if len(a) <= len(b) else b) if t[1] == r1 and t[2] == o2)', '                pass'),
+    "g59_added_stamps_unordered": ('        self.stamp.pop(t[1], None)  # G59: stamps kept in increasing order (moved to the end when bumped)\n', ''),
+    "g59_sync_stamps_unordered": ('            self.stamp.pop(t[1], None)  # G59: stamps kept in increasing order\n', ''),
+    "g59_sx_not_eager": ('            self._sx()  # G59: the seeds index in step', '            pass  # G59: the seeds index in step'),
+    "g59_ix_check_skips_pairs": ('            if ok and pairs is not None:', '            if False:'),
+    "g59_adopt_without_pairs": ('ix.update(pairs={}, small_part=[])', 'pass'),
+    "g59_flag_without_routed": ('        self.partitioned = bool(partitioned and self.routed and self.incremental)', '        self.partitioned = bool(partitioned and self.incremental)'),
+    "g59_gc_not_unfrozen": ('            gc.unfreeze()  # G59', '            pass  # G59', "serve.py"),
 }
 
 

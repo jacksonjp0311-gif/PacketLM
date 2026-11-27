@@ -462,6 +462,35 @@ def _write_atomic(path: Path, data: bytes) -> None:
 
 
 SMALL_PACKET = 38  # G57b: packets below this popcount are always recall candidates (Memo.recall_candidates)
+# G59 (`--partitioned`, docs/G59.md §2): packets below this popcount are always candidates of the
+# partitioned recall; every code's bits are split into PAIR_GROUPS groups (consecutive in bit
+# order) and each pair of bits inside a group is indexed
+SMALL_PART = 42
+PAIR_GROUPS = 4
+_CODE_BITS = {}
+
+
+def _code_bits(code):
+    """(int, ascending bit positions) of bits_for(token, role) for a code (role, token); memoized
+    (a pure function of the code)."""
+    got = _CODE_BITS.get(code)
+    if got is None:
+        x = bits_for(code[1], code[0])
+        got = _CODE_BITS[code] = (x, _geom().bits(x))
+    return got
+
+
+def _code_pairs(pos):
+    """The indexed bit pairs of a code: pairs inside each of PAIR_GROUPS consecutive groups of its
+    ascending bit positions (a code has <= 16 bits, so groups of 4)."""
+    g = -(-len(pos) // PAIR_GROUPS) if pos else 1
+    out = []
+    for k in range(0, len(pos), g):
+        grp = pos[k:k + g]
+        for i in range(len(grp)):
+            for j in range(i + 1, len(grp)):
+                out.append(grp[i] * 4096 + grp[j])
+    return out
 
 
 def _fresh_index(facts) -> dict:
@@ -544,6 +573,9 @@ class Memo:
         self.sx_dirty = set()
         self.track_members = False
         self.members = None
+        # G59 (`--partitioned`): the persistent index also keeps the code-pair index, and the seeds
+        # index is kept in step at the end of every call
+        self.partitioned = False
 
     def packet_of(self, t):
         p = self.pk.get(t)
@@ -594,6 +626,8 @@ class Memo:
             ix["decode"] = {pack(bits_for(t, 2)).bits: t for t in ix["names"]}
         ix.update(facts_ref=state["facts"], n_facts=len(state["facts"]), epoch=state.get("fact_epoch", 0),
                   by_rel={}, by_s={}, by_o={}, by_sr={}, told_rel=Counter(), prow={}, codes=set(), codebits={}, small=[])
+        if self.partitioned:
+            ix.update(pairs={}, small_part=[])
         self.ix = ix
         for f in state["facts"]:
             self._ix_add(f)
@@ -608,13 +642,21 @@ class Memo:
         if not t[1].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]):
             ix["told_rel"][t[1]] += 1
         ix["prow"].pop(t[1], None)
+        pairs = ix.get("pairs")
         for code in ((0, t[0]), (1, t[1]), (2, t[2])):
             if code not in ix["codes"]:
                 ix["codes"].add(code)
-                for b in _geom().bits(bits_for(code[1], code[0])):
+                _, pos = _code_bits(code)
+                for b in pos:
                     ix["codebits"].setdefault(b, []).append(code)
-        if self.packet_of(t).bit_count() < SMALL_PACKET:
+                if pairs is not None:  # G59: the code's group pairs
+                    for k in _code_pairs(pos):
+                        pairs.setdefault(k, []).append(code)
+        pc = self.packet_of(t).bit_count()
+        if pc < SMALL_PACKET:
             ix["small"].append(t)
+        if pairs is not None and pc < SMALL_PART:
+            ix["small_part"].append(t)
 
     def ix_append(self, f, state) -> None:
         """`tell` appended f (the index was valid just before): the reference build's structures
@@ -644,6 +686,7 @@ class Memo:
     def _added(self, t) -> None:
         """Memo.sync for one appended triple, without a pass over the others."""
         self.tick += 1
+        self.stamp.pop(t[1], None)  # G59: stamps kept in increasing order (moved to the end when bumped)
         self.stamp[t[1]] = self.tick
         p = self.packet_of(t)
         for (s_, r_), ent in self.recall.items():
@@ -674,6 +717,59 @@ class Memo:
                 cand.update((ix["by_s"], ix["by_rel"], ix["by_o"])[role].get(tok, ()))
         return cand
 
+    def part_threshold(self, qi):
+        """G59: k such that every triple that can ever add a name to the recall of q (|p| >= SMALL_PART)
+        has two of its three codes X with |X & q| >= k (docs/G59.md §2a); None if k < PAIR_GROUPS + 1
+        (the pigeonhole over a code's groups then does not hold: the G57b filter is used)."""
+        m = -(-(SMALL_PART + qi.bit_count() - 16) // 2)
+        k = -(-(m - 16) // 2)
+        return k if k >= PAIR_GROUPS + 1 else None
+
+    def recall_partitioned(self, s, r, qi, k):
+        """G59 (`--partitioned`, docs/G59.md §2a): a candidate set for the recall of (s, r) that holds
+        every triple that can add a name now or later, built from the codes near q only.
+        A triple t adds a name x to the recall iff it passes and p ^ q = c_x (x's role-2 code, <= 16
+        bits). Then |p ^ q| <= 16, so m = |p & q| >= (|p| + |q| - 16) / 2. p lies in the union of t's
+        three codes, each of <= 16 bits, so the two largest overlaps |X & q| sum to >= m - 16 with the
+        largest <= 16: two codes have |X & q| >= k = ceil((m_min - 16) / 2). A code X with |X & q| >= k
+        >= PAIR_GROUPS + 1 has two of those bits in one of its groups, i.e. one of its indexed pairs
+        is a pair of q's bits. Candidates: every triple with two codes in H = {indexed codes hit by a
+        pair of q with |X & q| >= k}, plus every packet with |p| < SMALL_PART."""
+        ix = self.ix
+        self.counts["partitioned_queries"] += 1
+        pairs, Q = ix["pairs"], _geom().bits(qi)
+        hit = set()
+        for i in range(len(Q)):
+            base = Q[i] * 4096
+            for j in range(i + 1, len(Q)):
+                got = pairs.get(base + Q[j])
+                if got:
+                    hit.update(got)
+        H = {X for X in hit if (_code_bits(X)[0] & qi).bit_count() >= k}
+        self.counts["partitioned_hits"] += len(hit)
+        roles = ({}, {}, {})
+        for role, tok in H:
+            roles[role][tok] = True
+        cand = set(ix["small_part"])
+        by_s, by_rel, by_o, by_sr = ix["by_s"], ix["by_rel"], ix["by_o"], ix["by_sr"]
+        for s0 in roles[0]:
+            for r1 in roles[1]:
+                for f in by_sr.get((s0, r1), ()):
+                    cand.add((f["s"], f["r"], f["o"]))
+            for o2 in roles[2]:
+                a, b = by_s.get(s0, ()), by_o.get(o2, ())
+                cand.update(t for t in (a if len(a) <= len(b) else b) if t[0] == s0 and t[2] == o2)
+        for r1 in roles[1]:
+            for o2 in roles[2]:
+                a, b = by_rel.get(r1, ()), by_o.get(o2, ())
+                cand.update(t for t in (a if len(a) <= len(b) else b) if t[1] == r1 and t[2] == o2)
+        if G58_AUDIT["on"]:  # every triple that passes with |p ^ q| <= 16 is a candidate
+            for t in self.base:
+                p = self.packet_of(t)
+                if 2 * (qi & p).bit_count() > p.bit_count() and (p ^ qi).bit_count() <= 16 and t not in cand:
+                    _g58_violation("recall_partitioned_missed", (s, r, t))
+        return cand
+
     def ix_check(self, state, fresh) -> None:
         """Guard: the persistent index equals a fresh build -- the reference structures (names, pos,
         out, triples, ref, byid) and, since G58 (Low 1 of verify-8994490), every G57b structure:
@@ -686,26 +782,56 @@ class Memo:
         told = Counter(f["r"] for f in state["facts"]
                        if not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]))
         _need(same and +ix["told_rel"] == told, "incremental fact index diverged from the facts")
-        by_rel, by_s, by_o, by_sr, codes, codebits, small = {}, {}, {}, {}, set(), {}, Counter()
+        by_rel, by_s, by_o, by_sr, codes, small, small_part = {}, {}, {}, {}, set(), Counter(), Counter()
+        pairs = ix.get("pairs")
         for f in state["facts"]:
             t = (f["s"], f["r"], f["o"])
             by_rel.setdefault(t[1], []).append(t)
             by_s.setdefault(t[0], []).append(t)
             by_o.setdefault(t[2], []).append(t)
             by_sr.setdefault((t[0], t[1]), []).append(f)
-            for code in ((0, t[0]), (1, t[1]), (2, t[2])):
-                if code not in codes:
-                    codes.add(code)
-                    for b in _geom().bits(bits_for(code[1], code[0])):
-                        codebits.setdefault(b, set()).add(code)
-            if self.packet_of(t).bit_count() < SMALL_PACKET:
+            codes.add((0, t[0]))
+            codes.add((1, t[1]))
+            codes.add((2, t[2]))
+            pc = self.packet(t).bit_count()
+            if pc < SMALL_PACKET:
                 small[t] += 1
+            if pc < SMALL_PART:
+                small_part[t] += 1
         ok = ix["by_rel"] == by_rel and ix["by_s"] == by_s and ix["by_o"] == by_o \
             and set(ix["by_sr"]) == set(by_sr) \
             and all(len(ix["by_sr"][k]) == len(v) and all(a is b for a, b in zip(ix["by_sr"][k], v)) for k, v in by_sr.items()) \
-            and ix["codes"] == codes and {b: set(v) for b, v in ix["codebits"].items()} == codebits \
-            and Counter(ix["small"]) == small \
+            and ix["codes"] == codes and Counter(ix["small"]) == small \
             and ix["decode"] == {pack(bits_for(t, 2)).bits: t for t in fresh["names"]}
+        if ok:
+            # G59: codebits (and the pair index) equal fresh builds, checked without rebuilding them:
+            # every listed entry is valid, no list repeats an entry, and the number of entries equals
+            # the number of valid ones (so the listed sets are exactly the valid sets)
+            xi = {X: bits_for(X[1], X[0]) for X in codes}
+            n = 0
+            for b, lst in ix["codebits"].items():
+                n += len(lst)
+                if len(set(lst)) != len(lst) or not all(X in xi and xi[X] >> b & 1 for X in lst):
+                    ok = False
+                    break
+            ok = ok and n == sum(x.bit_count() for x in xi.values())
+            if ok and pairs is not None:
+                ok = Counter(ix["small_part"]) == small_part
+                # each code's valid pair keys, from its fresh bits (the same grouping as `_code_pairs`)
+                bits = _geom().bits
+                ks = {X: frozenset(_code_pairs(bits(x))) for X, x in xi.items()}
+                want, n = sum(len(v) for v in ks.values()), 0
+                for key, lst in pairs.items():
+                    n += len(lst)
+                    if not ok or len(set(lst)) != len(lst):
+                        ok = False
+                        break
+                    for X in lst:
+                        v = ks.get(X)
+                        if v is None or key not in v:
+                            ok = False
+                            break
+                ok = ok and n == want
         if ok:
             pos = fresh["pos"]
             for rel, rows in ix["prow"].items():
@@ -758,6 +884,7 @@ class Memo:
         self.last = list(triples)
         self.tick += 1
         for t in list(added) + list(removed):
+            self.stamp.pop(t[1], None)  # G59: stamps kept in increasing order
             self.stamp[t[1]] = self.tick
         for (s_, r_), ent in self.recall.items():
             qi = bits_for(s_, 0) ^ bits_for(r_, 1)
@@ -784,7 +911,7 @@ class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
                  operators=False, retention="static", programs=False, answers=False, qualified_library=False,
                  bounded=False, lean=False, closed_guards=None, indexed=False, memo=None, incremental=False,
-                 routed=False):
+                 routed=False, partitioned=False):
         self.path = Path(path)
         self.qualified_library = qualified_library  # G51: library offers only qualified capabilities
         # G55 (option 3): guard budget under `complete`, independent of the observations; None = MAX_GUARDS
@@ -801,6 +928,13 @@ class Engine:
         # visits only the primitives that leave the frontier. Needs the memo; base engine only.
         self.routed = bool(routed and indexed and geometry and not programs and not operators
                            and retention == "static")
+        # G59 (`--partitioned`, docs/G59.md): exact recall from the codes near the query (a code-pair
+        # index), and the seeds index kept in step at the end of every call. Needs `--routed` and
+        # `--incremental`.
+        self.partitioned = bool(partitioned and self.routed and self.incremental)
+        if self.partitioned and not self.memo.partitioned:
+            self.memo.partitioned = True
+            self.memo.ix = None  # rebuilt with the pair index on next use
         self.readonly_call = False  # set by serve.py for a call whose lines are all questions
         self._cap_fp = {}
         self.bounded = bounded  # G53: exact cost bounds (memoized scan images; no re-scan of settled versions)
@@ -881,6 +1015,8 @@ class Engine:
         call and persists by journal instead of a full write."""
         if getattr(self, "_grown", None):
             self._flush_growth()
+        if self.partitioned and self.memo.sx_dirty or self.partitioned and self.memo.sx is None:
+            self._sx()  # G59: the seeds index in step with this call's writes (paid by the call that wrote)
         if self.retention == "adaptive":
             for comp, why in ret_mod.decide(self.state, self.state["retention"]):
                 ret_mod.archive(self.state, self.state["retention"], self._archive_dir, comp, why)
@@ -1261,7 +1397,9 @@ class Engine:
             if idx.get("persistent"):  # G57b: the exact candidate set, then the same test
                 pk, base = self.memo.packet_of, self.memo.base
                 ent = Counter()
-                for t in self.memo.recall_candidates(s, r):
+                k = self.memo.part_threshold(qi) if self.partitioned and "pairs" in self.memo.ix else None
+                cands = self.memo.recall_partitioned(s, r, qi, k) if k is not None else self.memo.recall_candidates(s, r)
+                for t in cands:
                     p = pk(t)
                     if 2 * (qi & p).bit_count() > p.bit_count():
                         ent[t] += base[t]
@@ -1492,9 +1630,10 @@ class Engine:
             for x in new:
                 fast |= X["subj"].get(x, set())
             X["pos"], X["npos"] = pos, len(pos)
-            for r, t in memo.stamp.items():
-                if t > X["tick"]:
-                    fast |= X["rel"].get(r, set())
+            for r in reversed(memo.stamp):  # G59: in increasing stamp order, so stop at the first old one
+                if memo.stamp[r] <= X["tick"]:
+                    break
+                fast |= X["rel"].get(r, set())
             for dn, dv in memo.rv_dirty:  # the capability itself, and every one whose closure holds it
                 fast.add(dn)
                 fast |= X["dep"].get((dn, dv), set()) if dv is not None else X["depn"].get(dn, set())
@@ -3233,7 +3372,7 @@ def parse_cli(argv):
              "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True), "--answers": ("answers", True),
              "--qualified-library": ("qualified_library", True),
              "--bounded": ("bounded", True), "--lean": ("lean", True), "--indexed": ("indexed", True), "--incremental": ("incremental", True),
-             "--routed": ("routed", True)}
+             "--routed": ("routed", True), "--partitioned": ("partitioned", True)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):

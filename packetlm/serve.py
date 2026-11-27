@@ -34,6 +34,7 @@ Protocol: one JSON request per stdin line, one JSON response per stdout line.
 Run: python -m packetlm.serve
 """
 from __future__ import annotations
+import gc
 import hashlib
 import json
 import os
@@ -146,6 +147,14 @@ class Server:
             o.memo.ix_check(eng.state, _fresh_index(eng.state["facts"]))
         o.since_full, o.validated = 0, True
         self._journal_start(o, _file_checksum(o.path))
+        if o.kw.get("partitioned"):
+            # G59 (docs/G59.md §2d): the snapshot's state is long-lived while the path is open. CPython's
+            # cyclic collector would otherwise re-traverse all of it (every fact, related or not) in
+            # its full collections, an O(heap) cost that lands on whichever call crosses the threshold.
+            # Collect the young generations (the garbage of this call), then move the survivors to the
+            # permanent generation; `close` returns them. No reply or state depends on it.
+            gc.collect(1)
+            gc.freeze()
 
     @staticmethod
     def _replay(path: Path, o: Open, lines) -> tuple:
@@ -218,6 +227,8 @@ class Server:
             self._snapshot(o)
         if o.jfh:
             o.jfh.close()
+        if gc.get_freeze_count():
+            gc.unfreeze()  # G59: the closed path's state is no longer long-lived; it is collectable again
 
     # ---------- requests ----------
 

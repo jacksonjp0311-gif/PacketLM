@@ -1738,6 +1738,7 @@ def g57b_checks(tmp: Path) -> dict:
                     _c[k] = sum(1 << b for b in rr.sample(range(128), 16))
                 return _c[k]
             E.bits_for = fake
+        E._CODE_BITS.clear()  # G59: the code-bits memo holds bits_for's values
         try:
             rng = _r.Random(57)
             a, _ = eng_pair("cand%d" % dense)
@@ -1760,6 +1761,7 @@ def g57b_checks(tmp: Path) -> dict:
             return (0 < small < len(set(ix["triples"])) if dense else small == 0) and all(a.memo.packet_of(t).bit_count() < SMALL_PACKET for t in ix["small"])
         finally:
             E.bits_for = real
+            E._CODE_BITS.clear()
     guarded("g57b_recall_candidates_superset_real_codes", lambda: candidates(False))
     guarded("g57b_recall_candidates_superset_dense_codes", lambda: candidates(True))
 
@@ -1774,6 +1776,7 @@ def g57b_checks(tmp: Path) -> dict:
                  ("R2", 1): m(list(range(0, 14)) + [104, 105]),
                  ("B", 2): m([102, 103] + list(range(200, 205)) + list(range(400, 409)))}
         E.bits_for = lambda tok, role: codes.get((tok, role)) or real(tok, role)
+        E._CODE_BITS.clear()
         try:
             a, _ = eng_pair("wit")
             a.tell("A", "R2", "B")
@@ -1785,6 +1788,7 @@ def g57b_checks(tmp: Path) -> dict:
                 and ("A", "R2", "B") not in a.memo.ix["small"]
         finally:
             E.bits_for = real
+            E._CODE_BITS.clear()
     guarded("g57b_recall_candidate_bound_tight_case", candidate_bound_witness)
 
     def index_equal():
@@ -2180,6 +2184,264 @@ def g58_checks(tmp: Path) -> dict:
     return out
 
 
+def g59_checks(tmp: Path) -> dict:
+    """G59 (`--partitioned`): exact recall from the codes near the query and the seeds index kept in
+    step give the G58 engine's replies and state bytes (docs/G59.md). Each check is guarded."""
+    from . import serve, g59_diff, g58_diff
+    from . import engine as E
+    from .engine import Engine, StateError as SE
+    from collections import Counter
+    import random as _r
+    out = {}
+
+    def guarded(name, fn):
+        try:
+            out[name] = bool(fn())
+        except Exception as exc:  # noqa: BLE001
+            out[name] = False
+            out["_" + name + "_error"] = f"{type(exc).__name__}: {exc}"[:200]
+
+    def eng(tag, part=True):
+        return Engine(tmp / f"g59_{tag}.json", indexed=True, incremental=True, lean=True, routed=True, partitioned=part)
+
+    def differential(dense):
+        r = g59_diff.run(n=30 if not dense else 20, seed=591 + (dense is True) + 2 * (dense == "blocks"), dense=dense)
+        out[f"_differential_dense{dense}"] = {k: v for k, v in r.items() if k != "mismatch"}
+        p = r.get("paths", {})
+        return r["ok"] and r["audit_violations"] == 0 and r["sessions"] == (30 if not dense else 20) + len(g59_diff.SCENARIOS) \
+            and p.get("partitioned_queries", 0) > 0 and p.get("scoped_validations", 0) > 0 and p.get("full_validations", 0) > 0
+    guarded("g59_differential_replies_and_state_equal", lambda: differential(False))
+    guarded("g59_differential_dense_codes", lambda: differential(True))
+    guarded("g59_differential_block_codes", lambda: differential("blocks"))
+
+    def with_codes(fn_codes, body):
+        from . import field as F
+        real, realf = E.bits_for, F.bits_for
+        E.bits_for = F.bits_for = fn_codes
+        E._CODE_BITS.clear()
+        try:
+            return body()
+        finally:
+            E.bits_for, F.bits_for = real, realf
+            E._CODE_BITS.clear()
+
+    def superset(codes_fn, tag):
+        # every triple that passes with |p ^ q| <= 16 (all that can ever add a name) is a candidate,
+        # and the recall equals the G58 engine's; counted so the check is not vacuous: candidates
+        # outside the (s, r) facts, passing triples the partition leaves out, and (block codes)
+        # names recalled through an unrelated fact
+        def body():
+            rng = _r.Random(59)
+            a, b = eng("sup" + tag), eng("sup_ref" + tag, part=False)
+            ents, rels = [f"c{i}" for i in range(40)], ["p", "q", "r", "s", "t"]
+            st = Counter()
+            for step in range(250):
+                t = (rng.choice(ents), rng.choice(rels), rng.choice(ents))
+                a.tell(*t)
+                b.tell(*t)
+                a._idx()
+                ix = a.memo.ix
+                for _ in range(3):
+                    s_, r_ = rng.choice(ents + ["zz"]), rng.choice(rels + ["u"])
+                    qi = E.bits_for(s_, 0) ^ E.bits_for(r_, 1)
+                    if a.ask(s_, r_) != b.ask(s_, r_):
+                        return False
+                    k = a.memo.part_threshold(qi)
+                    st["queries"] += 1
+                    if k is None:
+                        st["fallback"] += 1
+                        continue
+                    cand = a.memo.recall_partitioned(s_, r_, qi, k)
+                    dec = a._decode()
+                    for t2 in set(ix["triples"]):
+                        p = a.memo.packet_of(t2)
+                        passes = 2 * (qi & p).bit_count() > p.bit_count()
+                        if passes and (p ^ qi).bit_count() <= 16 and t2 not in cand:
+                            return False
+                        if (t2[0], t2[1]) != (s_, r_):
+                            st["exotic_candidates"] += t2 in cand
+                            st["passing_left_out"] += passes and t2 not in cand
+                            st["exotic_decoding"] += passes and E.pack(p ^ qi).bits in dec
+            out["_superset_" + tag] = dict(st)
+            # dense: the partition leaves passing (non-decoding) triples out; blocks: unrelated facts decode
+            return st["queries"] - st["fallback"] > 300 and st["exotic_candidates"] > 0 \
+                and (st["passing_left_out"] > 0 if tag == "dense" else st["exotic_decoding"] > 0)
+        return with_codes(codes_fn, body)
+    guarded("g59_partitioned_recall_superset_dense_codes", lambda: superset(g59_diff._dense, "dense"))
+    guarded("g59_partitioned_recall_superset_block_codes", lambda: superset(g59_diff._blocks, "blocks"))
+
+    def witness():
+        # a name recalled for (S, R) through a fact with neither S nor R: each of its three codes shares
+        # 8 or 16 bits with q; the partitioned recall finds it, as the reference does
+        m = lambda bits: sum(1 << b for b in bits)  # noqa: E731
+        codes = {("S", 0): m(range(100, 116)), ("R", 1): m(range(0, 16)),
+                 ("A", 0): m(list(range(100, 108)) + list(range(500, 508))),
+                 ("R2", 1): m(list(range(0, 8)) + list(range(600, 608))),
+                 ("B", 2): m(list(range(108, 116)) + list(range(8, 16))),
+                 ("X", 2): m(list(range(500, 508)) + list(range(600, 608)))}
+        real = E.bits_for
+
+        def body():
+            a, b = eng("wit"), eng("wit_ref", part=False)
+            for e_ in (a, b):
+                e_.tell("A", "R2", "B")
+                e_.tell("u", "v", "X")
+            ra, rb = a.ask("S", "R"), b.ask("S", "R")
+            qi = codes[("S", 0)] ^ codes[("R", 1)]
+            return ra == rb == {"status": "known", "value": "X"} and a.memo.part_threshold(qi) is not None \
+                and a.memo.counts["partitioned_queries"] > 0 and ("S", "R") not in a.memo.ix["by_sr"]
+        return with_codes(lambda tok, role: codes.get((tok, role)) or real(tok, role), body)
+    guarded("g59_partitioned_recall_exotic_witness", witness)
+
+    def fallback():
+        # a query whose q is too small for the pigeonhole bound (|q| <= 22) uses the G57b filter
+        m = lambda bits: sum(1 << b for b in bits)  # noqa: E731
+        codes = {("S", 0): m(range(0, 16)), ("R", 1): m(list(range(0, 11)) + list(range(200, 205)))}
+        real = E.bits_for
+
+        def body():
+            a, b = eng("fb"), eng("fb_ref", part=False)
+            for e_ in (a, b):
+                e_.tell("S", "R", "o1")
+                e_.tell("S", "w", "o2")
+            qi = codes[("S", 0)] ^ codes[("R", 1)]
+            ra, rb = a.ask("S", "R"), b.ask("S", "R")
+            return qi.bit_count() == 10 and a.memo.part_threshold(qi) is None and ra == rb \
+                and a.memo.counts["candidate_queries"] > 0 and a.memo.counts["partitioned_queries"] == 0
+        return with_codes(lambda tok, role: codes.get((tok, role)) or real(tok, role), body)
+    guarded("g59_threshold_fallback_to_g57b_filter", fallback)
+
+    def index_check_covers():
+        # the snapshot's index check catches a corrupted pair index, small list or codebits entry
+        a = eng("ixc")
+        rng = _r.Random(591)
+        for _ in range(300):
+            a.tell(f"e{rng.randrange(60)}", f"r{rng.randrange(6)}", f"e{rng.randrange(60)}")
+        a._idx()
+        m = a.memo
+        fresh = lambda: E._fresh_index(a.state["facts"])  # noqa: E731
+        m.ix_check(a.state, fresh())  # clean: passes
+        ix = m.ix
+        caught = 0
+        key, lst = next(iter(ix["pairs"].items()))
+        X = lst[0]
+        b1, b2 = divmod(key, 4096)
+        x = E.bits_for(X[1], X[0])
+        other = [b for b in E._geom().bits(x) if b not in (b1, b2)]
+        wrong_group = None
+        g = -(-x.bit_count() // E.PAIR_GROUPS)
+        for b in other:  # a pair of the code's bits that lie in different groups
+            lo, hi = min(b1, b), max(b1, b)
+            if (x & ((1 << lo) - 1)).bit_count() // g != (x & ((1 << hi) - 1)).bit_count() // g:
+                wrong_group = lo * 4096 + hi
+                break
+        corruptions = [
+            lambda: lst.pop(0),                                         # an entry missing
+            lambda: lst.append(X),                                      # an entry repeated
+            lambda: ix["pairs"].setdefault(wrong_group, []).append(X),  # a pair across two groups
+            lambda: ix["pairs"].setdefault(7 * 4096 + 9, []).append(X) if not (x >> 7 & 1 and x >> 9 & 1) else None,
+            lambda: ix["small_part"].append(ix["triples"][0]),
+            lambda: ix["codebits"][next(iter(ix["codebits"]))].append(("x", 0)),
+            lambda: ix["codebits"][next(iter(ix["codebits"]))].pop(),
+        ]
+        for corrupt in corruptions:
+            a2 = eng("ixc")  # same memo state rebuilt from scratch
+            a2.memo = E.Memo()
+            a2.memo.partitioned = True
+            a2.state = a.state
+            a2._cache = None
+            a2._idx()
+            ix = a2.memo.ix
+            key, lst = next(iter(ix["pairs"].items()))
+            X = lst[0]
+            corrupt()
+            try:
+                a2.memo.ix_check(a2.state, fresh())
+            except SE:
+                caught += 1
+        out["_index_check_corruptions_caught"] = f"{caught}/{len(corruptions)}"
+        return caught == len(corruptions) and wrong_group is not None
+    guarded("g59_index_check_covers_pairs_and_codebits", index_check_covers)
+
+    def seeds_in_step():
+        # with --partitioned the seeds index is synced at the end of every call: nothing pending,
+        # equal to a fresh computation
+        srv = serve.Server(snapshot_every=7)
+        p = tmp / "g59_sx.json"
+        rng = _r.Random(593)
+        ok, n = True, 0
+        for k in range(len(g58_diff.SCENARIOS) + 6):
+            calls = g58_diff.SCENARIOS[k] if k < len(g58_diff.SCENARIOS) else g58_diff.session(rng)
+            pp = tmp / f"g59_sx{k}.json"
+            for c in calls:
+                srv.call(pp, g59_diff.NEW, c)
+                e = srv._engine(srv.cur)
+                S = srv.cur.memo.sx
+                if srv.cur.memo.sx_dirty or S is None:
+                    return False
+                for nm in e.state["capabilities"]:
+                    ver = e.version(nm)
+                    want = (set(ver.get("domain", [])) | {s_ for s_, _ in e.state["observations"].get(nm, [])}) if ver else set()
+                    ok = ok and S["seeds"].get(nm) == want
+                n += 1
+        srv.close()
+        out["_seeds_in_step_calls"] = n
+        return ok and n > 50
+    guarded("g59_seeds_index_in_step_after_every_call", seeds_in_step)
+
+    def stamps_ordered():
+        a = eng("st")
+        rng = _r.Random(594)
+        for i in range(200):
+            a.tell(f"e{rng.randrange(30)}", f"r{rng.randrange(8)}", f"e{rng.randrange(30)}")
+            a._idx()
+            if i % 17 == 0 and a.state["facts"]:
+                f = rng.choice(a.state["facts"])
+                a.retract(f["s"], f["r"], f["o"])
+                a._idx()
+        v = list(a.memo.stamp.values())
+        return len(v) >= 8 and v == sorted(v)
+    guarded("g59_stamps_in_increasing_order", stamps_ordered)
+
+    def flag_needs_routed():
+        a = Engine(tmp / "g59_f1.json", indexed=True, incremental=True, lean=True, partitioned=True)
+        b = Engine(tmp / "g59_f2.json", indexed=True, lean=True, routed=True, partitioned=True)
+        return not a.partitioned and not b.partitioned and eng("f3").partitioned
+    guarded("g59_partitioned_requires_routed_and_incremental", flag_needs_routed)
+
+    def gc_frozen_while_open():
+        # §2d: with --partitioned the snapshot freezes the long-lived state; closing the path unfreezes
+        # it; G58 flags never freeze; the replies are those of the same calls with the collector off
+        import gc
+        if gc.get_freeze_count():
+            gc.unfreeze()
+        srv = serve.Server(snapshot_every=3)
+        calls = g58_diff.SCENARIOS[0]
+        got, frozen = [], []
+        for c in calls:
+            got.append(srv.call(tmp / "g59_gc.json", g59_diff.NEW, c)["replies"])
+            frozen.append(gc.get_freeze_count())
+        srv.close()
+        after = gc.get_freeze_count()
+        srv2 = serve.Server(snapshot_every=3)
+        for c in calls:
+            srv2.call(tmp / "g59_gc_b.json", g59_diff.BASE, c)
+            if gc.get_freeze_count():
+                return False
+        srv2.close()
+        gc.disable()
+        try:
+            srv3 = serve.Server(snapshot_every=3)
+            ref = [srv3.call(tmp / "g59_gc_c.json", g59_diff.NEW, c)["replies"] for c in calls]
+            srv3.close()
+        finally:
+            gc.enable()
+        out["_gc_frozen_counts"] = frozen
+        return max(frozen) > 0 and after == 0 and got == ref and gc.get_freeze_count() == 0
+    guarded("g59_gc_frozen_while_open_and_reply_neutral", gc_frozen_while_open)
+    return out
+
+
 def run() -> dict:
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
@@ -2190,7 +2452,7 @@ def run() -> dict:
                         ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks),
                         ("programs", program_checks), ("px", px_checks), ("g49", g49_checks),
                         ("serve", serve_checks), ("verify_3e2783c", verify_3e2783c_checks),
-                        ("g57", g57_checks), ("g57b", g57b_checks), ("g58", g58_checks)]:
+                        ("g57", g57_checks), ("g57b", g57b_checks), ("g58", g58_checks), ("g59", g59_checks)]:
             # a section that raises is a failed check (named), not a crash that hides the other sections
             try:
                 sections[sec] = fn(tmp)  # no pseudo-check when it completes (verification L3 of 82dd0a2)
