@@ -10,12 +10,12 @@ met plus controls), HOLD, failed.
 - 8/8 workflow modules, 47 checks, 0 failed. 10 modules crashed: `Router.path_union`
   was removed in 6a345a5. Three weak checks were found.
 
-## 2026-11-26 20:40 — G44 v1 (PR #1, b8cbe6c)
+## 2026-11-26 ~20:20 — G44 v1 (PR #1, b8cbe6c)
 
 - One engine; 39 checks; 86 suite checks.
 - Failure kept: `docs/evidence/g44_first_run_failed.json` (wrong test expectation).
 
-## 2026-11-26 21:xx — G44 audit resolution (engine schema 2)
+## 2026-11-26 20:39 — G44 audit resolution (engine schema 2)
 
 Pre-registered: `docs/G44_AUDIT.md` (commit 6e20bbe), before the run.
 
