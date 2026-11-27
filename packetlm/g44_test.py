@@ -1923,6 +1923,16 @@ def g58_checks(tmp: Path) -> dict:
                                       "scoped_validations", "full_validations"))
     guarded("g58_differential_replies_and_state_equal", differential)
 
+    def differential_library_flags():
+        # the capability index honours --no-library and --qualified-library (G51 arm Q)
+        ok = True
+        for extra, sd in ((["--no-library"], 584), (["--qualified-library"], 585)):
+            r = g58_diff.run(n=15, seed=sd, ref_flags=g58_diff.BASE + extra, new_flags=g58_diff.NEW + extra)
+            out[f"_differential{extra[0]}"] = {k: v for k, v in r.items() if k not in ("mismatch", "paths")}
+            ok = ok and r["ok"]
+        return ok
+    guarded("g58_differential_library_flags", differential_library_flags)
+
     def contract():
         r = g58_diff.contract_fuzz(n=30, seed=582)
         out["_contract_fuzz"] = r

@@ -82,7 +82,7 @@ MUTATIONS = {
     "g50_tiebreak_off_values": ('                if score > best_score or (score == best_score and score and tie(e) < tie(best)):', '                if score > best_score:'),
     "g50_tiebreak_off_answers": ('                if score > best_score or (tie and score == best_score and score and tie(e) < tie(best)):', '                if score > best_score:'),
     "g50_closure_size_ignored": ('                sizes[x] = len(seen)', '                sizes[x] = 1'),
-    "g51_qualified_library_ignored": ('                if self.qualified_library and ver["status"] != "qualified":', '                if False:'),
+    "g51_qualified_library_ignored": ('                if self.qualified_library and ver["status"] != "qualified":\n                    continue  # G51 arm Q', '                if False:\n                    continue  # G51 arm Q'),  # re-anchored in G58 (the audit repeats the test)
     "h1_guard_space_data_dependent": ('        if any(s_ in self._closed() for s_, _ in obs):\n            allp', '        if False:\n            allp'),
     "h1_gap_ignored": ('status = "qualified" if complete and not blockers and not gap else "provisional"', 'status = "qualified" if complete and not blockers else "provisional"'),
     "h1_no_identity_guard": ('            allp.append(nil)\n', '            pass\n'),
@@ -189,6 +189,8 @@ MUTATIONS = {
     "g58_members_not_merged": ('                y.extend(x)\n                m[new] = y', '                m[new] = y'),
     "g58_ix_check_skips_g57b_structures": ('        _need(ok, "incremental fact index diverged from the facts (G57b structures)")', '        pass'),
     "g58_no_ix_check_before_removal": ('            self.memo.counts["ix_checks_before_removal"] += 1\n            self.memo.ix_check(self.state, _fresh_index(self.state["facts"]))', '            pass'),
+    "g58_cx_library_off": ('        offer = self.use_library and ver["status"] in EXEC_OK and \\', '        offer = ver["status"] in EXEC_OK and \\'),
+    "g58_cx_qualified_library_ignored": ('            (not self.qualified_library or ver["status"] == "qualified")', '            True'),
     "g58_scoped_validation_skips_caps": ('*((sc.get("caps", set()),', '*((set(),', "serve.py"),
 }
 
@@ -239,13 +241,8 @@ def _baseline() -> list:
         return json.loads(rec.read_text())["failed"] if rec.exists() else ["baseline did not run"]
 
 
-def run() -> dict:
-    results = {}
-    base_failed = _baseline()
-    for name, (old, new, *target) in MUTATIONS.items():
-        if base_failed:
-            results[name] = {"error": f"baseline fails: {base_failed[:3]}"}
-            continue
+def _run_one(name, old, new, target):
+    if True:
         with tempfile.TemporaryDirectory() as d:
             dst = Path(d) / "repo"
             shutil.copytree(ROOT / "packetlm", dst / "packetlm", ignore=shutil.ignore_patterns("__pycache__"))
@@ -253,15 +250,30 @@ def run() -> dict:
             eng = dst / "packetlm" / (target[0] if target else "engine.py")
             src = eng.read_text()
             if src.count(old) != 1:
-                results[name] = {"error": "mutation site not found exactly once"}
-                continue
+                return {"error": "mutation site not found exactly once"}
             eng.write_text(src.replace(old, new))
             p = subprocess.run([sys.executable, "-m", "packetlm.g44_test"], cwd=dst, capture_output=True, text=True, timeout=600)
             rec = dst / "artifacts" / "g44_receipt.json"
             failed = json.loads(rec.read_text())["failed"] if rec.exists() and p.returncode else []
-            results[name] = {"exit": p.returncode, "failed": failed,
+            return {"exit": p.returncode, "failed": failed,
                              "verdict": "KILLED" if p.returncode else "SURVIVED",
                              "crash": p.stderr.strip().splitlines()[-1][:200] if p.returncode and not failed else None}
+
+
+def run(workers=int(__import__("os").environ.get("PACKETLM_MUT_WORKERS", "1"))) -> dict:
+    """Each mutation in its own temp copy; `workers` copies at once (G58: the same verdicts, in
+    parallel; results keyed and ordered by mutation name as before)."""
+    from concurrent.futures import ThreadPoolExecutor
+    results = {}
+    base_failed = _baseline()
+    if base_failed:
+        for name in MUTATIONS:
+            results[name] = {"error": f"baseline fails: {base_failed[:3]}"}
+    else:
+        with ThreadPoolExecutor(workers) as ex:
+            futs = {name: ex.submit(_run_one, name, old, new, target) for name, (old, new, *target) in MUTATIONS.items()}
+            for name in MUTATIONS:
+                results[name] = futs[name].result()
     for name, (old, new) in G45_MUTATIONS.items():
         results["g45." + name] = _run_g45_mutation(old, new) if not base_failed else {"error": "baseline fails"}
     out = {"baseline_failed": base_failed, "mutations": results, "killed": sum(r.get("verdict") == "KILLED" for r in results.values()),

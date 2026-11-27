@@ -2170,21 +2170,6 @@ class Engine:
             return got
         return visit
 
-    def _offered(self, name):
-        """The capability part of `primitives` (the same loop), for the G58 cache."""
-        out = []
-        if self.use_library:
-            for n in sorted(self.state["capabilities"]):
-                ver = self.version(n)
-                if n == name or not ver or ver["status"] not in EXEC_OK:
-                    continue
-                if self.qualified_library and ver["status"] != "qualified":
-                    continue
-                if any(dn == name for dn, _ in self._closure_cached(n, ver)):
-                    continue
-                out.append(f"cap:{n}@{ver['v']}")
-        return out
-
     def _operator_prims(self, name):
         """until:R:Q:T steps. Predicates (Q, T) are the properties every observed answer
         shares; R ranges over the told relations other than Q."""
