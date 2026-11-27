@@ -22,6 +22,7 @@ Uncertainty policy (docs/G44.md):
 from __future__ import annotations
 import copy
 import hashlib
+import bisect
 import itertools
 import json
 import os
@@ -533,6 +534,16 @@ class Memo:
         self.pfirst = {}  # G58: primitive -> (pin_gen, base, first relation)
         self.lib = {}
         self.pb = {}  # G58: (name, v, seq) -> the version's expanded base, valid while every status is PINNED_OK
+        # G58 capability index (`Engine._cx`): the offered capabilities in name order, by first base
+        # relation, and by dependency; `cx_dirty` = names whose record changed since the last sync
+        self.cx = None
+        self.cx_dirty = set()
+        # G58 seeds index (`Engine._sx`, for `_flush_growth`): entity -> names whose current version's
+        # domain or observed subjects hold it; and the union-find classes' members, when tracked
+        self.sx = None
+        self.sx_dirty = set()
+        self.track_members = False
+        self.members = None
 
     def packet_of(self, t):
         p = self.pk.get(t)
@@ -555,7 +566,15 @@ class Memo:
         uf.setdefault(b, b)
         ra, rb = self._find(a), self._find(b)
         if ra != rb:
-            uf[max(ra, rb)] = min(ra, rb)
+            new, old = min(ra, rb), max(ra, rb)
+            uf[old] = new
+            m = self.members
+            if m is not None:  # G58: class members, merged small into large
+                x, y = m.pop(old, None) or [old], m.get(new) or [new]
+                if len(x) > len(y):
+                    x, y = y, x
+                y.extend(x)
+                m[new] = y
 
     # ---------- G57b: persistent fact index ----------
 
@@ -671,6 +690,7 @@ class Memo:
         the seeds plus the union-find classes of the seeds that have edges."""
         if self.uf is None:
             self.uf = {}
+            self.members = {} if self.track_members else None
             for t in self.base:
                 if not t[1].startswith("cap:"):
                     self._union(t[0], t[2])
@@ -719,6 +739,7 @@ class Memo:
         if self.uf is not None:
             if any(not t[1].startswith("cap:") for t in removed):
                 self.uf = None  # an edge may be gone: rebuild the classes on next use
+                self.members = None
             else:
                 for t in added:
                     if not t[1].startswith("cap:"):
@@ -1070,6 +1091,7 @@ class Engine:
             self.state["observations"][name] = keep
         if self.memo is not None:
             self.memo.rvx = None  # G58: observations rewritten; the next review is a full pass
+            self.memo.sx = None
             if self.memo.scope is not None:
                 self.memo.scope["obs_all"] = True
         return events
@@ -1107,6 +1129,8 @@ class Engine:
         scan = self._scan(name, ver["seq"], horizon)
         blocking = scan.pop("blocking")
         ver["domain"] = scan.pop("domain_set")
+        if self.memo is not None:
+            self.memo.sx_dirty.add(name)  # G58
         rec = self.state["hypotheses"].setdefault(name, {"live": []})
         rec.update({"candidate": ver["seq"], "blocking": blocking, "scan": scan})
         status = "provisional" if blocking or self._deps_unqualified(ver["seq"]) else "qualified"
@@ -1360,6 +1384,8 @@ class Engine:
             if (old_status in PINNED_OK) != (status in PINNED_OK):
                 self.memo.pin_gen += 1
             self.memo.rv_dirty.add((name, v))
+            self.memo.cx_dirty.add(name)
+            self.memo.sx_dirty.add(name)
             if self.memo.scope is not None:
                 self.memo.scope.setdefault("caps", set()).add(name)
         if status == "qualified":
@@ -1781,13 +1807,18 @@ class Engine:
             return None
         return base[0].split(":")[1] if base[0].startswith("until:") else base[0]
 
-    def _activated(self, prims, n, start):
+    def _activated(self, prims, n, start, name=None):
         """Programs of length n whose image of the start set never empties; returns (seqs, pruned)."""
         out, pruned, P = [], 0, len(prims)
 
         idx = self._idx()
         by_first = {}
-        if self.routed:
+        rels = None
+        if self.routed and name is not None and not self.operators:
+            # G58: `prims` is `primitives(name)`: each node's visit list from the capability index
+            rels = self._cx_router(name, {r: k for k, r in enumerate(self.relations())})
+            first = None
+        elif self.routed:
             # G58: primitives indexed by their first base relation; a node visits only those that
             # leave its frontier, in the original order. Each skipped one adds P^(n-len-1) to
             # `pruned`, exactly as the loop below would (same count, same programs, same order).
@@ -1804,7 +1835,14 @@ class Engine:
             ents = [idx["names"][i] for i in _geom().bits(front)] if self.geometry else front
             here = set().union(*(idx["out"].get(x, set()) for x in ents)) if ents else set()
             visit = prims
-            if self.routed:
+            if rels is not None:
+                visit = [p for p, _, _ in rels(here)]
+                pruned += (P - len(visit)) * P ** (n - len(prefix) - 1)
+                if G58_AUDIT["on"]:
+                    _, _, bf = self._routing(prims)
+                    if [prims[i] for i in sorted(i for r in here for i in bf.get(r, ()))] != visit:
+                        _g58_violation("activated_visit", (name, sorted(here)))
+            elif self.routed:
                 ii = sorted(i for r in here for i in by_first.get(r, ()))
                 pruned += (P - len(ii)) * P ** (n - len(prefix) - 1)
                 visit = [prims[i] for i in ii]
@@ -1864,6 +1902,7 @@ class Engine:
         obs = self.state["observations"].setdefault(name, [])
         if self.memo is not None:
             self.memo.rv_obs.add(name)  # G58
+            self.memo.sx_dirty.add(name)
             if self.memo.scope is not None:
                 self.memo.scope.setdefault("obs", set()).add(name)
         if [subject, value] not in obs:
@@ -1945,10 +1984,7 @@ class Engine:
     def primitives(self, name):
         prims = [f"rel:{r}" for r in self.relations()]
         if self.routed and not self.operators:
-            key = ("caps", self._lib_key(name))
-            caps = self.memo.lib.get(key)
-            if caps is None:
-                caps = self.memo.lib[key] = self._offered(name)
+            caps = self._cx_offered(name)
             if G58_AUDIT["on"]:
                 fresh = []
                 if self.use_library:
@@ -1978,6 +2014,122 @@ class Engine:
         if self.operators:
             prims += self._operator_prims(name)
         return prims
+
+    # ---------- G58: capability index ----------
+
+    def _cx_entry(self, n):
+        """(offered, primitive, base, first relation, closure names) of a capability's current version:
+        offered = what `_offered`'s loop tests apart from the name itself and cycles."""
+        ver = self.version(n)
+        if not ver:
+            return (False, None, None, None, frozenset())
+        offer = self.use_library and ver["status"] in EXEC_OK and \
+            (not self.qualified_library or ver["status"] == "qualified")
+        clo = frozenset(dn for dn, _ in self._closure_cached(n, ver))
+        p = f"cap:{n}@{ver['v']}"
+        base = self.expand([p]) if offer else None
+        first = None if not base else (base[0].split(":")[1] if base[0].startswith("until:") else base[0])
+        return (offer, p, tuple(base) if base is not None else None, first, clo)
+
+    def _cx(self):
+        """G58 (docs/G58.md §2b): the capability index, synced with the capability records. Rebuilt
+        when the records object or the library flags change; otherwise only the names written since
+        the last sync (`cx_dirty`: status changes and new versions) and every capability whose
+        closure holds one of them (its base depends on their statuses) are recomputed."""
+        m, caps = self.memo, self.state["capabilities"]
+        X = m.cx
+        flags = (self.use_library, self.qualified_library)
+        if X is None or X["caps"] is not caps or X["flags"] != flags:
+            X = m.cx = {"caps": caps, "flags": flags, "ent": {}, "order": [], "order_p": [], "by_first": {},
+                        "rdep": {}}
+            todo = list(caps)
+            m.counts["g58_cx_rebuilt"] += 1
+        else:
+            todo = set(m.cx_dirty)
+            for n in m.cx_dirty:
+                todo |= X["rdep"].get(n, set())
+            todo |= {n for n in caps if n not in X["ent"]} if len(X["ent"]) < len(caps) else set()
+        m.cx_dirty = set()
+        ent, order, order_p, by_first, rdep = X["ent"], X["order"], X["order_p"], X["by_first"], X["rdep"]
+        for n in sorted(todo):
+            old = ent.get(n)
+            if old is not None and old[0]:
+                i = bisect.bisect_left(order, n)
+                del order[i], order_p[i]
+                if old[3] is not None:
+                    lst = by_first[old[3]]
+                    del lst[bisect.bisect_left(lst, n)]
+                for dn in old[4]:
+                    rdep[dn].discard(n)
+            new = ent[n] = self._cx_entry(n) if n in caps else (False, None, None, None, frozenset())
+            if new[0]:
+                i = bisect.bisect_left(order, n)
+                order.insert(i, n)
+                order_p.insert(i, new[1])
+                if new[3] is not None:
+                    bisect.insort(by_first.setdefault(new[3], []), n)
+                for dn in new[4]:
+                    rdep.setdefault(dn, set()).add(n)
+        if G58_AUDIT["on"]:  # every entry equals a fresh one
+            for n in caps:
+                if ent.get(n) != self._cx_entry(n):
+                    _g58_violation("cx_entry", n)
+        return X
+
+    def _cx_offered(self, name):
+        """`_offered(name)` from the index: every offered capability but the name itself and those
+        whose closure holds it (a cycle), in name order."""
+        X = self._cx()
+        excl = {n for n in X["rdep"].get(name, ()) if X["ent"][n][0]}
+        if X["ent"].get(name, (False,))[0]:
+            excl.add(name)
+        order, order_p = X["order"], X["order_p"]
+        if not excl:
+            return list(order_p)
+        out, j = [], 0
+        for i in sorted(bisect.bisect_left(order, n) for n in excl):
+            out += order_p[j:i]
+            j = i + 1
+        out += order_p[j:]
+        return out
+
+    def _cx_router(self, name, rels):
+        """The primitives of `primitives(name)` whose base is defined and starts with a relation in
+        a set `here`, in `primitives` order (relation primitives in relation order, then capabilities
+        in name order), as a function of `here` -> [(primitive, base tuple, first relation)]. For one
+        scan or activation walk (no record changes during it): per-relation lists and per-set results
+        are kept for its duration."""
+        X = self._cx()
+        ent, by_first = X["ent"], X["by_first"]
+        excl = X["rdep"].get(name, ())
+        per_rel, per_set = {}, {}
+
+        def rel_items(r):
+            got = per_rel.get(r)
+            if got is None:
+                got = []
+                k = rels.get(r)
+                if k is not None:
+                    got.append(((0, k, ""), f"rel:{r}", (r,), r))
+                for n in by_first.get(r, ()):
+                    if n != name and n not in excl:
+                        e = ent[n]
+                        got.append(((1, 0, n), e[1], e[2], r))
+                per_rel[r] = got
+            return got
+
+        def visit(here):
+            key = frozenset(here)
+            got = per_set.get(key)
+            if got is None:
+                items = []
+                for r in key:
+                    items += rel_items(r)
+                if len(key) > 1:
+                    items.sort(key=lambda t: t[0])
+                got = per_set[key] = [t[1:] for t in items]
+            return got
+        return visit
 
     def _offered(self, name):
         """The capability part of `primitives` (the same loop), for the G58 cache."""
@@ -2022,7 +2174,7 @@ class Engine:
             start = set(subjects)
         for n in range(min_len, max_len + 1):
             if self.activation:
-                seqs, pr = self._activated(prims, n, start)
+                seqs, pr = self._activated(prims, n, start, name=name if self.routed else None)
                 self._pruned += pr
             else:
                 seqs = product(prims, repeat=n)
@@ -2270,12 +2422,12 @@ class Engine:
         jf = lambda i, o, v: judge_closed(o, v) if i in closed_at else judge_set(o, v)  # noqa: E731
         scan_tab = None
         if self.routed and self.bounded:
-            scan_tab = self._scan_table(self.primitives(name))  # G58: cached per library generation
-            prims = scan_tab[0]
+            # G58: no primitive table; each node's visit list comes from the capability index
+            scan_tab = self._cx_router(name, {r: k for k, r in enumerate(self.relations())})
+            prims = None
         else:
             prims = [(p, self.expand([p])) for p in self.primitives(name)]
             prims = [(p, tuple(b) if self.bounded else b) for p, b in prims if b is not None]
-        P = len(prims)
         out = {"horizon": horizon, "domain": len(D), "domain_set": sorted(D), "scanned": 0, "evaluated": 0, "contradicted": 0,
                "compatible": 0, "pruned_compatible": 0, "blocking_n": 0, "conflicts": 0, "assumption": self.ASSUMPTION}
         blocking = []
@@ -2324,7 +2476,7 @@ class Engine:
         E0 = set()
         outrel = self._idx()["out"]
         if scan_tab is not None:
-            first, by_first = scan_tab[1], scan_tab[2]
+            first, by_first = {}, None
             out["pruned_counting"] = "visited nodes only (--bounded)"
         else:
             first = {p: (pb[0].split(":")[1] if pb[0].startswith("until:") else pb[0]) for p, pb in prims}
@@ -2344,7 +2496,17 @@ class Engine:
                 for f in (front.values() if self.bounded else front):
                     for x in f:
                         here |= outrel.get(x, set())
-                if self.bounded:
+                if scan_tab is not None:
+                    vv = scan_tab(here)
+                    for p, _, f in vv:
+                        first[p] = f
+                    visit = [(p, pb) for p, pb, _ in vv]
+                    if G58_AUDIT["on"]:
+                        ref_tab = self._scan_table(self.primitives(name))
+                        ref = [ref_tab[0][i] for i in sorted(i for r in here for i in ref_tab[2].get(r, ()))]
+                        if ref != visit:
+                            _g58_violation("scan_visit", (name, sorted(here)))
+                elif self.bounded:
                     visit = [prims[i] for i in sorted(i for r in here for i in by_first.get(r, ()))]
                 else:
                     visit = prims
@@ -2400,8 +2562,10 @@ class Engine:
             # is not itself qualified; its closed or open judgment is only relative to that version
             status = "provisional"
         cap = self.state["capabilities"].setdefault(name, {"current": None, "versions": [], "express": None})
-        if self.memo is not None and self.memo.scope is not None:
-            self.memo.scope.setdefault("caps", set()).add(name)  # G58: this record is written here
+        if self.memo is not None:
+            self.memo.sx_dirty.add(name)  # G58: its domain or current version may change here
+            if self.memo.scope is not None:
+                self.memo.scope.setdefault("caps", set()).add(name)  # G58: this record is written here
         cur = self.version(name)
         evidence = {"observations": len(self.state["observations"].get(name, [])),
                     "support": h["support"], "blocking": len(blocking), "turn": self._tick()}
@@ -2429,6 +2593,7 @@ class Engine:
         if self.memo is not None:
             self.memo.lib_gen += 1  # G58
             self.memo.rv_dirty.add((name, None))
+            self.memo.cx_dirty.add(name)
             if self.memo.scope is not None:
                 self.memo.scope.setdefault("caps", set()).add(name)
         return ver["v"], events
@@ -2700,6 +2865,8 @@ class Engine:
         grown, self._grown = getattr(self, "_grown", set()), set()
         if not grown:
             return
+        if self.routed and self.memo is not None:
+            return self._flush_growth_routed(grown)
         for n in sorted(self.state["capabilities"]):
             ver = self.version(n)
             obs = self.state["observations"].get(n, [])
@@ -2714,6 +2881,87 @@ class Engine:
             if hit:
                 self.stats["grown_requalified"] = self.stats.get("grown_requalified", 0) + 1
                 self.acquire(n)
+
+    def _sx(self):
+        """G58: entity -> names whose current version's domain or observed subjects hold it, synced
+        with `sx_dirty` (domain, version and observation writes); rebuilt when the records change
+        object or the observations are rewritten."""
+        m, caps = self.memo, self.state["capabilities"]
+        S = m.sx
+        if S is None or S["caps"] is not caps or S["obs"] is not self.state["observations"]:
+            S = m.sx = {"caps": caps, "obs": self.state["observations"], "seeds": {}, "by_ent": {}}
+            todo = set(caps)
+        else:
+            todo = set(m.sx_dirty)
+            if len(S["seeds"]) < len(caps):
+                todo |= {n for n in caps if n not in S["seeds"]}
+        m.sx_dirty = set()
+        seeds, by_ent = S["seeds"], S["by_ent"]
+        for n in todo:
+            for x in seeds.get(n, ()):
+                by_ent[x].discard(n)
+            ver = self.version(n) if n in caps else None
+            new = (set(ver.get("domain", [])) | {s_ for s_, _ in self.state["observations"].get(n, [])}) if ver else set()
+            seeds[n] = new
+            for x in new:
+                by_ent.setdefault(x, set()).add(n)
+        if G58_AUDIT["on"]:  # every capability's seeds equal fresh ones
+            for n in caps:
+                ver = self.version(n)
+                fresh = (set(ver.get("domain", [])) | {s_ for s_, _ in self.state["observations"].get(n, [])}) if ver else set()
+                if seeds.get(n) != fresh or any(n not in by_ent.get(x, ()) for x in fresh):
+                    _g58_violation("sx_seeds", n)
+        return S
+
+    def _flush_growth_routed(self, grown):
+        """G58 (docs/G58.md §2c): `_flush_growth` visiting only capabilities whose region can hold a
+        grown entity. A region is the seeds plus the union-find classes of the seeds, so a version
+        hits only if some grown entity is a seed or shares a class with one: the candidates are the
+        names indexed at the grown entities and at every member of their classes. They are taken in
+        name order with the same test as the full loop; after each re-acquisition the candidates are
+        recomputed (records may change) and only names after it are taken, as the loop would."""
+        m = self.memo
+        if not m.track_members:
+            m.track_members, m.uf, m.members = True, None, None  # classes rebuilt with members
+
+        def cands():
+            self._idx()
+            m.region_hits(set(), set())  # builds the classes (with members) if needed
+            S = self._sx()
+            by_ent, c = S["by_ent"], set()
+            for g in grown:
+                c |= by_ent.get(g, set())
+                if g in m.uf:
+                    r = m._find(g)
+                    for x in m.members.get(r) or [r]:
+                        c |= by_ent.get(x, set())
+            return c
+
+        last = None
+        while True:
+            todo = sorted(n for n in cands() if last is None or n > last)
+            if G58_AUDIT["on"]:
+                for n in sorted(self.state["capabilities"]):
+                    ver, obs = self.version(n), self.state["observations"].get(n, [])
+                    if (last is None or n > last) and n not in todo and ver and ver["status"] == "qualified" and obs \
+                            and m.region_hits(set(ver.get("domain", [])) | {s_ for s_, _ in obs}, grown):
+                        _g58_violation("flush_missed", n)
+            m.counts["g58_flush_routed"] += 1
+            m.counts["g58_flush_unseen"] += len(self.state["capabilities"]) - len(todo)
+            hit_at = None
+            for n in todo:
+                ver = self.version(n)
+                obs = self.state["observations"].get(n, [])
+                if not ver or ver["status"] != "qualified" or not obs:
+                    continue
+                if m.region_hits(set(ver.get("domain", [])) | {s_ for s_, _ in obs}, grown):
+                    hit_at = n
+                    break
+            if hit_at is None:
+                return
+            self.stats["grown_requalified"] = self.stats.get("grown_requalified", 0) + 1
+            self.acquire(hit_at)
+            last = hit_at
 
     def turn(self, line: str) -> str:
         if getattr(self, "_grown", None) and not line.strip().lower().startswith("fact "):

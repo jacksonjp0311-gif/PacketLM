@@ -155,8 +155,9 @@ def contract_fuzz(n=120, seed=0, reps=8) -> dict:
                 for c in calls:
                     try:
                         srv.call(p, NEW, c)
-                    except Exception:  # noqa: BLE001 -- a refused state after a direct transition
+                    except Exception as exc:  # noqa: BLE001 -- a refused state after a direct transition
                         stats["refused"] += 1
+                        stats.setdefault("refusals", []).append(f"call {type(exc).__name__}: {exc}"[:120])
                         break
                     stats["calls"] += 1
                     if srv.cur is None or srv.cur.memo is None:
@@ -171,6 +172,7 @@ def contract_fuzz(n=120, seed=0, reps=8) -> dict:
                         e._routing([f"cap:{nm}@{ver['v']}" for nm, ver in vers] + ["rel:p"])
                     for nm in sorted(caps):
                         e.primitives(nm)
+                    e._sx()
                     for x in sorted(e._idx()["pos"]):
                         e._reach(x)
                     stats["probes"] += 1
@@ -196,8 +198,9 @@ def contract_fuzz(n=120, seed=0, reps=8) -> dict:
                             if not f["r"].startswith("cap:"):
                                 e.correct(f["s"], f["r"], f"c{rng.randrange(5)}")  # a corrected fact: not told
                         e.review()
-                    except Exception:  # noqa: BLE001
+                    except Exception as exc:  # noqa: BLE001
                         stats["refused"] += 1
+                        stats.setdefault("refusals", []).append(f"{type(exc).__name__}: {exc}"[:120])
                         break
                     stats["reviews"] += 1
                 srv.cur = None

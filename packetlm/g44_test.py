@@ -1951,7 +1951,15 @@ def g58_checks(tmp: Path) -> dict:
             if e.version("kz")["status"] != "provisional":
                 return False
             e.review()
-            return not _e.G58_AUDIT["log"]
+            ok = not _e.G58_AUDIT["log"]
+            # the capability index recomputes a dependent's base when its dependency's status changes
+            # (states only direct transitions reach: kz offered while zz is suspended, then zz back)
+            e._set_status("zz", 1, "suspended", "test")
+            e._set_status("kz", 1, "qualified", "test")
+            e.primitives("yy")
+            e._set_status("zz", 1, "qualified", "test")
+            e.primitives("yy")
+            return ok and not _e.G58_AUDIT["log"]
         finally:
             _e.G58_AUDIT.update(on=False, log=[])
             srv.cur = None
