@@ -1079,3 +1079,26 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
     capability economics, then G59 the amortization qualification gate.
 - **Tests at registration:** g44 152/152, suite 240/240 (11/11), G45 18/18, mutations 124/124
   (0 crash kills; 3 re-anchored for moved code, same intent).
+
+## 2026-11-27 05:35: G57 registered results (comp 201–207, unrel 211–217; part S 221–227)
+
+- Run at 963527c (clean) under `/workspace/REGISTERED_RUN.lock` (05:30:21–05:31:49 EST), no dev work
+  beside it; load 0.77 → 3.89. All guards held (Ei: replies and final state bytes, every role,
+  14 seeds; 0 wrong-qualified; part S replies equal).
+- **Mi claimed:** A(Ci+maint‖Cs+maint) = +0.041 [+0.020, +0.062] (comp), **+0.593 [+0.584, +0.601]**
+  (unrel). Unrel maintenance CPU 12.46 → 2.72 s.
+- **L1i no claim:** −0.803 [−0.904, −0.716] (1.80×). **L3i no claim:** −5.867 [−6.436, −5.233]
+  (6.87×; G56-style Cs‖Bs on the same seeds: 17.1×). Against Bs: −0.797 / −5.948.
+- **Rule F not claimed:** per-task CPU with fixed relevant state, N = 0 → 16000 unrelated facts:
+  Xi 2.26 → 206.6 ms, R = 91.9 [86.5, 95.7] (Xs 156.2).
+- Outcomes: comp C 252 solved (246 qualified, 147 library) vs B/P 246 — not accuracy-matched;
+  unrel 167/168 in every arm; 0 censored.
+- All predictions held. The primary hypothesis is not supported yet: per-call fact-index builds,
+  whole-state validation of mutating calls, `relations()` and first-key recall passes scale with
+  total state. Evidence: `docs/evidence/g57/`.
+- **Not done this chunk:** G55b (re-pre-registered G55 with new seeds, per-arm writes and an L32
+  time limit) was not started.
+- **Next (G57b, then Roadmap II G58):** incremental fact index kept across calls (positions,
+  per-relation rows, `reference.index`, `relations()` counters), delta validation of the facts and
+  records a call changed (with a periodic full validation as the guard), and a sublinear exact
+  candidate filter for recall — then repeat part S. Then G55b; then G58 capability economics.

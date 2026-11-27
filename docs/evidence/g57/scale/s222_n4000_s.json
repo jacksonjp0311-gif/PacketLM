@@ -1,0 +1,1 @@
+{"seed": 222, "n": 4000, "arm": "s", "pad_facts": 4024, "pad_caps": 8, "pad_cpu_s": 0.5239, "task_cpu_s": [0.07689, 0.08861, 0.08303, 0.08324, 0.08446, 0.08056, 0.08233, 0.08269, 0.09047, 0.11554], "mean_task_cpu_s": 0.08678, "reply_stream_sha256": "ee0df3bc033cfad2c9ab221e2ef5bf88cdca7370407f85c63ad5923350068c08", "known": 188}
