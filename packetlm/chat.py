@@ -1,7 +1,7 @@
-"""The question does not know the path.
+"""Fixes, not a new trick.
 
-A sequence is found from examples.
-The color question applies that sequence.
+No sequence means abstain, not the subject.
+The terminal loads, answers, and saves.
 Not a general mind.
 """
 
@@ -27,7 +27,7 @@ def discover(field, examples, objects):
                 if not cur:
                     ok = False
                     break
-            if cur != expected:
+            if not ok or cur != expected:
                 ok = False
             if not ok:
                 break
@@ -36,8 +36,10 @@ def discover(field, examples, objects):
     return hits[0] if len(hits) == 1 else None
 
 def apply_seq(field, seq, subject, objects):
+    if not seq:
+        return None
     cur = subject
-    for rel in seq or ():
+    for rel in seq:
         cur = ask(field, cur, rel, objects)
         if not cur:
             return None
@@ -67,25 +69,31 @@ def turn(field, objects, library, seq, line):
         return f"{parts[2]} owns {owned}" if owned else "unknown"
     return "unparsed"
 
+def library():
+    return [
+        induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))]),
+        induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))]),
+    ]
+
 def run() -> dict:
-    isa = induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))])
-    owns = induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))])
     field, objects = [], ["green", "red", "mira", "dax"]
     add(field, "mira", "isa", "dax")
     add(field, "dax", "tail", "green")
     seq = discover(field, [("mira", "green")], objects)
     lines = [ln for ln in Path("data/dialogue.txt").read_text().splitlines() if ln.strip()]
-    replies = [turn(field, objects, [isa, owns], seq, line) for line in lines]
+    replies = [turn(field, objects, library(), seq, line) for line in lines]
+    save(STATE, {"field": field, "seq": list(seq) if seq else None})
+    loaded = load(STATE)
     checks = {
         "found": seq == ("isa", "tail"),
-        "orion_before": replies[7] == "orion has a green tail",
-        "mira_before": replies[8] == "mira has a green tail",
+        "missing_abstains": apply_seq(field, None, "orion", objects) is None,
         "orion_after": replies[10] == "orion has a red tail",
         "mira_after": replies[11] == "mira has a red tail",
         "unrelated": replies[12] == "rex owns key",
+        "reloaded": loaded.get("seq") == ["isa", "tail"],
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "seq": list(seq) if seq else None, "failed": failed, "claim": "color uses a found sequence; the question does not name it"}
+    receipt = {**checks, "failed": failed, "claim": "missing sequence abstains; state reloads"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
@@ -93,8 +101,23 @@ def run() -> dict:
         raise SystemExit(1)
     return receipt
 
+def interactive():
+    state = load(STATE) if STATE.exists() else {"field": [], "seq": None}
+    field = state.get("field", [])
+    seq = tuple(state["seq"]) if state.get("seq") else None
+    objects = sorted({t for f in field for t in (f["s"], f["r"], f["o"])})
+    while True:
+        try:
+            line = input("> ")
+        except EOFError:
+            break
+        if line.strip() in {"quit", "exit"}:
+            break
+        print(turn(field, objects, library(), seq, line))
+        save(STATE, {"field": field, "seq": list(seq) if seq else None})
+
 if __name__ == "__main__":
     if "--interactive" in sys.argv:
-        print("interactive needs a found sequence; use the script")
+        interactive()
     else:
         run()
