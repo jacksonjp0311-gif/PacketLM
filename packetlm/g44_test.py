@@ -1957,6 +1957,34 @@ def g58_checks(tmp: Path) -> dict:
             srv.cur = None
     guarded("g58_review_follows_dependents", dependent_followed)
 
+    def closed_and_entities_followed():
+        # (1) only the closed judgment changes (`complete a`, applied directly: no re-acquisition) and
+        # it contradicts zz: review must suspend it; (2) an observed subject becomes known through a
+        # relation zz does not read: review must re-evaluate (the audit checks every skip)
+        from . import engine as _e
+        srv = serve.Server(snapshot_every=1000)
+        p = tmp / "g58_cl.json"
+        for c in [["fact a p b", "fact b p c", "fact c p d", "fact d p e", "fact e p f", "fact f p g"],
+                  ["example zz: a -> d", "example zz: b -> e", "example zz: c -> f", "example zz: q8 -> r8"],
+                  ["fact c p d2"], ["what is a zz"]]:
+            srv.call(p, g58_diff.NEW, c)
+        e = srv._engine(srv.cur)
+        if e.version("zz")["status"] not in ("qualified", "provisional"):
+            return False
+        _e.G58_AUDIT.update(on=True, log=[])
+        try:
+            e.review()
+            e.tell("q8", "w", "r7")
+            e.review()
+            ok_known = not _e.G58_AUDIT["log"] and e.version("zz")["status"] in ("qualified", "provisional")
+            e.complete("a")
+            ev = e.review()
+            return ok_known and not _e.G58_AUDIT["log"] and e.version("zz")["status"] == "suspended" and ev
+        finally:
+            _e.G58_AUDIT.update(on=False, log=[])
+            srv.cur = None
+    guarded("g58_review_follows_closed_and_entities", closed_and_entities_followed)
+
     def libpad(routed):
         # unrelated capabilities in the library: replies and state bytes equal, and the routed engine
         # skips the unrelated capabilities' review re-evaluations

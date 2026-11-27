@@ -57,6 +57,8 @@ SCENARIOS = [
      ["example zz: d -> e"]],
     # an observed subject unknown at the first review becomes known
     [CHAIN, ZZ, ["example zz: q9 -> r9"], ["fact q9 p r9"], ["example zz: d -> e"], ["what is q9 zz"]],
+    # ... through a fact at a relation the capability does not read (no stamp it reads changes)
+    [CHAIN, ZZ, ["example zz: q8 -> r8"], ["fact q8 w r7"], ["what is q8 zz"], ["fact q8 p r8"], ["what is q8 zz"]],
     # composition over a capability that is later superseded and re-taught
     [CHAIN + ["fact a q h", "fact b q g", "fact c q f", "fact h p i"], ZZ, ["example cz: a -> i"],
      ["example zz: a -> h", "example zz: b -> g", "example zz: c -> f"], ["example cz: b -> h"], ["what is a cz"],
@@ -172,27 +174,31 @@ def contract_fuzz(n=120, seed=0, reps=8) -> dict:
                     for x in sorted(e._idx()["pos"]):
                         e._reach(x)
                     stats["probes"] += 1
-                    r = rng.random()
-                    if vers and r < 0.5:
-                        held = [(nm, ver) for nm, ver in vers  # versions some closure holds (dependencies)
-                                if any((nm, ver["v"]) in e._closure_cached(m, w) for m, w in vers)]
-                        nm, ver = rng.choice(held if held and rng.random() < 0.6 else vers)
-                        e._set_status(nm, ver["v"], rng.choice(STATUSES), "contract fuzz")
-                        stats["transitions"] += 1
-                    elif caps and r < 0.8:
-                        nm = rng.choice(sorted(caps))
-                        ents = sorted(e._idx()["pos"]) or ["e0"]
-                        if r < 0.6:
-                            e.correct_example(nm, rng.choice(ents), rng.choice(ents))
-                        elif r < 0.7:
-                            e.observe(nm, rng.choice(ents), rng.choice(ents))
-                        else:
-                            e.acquire(nm)  # a re-scan without an observation change (requalify)
-                    elif r < 0.9 and e.state["facts"]:
-                        f = rng.choice(e.state["facts"])
-                        if not f["r"].startswith("cap:"):
-                            e.correct(f["s"], f["r"], f"c{rng.randrange(5)}")  # a corrected fact: not told
-                    e.review()
+                    try:  # direct operations on states no curriculum reaches; the engine may refuse
+                        r = rng.random()
+                        if vers and r < 0.5:
+                            held = [(nm, ver) for nm, ver in vers  # versions some closure holds (dependencies)
+                                    if any((nm, ver["v"]) in e._closure_cached(m, w) for m, w in vers)]
+                            nm, ver = rng.choice(held if held and rng.random() < 0.6 else vers)
+                            e._set_status(nm, ver["v"], rng.choice(STATUSES), "contract fuzz")
+                            stats["transitions"] += 1
+                        elif caps and r < 0.8:
+                            nm = rng.choice(sorted(caps))
+                            ents = sorted(e._idx()["pos"]) or ["e0"]
+                            if r < 0.6:
+                                e.correct_example(nm, rng.choice(ents), rng.choice(ents))
+                            elif r < 0.7:
+                                e.observe(nm, rng.choice(ents), rng.choice(ents))
+                            else:
+                                e.acquire(nm)  # a re-scan without an observation change (requalify)
+                        elif r < 0.9 and e.state["facts"]:
+                            f = rng.choice(e.state["facts"])
+                            if not f["r"].startswith("cap:"):
+                                e.correct(f["s"], f["r"], f"c{rng.randrange(5)}")  # a corrected fact: not told
+                        e.review()
+                    except Exception:  # noqa: BLE001
+                        stats["refused"] += 1
+                        break
                     stats["reviews"] += 1
                 srv.cur = None
                 stats["sessions"] += 1

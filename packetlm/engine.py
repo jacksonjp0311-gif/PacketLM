@@ -22,6 +22,7 @@ Uncertainty policy (docs/G44.md):
 from __future__ import annotations
 import copy
 import hashlib
+import itertools
 import json
 import os
 import re
@@ -1406,7 +1407,7 @@ class Engine:
         capability's fingerprint is computed and compared."""
         events = []
         memo, caps, rv = self.memo, self.state["capabilities"], self.memo.rv
-        self._idx()  # syncs the memo stamps
+        pos = self._idx()["pos"]  # syncs the memo stamps
         gen0 = memo.lib_gen
         closed = frozenset(self.state.get("complete", {}))
         X = memo.rvx
@@ -1415,6 +1416,17 @@ class Engine:
             fast = set(memo.rv_obs)
             for x in X["closed"] ^ closed:  # closed-world judgment changed at these subjects
                 fast |= X["subj"].get(x, set())
+            # entities that became known or unknown (the fingerprint's `known` flag); the persistent
+            # index only appends to its entity map, so the same map with the same length is the same set
+            if pos is X["pos"]:
+                new = [x for x in itertools.islice(pos, X["npos"], None)]
+                X["ents"].update(new)
+            else:
+                cur = set(pos)
+                new, X["ents"] = cur ^ X["ents"], cur
+            for x in new:
+                fast |= X["subj"].get(x, set())
+            X["pos"], X["npos"] = pos, len(pos)
             for r, t in memo.stamp.items():
                 if t > X["tick"]:
                     fast |= X["rel"].get(r, set())
@@ -1498,7 +1510,8 @@ class Engine:
                     for x in ss:
                         subj.setdefault(x, set()).add(n)
                 memo.rvx = {"caps": id(caps), "closed": closed, "tick": memo.tick, "rel": rel, "dep": dep,
-                            "depn": depn, "subj": subj, "order": {n: i for i, n in enumerate(caps)}}
+                            "depn": depn, "subj": subj, "order": {n: i for i, n in enumerate(caps)},
+                            "pos": pos, "npos": len(pos), "ents": set(pos)}
             else:
                 memo.rvx = None
         if G58_AUDIT["on"]:  # every capability not visited has the fingerprint of its last evaluation

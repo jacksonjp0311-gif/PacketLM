@@ -170,6 +170,7 @@ MUTATIONS = {
     "g58_status_lib_gen_kept": ('            self.memo.lib_gen += 1  # G58: what `primitives` offers may change', '            pass'),
     "g58_observe_not_recorded": ('    def observe(self, name, subject, value) -> list[str]:\n        obs = self.state["observations"].setdefault(name, [])\n        if self.memo is not None:\n            self.memo.rv_obs.add(name)  # G58', '    def observe(self, name, subject, value) -> list[str]:\n        obs = self.state["observations"].setdefault(name, [])\n        if self.memo is not None:\n            pass'),
     "g58_closed_delta_ignored": ('            for x in X["closed"] ^ closed:', '            for x in ():'),
+    "g58_entity_delta_ignored": ('            for x in new:\n                fast |= X["subj"].get(x, set())\n            X["pos"]', '            for x in ():\n                fast |= X["subj"].get(x, set())\n            X["pos"]'),
     "g58_changed_stamps_ignored": ('                if t > X["tick"]:', '                if False:'),
     "g58_dependents_not_followed": ('                fast |= X["dep"].get((dn, dv), set()) if dv is not None else X["depn"].get(dn, set())', '                pass'),
     "g58_pruned_count_wrong": ('                pruned += (P - len(ii)) * P ** (n - len(prefix) - 1)', '                pruned += (P - len(ii))'),
