@@ -309,6 +309,94 @@ def _valid_fast(doc, checksum_ok=False) -> bool:
     return True
 
 
+def _valid_scoped(state, touched, byid) -> bool:
+    """G57b change-scoped validation: `_valid_fast`'s checks with the per-fact checks run only on the
+    facts this call appended or gave a new support (`touched`), premises resolved through the
+    persistent index (`byid`, the ids of every fact). Sound only when the call removed nothing and
+    every fact change went through `tell` (Memo.scope["ok"]); a full validation runs every
+    FULL_VALIDATE_EVERY mutating calls and at every snapshot, and checks the index too."""
+    if not isinstance(state, dict):
+        return False
+    for key, typ in (("turn", int), ("facts", list), ("log", list), ("library", list), ("lexicon", dict),
+                     ("capabilities", dict), ("observations", dict), ("retired", dict), ("hypotheses", dict)):
+        if not isinstance(state.get(key), typ):
+            return False
+    if "retention" in state:
+        ret = state["retention"]
+        if not (isinstance(ret, dict) and isinstance(ret.get("call"), int) and isinstance(ret.get("touch"), dict)
+                and isinstance(ret.get("archived"), dict)):
+            return False
+        for sha, e in ret["archived"].items():
+            if not (isinstance(e.get("tokens"), list) and len(sha) == 64):
+                return False
+    for f in touched:
+        if byid.get(f.get("id")) is not f:
+            return False
+        g = f.get
+        fid, fs, fr, fo, sup = g("id"), g("s"), g("r"), g("o"), g("supports")
+        if not isinstance(fid, str) or not isinstance(fs, str) or not isinstance(fr, str) \
+                or not isinstance(fo, str) or not isinstance(sup, list):
+            return False
+        if "bits" in f or "count" in f or fid != f"{fs} {fr} {fo}" or not sup:
+            return False
+        for sp in sup:
+            if not (sp.get("kind") in ("told", "derived") and isinstance(sp.get("premises"), list)
+                    and isinstance(sp.get("turn"), int)):
+                return False
+    for f in touched:
+        for sp in f["supports"]:
+            for q in sp["premises"]:
+                if q not in byid:
+                    return False
+    for c in state["library"]:
+        kind = c.get("kind", "svo")
+        if kind == "svo":
+            if not {"order", "rel_at", "word", "meaning"} <= set(c):
+                return False
+        elif not (kind == "question" and isinstance(c.get("template"), list) and "meaning" in c):
+            return False
+    for word, target in state["lexicon"].items():
+        if not (isinstance(word, str) and isinstance(target, str)):
+            return False
+    for name, rs in state["retired"].items():
+        if not all(isinstance(x, dict) and {"s", "o", "reason"} <= set(x) for x in rs):
+            return False
+    for name, obs in state["observations"].items():
+        if not all(isinstance(o, list) and len(o) == 2 for o in obs):
+            return False
+    caps = state["capabilities"]
+    for name, cap in caps.items():
+        if not isinstance(cap.get("versions"), list):
+            return False
+        cur = cap.get("current")
+        if not (cur is None or 1 <= cur <= len(cap["versions"])):
+            return False
+        for i, ver in enumerate(cap["versions"], 1):
+            if not (ver.get("v") == i and ver.get("status") in VER_STATUS and ver.get("seq")):
+                return False
+            for d in _deps_of(ver["seq"]):
+                dn, dv = _split_cap(d)
+                if not (dn in caps and 1 <= dv <= len(caps[dn]["versions"])):
+                    return False
+    try:
+        def visit(node, stack):
+            if node in stack:
+                raise StateError("cycle")
+            name, v = _split_cap(node)
+            for d in _deps_of(caps[name]["versions"][v - 1]["seq"]):
+                visit(d, stack | {node})
+        for name, cap in caps.items():
+            for ver in cap["versions"]:
+                visit(f"cap:{name}@{ver['v']}", frozenset())  # (scoped copy)
+    except StateError:
+        return False
+    return True
+
+
+
+FULL_VALIDATE_EVERY = 64  # G57b, registered: mutating calls between full validations (also at every snapshot)
+
+
 def validate_lean(doc, checksum_ok=False) -> dict:
     if _valid_fast(doc, checksum_ok):
         return doc["state"]
@@ -355,6 +443,33 @@ def _write_atomic(path: Path, data: bytes) -> None:
     os.replace(tmp, path)
 
 
+SMALL_PACKET = 38  # G57b: packets below this popcount are always recall candidates (Memo.recall_candidates)
+
+
+def _fresh_index(facts) -> dict:
+    """The reference build of `Engine._idx`'s core structures (for the G57b guard)."""
+    names, pos, triples = [], {}, []
+    for f in facts:
+        for t in (f["s"], f["o"]):
+            if t not in pos:
+                pos[t] = len(names)
+                names.append(t)
+        triples.append((f["s"], f["r"], f["o"]))
+    out = {}
+    for s_, r_, _ in triples:
+        out.setdefault(s_, set()).add(r_)
+    return {"names": names, "pos": pos, "out": out, "triples": triples, "ref": reference.index(triples),
+            "byid": {f["id"]: f for f in facts}}
+
+
+class SparseRows(dict):
+    """G57b: a relation's bit rows as {entity position: row}; missing positions are empty rows, as
+    in the dense list `geom.rows_from` returns (`geom.compose` only indexes set positions)."""
+
+    def __missing__(self, key):
+        return 0
+
+
 class Memo:
     """G57 (`--indexed`): exact caches that outlive one call when a long-lived server keeps them
     (packetlm/serve.py), and are fresh per process otherwise. They hold no state and never change a
@@ -379,6 +494,13 @@ class Memo:
         self.pk = {}
         self.pkl = []  # (packet, popcount) of each triple in `last`, in order
         self.uf = None  # union-find over non-cap fact edges; None = rebuild on next use
+        # G57b (`--incremental`): the fact index kept across calls, maintained by the engine's own
+        # fact-changing paths (`tell` appends and supports); any removal discards it (rebuilt on
+        # next use). `scope` records what the current call changed, for change-scoped validation.
+        self.ix = None
+        self.scope = None
+        self.ix_checks = 0
+        self.counts = Counter()  # G57b: how often each path ran (tests show every path is exercised)
 
     def packet_of(self, t):
         p = self.pk.get(t)
@@ -402,6 +524,114 @@ class Memo:
         ra, rb = self._find(a), self._find(b)
         if ra != rb:
             uf[max(ra, rb)] = min(ra, rb)
+
+    # ---------- G57b: persistent fact index ----------
+
+    CORE = ("names", "pos", "decode", "out", "triples", "ref", "byid")
+
+    def ix_valid(self, state) -> bool:
+        ix = self.ix
+        return ix is not None and state["facts"] is ix["facts_ref"] and len(state["facts"]) == ix["n_facts"] \
+            and state.get("fact_epoch", 0) == ix["epoch"]
+
+    def ix_adopt(self, state, cache) -> None:
+        """Take a freshly built per-call index (the reference build) as the persistent one, and add
+        the G57b structures to it. O(state), once per rebuild."""
+        self.counts["ix_rebuilds"] += 1
+        ix = {k: cache[k] for k in self.CORE}
+        if ix["decode"] is None:
+            ix["decode"] = {pack(bits_for(t, 2)).bits: t for t in ix["names"]}
+        ix.update(facts_ref=state["facts"], n_facts=len(state["facts"]), epoch=state.get("fact_epoch", 0),
+                  by_rel={}, by_s={}, by_o={}, by_sr={}, told_rel=Counter(), prow={}, codes=set(), codebits={}, small=[])
+        self.ix = ix
+        for f in state["facts"]:
+            self._ix_add(f)
+
+    def _ix_add(self, f) -> None:
+        ix = self.ix
+        t = (f["s"], f["r"], f["o"])
+        ix["by_rel"].setdefault(t[1], []).append(t)
+        ix["by_s"].setdefault(t[0], []).append(t)
+        ix["by_o"].setdefault(t[2], []).append(t)
+        ix["by_sr"].setdefault((t[0], t[1]), []).append(f)
+        if not t[1].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]):
+            ix["told_rel"][t[1]] += 1
+        ix["prow"].pop(t[1], None)
+        for code in ((0, t[0]), (1, t[1]), (2, t[2])):
+            if code not in ix["codes"]:
+                ix["codes"].add(code)
+                for b in _geom().bits(bits_for(code[1], code[0])):
+                    ix["codebits"].setdefault(b, []).append(code)
+        if self.packet_of(t).bit_count() < SMALL_PACKET:
+            ix["small"].append(t)
+
+    def ix_append(self, f, state) -> None:
+        """`tell` appended f (the index was valid just before): the reference build's structures
+        in the same insertion order, the G57b structures, and the memo's recall/stamps/components."""
+        ix = self.ix
+        self.counts["ix_appends"] += 1
+        t = (f["s"], f["r"], f["o"])
+        if f["id"] in ix["byid"] and self.scope is not None:
+            self.scope["ok"] = False  # a duplicate id: leave it to the full validator
+        for x in (t[0], t[2]):
+            if x not in ix["pos"]:
+                ix["pos"][x] = len(ix["names"])
+                ix["names"].append(x)
+                ix["decode"][pack(bits_for(x, 2)).bits] = x
+        ix["triples"].append(t)
+        ix["out"].setdefault(t[0], set()).add(t[1])
+        ix["ref"].setdefault(t[1], {}).setdefault(t[0], set()).add(t[2])
+        ix["byid"][f["id"]] = f
+        self._ix_add(f)
+        ix["n_facts"], ix["epoch"] = len(state["facts"]), state.get("fact_epoch", 0)
+        self._added(t)
+
+    def ix_support(self, f, was_told) -> None:
+        if not was_told and not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]):
+            self.ix["told_rel"][f["r"]] += 1
+
+    def _added(self, t) -> None:
+        """Memo.sync for one appended triple, without a pass over the others."""
+        self.tick += 1
+        self.stamp[t[1]] = self.tick
+        p = self.packet_of(t)
+        for (s_, r_), ent in self.recall.items():
+            if self.passes(bits_for(s_, 0) ^ bits_for(r_, 1), p):
+                ent[t] += 1
+        if self.uf is not None and not t[1].startswith("cap:"):
+            self._union(t[0], t[2])
+        self.pkl.append((p, p.bit_count()))
+        self.base[t] += 1
+        self.last.append(t)
+
+    def recall_candidates(self, s, r):
+        """G57b: an exact candidate set for the recall test 2|q&p| > |p|, q = b(s,0) ^ b(r,1).
+        q's bits lie in b_s | b_r, so |q&p| <= |b_s&p| + |b_r|; passing needs |q&p| >= |p|//2 + 1,
+        hence |b_s&p| >= |p|//2 + 1 - |b_r|. p lies in the union of its three codes (s' role 0,
+        r' role 1, o' role 2), so one code X has |b_s&X| >= ceil((|p|//2 + 1 - |b_r|) / 3), which is
+        >= 2 whenever |p| >= 2|b_r| + 6 (all packets with |p| >= SMALL_PACKET = 38, as |b_r| <= 16).
+        Candidates: the triples of every code sharing >= 2 bits with b_s, plus every packet with
+        |p| < 38. Each candidate is then tested exactly; every other triple fails the test."""
+        ix = self.ix
+        self.counts["candidate_queries"] += 1
+        cnt = Counter()
+        for b in _geom().bits(bits_for(s, 0)):
+            cnt.update(ix["codebits"].get(b, ()))
+        cand = set(ix["small"])
+        for (role, tok), c in cnt.items():
+            if c >= 2:
+                cand.update((ix["by_s"], ix["by_rel"], ix["by_o"])[role].get(tok, ()))
+        return cand
+
+    def ix_check(self, state, fresh) -> None:
+        """Guard: the persistent index equals a fresh build of the reference structures."""
+        self.ix_checks += 1
+        ix = self.ix
+        same = all(ix[k] == fresh[k] for k in ("names", "pos", "out", "triples", "ref")) \
+            and list(ix["byid"]) == list(fresh["byid"]) and all(ix["byid"][k] is fresh["byid"][k] for k in fresh["byid"])
+        told = Counter(f["r"] for f in state["facts"]
+                       if not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]))
+        _need(same and +ix["told_rel"] == told, "incremental fact index diverged from the facts")
 
     def region_hits(self, seeds, grown) -> bool:
         """`grown & _component(seeds)` is non-empty, decided from components kept across calls:
@@ -467,7 +697,7 @@ class Memo:
 class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
                  operators=False, retention="static", programs=False, answers=False, qualified_library=False,
-                 bounded=False, lean=False, closed_guards=None, indexed=False, memo=None):
+                 bounded=False, lean=False, closed_guards=None, indexed=False, memo=None, incremental=False):
         self.path = Path(path)
         self.qualified_library = qualified_library  # G51: library offers only qualified capabilities
         # G55 (option 3): guard budget under `complete`, independent of the observations; None = MAX_GUARDS
@@ -476,6 +706,9 @@ class Engine:
         # G57: relation-indexed rows, incremental exact recall, gated re-asks (docs/G57.md)
         self.indexed = indexed
         self.memo = (memo if memo is not None else Memo()) if indexed else None
+        # G57b: the persistent fact index (needs the memo); static retention only
+        self.incremental = bool(incremental and indexed and retention == "static")
+        self._ents_tracked = False
         self.readonly_call = False  # set by serve.py for a call whose lines are all questions
         self._cap_fp = {}
         self.bounded = bounded  # G53: exact cost bounds (memoized scan images; no re-scan of settled versions)
@@ -628,7 +861,15 @@ class Engine:
 
     # ---------- indexes ----------
 
+    def _ix_live(self) -> bool:
+        return self.incremental and self.memo.ix_valid(self.state)
+
     def _idx(self):
+        if self._cache is None and self.incremental and self.memo.ix_valid(self.state):
+            ix = self.memo.ix  # G57b: the persistent index; per-call caches start empty
+            self._cache = {k: ix[k] for k in Memo.CORE}
+            self._cache.update(rows={}, persistent=True)
+            return self._cache
         if self._cache is None:
             names, pos, decode, triples = [], {}, ({} if not self.lean else None), []
             for f in self.state["facts"]:
@@ -647,6 +888,12 @@ class Engine:
                            "byid": {f["id"]: f for f in self.state["facts"]}}
             if self.memo is not None:
                 self.memo.sync(triples)
+            if self.incremental:
+                if self.memo.scope is not None:
+                    self.memo.scope["ok"] = False  # rebuilt: this call's changes were not all tracked
+                self.memo.ix_adopt(self.state, self._cache)
+                self._cache = {k: self.memo.ix[k] for k in Memo.CORE}
+                self._cache.update(rows={}, persistent=True)
         return self._cache
 
     def _dirty(self):
@@ -657,6 +904,8 @@ class Engine:
 
     def relations(self) -> list[str]:
         """Primitive relation identities: told facts only, never cap:* conclusions."""
+        if self._ix_live():  # G57b: counts kept by the index
+            return sorted(r for r, c in self.memo.ix["told_rel"].items() if c > 0)
         return sorted({f["r"] for f in self.state["facts"]
                        if not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"])})
 
@@ -667,6 +916,8 @@ class Engine:
         return self.state["turn"]
 
     def _find(self, s, r, o=None):
+        if self._ix_live():  # G57b: the facts of (s, r) in fact order
+            return [f for f in self.memo.ix["by_sr"].get((s, r), ()) if o is None or f["o"] == o]
         return [f for f in self.state["facts"] if f["s"] == s and f["r"] == r and (o is None or f["o"] == o)]
 
     def tell(self, s, r, o, source="told", premises=None, program=None) -> dict:
@@ -678,16 +929,33 @@ class Engine:
             fact = existing[0]
             if not any(sp["kind"] == kind and sp["premises"] == support["premises"] and sp.get("program") == program
                        for sp in fact["supports"]):
+                live = self._ix_live()
+                was_told = any(sp["kind"] == "told" for sp in fact["supports"])
                 fact["supports"].append(support)
+                if live:
+                    self.memo.ix_support(fact, was_told)
+                if self.incremental and self.memo.scope is not None:
+                    self.memo.scope["touched"].append(fact)
             return fact
         fact = {"id": f"{s} {r} {o}", "s": s, "r": r, "o": o, "supports": [support]}
         if kind == "told" and not r.startswith("cap:") and self.state.get("complete"):
             self._fc_violated(s, f"new fact {s} {r} {o}")
-        ents = self._known_entities()
-        was_known = s in ents  # S1 of cdb4828: known before this fact?
-        ents.update((s, o))
+        live = self._ix_live()
+        if live and getattr(self, "_ents", None) is None:
+            # G57b: the reference's entity set here is exactly the index's entities (facts at first
+            # use plus every fact told since, with no removal in between: a removal rebuilds)
+            was_known = s in self.memo.ix["pos"]
+            self._ents_tracked = True
+        else:
+            ents = self._known_entities()
+            was_known = s in ents  # S1 of cdb4828: known before this fact?
+            ents.update((s, o))
         self.state["facts"].append(fact)
         self.state["fact_epoch"] = self.state.get("fact_epoch", 0) + 1  # G53: any fact change
+        if live:
+            self.memo.ix_append(fact, self.state)
+        if self.incremental and self.memo.scope is not None:
+            self.memo.scope["touched"].append(fact)
         if kind == "told" and not r.startswith("cap:"):
             self._grow(s, was_known)
         self._dirty()
@@ -697,6 +965,12 @@ class Engine:
         """Truth maintenance: remove facts, then any proof that used them or a dropped program.
         A conclusion stays while one independent proof remains."""
         removed = set(ids)
+        if self.incremental:
+            if self._ents_tracked and getattr(self, "_ents", None) is None:
+                # the set the reference built at its first use, plus every fact told since
+                self._ents = {x for f in self.state["facts"] for x in (f["s"], f["o"])}
+            if self.memo.scope is not None:
+                self.memo.scope["ok"] = False  # supports and facts may change anywhere
         if self.state.get("complete"):
             byid = {f["id"]: f for f in self.state["facts"]}
             for i in sorted(removed):
@@ -879,8 +1153,16 @@ class Engine:
         if ent is None:
             # the reference's test, 2|q&p| - |p| > 0, over this index's triples (memo.pkl is aligned
             # with them: sync ran when this index was built)
-            _need(len(self.memo.pkl) == len(idx["triples"]), "memo packets out of step with the index")
-            ent = Counter(t for t, (p, c) in zip(idx["triples"], self.memo.pkl) if 2 * (qi & p).bit_count() > c)
+            if idx.get("persistent"):  # G57b: the exact candidate set, then the same test
+                pk, base = self.memo.packet_of, self.memo.base
+                ent = Counter()
+                for t in self.memo.recall_candidates(s, r):
+                    p = pk(t)
+                    if 2 * (qi & p).bit_count() > p.bit_count():
+                        ent[t] += base[t]
+            else:
+                _need(len(self.memo.pkl) == len(idx["triples"]), "memo packets out of step with the index")
+                ent = Counter(t for t, (p, c) in zip(idx["triples"], self.memo.pkl) if 2 * (qi & p).bit_count() > c)
             self.memo.recall[(s, r)] = ent
         found = []
         if ent:
@@ -1194,6 +1476,14 @@ class Engine:
 
     def _rows(self, rel):
         idx = self._idx()
+        if idx.get("persistent"):  # G57b: kept across calls, dropped when rel changes; built from rel's triples only
+            prow = self.memo.ix["prow"]
+            if rel not in prow:
+                pos, rows = idx["pos"], SparseRows()
+                for s_, _, o_ in self.memo.ix["by_rel"].get(rel, ()):
+                    rows[pos[s_]] = rows[pos[s_]] | (1 << pos[o_])
+                prow[rel] = rows
+            return prow[rel]
         if rel not in idx["rows"]:
             n = len(idx["names"])
             if self.indexed:  # G57: the same triples in the same order, grouped by relation once per index
@@ -1388,10 +1678,15 @@ class Engine:
         first = base[0].split(":")[1] if base[0].startswith("until:") else base[0]
         return set(self._idx()["ref"].get(first, {}))
 
-    def _predictions(self, seq):
+    def _predictions(self, seq, also=None):
         dom = self._domain(seq)
         out = {}
-        for e in self.entities():
+        if also is not None:  # G57b sparse table: entities in dom or `also`, in entity order
+            pos = self._idx()["pos"]
+            ents = sorted({e for e in dom if e in pos} | {e for e in also if e in pos}, key=pos.__getitem__)
+        else:
+            ents = self.entities()
+        for e in ents:
             if e not in dom:
                 out[e] = None
                 continue
@@ -1403,11 +1698,17 @@ class Engine:
         """Answer class per entity (value, !none, !several) for PX investigate."""
         return {e: outcome(self.execute(seq, e)) for e in self.entities()}
 
-    def _differs(self, seq, preds) -> bool:
+    def _differs(self, seq, preds, sparse=False) -> bool:
         """Extensional difference from a prediction table; stops at the first entity that differs.
-        Only entities where either side can be defined are checked (exact)."""
+        Only entities where either side can be defined are checked (exact). G57b `sparse`: the
+        table omits entities predicted None; they are visited too when in this program's domain,
+        in entity order (the same visits as the full table)."""
         dom = self._domain(seq)
-        for e, v in preds.items():
+        items = preds.items()
+        if sparse:
+            pos = self._idx()["pos"]
+            items = [(e, preds.get(e)) for e in sorted(set(preds) | {e for e in dom if e in pos}, key=pos.__getitem__)]
+        for e, v in items:
             if v is None and e not in dom:
                 continue
             r = self.execute(seq, e)
@@ -1584,9 +1885,12 @@ class Engine:
         (empty image of the candidate's domain), not shown false. Symbolic row lookups."""
         ref = self._idx()["ref"]
         obs = self.state["observations"].get(name, [])
-        mine = self._predictions(cand_seq)
-        cand_base = tuple(self.expand(cand_seq))
         neg = {s_ for s_, v in obs if v in (NONE, SEVERAL)}  # PX: negative statements are checked too
+        sparse = self._ix_live()
+        # G57b: with the persistent index, only the entries the scan reads (domain and negative
+        # subjects), in entity order; the omitted ones are None (see _differs)
+        mine = self._predictions(cand_seq, also=neg) if sparse else self._predictions(cand_seq)
+        cand_base = tuple(self.expand(cand_seq))
         D = [e for e, v in mine.items() if v is not None or e in neg]
         want = [mine[e] for e in D]
         pos = {e: i for i, e in enumerate(D)}
@@ -1696,7 +2000,7 @@ class Engine:
                             else:
                                 vals = [next(iter(f)) if len(f) == 1 else None for f in nf]
                                 conflict = any(x is not None and x != w for x, w in zip(vals, want))
-                            if conflict or (support >= 1 and self._differs(seq, mine)):
+                            if conflict or (support >= 1 and self._differs(seq, mine, sparse)):
                                 out["blocking_n"] += 1
                                 out["conflicts"] += conflict
                                 blocking.append(seq)
@@ -1921,10 +2225,12 @@ class Engine:
         return {"status": "unknown", "value": None, "relation": target}
 
     def _dom_set(self, name, ver):
-        key = (name, ver["v"], id(ver["domain"]))
+        # keyed on the domain's content (Info 2 of verify-35bda6b: an id() key can return a stale set
+        # after CPython reuses a replaced list's address); a list compare is cheaper than the set build
+        key = (name, ver["v"])
         c = getattr(self, "_dom_cache", {})
-        if c.get("key") != key:
-            c = {"key": key, "set": set(ver["domain"])}
+        if c.get("key") != key or c.get("domain") != ver["domain"]:
+            c = {"key": key, "domain": list(ver["domain"]), "set": set(ver["domain"])}
             self._dom_cache = c
         return c["set"]
 
@@ -2244,7 +2550,7 @@ def parse_cli(argv):
              "--no-activation": ("activation", False), "--operators": ("operators", True),
              "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True), "--answers": ("answers", True),
              "--qualified-library": ("qualified_library", True),
-             "--bounded": ("bounded", True), "--lean": ("lean", True), "--indexed": ("indexed", True)}
+             "--bounded": ("bounded", True), "--lean": ("lean", True), "--indexed": ("indexed", True), "--incremental": ("incremental", True)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):

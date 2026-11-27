@@ -1689,6 +1689,184 @@ def progs_max_guards():
     return programs.MAX_GUARDS
 
 
+def g57b_checks(tmp: Path) -> dict:
+    """G57b (`--indexed --incremental`): the persistent fact index, the exact recall candidate
+    filter, indexed relations()/_find, sparse prediction tables and change-scoped validation give
+    the G57 engine's replies and state bytes; the periodic full validation catches what the scoped
+    one cannot (docs/G57b.md). Each check is guarded: an exception fails that check by name."""
+    from . import serve, g57_diff
+    from .engine import Memo, StateError as SE, bits_for, _fresh_index, SMALL_PACKET
+    from collections import Counter
+    import random as _r
+    out = {}
+
+    def guarded(name, fn):
+        try:
+            out[name] = bool(fn())
+        except Exception as exc:  # noqa: BLE001
+            out[name] = False
+            out["_" + name + "_error"] = f"{type(exc).__name__}: {exc}"[:200]
+
+    B = g57_diff.BASE
+
+    def differential(full_every):
+        r = g57_diff.run(n=40, seed=571 + full_every, ref_flags=B + ["--indexed"], new_flags=B + ["--indexed", "--incremental"],
+                         full_every=full_every)
+        out[f"_differential_k{full_every}"] = {k: v for k, v in r.items() if k != "mismatch"}
+        p = r.get("paths", {})
+        return r["ok"] and r["sessions"] == 40 + len(g57_diff.SCENARIOS) and r["gated_answers"] > 0 and all(
+            p.get(k, 0) > 0 for k in ("scoped_validations", "full_validations", "ix_rebuilds", "ix_appends", "candidate_queries"))
+    guarded("g57b_differential_vs_g57_default_period", lambda: differential(64))
+    guarded("g57b_differential_vs_g57_period_3", lambda: differential(3))
+
+    def eng_pair(tag):
+        a = Engine(tmp / f"g57b_{tag}_a.json", indexed=True, incremental=True, lean=True)
+        b = Engine(tmp / f"g57b_{tag}_b.json", indexed=True, lean=True)
+        return a, b
+
+    def candidates(dense):
+        # the candidate set contains every triple that passes the recall test. `dense`: codes are
+        # drawn from 128 bit positions instead of 4096 (engine.bits_for patched for this check), so
+        # packets below SMALL_PACKET bits and multi-bit code overlaps are common; otherwise real codes
+        from . import engine as E
+        real = E.bits_for
+        if dense:
+            def fake(tok, role, _c={}):
+                k = (tok, role)
+                if k not in _c:
+                    rr = _r.Random(f"{tok}/{role}")
+                    _c[k] = sum(1 << b for b in rr.sample(range(128), 16))
+                return _c[k]
+            E.bits_for = fake
+        try:
+            rng = _r.Random(57)
+            a, _ = eng_pair("cand%d" % dense)
+            ents, rels = [f"c{i}" for i in range(40)], ["p", "q", "r", "s", "t"]
+            sizes = []
+            for step in range(300):
+                a.tell(rng.choice(ents), rng.choice(rels), rng.choice(ents))
+                a._idx()
+                ix = a.memo.ix
+                for _ in range(3):
+                    s_, r_ = rng.choice(ents + ["zz"]), rng.choice(rels + ["u"])
+                    qi = E.bits_for(s_, 0) ^ E.bits_for(r_, 1)
+                    full = {t for t in ix["triples"] if 2 * (qi & a.memo.packet_of(t)).bit_count() > a.memo.packet_of(t).bit_count()}
+                    cand = a.memo.recall_candidates(s_, r_)
+                    if not full <= cand:
+                        return False
+                    sizes.append(len(cand) / max(1, len(set(ix["triples"]))))
+            small = len(ix["small"])
+            out[f"_candidates_dense{int(dense)}"] = {"small": small, "mean_candidate_fraction": round(sum(sizes) / len(sizes), 4)}
+            return (0 < small < len(set(ix["triples"])) if dense else small == 0) and all(a.memo.packet_of(t).bit_count() < SMALL_PACKET for t in ix["small"])
+        finally:
+            E.bits_for = real
+    guarded("g57b_recall_candidates_superset_real_codes", lambda: candidates(False))
+    guarded("g57b_recall_candidates_superset_dense_codes", lambda: candidates(True))
+
+    def index_equal():
+        # after random tells, supports and removals the persistent index equals a fresh build,
+        # relations() and _find equal the unindexed engine's
+        rng = _r.Random(58)
+        a, b = eng_pair("ix")
+        ents, rels = [f"d{i}" for i in range(15)], ["p", "q", "r"]
+        for step in range(150):
+            x, r_, y = rng.choice(ents), rng.choice(rels), rng.choice(ents)
+            for e in (a, b):
+                e.tell(x, r_, y)
+            if rng.random() < 0.1:
+                for e in (a, b):
+                    e.retract(x, r_, y)
+            a._idx()
+            b._idx()
+            if a.relations() != b.relations() or a.entities() != b.entities():
+                return False
+            for _ in range(3):
+                q = (rng.choice(ents), rng.choice(rels), rng.choice(ents))
+                for qq in (q, q[:2]):
+                    if [f["id"] for f in a._find(*qq)] != [f["id"] for f in b._find(*qq)]:
+                        return False
+            if a._ix_live():
+                a.memo.ix_check(a.state, _fresh_index(a.state["facts"]))
+        return a.memo.counts["ix_appends"] > 0 and a.state["facts"] == b.state["facts"]
+    guarded("g57b_index_relations_find_equal_reference", index_equal)
+
+    def guard_catches_corruption():
+        # a corrupted fact the calls do not touch passes the change-scoped validation (that is the
+        # scope), and the registered periodic full validation raises; the call is not kept, and the
+        # reloaded state (snapshot + journal) is the uncorrupted one
+        p = tmp / "g57b_guard.json"
+        fl = B + ["--indexed", "--incremental"]
+        srv = serve.Server(snapshot_every=1000, full_every=4)
+        srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": ["fact a p b", "fact b p c"]})  # full (first)
+        srv.cur.state["facts"][0]["supports"] = []  # injected corruption of an untouched fact
+        passed = 0
+        try:
+            for k in range(10):
+                srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": [f"fact g{k} q h{k}"]})
+                passed += 1
+        except SE:
+            pass
+        caught_at_period = passed == 3  # calls 2, 3, 4 scoped; call 5 is the full validation
+        r = srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": ["what is a p"]})
+        st = srv.cur.state
+        srv.close()
+        clean = serve.Server(snapshot_every=1000)  # the same kept calls, never corrupted (G57 engine)
+        q = tmp / "g57b_guard_clean.json"
+        for lines in [["fact a p b", "fact b p c"]] + [[f"fact g{k} q h{k}"] for k in range(3)]:
+            clean.handle({"op": "call", "state": str(q), "flags": B + ["--indexed"], "lines": lines})
+        r2 = clean.handle({"op": "call", "state": str(q), "flags": B + ["--indexed"], "lines": ["what is a p"]})
+        same = json.dumps(clean.cur.state, sort_keys=True) == json.dumps(st, sort_keys=True)
+        clean.close()
+        return caught_at_period and same and r["replies"] == r2["replies"] and st["facts"][0]["supports"] != []
+    guarded("g57b_period_guard_catches_untouched_corruption", guard_catches_corruption)
+
+    def ix_check_catches():
+        # a corrupted persistent index (not the facts) is caught by the guard's index check
+        p = tmp / "g57b_ixguard.json"
+        fl = B + ["--indexed", "--incremental"]
+        srv = serve.Server(snapshot_every=1000, full_every=3)
+        srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": ["fact a p b", "fact b p c", "what is a p"]})
+        srv.cur.memo.ix["out"]["a"] = {"zz"}
+        try:
+            for k in range(5):
+                srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": [f"fact g{k} q h{k}"]})
+            return False
+        except SE as exc:
+            return "incremental fact index diverged" in str(exc) and srv.cur is None
+    guarded("g57b_period_guard_catches_index_corruption", ix_check_catches)
+
+    def scoped_rejects_touched():
+        # a call whose own (touched) fact is broken fails the scoped validation itself
+        from .engine import _valid_scoped
+        a, _ = eng_pair("sc")
+        a.tell("a", "p", "b")
+        a._idx()
+        a.memo.scope = {"ok": True, "touched": []}
+        a.tell("b", "p", "c")
+        t = a.memo.scope["touched"]
+        good = _valid_scoped(a.state, t, a.memo.ix["byid"])
+        t[0]["supports"] = []
+        return good and len(t) == 1 and not _valid_scoped(a.state, t, a.memo.ix["byid"])
+    guarded("g57b_scoped_validation_checks_touched", scoped_rejects_touched)
+
+    def dom_cache_content():
+        # Info 2 of verify-35bda6b: replaced domain lists (whose addresses CPython may reuse) and
+        # in-place edits never return a stale domain set
+        e = Engine(tmp / "g57b_dom.json")
+        rng = _r.Random(3)
+        ver = {"v": 1}
+        for k in range(200):
+            if k % 3 == 2:
+                ver["domain"].append(f"z{k}")  # in place
+            else:
+                ver["domain"] = [f"e{rng.randrange(50)}" for _ in range(rng.randrange(1, 5))]  # replaced
+            if e._dom_set("cap", ver) != set(ver["domain"]):
+                return False
+        return True
+    guarded("g57b_domain_cache_keyed_on_content", dom_cache_content)
+    return out
+
+
 def run() -> dict:
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
@@ -1699,7 +1877,7 @@ def run() -> dict:
                         ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks),
                         ("programs", program_checks), ("px", px_checks), ("g49", g49_checks),
                         ("serve", serve_checks), ("verify_3e2783c", verify_3e2783c_checks),
-                        ("g57", g57_checks)]:
+                        ("g57", g57_checks), ("g57b", g57b_checks)]:
             # a section that raises is a failed check (named), not a crash that hides the other sections
             try:
                 sections[sec] = fn(tmp)  # no pseudo-check when it completes (verification L3 of 82dd0a2)

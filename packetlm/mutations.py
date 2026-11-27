@@ -144,6 +144,24 @@ MUTATIONS = {
     'd6_serve_call_skips_finish': ('        replies = [eng.turn(x) for x in lines]\n        eng.finish()\n        if ro:', '        replies = [eng.turn(x) for x in lines]\n        if ro:', 'serve.py'),
     'g57_indexed_ambiguity_off': ('found.append(got)\n        found = sorted(found)\n        if not found:\n            return {"status": "unknown", "value": None}\n        if len(found) > 1:\n            return {"status": "ambiguous", "value": None, "candidates": found}\n        return {"status": "known", "value": found[0]}\n\n    def _decode', 'found.append(got)\n        found = sorted(found)\n        if not found:\n            return {"status": "unknown", "value": None}\n        if False:\n            return {"status": "ambiguous", "value": None, "candidates": found}\n        return {"status": "known", "value": found[0]}\n\n    def _decode'),
     'g57_region_seeds_only': ('                hit = self.memo.region_hits(seeds, grown)', '                hit = bool(grown & seeds)'),
+    # G57b (docs/G57b.md): the persistent index, candidate filter, sparse tables and scoped validation
+    "g57b_append_skips_by_sr": ('        ix["by_sr"].setdefault((t[0], t[1]), []).append(f)\n', '        ix["by_sr"].setdefault((t[0], t[1]), []).append(f) if len(ix["by_sr"]) < 3 else None\n'),
+    "g57b_append_skips_ref": ('        ix["ref"].setdefault(t[1], {}).setdefault(t[0], set()).add(t[2])\n        ix["byid"]', '        ix["byid"]'),
+    "g57b_append_skips_memo": ('        ix["n_facts"], ix["epoch"] = len(state["facts"]), state.get("fact_epoch", 0)\n        self._added(t)', '        ix["n_facts"], ix["epoch"] = len(state["facts"]), state.get("fact_epoch", 0)'),
+    "g57b_support_skips_told_rel": ('            self.ix["told_rel"][f["r"]] += 1', '            pass'),
+    "g57b_valid_ignores_identity": ('        return ix is not None and state["facts"] is ix["facts_ref"] and len(state["facts"]) == ix["n_facts"] \\\n            and state.get("fact_epoch", 0) == ix["epoch"]', '        return ix is not None'),
+    "g57b_candidates_need_3_bits": ('            if c >= 2:\n                cand.update', '            if c >= 3:\n                cand.update'),
+    "g57b_no_small_packets": ('        if self.packet_of(t).bit_count() < SMALL_PACKET:\n            ix["small"].append(t)', '        pass'),
+    "g57b_differs_skips_domain": ('            items = [(e, preds.get(e)) for e in sorted(set(preds) | {e for e in dom if e in pos}, key=pos.__getitem__)]', '            items = list(preds.items())'),
+    "g57b_sparse_drops_negatives": ('        mine = self._predictions(cand_seq, also=neg) if sparse', '        mine = self._predictions(cand_seq, also=set()) if sparse'),
+    "g57b_was_known_always": ('            was_known = s in self.memo.ix["pos"]', '            was_known = True'),
+    "g57b_drop_keeps_ents_untracked": ('            if self._ents_tracked and getattr(self, "_ents", None) is None:', '            if False:'),
+    "g57b_touched_not_recorded": ('        if self.incremental and self.memo.scope is not None:\n            self.memo.scope["touched"].append(fact)\n        if kind == "told"', '        if kind == "told"'),
+    "g57b_scoped_skips_premises": ('    for f in touched:\n        for sp in f["supports"]:\n            for q in sp["premises"]:\n                if q not in byid:\n                    return False', '    pass'),
+    "g57b_ix_check_noop": ('_need(same and +ix["told_rel"] == told, "incremental', '_need(True, "incremental'),
+    "g57b_no_period_guard": ('        if sc is not None and sc["ok"] and o.since_full < self.full_every', '        if sc is not None and sc["ok"]', "serve.py"),
+    "v35_dom_cache_by_id": ('        if c.get("key") != key or c.get("domain") != ver["domain"]:', '        if c.get("key") != key:'),
+    "g57b_drop_keeps_scope": ('            if self.memo.scope is not None:\n                self.memo.scope["ok"] = False  # supports and facts may change anywhere', '            pass'),
 }
 
 

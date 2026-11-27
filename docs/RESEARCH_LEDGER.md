@@ -1102,3 +1102,31 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   per-relation rows, `reference.index`, `relations()` counters), delta validation of the facts and
   records a call changed (with a periodic full validation as the guard), and a sublinear exact
   candidate filter for recall — then repeat part S. Then G55b; then G58 capability economics.
+
+## 2026-11-27 06:10: G57b pre-registration (`--incremental`; part S 231–237, comp 241–247, unrel 251–257)
+
+- **Why:** G57 rule F failed (Xi R_16000 = 91.9). Profiling the G57 engine on part S at N = 0/1k/4k/16k
+  (`docs/evidence/g57b/profile_before.json`) put the scaling in the per-call fact-index build
+  (`_idx` 0.96 s at 16k), whole-state validation of every mutating call (0.74 s),
+  `reference.index` (0.64 s) and `relations()` (0.63 s); workload 0.10 → 5.91 s.
+- **Mechanism (docs/G57b.md §2):** a persistent fact index maintained by `tell` (rebuilt after any
+  removal); indexed `relations()`, `_find`, rows, was-known; an exact recall candidate filter
+  (codes sharing ≥ 2 bits with b_s plus packets under 38 bits; proof in §2; linear in codes with
+  constant ≈ 1/16 — not asymptotically sublinear, recorded honestly); sparse prediction tables
+  in `_scan`; change-scoped validation with a full validation + `ix_check` every **K = 64** mutating
+  calls and at every snapshot. Guard tests: an untouched corrupted fact passes scoped validation
+  and is caught at the period; the call is dropped and the reloaded state equals a clean run's; a
+  corrupted index is caught by `ix_check`.
+- **Registered:** material iff Xj R_16000 (vs N = 0) upper CI ≤ 45.95, else stop and report; rule F
+  on Xj with the N = 1000 baseline (Low 1 of verify-35bda6b); L1j/L3j = A(Cj+maint‖Bj) comp/unrel and
+  A(Cj+maint‖Ci+maint); outcomes separate; Xj replies and state bytes must equal Xi's.
+- **verify-35bda6b (7a47c12) folded in:** no High/Medium. Low 1 (N = 0 is not the same relevant
+  state): G57.md correction note; G57b baseline N = 1000. Low 2 (provenance): both receipts record
+  HEAD, clean tree, source/engine hashes and the lock; the run wrapper records lock create/delete
+  times. Low 3 (only Xs paid a 16k snapshot in G57's timed window): G57b snapshots every arm before
+  the window, none inside, snapshot cost reported separately and amortized. Info 2 (`_dom_set`
+  keyed on `id()`): keyed on content, check + mutation. Info 3: G57 comp Mi (+0.041) is small and
+  timing-sensitive; stated.
+- **Dev (not evidence):** part S dev seeds 991–992: Xj R_16000 3.6 (Xi 82.0), R1k_16000 2.9;
+  L1/L3 harness dev seeds 961–964: exact j = i, Cj+maint‖Bj −0.86 comp / −2.39 unrel (Ci: −1.03 /
+  −4.93); Bj‖Bi −0.05 / −0.09 (index overhead on small fresh states).

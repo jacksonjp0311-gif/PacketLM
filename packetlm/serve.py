@@ -42,7 +42,7 @@ import sys
 import time
 from pathlib import Path
 
-from .engine import _read_doc, Engine, Memo, StateError, SCHEMA, validate_lean, parse_cli, empty_state, _need
+from .engine import _read_doc, _valid_scoped, _fresh_index, FULL_VALIDATE_EVERY, Engine, Memo, StateError, SCHEMA, validate_lean, parse_cli, empty_state, _need
 
 SNAPSHOT_EVERY = 64
 JOURNAL_SCHEMA = "packetlm.journal/1"
@@ -81,14 +81,16 @@ class Open:
     def __init__(self, path: Path, kw: dict, flags: list):
         self.path, self.kw, self.flags = path, kw, flags
         self.memo = Memo() if kw.get("indexed") else None  # G57: lives as long as the open state
+        self.since_full, self.validated = 0, False  # G57b: mutating calls since the last full validation
         self.state, self.report, self.known, self.since = None, None, None, 0
         self.jpath = path.with_name(path.name + ".journal")
         self.jfh = None
 
 
 class Server:
-    def __init__(self, snapshot_every=SNAPSHOT_EVERY, check_readonly=None):
+    def __init__(self, snapshot_every=SNAPSHOT_EVERY, check_readonly=None, full_every=None):
         self.cur: Open | None = None
+        self.full_every = full_every or int(os.environ.get("PACKETLM_FULL_VALIDATE_EVERY", FULL_VALIDATE_EVERY))
         # tests and the differential check: verify that every read-only call left the state unchanged
         self.check_readonly = bool(int(os.environ.get("PACKETLM_CHECK_READONLY", "0"))) if check_readonly is None \
             else check_readonly
@@ -113,10 +115,34 @@ class Server:
         os.replace(tmp, o.jpath)
         o.jfh = open(o.jpath, "ab")
 
+    def _validate(self, o: Open, eng) -> None:
+        """Every structural check after a changing call. G57b (`--incremental`): only what the call
+        changed, when the call changed facts only through `tell` and removed none; a full
+        validation (with a check of the persistent index against a fresh build) at least every
+        FULL_VALIDATE_EVERY mutating calls, and after any untracked change."""
+        sc = o.memo.scope if eng.incremental else None
+        o.since_full += 1
+        if sc is not None and sc["ok"] and o.since_full < self.full_every and o.memo.ix_valid(eng.state) \
+                and _valid_scoped(eng.state, sc["touched"], o.memo.ix["byid"]):
+            o.memo.counts["scoped_validations"] += 1
+            return
+        if eng.incremental:
+            o.memo.counts["full_validations"] += 1
+        validate_lean({"schema": SCHEMA, "checksum": None, "state": eng.state}, checksum_ok=True)
+        if eng.incremental:
+            if o.memo.ix_valid(eng.state):
+                o.memo.ix_check(eng.state, _fresh_index(eng.state["facts"]))
+            else:
+                eng._idx()  # adopt the index now (O(F), as this validation), so the next calls are scoped
+        o.since_full, o.validated = 0, True
+
     def _snapshot(self, o: Open) -> None:
         eng = self._engine(o)
         eng.save()  # lean save: full validation, backup kept, atomic replace, fsync
         o.state, o.known, o.since = eng.state, eng._known_bytes, 0
+        if eng.incremental and o.memo.ix_valid(eng.state):  # G57b: the snapshot is a full validation
+            o.memo.ix_check(eng.state, _fresh_index(eng.state["facts"]))
+        o.since_full, o.validated = 0, True
         self._journal_start(o, _file_checksum(o.path))
 
     @staticmethod
@@ -206,6 +232,8 @@ class Server:
         else:
             report = {"loaded": "memory"}
         eng = self._engine(o)
+        if eng.incremental:  # G57b: what this call changes, for change-scoped validation
+            o.memo.scope = {"ok": o.validated and o.memo.ix_valid(o.state), "touched": []}
         # G57 (a): a call whose lines are all questions under --indexed is read-only. Its state was
         # validated and journaled when it was last changed, so it is neither re-validated nor
         # journaled; its re-asks may be answered from the memo (Engine._gated).
@@ -222,7 +250,7 @@ class Server:
                    "cpu_total_s": round(now - self.mark, 4), "readonly": True}
             self.mark = now
             return out
-        validate_lean({"schema": SCHEMA, "checksum": None, "state": eng.state}, checksum_ok=True)
+        self._validate(o, eng)
         o.state = eng.state
         o.jfh.write((json.dumps({"flags": list(flags), "lines": list(lines), "replies_sha256": _rhash(replies)})
                      + "\n").encode())

@@ -132,7 +132,7 @@ SCENARIOS = [
 ]
 
 
-def run(n=60, seed=0, mutate=None) -> dict:
+def run(n=60, seed=0, mutate=None, ref_flags=None, new_flags=None, full_every=None) -> dict:
     """Returns counts; `ok` is True when every call agreed."""
     rng = random.Random(seed)
     stats = {"sessions": 0, "calls": 0, "readonly_calls": 0, "gated_answers": 0, "replies": 0,
@@ -141,11 +141,12 @@ def run(n=60, seed=0, mutate=None) -> dict:
         tmp = Path(d)
         for k in range(len(SCENARIOS) + n):
             calls = SCENARIOS[k] if k < len(SCENARIOS) else session(rng)
-            ref, ind = serve.Server(snapshot_every=5), serve.Server(snapshot_every=5, check_readonly=True)
+            ref = serve.Server(snapshot_every=5)
+            ind = serve.Server(snapshot_every=5, check_readonly=True, full_every=full_every)
             pr, pi = tmp / f"r{k}.json", tmp / f"i{k}.json"
             for c in calls:
-                a = ref.call(pr, BASE, c)
-                b = ind.call(pi, BASE + ["--indexed"], c)
+                a = ref.call(pr, ref_flags or BASE, c)
+                b = ind.call(pi, new_flags or BASE + ["--indexed"], c)
                 stats["calls"] += 1
                 stats["replies"] += len(c)
                 stats["readonly_calls"] += bool(b.get("readonly"))
@@ -153,6 +154,9 @@ def run(n=60, seed=0, mutate=None) -> dict:
                 if a["replies"] != b["replies"] or json.dumps(ref.cur.state) != json.dumps(ind.cur.state):
                     stats["mismatch"] = {"session": k, "lines": c, "ref": a["replies"], "indexed": b["replies"]}
                     return {**stats, "ok": False}
+            if ind.cur is not None and ind.cur.memo is not None:
+                for k, v in ind.cur.memo.counts.items():
+                    stats.setdefault("paths", {})[k] = stats.get("paths", {}).get(k, 0) + v
             ref.close()
             ind.close()
             if pr.read_bytes() != pi.read_bytes():
@@ -165,4 +169,9 @@ def run(n=60, seed=0, mutate=None) -> dict:
 if __name__ == "__main__":
     n = int(sys.argv[1]) if len(sys.argv) > 1 else 60
     seed = int(sys.argv[2]) if len(sys.argv) > 2 else 0
-    print(json.dumps(run(n, seed), indent=1))
+    if "--g57b" in sys.argv:  # G57b: --incremental against the G57 engine
+        print(json.dumps(run(n, seed, ref_flags=BASE + ["--indexed"], new_flags=BASE + ["--indexed", "--incremental"],
+                             full_every=int(sys.argv[sys.argv.index("--full-every") + 1]) if "--full-every" in sys.argv
+                             else None), indent=1))
+    else:
+        print(json.dumps(run(n, seed), indent=1))
