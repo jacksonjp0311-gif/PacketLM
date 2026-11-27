@@ -1,0 +1,17 @@
+{"instrument_head": "70297af", "dirty": ""}
+{"cur": "comp", "extra": "Pk+maint||Bk", "report": ["A_36 = -0.1290  [-0.1676, -0.0956] (95% paired bootstrap, S=7); delta-SE=0.0208; sign-flip p=0.01562; geometric-mean form=-0.1326", "censored tasks: Pk+maint=3, Bk=3"]}
+{"cur": "comp", "extra": "Cr+maint||Br", "report": ["A_36 = -0.5238  [-0.6155, -0.4359] (95% paired bootstrap, S=7); delta-SE=0.0515; sign-flip p=0.01562; geometric-mean form=-0.5303", "censored tasks: Cr+maint=0, Br=3"]}
+{"cur": "comp", "extra": "Ck||Bk", "report": ["A_36 = -0.4063  [-0.4889, -0.3293] (95% paired bootstrap, S=7); delta-SE=0.0457; sign-flip p=0.01562; geometric-mean form=-0.4102", "censored tasks: Ck=0, Bk=3"]}
+{"cur": "comprep", "extra": "Pk+maint||Bk", "report": ["A_36 = -0.2912  [-0.4424, -0.1657] (95% paired bootstrap, S=7); delta-SE=0.0769; sign-flip p=0.01562; geometric-mean form=-0.2836", "censored tasks: Pk+maint=3, Bk=3"]}
+{"cur": "comprep", "extra": "Cr+maint||Br", "report": ["A_36 = -0.8545  [-1.0123, -0.7050] (95% paired bootstrap, S=7); delta-SE=0.0866; sign-flip p=0.01562; geometric-mean form=-0.8503", "censored tasks: Cr+maint=0, Br=3"]}
+{"cur": "comprep", "extra": "Ck||Bk", "report": ["A_36 = -0.6603  [-0.8094, -0.5354] (95% paired bootstrap, S=7); delta-SE=0.0766; sign-flip p=0.01562; geometric-mean form=-0.6566", "censored tasks: Ck=0, Bk=3"]}
+{"cur": "unrel", "extra": "Pk+maint||Bk", "report": ["A_24 = -1.4759  [-1.6575, -1.3059] (95% paired bootstrap, S=7); delta-SE=0.0984; sign-flip p=0.01562; geometric-mean form=-1.4761", "censored tasks: Pk+maint=1, Bk=1"]}
+{"cur": "unrel", "extra": "Cr+maint||Br", "report": ["A_24 = -1.7711  [-1.9234, -1.6348] (95% paired bootstrap, S=7); delta-SE=0.0815; sign-flip p=0.01562; geometric-mean form=-1.7678", "censored tasks: Cr+maint=1, Br=1"]}
+{"cur": "unrel", "extra": "Ck||Bk", "report": ["A_24 = -0.2953  [-0.4380, -0.1813] (95% paired bootstrap, S=7); delta-SE=0.0725; sign-flip p=0.01562; geometric-mean form=-0.2881", "censored tasks: Ck=1, Bk=1"]}
+{"cur": "mixed", "extra": "Pk+maint||Bk", "report": ["A_48 = -0.3570  [-0.3793, -0.3284] (95% paired bootstrap, S=7); delta-SE=0.0146; sign-flip p=0.01562; geometric-mean form=-0.3566", "censored tasks: Pk+maint=5, Bk=5"]}
+{"cur": "mixed", "extra": "Cr+maint||Br", "report": ["A_48 = -0.8677  [-0.9494, -0.7926] (95% paired bootstrap, S=7); delta-SE=0.0437; sign-flip p=0.01562; geometric-mean form=-0.8682", "censored tasks: Cr+maint=3, Br=5"]}
+{"cur": "mixed", "extra": "Ck||Bk", "report": ["A_48 = -0.6220  [-0.6986, -0.5478] (95% paired bootstrap, S=7); delta-SE=0.0427; sign-flip p=0.01562; geometric-mean form=-0.6203", "censored tasks: Ck=3, Bk=5"]}
+{"cur": "long", "extra": "Pk+maint||Bk", "report": ["A_144 = -1.0495  [-1.7785, -0.6631] (95% paired bootstrap, S=7); delta-SE=0.3498; sign-flip p=0.01562; geometric-mean form=-0.9353", "censored tasks: Pk+maint=22, Bk=22"]}
+{"cur": "long", "extra": "Cr+maint||Br", "report": ["A_144 = -1.6590  [-2.4479, -1.2053] (95% paired bootstrap, S=7); delta-SE=0.3715; sign-flip p=0.01562; geometric-mean form=-1.5660", "censored tasks: Cr+maint=0, Br=22"]}
+{"cur": "long", "extra": "Ck||Bk", "report": ["A_144 = -1.2920  [-2.0056, -0.8802] (95% paired bootstrap, S=7); delta-SE=0.3406; sign-flip p=0.01562; geometric-mean form=-1.1928", "censored tasks: Ck=0, Bk=22"]}
+{"contrasts": 64, "matching": 64}

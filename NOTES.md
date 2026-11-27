@@ -11,3 +11,6 @@ rv exclusion: rv holds fingerprints only; lag legit; only full eval can check â†
 extra: P||B comp -0.13, long -1.05, unrel -1.48 (accumulation w/o library); C||P comp -0.34; maint share Ck unrel 48% (retention probes grow linearly per family); task-only: comp -0.41, unrel -0.30 (Q3 would pass task-only, but Q3 registered +maint & same as G58 L3r), long -1.29.
 Ck||Cr unrel -0.148 CI<0: k slower on small states. k at N=0 2.70 vs r 2.36 ms.
 cpu_per_call alpha k 0.42; work metric = call+c_call events (1 per builtin regardless of size; py3.13 comprehensions inlined) -> probe work_probe.py pending (wait for load).
+(1) p3 block audit 30 sess 2508 calls 0 diffs (3520/3556 partitioned); x1 cross-tree XK64 vs 33565b0 XR64: 60 sess 4874 calls 0 per-call/final/journal diffs. p1,p2,p4,p5 running; mutdiff (5 mutants, no audit, dense) running.
+gate protocol: long-lived Server (not process per call); close snapshot charged to last family maint.
+ledger "every prediction held except part S point": charged-prop point 0.36[0.28,0.43] vs 0.49 and work 0.10[0.098,0.107] vs 0.082 also outside predicted CIs; comp A -1.07 vs -0.52 -> Low wording.
