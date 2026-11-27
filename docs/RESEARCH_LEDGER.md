@@ -206,3 +206,41 @@ items 1–3.
   seed rose from 1.16–1.26 s to 1.21–1.41 s.
 - Evidence: `docs/evidence/g45_receipt_audit283.json`, `g44_receipt_audit283.json`,
   `g44_audit_mutations.json`.
+
+## 2026-11-26 21:40 — G46 longitudinal benchmark: registered run (docs/G46.md § Results)
+
+- **Protocol:** pre-registered in 283f526, with clarifications and the example-pool fix
+  committed before any engine run. The engine changed (audit 283f526 fixes, 9c5315f) before
+  the registered run; it was frozen at sha256 `cab85669629f…` for the run.
+- **Aborted first attempt** (21:12–21:21): arm N spent more than 300 s per call. Nothing was
+  read. Amendment 1 made the harness resumable and gave N a 120 s per-call budget.
+- **Outcome: 26 of 27 seed-thresholds hold, so G46 is NOT passed.** Seed 33 threshold 6 fails:
+  3 of 4 ambiguous-truth queries answered `ambiguous`, against the required ≥95%. The 4th
+  was `unknown`, because its capability was itself ambiguous and nothing was adopted.
+- **What held:**
+  - retention 1.0 over 378 rechecks per seed;
+  - plasticity 36/36, 36/36 and 35/36;
+  - transfer 1.0, 1.0 and 0.972;
+  - 0 wrong qualified answers;
+  - corrections propagated 5/5;
+  - 0 spurious answers on 86 undefined queries;
+  - controls: frozen arm 0 phase-B acquisitions, shuffled arm 0 matches, geometry-off decisions identical.
+- **H1 false:** `A_36(C‖B)` = −7.00 [−7.19, −6.85] on the pinned learning-amortization
+  instrument. The continual learner costs about 8× the empty-memory learner, and the gap
+  widens (log-ratio trend −0.069 per task). This is the utility problem.
+- **H2:** `A^reuse_36(C‖P)` = +0.225 [+0.210, +0.254], break-even at task 28. P is censored on
+  11 tasks against C's 1, so this is a lower bound. The receipt's strict equal-accuracy rule
+  reports no value for H2, because C was more accurate.
+- **Cause, from profiling:**
+  - 93% of a phase-B acquisition is the open-world qualification scan (audit fix 9c5315f);
+  - per-entity work runs over all 534 retained entities;
+  - library capabilities widen the scan.
+  Making qualification honest made it expensive. This is the first target for G48 and for the
+  adaptive-retention experiment.
+- **Learning-to-learn:** not claimed, and not supported.
+- **Failure evidence kept:** the seed-33 receipt, the aborted-attempt note, and N's partial
+  results in raw.
+- **Reproduce:**
+  - `python3 benchmarks/g46.py --seeds 11,22,33 --jobs 8` (about 6 min on 8 cores);
+  - `python3 benchmarks/la_export.py artifacts/g46/g46_raw.json costs.csv`;
+  - `PYTHONPATH=<learning-amortization@70297af> python3 -m amortization costs.csv --cont C --base B`.
