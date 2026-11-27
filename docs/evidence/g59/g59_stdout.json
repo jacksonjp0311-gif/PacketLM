@@ -1,0 +1,672 @@
+{
+ "guards": {
+  "exact_replies_and_state_k_equal_r": true,
+  "no_wrong_qualified_C": true,
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ },
+ "gate": {
+  "Q1_comp_positive": false,
+  "Q2_detail": {
+   "comp": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "comprep": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "unrel": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "mixed": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "long": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   }
+  },
+  "Q2_no_correctness_or_retention_loss": true,
+  "Q3_unrel_penalty_halved": false,
+  "Q4a_comp_replicates": false,
+  "Q4b_mixed_positive": false,
+  "PASS": false,
+  "verdict": "HOLD",
+  "switch_rule_triggered": true,
+  "strata_qualified": {
+   "comp": {
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": false
+   },
+   "comprep": {
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": false
+   },
+   "mixed": {
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": false
+   },
+   "long": {
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": false
+   }
+  },
+  "deepest_first_comp": true,
+  "accumulation": {
+   "A_final_task_only": [
+    -1.292,
+    [
+     -2.0056,
+     -0.8802
+    ]
+   ],
+   "beta": [
+    -0.0066,
+    [
+     -0.007,
+     -0.0062
+    ]
+   ],
+   "crosses_zero": false,
+   "plateau_below_zero": false,
+   "diverging_below_zero": true,
+   "rate_ratio": {
+    "slope_y": [
+     0.04497,
+     [
+      0.03749,
+      0.05514
+     ]
+    ],
+    "s_savings": [
+     0.0407,
+     [
+      0.03791,
+      0.04321
+     ]
+    ],
+    "o_overhead": [
+     0.08568,
+     [
+      0.07779,
+      0.09549
+     ]
+    ],
+    "y_first": [
+     -0.1971,
+     [
+      -0.30957,
+      -0.11804
+     ]
+    ],
+    "y_last": [
+     0.77271,
+     [
+      0.5981,
+      0.95322
+     ]
+    ],
+    "rate_ratio_o_over_s": 2.1049,
+    "predicted_crossover_family": null,
+    "families": 24
+   }
+  }
+ },
+ "comp": {
+  "primary": [
+   [
+    "Ck+maint",
+    "Bk",
+    "A_36 = -0.5179  [-0.6109, -0.4337] (95% paired bootstrap, S=7); delta-SE=0.0503; sign-flip p=0.01562; geometric-mean form=-0.5234"
+   ],
+   [
+    "Ck+maint",
+    "Pk+maint",
+    "A_36 = -0.3445  [-0.3899, -0.2967] (95% paired bootstrap, S=7); delta-SE=0.0267; sign-flip p=0.01562; geometric-mean form=-0.3450"
+   ],
+   [
+    "Ck+maint",
+    "Cr+maint",
+    "A_36 = -0.0080  [-0.0205, +0.0048] (95% paired bootstrap, S=7); delta-SE=0.0071; sign-flip p=0.25; geometric-mean form=-0.0078"
+   ]
+  ],
+  "outcomes": {
+   "Cr": {
+    "tasks": 252,
+    "solved": 252,
+    "sealed_correct": 1134,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Ck": {
+    "tasks": 252,
+    "solved": 252,
+    "sealed_correct": 1134,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Br": {
+    "tasks": 252,
+    "solved": 249,
+    "sealed_correct": 1130,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Bk": {
+    "tasks": 252,
+    "solved": 249,
+    "sealed_correct": 1130,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pr": {
+    "tasks": 252,
+    "solved": 249,
+    "sealed_correct": 1130,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pk": {
+    "tasks": 252,
+    "solved": 249,
+    "sealed_correct": 1130,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Fr": {
+    "tasks": 252,
+    "solved": 129,
+    "sealed_correct": 825,
+    "sealed_n": 1134,
+    "qualified": 126,
+    "censored": 126,
+    "uses_library": 84,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Fk": {
+    "tasks": 252,
+    "solved": 129,
+    "sealed_correct": 825,
+    "sealed_n": 1134,
+    "qualified": 126,
+    "censored": 126,
+    "uses_library": 84,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true,
+   "F": true
+  }
+ },
+ "comprep": {
+  "primary": [
+   [
+    "Ck+maint",
+    "Bk",
+    "A_36 = -0.7819  [-0.9388, -0.6475] (95% paired bootstrap, S=7); delta-SE=0.0810; sign-flip p=0.01562; geometric-mean form=-0.7788"
+   ],
+   [
+    "Ck+maint",
+    "Pk+maint",
+    "A_36 = -0.3801  [-0.4209, -0.3397] (95% paired bootstrap, S=7); delta-SE=0.0227; sign-flip p=0.01562; geometric-mean form=-0.3857"
+   ],
+   [
+    "Ck+maint",
+    "Cr+maint",
+    "A_36 = -0.0040  [-0.0148, +0.0074] (95% paired bootstrap, S=7); delta-SE=0.0062; sign-flip p=0.4844; geometric-mean form=-0.0046"
+   ]
+  ],
+  "outcomes": {
+   "Cr": {
+    "tasks": 252,
+    "solved": 252,
+    "sealed_correct": 1134,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Ck": {
+    "tasks": 252,
+    "solved": 252,
+    "sealed_correct": 1134,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Br": {
+    "tasks": 252,
+    "solved": 249,
+    "sealed_correct": 1124,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Bk": {
+    "tasks": 252,
+    "solved": 249,
+    "sealed_correct": 1124,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pr": {
+    "tasks": 252,
+    "solved": 249,
+    "sealed_correct": 1124,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pk": {
+    "tasks": 252,
+    "solved": 249,
+    "sealed_correct": 1124,
+    "sealed_n": 1134,
+    "qualified": 249,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Fr": {
+    "tasks": 252,
+    "solved": 133,
+    "sealed_correct": 826,
+    "sealed_n": 1134,
+    "qualified": 125,
+    "censored": 126,
+    "uses_library": 84,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Fk": {
+    "tasks": 252,
+    "solved": 133,
+    "sealed_correct": 826,
+    "sealed_n": 1134,
+    "qualified": 125,
+    "censored": 126,
+    "uses_library": 84,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true,
+   "F": true
+  }
+ },
+ "unrel": {
+  "primary": [
+   [
+    "Ck+maint",
+    "Bk",
+    "A_24 = -1.5003  [-1.6763, -1.3446] (95% paired bootstrap, S=7); delta-SE=0.0922; sign-flip p=0.01562; geometric-mean form=-1.4992"
+   ],
+   [
+    "Ck+maint",
+    "Pk+maint",
+    "A_24 = -0.0098  [-0.0263, +0.0066] (95% paired bootstrap, S=7); delta-SE=0.0095; sign-flip p=0.3594; geometric-mean form=-0.0094"
+   ],
+   [
+    "Ck+maint",
+    "Cr+maint",
+    "A_24 = -0.1482  [-0.1935, -0.0872] (95% paired bootstrap, S=7); delta-SE=0.0314; sign-flip p=0.03125; geometric-mean form=-0.1480"
+   ]
+  ],
+  "outcomes": {
+   "Cr": {
+    "tasks": 168,
+    "solved": 167,
+    "sealed_correct": 668,
+    "sealed_n": 672,
+    "qualified": 167,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Ck": {
+    "tasks": 168,
+    "solved": 167,
+    "sealed_correct": 668,
+    "sealed_n": 672,
+    "qualified": 167,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Br": {
+    "tasks": 168,
+    "solved": 167,
+    "sealed_correct": 668,
+    "sealed_n": 672,
+    "qualified": 167,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Bk": {
+    "tasks": 168,
+    "solved": 167,
+    "sealed_correct": 668,
+    "sealed_n": 672,
+    "qualified": 167,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pr": {
+    "tasks": 168,
+    "solved": 167,
+    "sealed_correct": 668,
+    "sealed_n": 672,
+    "qualified": 167,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pk": {
+    "tasks": 168,
+    "solved": 167,
+    "sealed_correct": 668,
+    "sealed_n": 672,
+    "qualified": 167,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true
+  }
+ },
+ "mixed": {
+  "primary": [
+   [
+    "Ck+maint",
+    "Bk",
+    "A_48 = -0.8204  [-0.9021, -0.7431] (95% paired bootstrap, S=7); delta-SE=0.0450; sign-flip p=0.01562; geometric-mean form=-0.8190"
+   ],
+   [
+    "Ck+maint",
+    "Pk+maint",
+    "A_48 = -0.3415  [-0.4032, -0.2857] (95% paired bootstrap, S=7); delta-SE=0.0328; sign-flip p=0.01562; geometric-mean form=-0.3408"
+   ],
+   [
+    "Ck+maint",
+    "Cr+maint",
+    "A_48 = -0.0161  [-0.0269, -0.0042] (95% paired bootstrap, S=7); delta-SE=0.0063; sign-flip p=0.0625; geometric-mean form=-0.0156"
+   ]
+  ],
+  "outcomes": {
+   "Cr": {
+    "tasks": 336,
+    "solved": 333,
+    "sealed_correct": 1458,
+    "sealed_n": 1470,
+    "qualified": 330,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Ck": {
+    "tasks": 336,
+    "solved": 333,
+    "sealed_correct": 1458,
+    "sealed_n": 1470,
+    "qualified": 330,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Br": {
+    "tasks": 336,
+    "solved": 331,
+    "sealed_correct": 1451,
+    "sealed_n": 1470,
+    "qualified": 331,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Bk": {
+    "tasks": 336,
+    "solved": 331,
+    "sealed_correct": 1451,
+    "sealed_n": 1470,
+    "qualified": 331,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pr": {
+    "tasks": 336,
+    "solved": 331,
+    "sealed_correct": 1451,
+    "sealed_n": 1470,
+    "qualified": 331,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pk": {
+    "tasks": 336,
+    "solved": 331,
+    "sealed_correct": 1451,
+    "sealed_n": 1470,
+    "qualified": 331,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true
+  }
+ },
+ "long": {
+  "primary": [
+   [
+    "Ck+maint",
+    "Bk",
+    "A_144 = -1.6324  [-2.3500, -1.2086] (95% paired bootstrap, S=7); delta-SE=0.3420; sign-flip p=0.01562; geometric-mean form=-1.5446"
+   ],
+   [
+    "Ck+maint",
+    "Pk+maint",
+    "A_144 = -0.2844  [-0.3865, -0.1964] (95% paired bootstrap, S=7); delta-SE=0.0586; sign-flip p=0.01562; geometric-mean form=-0.3148"
+   ],
+   [
+    "Ck+maint",
+    "Cr+maint",
+    "A_144 = -0.0329  [-0.0467, -0.0234] (95% paired bootstrap, S=7); delta-SE=0.0064; sign-flip p=0.01562; geometric-mean form=-0.0351"
+   ]
+  ],
+  "outcomes": {
+   "Cr": {
+    "tasks": 1008,
+    "solved": 1008,
+    "sealed_correct": 4536,
+    "sealed_n": 4536,
+    "qualified": 987,
+    "censored": 0,
+    "uses_library": 588,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Ck": {
+    "tasks": 1008,
+    "solved": 1008,
+    "sealed_correct": 4536,
+    "sealed_n": 4536,
+    "qualified": 987,
+    "censored": 0,
+    "uses_library": 588,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Br": {
+    "tasks": 1008,
+    "solved": 986,
+    "sealed_correct": 4468,
+    "sealed_n": 4536,
+    "qualified": 986,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Bk": {
+    "tasks": 1008,
+    "solved": 986,
+    "sealed_correct": 4468,
+    "sealed_n": 4536,
+    "qualified": 986,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pr": {
+    "tasks": 1008,
+    "solved": 986,
+    "sealed_correct": 4468,
+    "sealed_n": 4536,
+    "qualified": 986,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pk": {
+    "tasks": 1008,
+    "solved": 986,
+    "sealed_correct": 4468,
+    "sealed_n": 4536,
+    "qualified": 986,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true
+  }
+ }
+}
