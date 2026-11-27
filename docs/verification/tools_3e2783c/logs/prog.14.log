@@ -1,0 +1,1 @@
+{"mode": "prog", "seed": 14, "cases": 95, "qualified": 81, "ops": 270, "still_qualified_at_end": 12, "cases_wrong_before_ops": 0, "cases_wrong_qualified": 0, "cases_qualified_after_none_reacquire": 0, "cases_honest_witness_found": 0, "cases_wrong_qualified_H_in_space": 0, "cases_wrong_qualified_obs_still_true": 0, "wrong_qualified_answers": 0}
