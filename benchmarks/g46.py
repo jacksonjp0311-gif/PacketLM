@@ -8,6 +8,7 @@ Run: python benchmarks/g46.py [--seeds 11,22,33] [--jobs 8]
 from __future__ import annotations
 import json
 import random
+import subprocess
 import sys
 import time
 from multiprocessing import Pool
@@ -28,6 +29,22 @@ SPEC = {
 FLAGS = {"C": [], "B": ["--no-library"], "P": ["--no-library"], "F": [], "S": [],
          "G": ["--no-geometry"], "N": ["--no-activation"]}
 CLI_ARMS = list(FLAGS)
+N_CALL_BUDGET_S = 120  # amendment 1 (docs/G46.md): per-call wall budget for the activation ablation only
+
+
+class BudgetTeacher(Teacher):
+    def __call__(self, *lines):
+        t = time.perf_counter()
+        p = subprocess.run([sys.executable, "-m", "packetlm.engine", str(self.state), *self.flags, *lines],
+                           cwd=ROOT, capture_output=True, text=True, timeout=N_CALL_BUDGET_S)
+        self.calls += 1
+        if p.returncode:
+            raise RuntimeError(p.stderr[-800:])
+        out = json.loads(p.stdout)
+        self.cpu += out["cpu_s"]
+        self.log.append({"lines": list(lines), "replies": out["replies"], "load": out["load"],
+                         "stats": out["stats"], "cpu_s": out["cpu_s"], "wall_s": round(time.perf_counter() - t, 3)})
+        return out["replies"]
 
 
 def truth(triples, hidden, s):
@@ -156,6 +173,22 @@ def stat_sum(log, a, b):
 
 def run_arm(args):
     seed, arm = args
+    done = OUT / f"seed{seed}" / f"result_{arm}.json"
+    if done.exists():
+        r = json.loads(done.read_text())
+        if r.get("engine_sha256") == source_hash():
+            return r
+    try:
+        r = _run_arm(seed, arm)
+    except subprocess.TimeoutExpired as e:
+        r = {"seed": seed, "arm": arm, "aborted": f"call exceeded {N_CALL_BUDGET_S}s wall: {str(e.cmd[-1])[:80]}"}
+        r.update(getattr(e, "partial", {}))
+    r["engine_sha256"] = source_hash()
+    done.write_text(json.dumps(r))
+    return r
+
+
+def _run_arm(seed, arm):
     fams = world(seed)
     sealed_all = sealed_tokens(fams)
     d = OUT / f"seed{seed}"
@@ -166,6 +199,16 @@ def run_arm(args):
     flags = FLAGS[arm] + ["--deepen=5"]
     rng = random.Random(seed * 7919 + ord(arm))
     log, tasks, families, last = [], [], [], {}
+    Teach = BudgetTeacher if arm == "N" else Teacher
+    try:
+        return _arm_body(seed, arm, fams, sealed_all, d, persistent, flags, rng, log, tasks, families, last, Teach)
+    except subprocess.TimeoutExpired as e:
+        e.partial = {"tasks": tasks, "families": families, "interactions": sum(len(x["lines"]) for x in log),
+                     "processes": len(log), "final_state_bytes": persistent.stat().st_size if persistent.exists() else None}
+        raise
+
+
+def _arm_body(seed, arm, fams, sealed_all, d, persistent, flags, rng, log, tasks, families, last, Teach):
     for fi, fam in enumerate(fams):
         triples = list(fam["triples"])
         frozen = arm == "F" and fam["phase"] == "B"
@@ -173,7 +216,7 @@ def run_arm(args):
         for ti, task in enumerate(fam["tasks"]):
             name, ex = task["name"], task["examples"]
             state = d / f"B_{fi}_{ti}.json" if arm == "B" else persistent
-            T = Teacher(state, flags, log)
+            T = Teach(state, flags, log)
             a0 = len(log)
             evidence, asked, status = [], [], None
             if not frozen:
@@ -239,7 +282,7 @@ def run_arm(args):
                           "cost": stat_sum(log, a0, a1), "state_bytes": size})
         fam_rec = {"family": fi, "phase": fam["phase"]}
         if arm != "B":
-            T = Teacher(persistent, flags, log)
+            T = Teach(persistent, flags, log)
             a0 = len(log)
             if fam["phase"] == "A":
                 s, r, o = fam["correction"]
