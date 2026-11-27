@@ -813,12 +813,11 @@ def program_checks(tmp) -> dict:
     q6, q7 = e6.investigate("up"), e7.investigate("up")
     out["prog_question_independent_of_fact_order"] = q6.get("result") == "question" and q6 == q7
     # questions stay inside the observations' component (an unrelated world is never asked about)
-    for t in [("aa1", "in", "aa2"), ("aa1", "in", "aa3"), ("aa2", "kind", "R"), ("aa3", "kind", "Q")]:
-        e6.tell(*t)  # an unrelated world whose names sort first; one hypothesis is defined there
-    e6.acquire("up")
-    q8 = e6.investigate("up")
-    out["prog_question_inside_component"] = q8.get("result") == "question" and not q8["subject"].startswith("aa") and \
-        e6._predictions(["prog:rel:in>is:kind:R"]).get("aa1") == "aa2"
+    for t in [("aa1", "in", "aa2"), ("aa2", "kind", "AA")]:
+        e6.tell(*t)  # a disconnected world (no shared token) whose names sort first
+    pool = e6._question_pool("up")
+    out["prog_question_inside_component"] = "aa1" not in pool and "aa2" not in pool and {"x", "y"} <= set(pool) \
+        and pool == sorted(pool) and e6.investigate("up").get("subject") == q6.get("subject")
     # programs off: no program tokens are ever hypothesised
     e5 = Engine(tmp / "prog5.json", deepen=3)
     for t in tri:

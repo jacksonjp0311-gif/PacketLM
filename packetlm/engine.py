@@ -1215,15 +1215,7 @@ class Engine:
         best, best_score = None, 0
         # programs mode: ties broken by entity name, not by fact storage order, which adaptive
         # retention changes when it restores a component (G48 H6 failure, docs/G48.md)
-        if self.programs:
-            # programs mode: only the relevance component of the observations (the same domain the
-            # acquisition uses; G48R H6 failure: questions about other, possibly archived, worlds),
-            # ties broken by entity name (G48 H6 failure: fact storage order)
-            comp = self._component({x for o in self.state["observations"].get(name, []) for x in o})
-            pool = sorted(e for e in self.entities() if e in comp)
-        else:
-            pool = self.entities()
-        for e in pool:
+        for e in self._question_pool(name):
             if e in done:
                 continue
             if self.programs:
@@ -1247,6 +1239,15 @@ class Engine:
             gaps = [list(h) for h, p in preds.items() if all(v is None for e, v in p.items() if e not in done)]
             return {"result": "need knowledge", "undecidable": gaps}
         return {"result": "question", "subject": best}
+
+    def _question_pool(self, name):
+        """Entities investigate may ask about. Programs mode: only the relevance component of the
+        observations (the domain the acquisition uses; G48R H6 failure: questions about other,
+        possibly archived, worlds), in name order (G48 H6 failure: fact storage order)."""
+        if not self.programs:
+            return self.entities()
+        comp = self._component({x for o in self.state["observations"].get(name, []) for x in o})
+        return sorted(e for e in self.entities() if e in comp)
 
     def discover(self, name, oracle, budget=8) -> dict:
         asked = []

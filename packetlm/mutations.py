@@ -51,8 +51,8 @@ MUTATIONS = {
     "prog_deps_hidden": ('            out += progs.deps(s)  # capabilities used inside', '            pass  # capabilities used inside'),
     "prog_investigate_defined_only": ('                if not known or len(set(allp)) < 2:', '                if len(set(known)) < 2:'),
     "prog_scan_ignored": ('        status = "qualified" if complete and not blockers else "provisional"', '        status = "qualified"'),
-    "prog_order_dependent_ties": ('            pool = sorted(e for e in self.entities() if e in comp)', '            pool = [e for e in self.entities() if e in comp]'),
-    "prog_investigate_outside_component": ('            pool = sorted(e for e in self.entities() if e in comp)', '            pool = sorted(self.entities())'),
+    "prog_order_dependent_ties": ('        return sorted(e for e in self.entities() if e in comp)', '        return [e for e in self.entities() if e in comp]'),
+    "prog_investigate_outside_component": ('        return sorted(e for e in self.entities() if e in comp)', '        return sorted(self.entities())'),
     "static_ignores_archive": ('        if ret and retention == "static" and ret["archived"]:', '        if False:'),
     "no_requalify": ('        out["review"] = retired + self.review() + self._requalify_retired()\n        return out\n\n    def correct_example', '        out["review"] = retired + self.review()\n        return out\n\n    def correct_example'),
     "scan_short_horizon": ('        horizon = self.deepen if (max_len is None and self.deepen) else searched', '        horizon = searched'),
@@ -62,9 +62,25 @@ MUTATIONS = {
 }
 
 
+def _baseline() -> list:
+    """Unmutated run first: a check that already fails at baseline cannot kill a mutation
+    (found 2026-11-26: a check failing at baseline made a mutation look killed)."""
+    with tempfile.TemporaryDirectory() as d:
+        dst = Path(d) / "repo"
+        shutil.copytree(ROOT / "packetlm", dst / "packetlm", ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copytree(ROOT / "data", dst / "data")
+        p = subprocess.run([sys.executable, "-m", "packetlm.g44_test"], cwd=dst, capture_output=True, text=True, timeout=600)
+        rec = dst / "artifacts" / "g44_receipt.json"
+        return json.loads(rec.read_text())["failed"] if rec.exists() else ["baseline did not run"]
+
+
 def run() -> dict:
     results = {}
+    base_failed = _baseline()
     for name, (old, new, *target) in MUTATIONS.items():
+        if base_failed:
+            results[name] = {"error": f"baseline fails: {base_failed[:3]}"}
+            continue
         with tempfile.TemporaryDirectory() as d:
             dst = Path(d) / "repo"
             shutil.copytree(ROOT / "packetlm", dst / "packetlm", ignore=shutil.ignore_patterns("__pycache__"))
@@ -81,7 +97,7 @@ def run() -> dict:
             results[name] = {"exit": p.returncode, "failed": failed,
                              "verdict": "KILLED" if p.returncode else "SURVIVED",
                              "crash": p.stderr.strip().splitlines()[-1][:200] if p.returncode and not failed else None}
-    out = {"mutations": results, "killed": sum(r.get("verdict") == "KILLED" for r in results.values()),
+    out = {"baseline_failed": base_failed, "mutations": results, "killed": sum(r.get("verdict") == "KILLED" for r in results.values()),
            "total": len(results)}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/mutations_receipt.json").write_text(json.dumps(out, indent=2))

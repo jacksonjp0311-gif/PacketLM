@@ -475,3 +475,17 @@ they are archived.
 - No third replication.
 - Investigate now scores only the observations' component (check plus mutation; 41/41 killed).
 - The no-harm property is re-tested in the next pre-registered experiment (PX, arm RA).
+
+**Correction, 23:10.** Commit 69239f5 pushed with `programs.prog_question_inside_component`
+**failing at baseline**. The test world shared class tokens (R, Q), so it was connected to the
+observations' component and the check could not pass. The suite showed 190 checks with 1
+failed. The mutation run still reported that mutation as killed, because the mutation driver
+never ran an unmutated baseline.
+
+Fixes:
+- **The check** now asks the question pool directly, using a world with no shared token. The
+  pool logic is factored into `_question_pool`.
+- **The mutation driver** runs an unmutated baseline first. If anything fails at baseline,
+  every mutation is reported invalid.
+- **Result:** baseline 0 failed; 41/41 killed. The order and component mutations are both
+  caught by named checks.
