@@ -132,6 +132,15 @@ def judge1(pred, v):
     return "supported" if pred == v else "contradicted"
 
 
+def judge_set(out, v):
+    """Full-set judgment, as engine.judge_set (PX: `!none` / `!several` statements)."""
+    if v == "!none":
+        return "supported" if not out else "contradicted"
+    if v == "!several":
+        return "supported" if len(out) >= 2 else ("contradicted" if len(out) == 1 else "undetermined")
+    return judge1(one(out), v)
+
+
 def proposals(ref, obs):
     """Guard proposals (designed rule, see module doc)."""
     props = {}
@@ -145,6 +154,8 @@ def proposals(ref, obs):
             count[p] = count.get(p, 0) + 1
     shared = None
     for _, v in obs:
+        if v.startswith("!"):
+            continue  # PX statements carry no answer entity
         shared = set(props.get(v, ())) if shared is None else shared & props.get(v, set())
     shared = sorted(shared or ())
     subj = sorted({p for s, _ in obs for p in props.get(s, ()) if count[p] >= 2} - set(shared))
@@ -175,7 +186,7 @@ class Inducer:
         return one(run(self.ctx, prog, x))
 
     def marks(self, prog):
-        return [judge1(self.pred(prog, s), v) for s, v in self.obs]
+        return [judge_set(run(self.ctx, prog, s), v) for s, v in self.obs]
 
     def programs(self, k):
         """All programs of size k in canonical order (designed grammar)."""
@@ -208,7 +219,7 @@ class Inducer:
                 self.examined += 1
                 ok = True
                 for s, v in self.obs:
-                    if judge1(self.pred(p, s), v) != "supported":
+                    if judge_set(run(self.ctx, p, s), v) != "supported":
                         ok = False
                         break
                 if ok:

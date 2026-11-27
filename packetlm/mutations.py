@@ -54,6 +54,13 @@ MUTATIONS = {
     "prog_order_dependent_ties": ('        return sorted(e for e in self.entities() if e in comp)', '        return [e for e in self.entities() if e in comp]'),
     "prog_investigate_outside_component": ('        return sorted(e for e in self.entities() if e in comp)', '        return sorted(self.entities())'),
     "prog_scan_short_horizon": ('        horizon = progs.MAX_SIZE\n', '        horizon = progs.size(cand)\n'),
+    "px_none_undetermined": ('    if ans == NONE:\n        return "supported" if not out else "contradicted"', '    if ans == NONE:\n        return "supported" if not out else "undetermined"'),
+    "px_scan_skips_negative_subjects": ('        D = [e for e, v in mine.items() if v is not None or e in neg]', '        D = [e for e, v in mine.items() if v is not None]'),
+    "px_statement_as_answer_entity": ('        if v.startswith("!"):\n            continue', '        if False:\n            continue', "programs.py"),
+    # The PX investigate has two redundant parts (outcome-class predictions; class scoring that treats
+    # "no value" as a class). Each alone asks the one-sided question, so a mutation of one part survives
+    # (found 2026-11-26); the mutation removes the mode, and the check shows the question is not asked.
+    "px_investigate_defined_only": ('        self.answers = answers\n', '        self.answers = False\n'),
     "static_ignores_archive": ('        if ret and retention == "static" and ret["archived"]:', '        if False:'),
     "no_requalify": ('        out["review"] = retired + self.review() + self._requalify_retired()\n        return out\n\n    def correct_example', '        out["review"] = retired + self.review()\n        return out\n\n    def correct_example'),
     "scan_short_horizon": ('        horizon = self.deepen if (max_len is None and self.deepen) else searched', '        horizon = searched'),

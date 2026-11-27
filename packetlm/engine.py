@@ -68,6 +68,30 @@ def judge(pred, ans):
     return "supported" if pred == ans else "contradicted"
 
 
+NONE, SEVERAL = "!none", "!several"  # PX teacher statements (docs/PX.md): not withheld, no / several values
+
+
+def judge_set(out, ans):
+    """Judge a full prediction set. A value answer is judged as before (open world: a missing
+    value is undetermined). `!none` (the teacher states there is no value) contradicts any
+    prediction with a value; `!several` contradicts a single value and is undetermined on
+    nothing. Not executable (None) is always undetermined."""
+    if out is None:
+        return "undetermined"
+    if ans == NONE:
+        return "supported" if not out else "contradicted"
+    if ans == SEVERAL:
+        return "supported" if len(out) >= 2 else ("contradicted" if len(out) == 1 else "undetermined")
+    return judge(next(iter(out)) if len(out) == 1 else None, ans)
+
+
+def outcome(out):
+    """The answer class a full prediction set stands for (PX investigate)."""
+    if not out:
+        return NONE
+    return next(iter(out)) if len(out) == 1 else SEVERAL
+
+
 def _geom():
     from . import geom  # lazy: geom imports choose/express from here
     return geom
@@ -190,7 +214,7 @@ def _write_atomic(path: Path, data: bytes) -> None:
 
 class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
-                 operators=False, retention="static", programs=False):
+                 operators=False, retention="static", programs=False, answers=False):
         self.path = Path(path)
         self.state = state if state is not None else empty_state()
         self.report = report or {"loaded": "new"}
@@ -209,6 +233,9 @@ class Engine:
         # programs: G48 acquisition over the designed program grammar of packetlm/programs.py
         # (guards, ordered choice, tail recursion); the structure itself is acquired.
         self.programs = programs
+        # answers: the teacher may state `-> !none` / `-> !several` (docs/PX.md); investigate then
+        # scores every answer class, including those two
+        self.answers = answers
         self.stats = {"evaluations": 0, "executions": 0, "row_ops": 0, "asks": 0}
         self._cache = None
         self._known_bytes = None  # sha256 of the primary bytes this process validated or wrote
@@ -865,7 +892,7 @@ class Engine:
         for s, v in observations:
             self.stats["evaluations"] += 1
             out = self.execute(seq, s)
-            marks.append(judge(next(iter(out)) if out and len(out) == 1 else None, v))
+            marks.append(judge_set(out, v))
         if "contradicted" in marks:
             status = "contradicted"
         elif marks and all(m == "supported" for m in marks):
@@ -953,6 +980,10 @@ class Engine:
             r = self.execute(seq, e)
             out[e] = next(iter(r)) if r and len(r) == 1 else None
         return out
+
+    def _outcomes(self, seq):
+        """Answer class per entity (value, !none, !several) for PX investigate."""
+        return {e: outcome(self.execute(seq, e)) for e in self.entities()}
 
     def _differs(self, seq, preds) -> bool:
         """Extensional difference from a prediction table; stops at the first entity that differs.
@@ -1099,7 +1130,8 @@ class Engine:
         obs = self.state["observations"].get(name, [])
         mine = self._predictions(cand_seq)
         cand_base = tuple(self.expand(cand_seq))
-        D = [e for e, v in mine.items() if v is not None]
+        neg = {s_ for s_, v in obs if v in (NONE, SEVERAL)}  # PX: negative statements are checked too
+        D = [e for e, v in mine.items() if v is not None or e in neg]
         want = [mine[e] for e in D]
         pos = {e: i for i, e in enumerate(D)}
         obs_at = [(pos[s_], v) for s_, v in obs if s_ in pos]
@@ -1156,10 +1188,10 @@ class Engine:
                     if key != cand_base:
                         vals = [next(iter(f)) if len(f) == 1 else None for f in nf]
                         out["evaluated"] += len(obs_at)
-                        if any(vals[i] is not None and vals[i] != v for i, v in obs_at):
+                        if any(judge_set(nf[i], v) == "contradicted" for i, v in obs_at):
                             out["contradicted"] += 1
                         else:
-                            support = sum(vals[i] == v for i, v in obs_at)
+                            support = sum(judge_set(nf[i], v) == "supported" for i, v in obs_at)
                             conflict = any(x is not None and x != w for x, w in zip(vals, want))
                             if conflict or (support >= 1 and self._differs(seq, mine)):
                                 out["blocking_n"] += 1
@@ -1214,12 +1246,22 @@ class Engine:
         if len(live) <= 1:
             return {"result": "settled"}
         done = {s for s, _ in self.state["observations"].get(name, [])} | set(rec.get("unanswered", []))
-        preds = {tuple(h): self._predictions(h) for h in live}
+        preds = {tuple(h): (self._outcomes(h) if self.answers else self._predictions(h)) for h in live}
         best, best_score = None, 0
         # programs mode: ties broken by entity name, not by fact storage order, which adaptive
         # retention changes when it restores a component (G48 H6 failure, docs/G48.md)
         for e in self._question_pool(name):
             if e in done:
+                continue
+            if self.answers:
+                # PX: every answer class can be stated (value, !none, !several); an answer removes every
+                # hypothesis of another class from the supported set. Worst case over the classes.
+                allp = [p[e] for p in preds.values()]
+                if len(set(allp)) < 2:
+                    continue
+                score = min(len(allp) - allp.count(c) for c in set(allp))
+                if score > best_score:
+                    best, best_score = e, score
                 continue
             if self.programs:
                 # G48 (docs/G48.md, seed-33 mechanism): an answer v removes every hypothesis that
@@ -1474,7 +1516,7 @@ def main(argv) -> int:
     t0 = time.process_time()
     flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False),
              "--no-activation": ("activation", False), "--operators": ("operators", True),
-             "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True)}
+             "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True), "--answers": ("answers", True)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):

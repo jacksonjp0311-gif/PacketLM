@@ -540,3 +540,25 @@ extension (PX).
 - The G48 claim is therefore about accuracy and depth generalization of provisional programs,
   not about qualification.
 - `sealed_tokens_g48.json` was refreshed with the G48R2 items.
+
+## 2026-11-26 23:40 — PX implemented, dev run, pre-registered (docs/PX.md)
+
+**Implementation**
+- Teacher statements `-> !none` / `-> !several`, judged on full prediction sets. Value answers
+  are unchanged, so the open world is unchanged.
+- PX investigate scores every answer class.
+- Tests: 6 checks and 4 mutations (46/46 killed). One mutation-redundancy was found and
+  recorded.
+
+**Dev mechanism (before registration)**
+- In G48 worlds, `!none` at T1 roots refutes P's reflexive recursive program, which was wrong
+  there.
+- The recursive and depth-2-bounded programs then tie on depth ≤ 2 answers, so T1 cannot be
+  identified while depth ≥ 3 is sealed.
+- Result: R is better at abstention (spurious 1.0% vs 6.0%) and worse on sealed T1 (0.05 vs 1.0).
+- Qualification gain: none expected or seen. The G48 scan cannot complete within its budget,
+  and less-defined blockers can't be refuted under the open world.
+- G46 dev seed 999: E has the same statuses as C (18 qualified), uses 11 negative statements,
+  and passes threshold 6.
+
+**Pre-registered thresholds:** PXA1–3 and PXB1–2 (seed 33 threshold 6; no harm on 1–6).

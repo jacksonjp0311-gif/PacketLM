@@ -29,6 +29,8 @@ OUT = ROOT / "artifacts/g48"
 ARMS = {"P": ["--programs"], "X": ["--deepen=3"], "S": ["--programs"],
         "A": ["--programs", "--adaptive-retention"]}
 SEEDS = [481, 482, 483, 484, 485, 486, 487]
+ABSTAIN = False  # PX: also ask every world entity whose truth has no single value (abstention)
+RICH = set()  # arms whose teacher states `!none` / `!several` for non-sealed items (docs/PX.md)
 QUESTIONS = 4
 
 
@@ -45,6 +47,12 @@ def truth(triples, hidden, x, lib):
     cap = lambda tok, y: P.run_naive(ref, P.parse(lib[tok]), y)  # noqa: E731
     out = P.run_naive(ref, P.parse(hidden), x, cap)
     return next(iter(out)) if len(out) == 1 else None
+
+
+def truth_set(triples, hidden, x, lib):
+    ref = ref_of(triples)
+    cap = lambda tok, y: P.run_naive(ref, P.parse(lib[tok]), y)  # noqa: E731
+    return P.run_naive(ref, P.parse(hidden), x, cap)
 
 
 def world_until(rng, nm):
@@ -170,8 +178,14 @@ def teach_task(T, state, arm, arng, name, tri, hidden, lib, examples, sealed, va
         subj = q.split()[2]
         asked.append(subj)
         tv = truth(tri, hidden, subj, lib)
-        if subj in sealed or tv is None:
-            pending = f"unanswered {name}: {subj}"
+        if subj in sealed:
+            pending = f"unanswered {name}: {subj}"  # withheld
+            continue
+        if tv is None:
+            if arm in RICH:  # PX: not withheld, there is no single value; say which
+                pending = f"example {name}: {subj} -> {'!none' if not truth_set(tri, hidden, subj, lib) else '!several'}"
+            else:
+                pending = f"unanswered {name}: {subj}"
             continue
         if arm == "S":
             tv = arng.choice([v for v in values_pool if v != tv])
@@ -186,6 +200,15 @@ def evaluate(T, name, tri, hidden, lib, items):
     pairs = [(s, t) for s, t in pairs if t is not None]
     replies = T(*[f"what is {s} {name}" for s, _ in pairs]) if pairs else []
     return [classify(r, s, name, t) for (s, t), r in zip(pairs, replies)]
+
+
+def abstain(T, name, tri, hidden, lib, exclude):
+    """Items whose truth has no single value: a reply with a value is spurious (PX)."""
+    ents = sorted({x for s_, _, o in tri for x in (s_, o)} - set(exclude))
+    items = [e for e in ents if truth(tri, hidden, e, lib) is None]
+    replies = T(*[f"what is {e} {name}" for e in items]) if items else []
+    sp = [e for e, r in zip(items, replies) if r.startswith(f"{e} {name} ")]
+    return {"n": len(items), "spurious": len(sp), "spurious_items": sp[:20]}
 
 
 def run_arm(job):
@@ -230,8 +253,11 @@ def run_arm(job):
             st, ver = current(state, name)
             tasks.append({"round": rd, "class": cls, "name": name, "hidden": hidden, "examples": exs, "asked": asked,
                           "seq": ver["seq"] if ver else None, "status": ver["status"] if ver else "none",
+                          "negative_statements": sum(str(v).startswith("!") for _, v in st["observations"].get(name, [])),
                           "hyp": {k: st["hypotheses"].get(name, {}).get(k) for k in ("searched_len", "supported_programs", "scan")},
                           "rows": rows + trows})
+            if ABSTAIN:
+                tasks[-1]["abstain"] = abstain(T, name, tri, hidden, lib, asked)
             sealed1 |= set(new)
         # T4: cap:n1 then the compose relation; examples at depth 1-2 (none sealed), sealed deeper
         st, ver1 = current(state, n1)
@@ -249,8 +275,11 @@ def run_arm(job):
                       "examples": exs, "asked": asked, "seq": ver["seq"] if ver else None,
                       "status": ver["status"] if ver else "none",
                       "uses_library": bool(ver) and any(f"cap:{n1}@" in t for t in ver["seq"]),
-                      "hyp": {k: st["hypotheses"].get(n4, {}).get(k) for k in ("searched_len", "supported_programs", "scan")},
+                      "negative_statements": sum(str(v).startswith("!") for _, v in st["observations"].get(n4, [])),
+                          "hyp": {k: st["hypotheses"].get(n4, {}).get(k) for k in ("searched_len", "supported_programs", "scan")},
                       "rows": rows})
+        if ABSTAIN:
+            tasks[-1]["abstain"] = abstain(T, n4, tri, hidden4, lib, asked)
         # T2 conditional and T3 type-filtered
         for cls, maker, nex in (("T2", world_cond, 4), ("T3", world_filter, 3)):
             W = maker(rng, nm)
@@ -277,8 +306,11 @@ def run_arm(job):
             st, ver = current(state, name)
             tasks.append({"round": rd, "class": cls, "name": name, "hidden": W["hidden"], "examples": exs,
                           "asked": asked, "seq": ver["seq"] if ver else None, "status": ver["status"] if ver else "none",
+                          "negative_statements": sum(str(v).startswith("!") for _, v in st["observations"].get(name, [])),
                           "hyp": {k: st["hypotheses"].get(name, {}).get(k) for k in ("searched_len", "supported_programs", "scan")},
                           "rows": rows + trows})
+            if ABSTAIN:
+                tasks[-1]["abstain"] = abstain(T, name, tri, W["hidden"], {}, asked)
     replies = [r for e in log for r in e["replies"]]
     return {"seed": seed, "arm": arm, "tasks": tasks, "processes": len(log),
             "cpu_s": round(sum(e["cpu_s"] for e in log), 3),

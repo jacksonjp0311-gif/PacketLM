@@ -14,7 +14,7 @@ import sys
 import tempfile
 from itertools import product
 from pathlib import Path
-from .engine import Engine, StateError, judge, _checksum, SCHEMA, SCHEMA_V2
+from .engine import Engine, StateError, judge, judge_set, _checksum, SCHEMA, SCHEMA_V2
 from .field import add as field_add, ask as field_ask, bind
 from . import reference
 from . import programs as progs
@@ -854,6 +854,58 @@ def program_checks(tmp) -> dict:
     return out
 
 
+def px_checks(tmp) -> dict:
+    """PX teacher statements `-> !none` / `-> !several` (docs/PX.md)."""
+    out = {}
+    table = [(set(), "!none", "supported"), ({"x"}, "!none", "contradicted"), ({"x", "y"}, "!none", "contradicted"),
+             (set(), "!several", "undetermined"), ({"x"}, "!several", "contradicted"), ({"x", "y"}, "!several", "supported"),
+             (set(), "x", "undetermined"), ({"x"}, "x", "supported"), ({"y"}, "x", "contradicted"), (None, "!none", "undetermined")]
+    out["px_judge_table"] = all(judge_set(o, a) == w and progs.judge_set(o or set(), a) == (w if o is not None else "supported")
+                                for o, a, w in table)
+
+    def world(path, answers):
+        e = Engine(path, deepen=2, answers=answers)
+        for t in [("a", "r1", "x"), ("a", "r2", "x"), ("b", "r1", "x2"), ("b", "r2", "x2"), ("c", "r1", "y")]:
+            e.tell(*t)
+        e.observe("h", "a", "x")
+        e.observe("h", "b", "x2")
+        return e, e.acquire("h")
+    e0, r0 = world(tmp / "px0.json", False)
+    q0 = e0.investigate("h")
+    e1, r1 = world(tmp / "px1.json", True)
+    q1 = e1.investigate("h")
+    asked = q1.get("subject")
+    e1.observe("h", asked, "!none")  # truth of the hidden r2 at c: no value (stated, not withheld)
+    r2 = e1.acquire("h")
+    out["px_base_one_sided_unresolved_without"] = r0["result"] == "ambiguous" and q0["result"] != "question"
+    out["px_base_none_resolves_ambiguity"] = r1["result"] == "ambiguous" and asked == "c" and \
+        r2.get("seq") == ["rel:r2"] and r2["result"] in ("qualified", "provisional")
+    # base scan: a more-defined alternative is contradicted by `!none` where the candidate is empty
+    out["px_base_qualifies_after_none"] = r2["result"] == "qualified"
+    # programs: the filter's open-world blocker `is:kind:T|...` is defined on the T objects, where the
+    # truth is stated as none; after that statement no blocker of that form remains among those kept
+    e3 = Engine(tmp / "px3.json", programs=True, answers=True)
+    for i in range(6):
+        e3.tell(f"q{i}", "has", f"t{i}")
+        e3.tell(f"t{i}", "kind", "T")
+        for j in range(2):
+            e3.tell(f"q{i}", "has", f"d{i}{j}")
+            e3.tell(f"d{i}{j}", "kind", "D")
+    for i in range(3):
+        e3.observe("filt", f"q{i}", f"t{i}")
+    before = e3.acquire("filt")
+    selfish = lambda r: [b[0] for b in r.get("blocking", []) if b[0].startswith("prog:is:kind:T|")]  # noqa: E731
+    for i in range(3):
+        e3.observe("filt", f"t{i}", "!none")
+    after = e3.acquire("filt")
+    out["px_programs_none_contradicts_more_defined"] = bool(selfish(before)) and not selfish(after) and \
+        after.get("seq") == ["prog:rel:has>is:kind:T"]
+    out["px_statements_not_guard_proposals"] = ("kind", "T") in progs.proposals(
+        {"kind": {"t0": {"T"}}}, [("q0", "t0"), ("t1", "!none")])
+    out["_px_blockers_before_after"] = [len(before.get("blocking", [])), len(after.get("blocking", []))]
+    return out
+
+
 def run() -> dict:
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
@@ -862,7 +914,7 @@ def run() -> dict:
                         ("acquisition", acquisition_checks), ("discovery", discovery_checks),
                         ("persistence", persistence_checks), ("fresh_process", fresh_process_checks),
                         ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks),
-                        ("programs", program_checks)]:
+                        ("programs", program_checks), ("px", px_checks)]:
             # a section that raises is a failed check (named), not a crash that hides the other sections
             try:
                 sections[sec] = fn(tmp)  # no pseudo-check when it completes (verification L3 of 82dd0a2)
