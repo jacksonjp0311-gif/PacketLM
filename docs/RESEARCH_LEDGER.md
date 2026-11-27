@@ -728,3 +728,29 @@ fails and everything else holds.
   - This is the second question-budget failure, with a different cause from G49's. Next is a
     pre-registered tie-break by distance from the observed subjects. Not rerun.
 - **Everything else passed:** 0 wrong-qualified anywhere, 164/164 retracted, FC3 16/16, D2 1.000.
+
+## 2026-11-27 01:20: G51 registered results (docs/G51.md): no learning-to-learn claim
+
+Pre-registration ad1bc03, instrument pinned at 70297af, S = 7, all guards pass.
+
+**Compositional curriculum:**
+- A(C+maint ‖ B) = −2.872 [−3.154, −2.561].
+- A(Q+maint ‖ B) = −2.902 [−3.188, −2.592].
+- A(C+maint ‖ P+maint) = −0.774 [−0.866, −0.665].
+- A(Q+maint ‖ C+maint) = −0.008 [−0.024, +0.013].
+- A(C+maint ‖ F+maint) = −4.821.
+
+**Unrelated curriculum:**
+- A(C+maint ‖ B) = −5.080 [−5.325, −4.859].
+- A(C+maint ‖ P+maint) = −0.024 [−0.048, −0.001].
+- A(Q+maint ‖ C+maint) = +0.015 [−0.010, +0.039].
+
+**Decisions:**
+- **L1: no claim.** The persistent learner is about 18× costlier than the empty-state learner.
+- **L2: no claim.** Reuse costs about 2.2× more.
+- **L3: the utility problem persists.**
+- **L4: no difference.**
+
+**Other results:**
+- C and Q solve 252/252 tasks and pass every G46 threshold, with 0 wrong-qualified answers.
+- 144 tasks were acquired through qualified library capabilities.
