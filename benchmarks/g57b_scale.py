@@ -36,6 +36,7 @@ def provenance():
     git = lambda *a: subprocess.run(["git", *a], cwd=ROOT, capture_output=True, text=True).stdout.strip()  # noqa: E731
     return {"head": git("rev-parse", "HEAD"), "git_status_porcelain": git("status", "--porcelain"),
             "source_sha256": g48.source_hash(), "engine_sha256": g48.engine_hash(),
+            "harness_sha256": hashlib.sha256(b"".join((ROOT / f).read_bytes() for f in HARNESS)).hexdigest(),
             "lock": LOCK.read_text().strip() if LOCK.exists() else None, "loadavg": os.getloadavg(),
             "at": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
 
@@ -45,6 +46,12 @@ TASKS = 10
 ARMS = {"s": [], "i": ["--indexed"], "j": ["--indexed", "--incremental"]}
 BASE_N = 1000
 MATERIAL = 91.9 / 2  # registered: Xj's R_16000 upper CI bound must be <= half of G57 Xi's R_16000 (91.9)
+# registered (finalization, before any G57b registered run): the same halving test against the N = 1000
+# baseline. G57 Xi's comparable value, computed from the published G57 part S files
+# (docs/evidence/g57/scale, seeds 221-227, same boot): R1k_16000 = 17.8296 [17.3312, 18.4131].
+G57_R1K_16000 = 17.8296
+MATERIAL_1K = G57_R1K_16000 / 2
+HARNESS = ["benchmarks/g57b_scale.py", "benchmarks/g57_scale.py", "benchmarks/g57b_registered.sh"]
 
 
 def job(args):
@@ -129,7 +136,9 @@ def main(argv):
             if n > BASE_N:  # registered rule F baseline (Low 1)
                 summ[a][f"R1k_{n}"] = boot([R[(s, n, a)]["mean_task_cpu_s"] / R[(s, BASE_N, a)]["mean_task_cpu_s"] for s in seeds])
     rep["summary"] = summ
-    rep["material_Xj"] = summ["j"][f"R_{nmax}"][1][1] <= MATERIAL  # registered (docs/G57b.md)
+    rep["material_Xj_vs_N0"] = summ["j"][f"R_{nmax}"][1][1] <= MATERIAL  # registered (docs/G57b.md)
+    rep["material_Xj_vs_N1000"] = summ["j"][f"R1k_{nmax}"][1][1] <= MATERIAL_1K  # registered (docs/G57b.md)
+    rep["material_Xj"] = rep["material_Xj_vs_N0"] and rep["material_Xj_vs_N1000"]  # both, else stop and report
     rep["flat_Xj"] = summ["j"][f"R1k_{nmax}"][1][1] <= 1.25  # rule F on Xj, baseline N = 1000 (Low 1)
     rep["flat_Xj_vs_N0"] = summ["j"][f"R_{nmax}"][1][1] <= 1.25  # reported, G57's form
     (out / f"{name}_receipt.json").write_text(json.dumps(rep, indent=1))
