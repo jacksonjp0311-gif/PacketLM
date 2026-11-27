@@ -1215,7 +1215,15 @@ class Engine:
         best, best_score = None, 0
         # programs mode: ties broken by entity name, not by fact storage order, which adaptive
         # retention changes when it restores a component (G48 H6 failure, docs/G48.md)
-        for e in (sorted(self.entities()) if self.programs else self.entities()):
+        if self.programs:
+            # programs mode: only the relevance component of the observations (the same domain the
+            # acquisition uses; G48R H6 failure: questions about other, possibly archived, worlds),
+            # ties broken by entity name (G48 H6 failure: fact storage order)
+            comp = self._component({x for o in self.state["observations"].get(name, []) for x in o})
+            pool = sorted(e for e in self.entities() if e in comp)
+        else:
+            pool = self.entities()
+        for e in pool:
             if e in done:
                 continue
             if self.programs:

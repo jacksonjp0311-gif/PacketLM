@@ -812,6 +812,13 @@ def program_checks(tmp) -> dict:
     e7.acquire("up")
     q6, q7 = e6.investigate("up"), e7.investigate("up")
     out["prog_question_independent_of_fact_order"] = q6.get("result") == "question" and q6 == q7
+    # questions stay inside the observations' component (an unrelated world is never asked about)
+    for t in [("aa1", "in", "aa2"), ("aa1", "in", "aa3"), ("aa2", "kind", "R"), ("aa3", "kind", "Q")]:
+        e6.tell(*t)  # an unrelated world whose names sort first; one hypothesis is defined there
+    e6.acquire("up")
+    q8 = e6.investigate("up")
+    out["prog_question_inside_component"] = q8.get("result") == "question" and not q8["subject"].startswith("aa") and \
+        e6._predictions(["prog:rel:in>is:kind:R"]).get("aa1") == "aa2"
     # programs off: no program tokens are ever hypothesised
     e5 = Engine(tmp / "prog5.json", deepen=3)
     for t in tri:

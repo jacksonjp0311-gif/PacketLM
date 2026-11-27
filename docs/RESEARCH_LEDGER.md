@@ -458,3 +458,20 @@ kills; G45 18/18.
   settle H6.
 - Then the teacher protocol extension (`-> none` / `-> several`), so the one-sided ambiguity
   can be answered for sealed-adjacent items.
+
+## 2026-11-26 23:00 — G48R registered (docs/G48R.md): 6/7, H6 FAILS again; second cause found; not repeated
+
+**Result.** G48 replicates on new seeds 491–497 for H1–H5:
+- P is 1.000 in every class, including depths 3–7;
+- 0 wrong-qualified, with 14 qualified tasks;
+- X 0.000 and S 0.0017.
+
+**H6 failure.** H6 failed on 3 seeds. With the tie-order fix in place, the remaining cause is
+that programs-mode investigate scored entities of **other worlds**: in P they are hot; in A
+they are archived.
+- Of P's 12 differing questions, 9 lie outside the task's component, and all were refused.
+
+**Decision (two failures, one root cause: investigate depends on hot state outside the task).**
+- No third replication.
+- Investigate now scores only the observations' component (check plus mutation; 41/41 killed).
+- The no-harm property is re-tested in the next pre-registered experiment (PX, arm RA).
