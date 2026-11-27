@@ -123,3 +123,10 @@ Continuous execution is useful, but continuous verification is more important. Y
 My recommendations here are based on our last inspected G44 pull request and the broader research direction, not a fresh audit of subsequent overnight commits.
 
 The central objective remains: build a machine that learns, then investigate whether learning itself can become an acquired capability.```
+
+## Standing rule (James, 2026-11-27 09:23; applies from G58 on): emergence log
+
+Every milestone logs and analyzes emergent behaviors — behaviors nobody programmed that arise from
+accumulation or composition: the reuse distribution, library self-organization, unexpected transfer,
+phase shifts in cost curves, novel compositions. A per-milestone log format is coming from a separate
+analysis; until then each milestone doc carries a short "Emergence observations" section.

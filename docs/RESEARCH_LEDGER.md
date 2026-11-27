@@ -1191,3 +1191,10 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   (c) long-curriculum arms with growing accumulated knowledge (A against an accumulation curve), so
   that "crosses zero" and "plateaus below zero" can be told apart. Fresh seeds. Together with the
   switch rule above, a plateau below zero would count toward the representation-limit outcome.
+
+## 2026-11-27 09:23: standing rule (James): emergence log from G58 on
+
+- Every milestone logs and analyzes emergent (unprogrammed) behaviors from accumulation/composition:
+  reuse distribution, library self-organization, unexpected transfer, cost-curve phase shifts, novel
+  compositions. Format to come; G58 records its observations in docs/G58.md §11. Also in
+  docs/STANDING_DIRECTIVE.md.
