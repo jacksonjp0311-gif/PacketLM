@@ -401,6 +401,15 @@ def _valid_scoped(state, touched, byid, caps_scope=None, obs_scope=None) -> bool
 
 
 
+# G58 audit (tests only, docs/G58.md §2d): when on, every routed shortcut is recomputed the
+# unrouted way at each use and a difference is logged. Off in every registered run.
+G58_AUDIT = {"on": False, "log": []}
+
+
+def _g58_violation(kind, detail):
+    G58_AUDIT["log"].append((kind, str(detail)[:200]))
+
+
 FULL_VALIDATE_EVERY = 64  # G57b, registered: mutating calls between full validations (also at every snapshot)
 
 
@@ -1115,10 +1124,6 @@ class Engine:
         """The teacher replaces an earlier example. The old one is retired; the
         procedure is re-checked and suspended if the new example contradicts it."""
         obs = self.state["observations"].setdefault(name, [])
-        if self.memo is not None:
-            self.memo.rv_obs.add(name)  # G58
-            if self.memo.scope is not None:
-                self.memo.scope.setdefault("obs", set()).add(name)
         for old in [x for x in obs if x[0] == s]:
             obs.remove(old)
             self.state["retired"].setdefault(name, []).append(
@@ -1423,9 +1428,11 @@ class Engine:
                     fast.add(n)
         covered = True
         seen = {}  # name -> (base, deps, observed subjects) of each capability visited
+        visited = set()
 
         def visit(name, full_fp=True):
             nonlocal covered
+            visited.add(name)
             ver = self.version(name)
             if not ver or ver["status"] not in EXEC_OK:
                 return
@@ -1437,7 +1444,8 @@ class Engine:
                 return
             h = self.evaluate(ver["seq"], obs)
             if h["status"] == "contradicted":
-                rv.pop(name, None)
+                # rv keeps the fingerprint of the last non-contradicted evaluation: `evaluate` is a
+                # function of the fingerprint, so a later equal fingerprint is again not contradicted
                 events.extend(self._set_status(name, ver["v"], "suspended", "contradicted by its observations"))
             elif fp is not None:
                 rv[name] = fp
@@ -1493,6 +1501,20 @@ class Engine:
                             "depn": depn, "subj": subj, "order": {n: i for i, n in enumerate(caps)}}
             else:
                 memo.rvx = None
+        if G58_AUDIT["on"]:  # every capability not visited has the fingerprint of its last evaluation
+            for n in caps:
+                ver = self.version(n)
+                if n in visited or not ver or ver["status"] not in EXEC_OK:
+                    continue
+                obs = self.state["observations"].get(n, [])
+                fp = self._review_fp(n, ver, obs)
+                if fp is None or rv.get(n) != fp:
+                    _g58_violation("review_skipped_changed", n)
+            for n in list(caps):  # the outcome: no capability left EXEC_OK is contradicted
+                ver = self.version(n)
+                if ver and ver["status"] in EXEC_OK and \
+                        self.evaluate(ver["seq"], self.state["observations"].get(n, []))["status"] == "contradicted":
+                    _g58_violation("review_missed_contradiction", n)
         memo.rv_obs, memo.rv_dirty = set(), set()
         return events
 
@@ -1518,6 +1540,14 @@ class Engine:
                 tuple((s_, v_, s_ in pos, s_ in closed) for s_, v_ in obs))
 
     def _expand_fast(self, seq):
+        out = self._expand_fast0(seq)
+        if G58_AUDIT["on"]:
+            fresh = self.expand(list(seq))
+            if (None if out is None else list(out)) != (None if fresh is None else list(fresh)):
+                _g58_violation("expand", seq)
+        return out
+
+    def _expand_fast0(self, seq):
         """G58: `expand(seq)` for rel:/op:/cap: steps, with each capability version's base cached
         (its seq never changes; the cache key holds it). A cached base is used only when the version
         and every version in its closure are PINNED_OK, the condition under which `expand` returns
@@ -1554,6 +1584,8 @@ class Engine:
         c = self.memo.clo.get(key)
         if c is None:
             c = self.memo.clo[key] = frozenset(self._closure(name, ver["v"]))
+        if G58_AUDIT["on"] and c != frozenset(self._closure(name, ver["v"])):
+            _g58_violation("closure", key)
         return c
 
     # ---------- execution ----------
@@ -1872,6 +1904,10 @@ class Engine:
             self.memo.counts["g58_route_built"] += 1
         else:
             self.memo.counts["g58_route_cached"] += 1
+        if G58_AUDIT["on"]:
+            fresh = [self.expand([p]) for p in prims]
+            if [None if b is None else list(b) for b in c[0]] != [None if b is None else list(b) for b in fresh]:
+                _g58_violation("routing_bases", prims)
         return c
 
     def _scan_table(self, names):
@@ -1900,6 +1936,20 @@ class Engine:
             caps = self.memo.lib.get(key)
             if caps is None:
                 caps = self.memo.lib[key] = self._offered(name)
+            if G58_AUDIT["on"]:
+                fresh = []
+                if self.use_library:
+                    for n in sorted(self.state["capabilities"]):
+                        ver = self.version(n)
+                        if n == name or not ver or ver["status"] not in EXEC_OK:
+                            continue
+                        if self.qualified_library and ver["status"] != "qualified":
+                            continue
+                        if any(dn == name for dn, _ in self._closure(n, ver["v"])):
+                            continue
+                        fresh.append(f"cap:{n}@{ver['v']}")
+                if fresh != list(caps):
+                    _g58_violation("offered", name)
             return prims + caps
         if self.use_library:
             for n in sorted(self.state["capabilities"]):
@@ -2707,6 +2757,13 @@ class Engine:
                         if z not in seen and any(sp["kind"] == "told" for sp in f["supports"]):
                             seen.add(z)
                             todo.append(z)
+            if G58_AUDIT["on"]:
+                self.routed = False
+                try:
+                    if self._reach(x) != sorted(seen):
+                        _g58_violation("reach", x)
+                finally:
+                    self.routed = True
             return sorted(seen)
         adj = {}
         for f in self.state["facts"]:

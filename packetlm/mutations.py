@@ -162,6 +162,22 @@ MUTATIONS = {
     "g57b_no_period_guard": ('        if sc is not None and sc["ok"] and o.since_full < self.full_every', '        if sc is not None and sc["ok"]', "serve.py"),
     "v35_dom_cache_by_id": ('        if c.get("key") != key or c.get("domain") != ver["domain"]:', '        if c.get("key") != key:'),
     "g57b_drop_keeps_scope": ('            if self.memo.scope is not None:\n                self.memo.scope["ok"] = False  # supports and facts may change anywhere', '            pass'),
+    # G58 (`--routed`, docs/G58.md): one mechanism of exact capability routing at a time
+    "g58_pin_gen_not_bumped": ('            if (old_status in PINNED_OK) != (status in PINNED_OK):\n                self.memo.pin_gen += 1', '            pass'),
+    "g58_status_not_dirty": ('            self.memo.rv_dirty.add((name, v))', '            pass'),
+    "g58_new_version_not_dirty": ('            self.memo.lib_gen += 1  # G58\n            self.memo.rv_dirty.add((name, None))', '            self.memo.lib_gen += 1  # G58'),
+    "g58_new_version_lib_gen_kept": ('            self.memo.lib_gen += 1  # G58\n            self.memo.rv_dirty.add((name, None))', '            self.memo.rv_dirty.add((name, None))'),
+    "g58_status_lib_gen_kept": ('            self.memo.lib_gen += 1  # G58: what `primitives` offers may change', '            pass'),
+    "g58_observe_not_recorded": ('    def observe(self, name, subject, value) -> list[str]:\n        obs = self.state["observations"].setdefault(name, [])\n        if self.memo is not None:\n            self.memo.rv_obs.add(name)  # G58', '    def observe(self, name, subject, value) -> list[str]:\n        obs = self.state["observations"].setdefault(name, [])\n        if self.memo is not None:\n            pass'),
+    "g58_closed_delta_ignored": ('            for x in X["closed"] ^ closed:', '            for x in ():'),
+    "g58_changed_stamps_ignored": ('                if t > X["tick"]:', '                if False:'),
+    "g58_dependents_not_followed": ('                fast |= X["dep"].get((dn, dv), set()) if dv is not None else X["depn"].get(dn, set())', '                pass'),
+    "g58_pruned_count_wrong": ('                pruned += (P - len(ii)) * P ** (n - len(prefix) - 1)', '                pruned += (P - len(ii))'),
+    "g58_reach_ignores_told": ('                        if z not in seen and any(sp["kind"] == "told" for sp in f["supports"]):', '                        if z not in seen:'),
+    "g58_fp_ignores_closed": ('tuple((s_, v_, s_ in pos, s_ in closed) for s_, v_ in obs))', 'tuple((s_, v_, s_ in pos, False) for s_, v_ in obs))'),
+    "g58_fp_ignores_stamps": ('                tuple(stamp.get(r, 0) for r in base) if base is not None else None,', '                None,'),
+    "g58_base_cache_ignores_status": ('                if b is not None and all((self.version(dn, dv) or {}).get("status") in PINNED_OK\n                                         for dn, dv in self._closure_cached(name, ver)):', '                if b is not None:'),
+    "g58_scoped_validation_skips_caps": ('*((sc.get("caps", set()),', '*((set(),', "serve.py"),
 }
 
 

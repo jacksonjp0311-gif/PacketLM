@@ -1898,6 +1898,205 @@ def g57b_checks(tmp: Path) -> dict:
     return out
 
 
+def g58_checks(tmp: Path) -> dict:
+    """G58 (`--routed`): exact capability routing gives the G57b engine's replies and state bytes
+    (docs/G58.md). Each check is guarded: an exception fails that check by name."""
+    from . import serve, g58_diff
+    from .engine import _valid_scoped
+    import random as _r
+    out = {}
+
+    def guarded(name, fn):
+        try:
+            out[name] = bool(fn())
+        except Exception as exc:  # noqa: BLE001
+            out[name] = False
+            out["_" + name + "_error"] = f"{type(exc).__name__}: {exc}"[:200]
+
+    def differential():
+        r = g58_diff.run(n=40, seed=581)
+        out["_differential"] = {k: v for k, v in r.items() if k != "mismatch"}
+        p = r.get("paths", {})
+        return r["ok"] and r["audit_violations"] == 0 and r["sessions"] == 40 + len(g58_diff.SCENARIOS) and all(
+            p.get(k, 0) > 0 for k in ("g58_review_skipped", "g58_review_unseen", "g58_review_fast", "g58_review_full",
+                                      "g58_route_built", "g58_route_cached", "g58_base_cached", "g58_reach_indexed",
+                                      "scoped_validations", "full_validations"))
+    guarded("g58_differential_replies_and_state_equal", differential)
+
+    def contract():
+        r = g58_diff.contract_fuzz(n=30, seed=582)
+        out["_contract_fuzz"] = r
+        return r["ok"] and r["reviews"] > 500 and r["transitions"] > 100
+    guarded("g58_routing_contract_under_arbitrary_transitions", contract)
+
+    def dependent_followed():
+        # a dependency's status changes and its dependent's does not (zz provisional -> qualified; kz stays provisional): the
+        # dependent's fingerprint changed, so review must visit it (the audit checks every skip)
+        from . import engine as _e
+        srv = serve.Server(snapshot_every=1000)
+        p = tmp / "g58_dep.json"
+        for c in [["fact a p b", "fact b p c", "fact c p d", "fact d p e", "fact e p f", "fact f p g",
+                   "fact d q x1", "fact e q x2", "fact f q x3"],
+                  ["example zz: a -> d", "example zz: b -> e", "example zz: c -> f"],
+                  ["example kz: a -> x1", "example kz: b -> x2"], ["what is c kz"]]:
+            srv.call(p, g58_diff.NEW, c)
+        e = srv._engine(srv.cur)
+        if e.version("kz")["seq"] != ["cap:zz@1", "rel:q"] or e.version("kz")["status"] != "provisional" \
+                or e.version("zz")["status"] != "provisional":
+            return False
+        _e.G58_AUDIT.update(on=True, log=[])
+        try:
+            e.review()  # settles the fingerprints
+            e._set_status("zz", 1, "qualified", "test")
+            if e.version("kz")["status"] != "provisional":
+                return False
+            e.review()
+            return not _e.G58_AUDIT["log"]
+        finally:
+            _e.G58_AUDIT.update(on=False, log=[])
+            srv.cur = None
+    guarded("g58_review_follows_dependents", dependent_followed)
+
+    def libpad(routed):
+        # unrelated capabilities in the library: replies and state bytes equal, and the routed engine
+        # skips the unrelated capabilities' review re-evaluations
+        fl = g58_diff.BASE + (["--routed"] if routed else [])
+        srv = serve.Server(snapshot_every=1000)
+        p = tmp / f"g58_lib_{int(routed)}.json"
+        reps = []
+        for c in range(12):
+            srv.handle({"op": "call", "state": str(p), "flags": fl,
+                        "lines": [f"fact pc{c}_{k} pr{c % 3} pc{c}_{k}o" for k in range(3)]})
+            reps += srv.handle({"op": "call", "state": str(p), "flags": fl,
+                                "lines": [f"example pcap{c}: pc{c}_{k} -> pc{c}_{k}o" for k in range(3)]})["replies"]
+        for t in range(3):
+            srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": [f"fact t{t}e{k} w{t} t{t}e{k + 1}" for k in range(4)]})
+            reps += srv.handle({"op": "call", "state": str(p), "flags": fl,
+                                "lines": [f"example wc{t}: t{t}e{k} -> t{t}e{k + 1}" for k in range(3)] + [f"complete t{t}e0"]})["replies"]
+            reps += srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": [f"what is t{t}e1 wc{t}"]})["replies"]
+        counts = dict(srv.cur.memo.counts)
+        srv.close()
+        return reps, p.read_bytes(), counts
+    def libpad_equal():
+        from . import engine as _e
+        a, sa, _ = libpad(False)
+        _e.G58_AUDIT.update(on=True, log=[])
+        try:
+            b, sb, cb = libpad(True)
+            log = list(_e.G58_AUDIT["log"])
+        finally:
+            _e.G58_AUDIT.update(on=False, log=[])
+        out["_libpad_counts"] = {k: v for k, v in cb.items() if k.startswith("g58")}
+        return a == b and sa == sb and cb.get("g58_review_unseen", 0) > 50 and not log
+    guarded("g58_library_padding_exact_and_unrelated_unseen", libpad_equal)
+
+    def activated_equal():
+        # routed activation: the same programs in the same order and the same pruned count, on random
+        # worlds and primitive lists (including primitives with no base and repeated first relations)
+        rng = _r.Random(58)
+        for k in range(30):
+            ea = Engine(tmp / f"g58_act_a{k}.json", indexed=True, incremental=True, lean=True, bounded=True, routed=True)
+            eb = Engine(tmp / f"g58_act_b{k}.json", indexed=True, incremental=True, lean=True, bounded=True)
+            for _ in range(rng.randint(5, 25)):
+                t = (f"e{rng.randrange(8)}", f"r{rng.randrange(4)}", f"e{rng.randrange(8)}")
+                ea.tell(*t)
+                eb.tell(*t)
+            prims = [f"rel:r{rng.randrange(6)}" for _ in range(rng.randint(2, 7))]
+            start = 0
+            pos = ea._idx()["pos"]
+            for e in rng.sample(sorted(pos), k=min(3, len(pos))):
+                start |= 1 << pos[e]
+            n = rng.randint(1, 3)
+            if ea._activated(prims, n, start) != eb._activated(prims, n, start):
+                return False
+        return True
+    guarded("g58_routed_activation_same_programs_and_pruned", activated_equal)
+
+    def scoped_caps():
+        # scoped validation with the capability scope: a broken capability written in this call is
+        # rejected; an untouched broken one passes (that is the scope) and the full validation the
+        # period runs rejects it
+        from .engine import _valid_fast
+        p = tmp / "g58_sc.json"
+        srv = serve.Server(snapshot_every=1000)
+        fl = g58_diff.NEW
+        srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": g58_diff.CHAIN + g58_diff.ZZ})
+        srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": ["example yy: a -> c", "example yy: b -> d"]})
+        st = srv.cur.state
+        byid = srv.cur.memo.ix["byid"]
+        ok_scoped = _valid_scoped(st, [], byid, {"yy"}, {"yy"})
+        st["capabilities"]["yy"]["versions"][0]["seq"] = ["cap:zz@9"]  # a dangling dependency
+        touched_rejected = not _valid_scoped(st, [], byid, {"yy"}, set())
+        untouched_passes = _valid_scoped(st, [], byid, {"zz"}, set())
+        try:
+            full_rejects = not _valid_fast(st)
+        except StateError:
+            full_rejects = True
+        srv.cur = None
+        return ok_scoped and touched_rejected and untouched_passes and full_rejects
+    guarded("g58_scoped_capability_validation", scoped_caps)
+
+    def period_catches_cap_corruption():
+        # an untouched capability corrupted in memory is caught at the period (K = 3 here); the call
+        # is not kept
+        from .engine import StateError as SE
+        p = tmp / "g58_period.json"
+        srv = serve.Server(snapshot_every=1000, full_every=3)
+        fl = g58_diff.NEW
+        srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": g58_diff.CHAIN + g58_diff.ZZ})
+        srv.cur.state["capabilities"]["zz"]["versions"][0]["status"] = "bogus"
+        try:
+            for k in range(5):
+                srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": [f"fact g{k} q h{k}"]})
+            return False
+        except SE:
+            return srv.cur is None
+    guarded("g58_period_guard_catches_capability_corruption", period_catches_cap_corruption)
+
+    def call_rejects_touched_cap():
+        # a capability record this call writes (scope["caps"]) is validated by the call itself: a
+        # corrupted old version of `zz`, then a call that teaches zz, is refused at once (K is large)
+        p = tmp / "g58_touch.json"
+        srv = serve.Server(snapshot_every=1000, full_every=10 ** 6)
+        fl = g58_diff.NEW
+        srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": g58_diff.CHAIN + g58_diff.ZZ})
+        srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": ["fact q1 w q2"]})
+        srv.cur.state["capabilities"]["zz"]["versions"][0]["status"] = "bogus"
+        try:
+            srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": ["example zz: d -> e"]})
+            return False
+        except StateError:
+            return srv.cur is None
+    guarded("g58_call_validates_capabilities_it_writes", call_rejects_touched_cap)
+
+    def reach_equal():
+        # indexed reach (told, non-cap out-edges) equals the fact-list reach on the open state, with
+        # derived facts (a program's conclusions: not edges) on capability and plain relations
+        rng = _r.Random(581)
+        for k in range(20):
+            srv = serve.Server(snapshot_every=1000)
+            lines = [f"fact e{rng.randrange(9)} r{rng.randrange(3)} e{rng.randrange(9)}" for _ in range(rng.randint(3, 20))]
+            srv.call(tmp / f"g58_r{k}.json", g58_diff.NEW, lines)
+            e = srv._engine(srv.cur)
+            fid = e.state["facts"][0]["id"]
+            e.tell("e0", "r1", f"d{k}", premises=[fid], program="prog:x")  # derived: not an edge
+            e.tell("e0", f"cap:zz", f"d{k}x", premises=[fid], program="prog:x")
+            e.tell(f"d{k}", "r0", "e5")
+            if not e._ix_live():
+                return False
+            for x in ["e0"] + sorted(e._idx()["pos"]):
+                got = e._reach(x)
+                e.routed = False
+                ref = e._reach(x)
+                e.routed = True
+                if got != ref:
+                    return False
+            srv.cur = None
+        return True
+    guarded("g58_indexed_reach_equal", reach_equal)
+    return out
+
+
 def run() -> dict:
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
@@ -1908,7 +2107,7 @@ def run() -> dict:
                         ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks),
                         ("programs", program_checks), ("px", px_checks), ("g49", g49_checks),
                         ("serve", serve_checks), ("verify_3e2783c", verify_3e2783c_checks),
-                        ("g57", g57_checks), ("g57b", g57b_checks)]:
+                        ("g57", g57_checks), ("g57b", g57b_checks), ("g58", g58_checks)]:
             # a section that raises is a failed check (named), not a crash that hides the other sections
             try:
                 sections[sec] = fn(tmp)  # no pseudo-check when it completes (verification L3 of 82dd0a2)
