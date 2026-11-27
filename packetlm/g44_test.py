@@ -2439,6 +2439,121 @@ def g59_checks(tmp: Path) -> dict:
         out["_gc_frozen_counts"] = frozen
         return max(frozen) > 0 and after == 0 and got == ref and gc.get_freeze_count() == 0
     guarded("g59_gc_frozen_while_open_and_reply_neutral", gc_frozen_while_open)
+
+    def g58_session():
+        rng = _r.Random(5951)
+        calls = [c for sc in g58_diff.SCENARIOS[:4] for c in sc]
+        for _ in range(6):
+            calls += g58_diff.session(rng)
+        return calls
+
+    def cache_check_catches():
+        # Low 1 of verify-33565b0: a corrupted capability or seeds index is caught by the periodic check
+        # (and an intact one passes); each corruption on a fresh copy of the same session
+        import copy
+        calls = g58_session()
+        kinds = ["cx_order_drop", "cx_entry_changed", "cx_by_first_drop", "cx_rdep_extra", "sx_seed_drop", "sx_by_ent_drop"]
+        caught, applied = 0, 0
+        for kind in [None] + kinds:
+            srv = serve.Server(snapshot_every=10 ** 6, full_every=10 ** 6)
+            path = tmp / f"g59_cc_{kind}.json"
+            for c in calls:
+                srv.call(path, g59_diff.BASE, c)
+            e = srv._engine(srv.cur)
+            m = srv.cur.memo
+            e._cx()
+            e._sx()
+            X, S = m.cx, m.sx
+            try:
+                if kind == "cx_order_drop" and X["order"]:
+                    del X["order"][0], X["order_p"][0]
+                elif kind == "cx_entry_changed" and X["order"]:
+                    n = X["order"][-1]
+                    X["ent"][n] = X["ent"][n][:4] + (frozenset({"zz_none"}),)
+                elif kind == "cx_by_first_drop" and any(X["by_first"].values()):
+                    next(v for v in X["by_first"].values() if v).pop()
+                elif kind == "cx_rdep_extra" and X["order"]:  # a dependency the records do not have
+                    X["rdep"].setdefault("zz_none", set()).add(X["order"][0])
+                elif kind == "sx_seed_drop" and any(S["seeds"].values()):
+                    next(v for v in S["seeds"].values() if v).pop()
+                elif kind == "sx_by_ent_drop" and any(S["by_ent"].values()):
+                    next(v for v in S["by_ent"].values() if v).pop()
+                elif kind is not None:
+                    continue
+                applied += kind is not None
+                e.cache_check()
+                if kind is None:
+                    ok_clean = m.counts["g59_cache_checks"] > 0 and bool(X["order"])
+            except SE:
+                if kind is None:
+                    return False
+                caught += 1
+            srv.close() if kind is None else None
+            srv.cur = None
+        out["_cache_check_corruptions_caught"] = f"{caught}/{applied}"
+        return ok_clean and applied == len(kinds) and caught == applied
+    guarded("g59_cache_check_catches_capability_and_seeds_index_corruption", cache_check_catches)
+
+    def check_not_repeated():
+        # Med of verify-33565b0: a call that runs the full validation and then a snapshot checks the
+        # index once; a snapshot without a full validation in its call still checks it
+        from .engine import Memo
+        real = Memo.ix_check
+        per = []
+
+        def wrap(self, *a, **k):
+            # counted when serve calls it (validation or snapshot); the engine's own check before a
+            # removal discards the index is a different index state and is not counted
+            per[-1] += sys._getframe(1).f_code.co_filename.endswith("serve.py")
+            return real(self, *a, **k)
+        Memo.ix_check = wrap
+        try:
+            srv = serve.Server(snapshot_every=4, full_every=4)
+            for c in g58_session()[:40]:
+                per.append(0)
+                srv.call(tmp / "g59_once.json", g59_diff.NEW, c)
+            per.append(0)
+            srv.close()
+            srv2 = serve.Server(snapshot_every=4, full_every=6)
+            per2 = len(per)
+            for c in g58_session()[:40]:
+                per.append(0)
+                srv2.call(tmp / "g59_once2.json", g59_diff.NEW, c)
+            srv2.close()
+        finally:
+            Memo.ix_check = real
+        out["_ix_checks_per_call"] = Counter(per)
+        return max(per) == 1 and sum(per[:per2]) >= 5 and sum(per[per2:]) > sum(per[:per2]) // 2
+    guarded("g59_full_check_not_repeated_in_one_call", check_not_repeated)
+
+    def proportional():
+        # §2e: the proportional policy gives the same replies and final state bytes with fewer snapshots;
+        # a path left open (no close) reopens by replaying its longer journal to the same state
+        calls = g58_session()
+        res = {}
+        for q in (0, 1.0):
+            srv = serve.Server(snapshot_every=4, snapshot_ratio=q)
+            n = [0]
+            real = srv._snapshot
+
+            def snap(o, real=real, n=n):
+                n[0] += 1
+                return real(o)
+            srv._snapshot = snap
+            path = tmp / f"g59_prop{q}.json"
+            reps = [srv.call(path, g59_diff.NEW, c)["replies"] for c in calls]
+            mem = json.dumps(srv.cur.state)
+            srv.cur.jfh.close()
+            srv.cur = None  # abandoned without close: the journal holds the calls since the last snapshot
+            srv2 = serve.Server(snapshot_every=4, snapshot_ratio=q)
+            srv2.call(path, g59_diff.NEW, [])
+            again = json.dumps(srv2.cur.state)
+            srv2.close()
+            res[q] = (reps, path.read_bytes(), n[0], mem == again)
+        out["_proportional_snapshots"] = [res[0][2], res[1.0][2]]
+        return res[0][0] == res[1.0][0] and res[0][1] == res[1.0][1] and res[1.0][2] < res[0][2] \
+            and res[0][3] and res[1.0][3]
+    guarded("g59_proportional_policy_same_replies_and_state", proportional)
     return out
 
 

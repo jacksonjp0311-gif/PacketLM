@@ -126,7 +126,7 @@ MUTATIONS = {
     'g57_gate_ignores_known_entity': ('                s in self._idx()["pos"], self._cap_fp["lib"])', '                True, self._cap_fp["lib"])', 'engine.py'),
     'g57_memo_keeps_removed': ('            for t, c in removed.items():\n                if t in ent:', '            for t, c in ():\n                if t in ent:', 'engine.py'),
     'g57_memo_ignores_added': ('            for t, c in added.items():\n                if self.passes(qi, self.packet_of(t)):', '            for t, c in ():\n                if self.passes(qi, self.packet_of(t)):', 'engine.py'),
-    'g57_memo_stamp_missed': ('        for t in list(added) + list(removed):\n            self.stamp[t[1]] = self.tick', '        for t in list(added):\n            self.stamp[t[1]] = self.tick', 'engine.py'),
+    'g57_memo_stamp_missed': ('        for t in list(added) + list(removed):\n            self.stamp.pop(t[1], None)', '        for t in list(added):\n            self.stamp.pop(t[1], None)', 'engine.py'),  # re-anchored in G59 (stamps in order)
     'g57_readonly_any_line': ('        ro = bool(o.memo is not None and lines and all(readonly_line(x) for x in lines))', '        ro = bool(o.memo is not None and lines and any(readonly_line(x) for x in lines))', 'serve.py'),
     'g57_gate_outside_readonly': ('        return self.readonly_call and self.memo is not None and self.geometry and not self.programs \\', '        return self.memo is not None and self.geometry and not self.programs \\', 'engine.py'),
     'g57_by_rel_wrong_relation': ('                sel = idx["by_rel"].get(rel, [])', '                sel = idx["by_rel"].get(rel, [])[1:]', 'engine.py'),
@@ -151,7 +151,7 @@ MUTATIONS = {
     "g57b_support_skips_told_rel": ('            self.ix["told_rel"][f["r"]] += 1', '            pass'),
     "g57b_valid_ignores_identity": ('        return ix is not None and state["facts"] is ix["facts_ref"] and len(state["facts"]) == ix["n_facts"] \\\n            and state.get("fact_epoch", 0) == ix["epoch"]', '        return ix is not None'),
     "g57b_candidates_need_3_bits": ('            if c >= 2:\n                cand.update', '            if c >= 3:\n                cand.update'),
-    "g57b_no_small_packets": ('        if self.packet_of(t).bit_count() < SMALL_PACKET:\n            ix["small"].append(t)', '        pass'),
+    "g57b_no_small_packets": ('        if pc < SMALL_PACKET:\n            ix["small"].append(t)', '        if False:\n            ix["small"].append(t)'),  # re-anchored in G59
     "g57b_differs_skips_domain": ('            items = [(e, preds.get(e)) for e in sorted(set(preds) | {e for e in dom if e in pos}, key=pos.__getitem__)]', '            items = list(preds.items())'),
     "g57b_sparse_drops_negatives": ('        mine = self._predictions(cand_seq, also=neg) if sparse', '        mine = self._predictions(cand_seq, also=set()) if sparse'),
     "g57b_was_known_always": ('            was_known = s in self.memo.ix["pos"]', '            was_known = True'),
@@ -159,7 +159,7 @@ MUTATIONS = {
     "g57b_touched_not_recorded": ('        if self.incremental and self.memo.scope is not None:\n            self.memo.scope["touched"].append(fact)\n        if kind == "told"', '        if kind == "told"'),
     "g57b_scoped_skips_premises": ('    for f in touched:\n        for sp in f["supports"]:\n            for q in sp["premises"]:\n                if q not in byid:\n                    return False', '    pass'),
     "g57b_ix_check_noop": ('_need(same and +ix["told_rel"] == told, "incremental', '_need(True, "incremental'),
-    "g57b_no_period_guard": ('        if sc is not None and sc["ok"] and o.since_full < self.full_every', '        if sc is not None and sc["ok"]', "serve.py"),
+    "g57b_no_period_guard": ('(o.since_full < self.full_every or self.ratio > 0)', '(True or self.ratio > 0)', "serve.py"),  # re-anchored in G59
     "v35_dom_cache_by_id": ('        if c.get("key") != key or c.get("domain") != ver["domain"]:', '        if c.get("key") != key:'),
     "g57b_drop_keeps_scope": ('            if self.memo.scope is not None:\n                self.memo.scope["ok"] = False  # supports and facts may change anywhere', '            pass'),
     # G58 (`--routed`, docs/G58.md): one mechanism of exact capability routing at a time
@@ -207,6 +207,16 @@ MUTATIONS = {
     "g59_ix_check_skips_pairs": ('            if ok and pairs is not None:', '            if False:'),
     "g59_adopt_without_pairs": ('ix.update(pairs={}, small_part=[])', 'pass'),
     "g59_flag_without_routed": ('        self.partitioned = bool(partitioned and self.routed and self.incremental)', '        self.partitioned = bool(partitioned and self.incremental)'),
+    # G59 verifier folds (verify-33565b0 Med/Low 1) and the proportional policy (docs/G59.md §2e)
+    "g59_snapshot_check_repeated": ('        if eng.incremental and not o.checked_call:', '        if eng.incremental:', "serve.py"),
+    "g59_snapshot_check_skipped": ('        if eng.incremental and not o.checked_call:', '        if False:', "serve.py"),
+    "g59_checked_flag_not_reset": ('            self._snapshot(o)\n        o.checked_call = False', '            self._snapshot(o)', "serve.py"),
+    "g59_cache_check_not_in_validation": ('            eng.cache_check()  # G59 (Low 1', '            pass  # G59 (Low 1', "serve.py"),
+    "g59_cache_check_cx_skipped": ('            _need(ok, "capability index diverged from the capability records")', '            pass'),
+    "g59_cache_check_sx_skipped": ('            _need(ok, "seeds index diverged from the capability records")', '            pass'),
+    "g59_cache_check_order_ignored": ('                and X["order"] == off and X["order_p"] == [ent[n][1] for n in off] \\', '                and True \\'),
+    "g59_ratio_ignored": ('        if o.since >= self.every and (self.ratio <= 0 or o.jfh.tell() >= self.ratio * o.snap_bytes):', '        if o.since >= self.every:', "serve.py"),
+    "g59_ratio_snap_bytes_zero": ('        o.snap_bytes = o.path.stat().st_size  # G59: for the proportional policy', '        o.snap_bytes = 0', "serve.py"),
     "g59_gc_not_unfrozen": ('            gc.unfreeze()  # G59', '            pass  # G59', "serve.py"),
 }
 
@@ -237,7 +247,10 @@ def _run_g45_mutation(old, new) -> dict:
         if src.count(old) != 1:
             return {"error": "mutation site not found exactly once"}
         eng.write_text(src.replace(old, new))
-        p = subprocess.run([sys.executable, "-m", "packetlm.g45_test"], cwd=dst, capture_output=True, text=True, timeout=900)
+        try:
+            p = subprocess.run([sys.executable, "-m", "packetlm.g45_test"], cwd=dst, capture_output=True, text=True, timeout=900)
+        except subprocess.TimeoutExpired:  # G59 (Low 2 of verify-33565b0): a hang counts as a kill
+            return {"exit": None, "failed": [], "verdict": "KILLED", "crash": "timeout (900 s): counted as killed"}
         rec = dst / "artifacts" / "g45_receipt.json"
         failed = json.loads(rec.read_text())["failed"] if rec.exists() else []
         t5 = [f for f in failed if f.endswith("t5_retention")]
@@ -268,7 +281,12 @@ def _run_one(name, old, new, target):
             if src.count(old) != 1:
                 return {"error": "mutation site not found exactly once"}
             eng.write_text(src.replace(old, new))
-            p = subprocess.run([sys.executable, "-m", "packetlm.g44_test"], cwd=dst, capture_output=True, text=True, timeout=600)
+            try:
+                p = subprocess.run([sys.executable, "-m", "packetlm.g44_test"], cwd=dst, capture_output=True, text=True, timeout=600)
+            except subprocess.TimeoutExpired:
+                # G59 (Low 2 of verify-33565b0): a hang is a detected behaviour change (the unmutated suite
+                # finishes well inside the limit), so it counts as a kill instead of aborting the run
+                return {"exit": None, "failed": [], "verdict": "KILLED", "crash": "timeout (600 s): counted as killed"}
             rec = dst / "artifacts" / "g44_receipt.json"
             failed = json.loads(rec.read_text())["failed"] if rec.exists() and p.returncode else []
             return {"exit": p.returncode, "failed": failed,

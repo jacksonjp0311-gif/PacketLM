@@ -807,7 +807,8 @@ class Memo:
             # G59: codebits (and the pair index) equal fresh builds, checked without rebuilding them:
             # every listed entry is valid, no list repeats an entry, and the number of entries equals
             # the number of valid ones (so the listed sets are exactly the valid sets)
-            xi = {X: bits_for(X[1], X[0]) for X in codes}
+            # (Med of verify-33565b0: per-code bits from the `_code_bits` memo, a pure function of the code)
+            xi = {X: _code_bits(X)[0] for X in codes}
             n = 0
             for b, lst in ix["codebits"].items():
                 n += len(lst)
@@ -818,8 +819,7 @@ class Memo:
             if ok and pairs is not None:
                 ok = Counter(ix["small_part"]) == small_part
                 # each code's valid pair keys, from its fresh bits (the same grouping as `_code_pairs`)
-                bits = _geom().bits
-                ks = {X: frozenset(_code_pairs(bits(x))) for X, x in xi.items()}
+                ks = {X: frozenset(_code_pairs(_code_bits(X)[1])) for X in xi}
                 want, n = sum(len(v) for v in ks.values()), 0
                 for key, lst in pairs.items():
                     n += len(lst)
@@ -2102,10 +2102,6 @@ class Engine:
             status = "undetermined"
         return {"seq": list(seq), "status": status, "support": marks.count("supported")}
 
-    def _lib_key(self, name):
-        caps = self.state["capabilities"]
-        return (self.memo.lib_gen, id(caps), len(caps), name, self.use_library, self.qualified_library)
-
     def _routing(self, prims):
         """G58: the routing tables for a primitive list (cached per library generation and list):
         each primitive's base (`expand([p])`), its first base relation, and the indices by first
@@ -3075,6 +3071,51 @@ class Engine:
                 if seeds.get(n) != fresh or any(n not in by_ent.get(x, ()) for x in fresh):
                     _g58_violation("sx_seeds", n)
         return S
+
+    def cache_check(self) -> None:
+        """G59 (Low 1 of verify-33565b0): the G58 caches checked against fresh builds at every full
+        validation -- the capability index (every entry, the offered order and primitives, the
+        by-first-relation lists, the dependency map) and the seeds index (every capability's seeds
+        and the entity map). Each is first synced with its pending writes (what its next use would
+        do), then compared; a difference raises StateError. Not covered: the review fingerprint map
+        (`memo.rv`), whose entries may legitimately lag until the next review (the G58 audit checks
+        it at every use in the tests)."""
+        if not self.routed or self.memo is None:
+            return
+        m, caps = self.memo, self.state["capabilities"]
+        self.memo.counts["g59_cache_checks"] += 1
+        X = m.cx
+        if X is not None and X["caps"] is caps and X["flags"] == (self.use_library, self.qualified_library):
+            X = self._cx()
+            ent = {n: self._cx_entry(n) for n in caps}
+            off = sorted(n for n, e in ent.items() if e[0])
+            by_first, rdep = {}, {}
+            for n in off:
+                e = ent[n]
+                if e[3] is not None:
+                    by_first.setdefault(e[3], []).append(n)
+                for dn in e[4]:
+                    rdep.setdefault(dn, set()).add(n)
+            gone = (False, None, None, None, frozenset())
+            ok = all(X["ent"].get(n) == e for n, e in ent.items()) \
+                and all(e == gone for n, e in X["ent"].items() if n not in ent) \
+                and X["order"] == off and X["order_p"] == [ent[n][1] for n in off] \
+                and {k: v for k, v in X["by_first"].items() if v} == by_first \
+                and {k: v for k, v in X["rdep"].items() if v} == rdep
+            _need(ok, "capability index diverged from the capability records")
+        S = m.sx
+        if S is not None and S["caps"] is caps and S["obs"] is self.state["observations"]:
+            S = self._sx()
+            by_ent, ok = {}, True
+            for n in caps:
+                ver = self.version(n)
+                fresh = (set(ver.get("domain", [])) | {s_ for s_, _ in self.state["observations"].get(n, [])}) if ver else set()
+                ok = ok and S["seeds"].get(n) == fresh
+                for x in fresh:
+                    by_ent.setdefault(x, set()).add(n)
+            ok = ok and all(not v for n, v in S["seeds"].items() if n not in caps) \
+                and {k: v for k, v in S["by_ent"].items() if v} == by_ent
+            _need(ok, "seeds index diverged from the capability records")
 
     def _flush_growth_routed(self, grown):
         """G58 (docs/G58.md §2c): `_flush_growth` visiting only capabilities whose region can hold a

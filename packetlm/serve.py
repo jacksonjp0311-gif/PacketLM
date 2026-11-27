@@ -83,19 +83,28 @@ class Open:
         self.path, self.kw, self.flags = path, kw, flags
         self.memo = Memo() if kw.get("indexed") else None  # G57: lives as long as the open state
         self.since_full, self.validated = 0, False  # G57b: mutating calls since the last full validation
+        self.checked_call = False  # G59: set only between this call's `_validate` and its snapshot
+        self.snap_bytes = 0
         self.state, self.report, self.known, self.since = None, None, None, 0
         self.jpath = path.with_name(path.name + ".journal")
         self.jfh = None
 
 
 class Server:
-    def __init__(self, snapshot_every=SNAPSHOT_EVERY, check_readonly=None, full_every=None):
+    def __init__(self, snapshot_every=SNAPSHOT_EVERY, check_readonly=None, full_every=None, snapshot_ratio=None):
         self.cur: Open | None = None
         self.full_every = full_every or int(os.environ.get("PACKETLM_FULL_VALIDATE_EVERY", FULL_VALIDATE_EVERY))
         # tests and the differential check: verify that every read-only call left the state unchanged
         self.check_readonly = bool(int(os.environ.get("PACKETLM_CHECK_READONLY", "0"))) if check_readonly is None \
             else check_readonly
         self.every = snapshot_every
+        # G59 (docs/G59.md §2e): proportional maintenance. With a ratio q > 0, a snapshot is taken when at
+        # least `every` calls are journaled AND the journal holds at least q x the snapshot's bytes
+        # (log compaction: reopening replays at most about q x the snapshot), and the periodic full
+        # validation happens at those snapshots instead of every FULL_VALIDATE_EVERY calls. Snapshot
+        # and validation work per call is then bounded by the call's own journal bytes instead of
+        # growing with the state. Off (0) by default; replies and state are the same either way.
+        self.ratio = snapshot_ratio if snapshot_ratio is not None else float(os.environ.get("PACKETLM_SNAPSHOT_RATIO", "0"))
         self.mark = 0.0  # CPU at the end of the previous charged request
 
     # ---------- persistence ----------
@@ -123,7 +132,7 @@ class Server:
         FULL_VALIDATE_EVERY mutating calls, and after any untracked change."""
         sc = o.memo.scope if eng.incremental else None
         o.since_full += 1
-        if sc is not None and sc["ok"] and o.since_full < self.full_every and o.memo.ix_valid(eng.state) \
+        if sc is not None and sc["ok"] and (o.since_full < self.full_every or self.ratio > 0) and o.memo.ix_valid(eng.state) \
                 and _valid_scoped(eng.state, sc["touched"], o.memo.ix["byid"],
                                   *((sc.get("caps", set()), None if sc.get("obs_all") else sc.get("obs", set()))
                                     if eng.routed else (None, None))):
@@ -137,16 +146,23 @@ class Server:
                 o.memo.ix_check(eng.state, _fresh_index(eng.state["facts"]))
             else:
                 eng._idx()  # adopt the index now (O(F), as this validation), so the next calls are scoped
+            eng.cache_check()  # G59 (Low 1 of verify-33565b0): the G58 caches too
         o.since_full, o.validated = 0, True
+        o.checked_call = True  # G59 (Med of verify-33565b0): a snapshot in this call need not repeat the checks
 
     def _snapshot(self, o: Open) -> None:
         eng = self._engine(o)
         eng.save()  # lean save: full validation, backup kept, atomic replace, fsync
         o.state, o.known, o.since = eng.state, eng._known_bytes, 0
-        if eng.incremental and o.memo.ix_valid(eng.state):  # G57b: the snapshot is a full validation
-            o.memo.ix_check(eng.state, _fresh_index(eng.state["facts"]))
+        # G57b: the snapshot is a full validation. G59 (Med of verify-33565b0): skipped when this call's
+        # `_validate` already ran the full checks on the same state (nothing writes in between)
+        if eng.incremental and not o.checked_call:
+            if o.memo.ix_valid(eng.state):
+                o.memo.ix_check(eng.state, _fresh_index(eng.state["facts"]))
+            eng.cache_check()
         o.since_full, o.validated = 0, True
         self._journal_start(o, _file_checksum(o.path))
+        o.snap_bytes = o.path.stat().st_size  # G59: for the proportional policy
         if o.kw.get("partitioned"):
             # G59 (docs/G59.md §2d): the snapshot's state is long-lived while the path is open. CPython's
             # cyclic collector would otherwise re-traverse all of it (every fact, related or not) in
@@ -217,6 +233,7 @@ class Server:
             self._snapshot(o)  # a new path: an empty snapshot first, so every journal names a base
         else:
             self._journal_start(o, _file_checksum(path))
+            o.snap_bytes = path.stat().st_size  # G59: for the proportional policy
         return o
 
     def close(self) -> None:
@@ -263,6 +280,7 @@ class Server:
                    "cpu_total_s": round(now - self.mark, 4), "readonly": True}
             self.mark = now
             return out
+        o.checked_call = False
         self._validate(o, eng)
         o.state = eng.state
         o.jfh.write((json.dumps({"flags": list(flags), "lines": list(lines), "replies_sha256": _rhash(replies)})
@@ -270,8 +288,9 @@ class Server:
         o.jfh.flush()
         os.fsync(o.jfh.fileno())
         o.since += 1
-        if o.since >= self.every:
+        if o.since >= self.every and (self.ratio <= 0 or o.jfh.tell() >= self.ratio * o.snap_bytes):
             self._snapshot(o)
+        o.checked_call = False
         now = _cpu()
         out = {"load": report, "replies": replies, "stats": eng.stats, "cpu_s": round(time.process_time() - t0, 4),
                "cpu_total_s": round(now - self.mark, 4)}
