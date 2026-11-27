@@ -1181,3 +1181,13 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   recorded as evidence that the limitation is the core representation, and the next step is to
   evaluate an alternative mathematical approach with the same instrument (70297af) and verification
   setup, rather than further engine optimization.
+
+## 2026-11-27 09:15: hypothesis queued for G59 (James; not run in G58)
+
+- **Accumulation threshold / rate ratio:** positive A needs reuse savings to compound faster than the
+  overhead of carrying knowledge grows, and may need a minimum accumulation before the crossover.
+  G59 should pre-register: (a) separate estimates of the savings-compounding rate and of the
+  overhead-growth rate; (b) a predicted crossover N* (or its absence), stated before the run;
+  (c) long-curriculum arms with growing accumulated knowledge (A against an accumulation curve), so
+  that "crosses zero" and "plateaus below zero" can be told apart. Fresh seeds. Together with the
+  switch rule above, a plateau below zero would count toward the representation-limit outcome.
