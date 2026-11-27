@@ -71,7 +71,7 @@ def _geom():
 
 def empty_state() -> dict:
     return {"turn": 0, "facts": [], "log": [], "library": [], "lexicon": {},
-            "capabilities": {}, "observations": {}, "hypotheses": {}}
+            "capabilities": {}, "observations": {}, "retired": {}, "hypotheses": {}}
 
 
 def _checksum(state: dict) -> str:
@@ -98,7 +98,7 @@ def validate(doc) -> dict:
     _need(isinstance(state, dict), "state missing")
     _need(doc.get("checksum") == _checksum(state), "checksum mismatch")
     types = {"turn": int, "facts": list, "log": list, "library": list, "lexicon": dict,
-             "capabilities": dict, "observations": dict, "hypotheses": dict}
+             "capabilities": dict, "observations": dict, "retired": dict, "hypotheses": dict}
     for key, typ in types.items():
         _need(isinstance(state.get(key), typ), f"bad field {key}")
     ids = set()
@@ -125,6 +125,8 @@ def validate(doc) -> dict:
             _need(kind == "question" and isinstance(c.get("template"), list) and "meaning" in c, "bad question construction")
     for word, target in state["lexicon"].items():
         _need(isinstance(word, str) and isinstance(target, str), "bad lexicon entry")
+    for name, rs in state["retired"].items():
+        _need(all(isinstance(x, dict) and {"s", "o", "reason"} <= set(x) for x in rs), f"bad retired {name}")
     for name, obs in state["observations"].items():
         _need(all(isinstance(o, list) and len(o) == 2 for o in obs), f"bad observations {name}")
     caps = state["capabilities"]
@@ -291,20 +293,55 @@ class Engine:
         self._dirty()
         return {"removed": sorted(removed), "proofs_dropped": dropped_proofs}
 
+    def _retire(self, ids, reason) -> list[str]:
+        """An example whose value was explained through a fact that is now changing
+        was dependent evidence. It is retired (kept, with the reason), not counted
+        against the procedure. A capability keeps the status it earned; `show` and
+        `why` report the retirement."""
+        ids = set(ids)
+        events = []
+        for name in list(self.state["observations"]):
+            ver = self.version(name)
+            if not ver or ver["status"] not in EXEC_OK:
+                continue
+            base = self.expand(ver["seq"])
+            keep = []
+            for s, v in self.state["observations"][name]:
+                if any(end == v and set(p) & ids for end, p in self.proofs(base, s)):
+                    self.state["retired"].setdefault(name, []).append(
+                        {"s": s, "o": v, "turn": self.state["turn"], "reason": reason})
+                    events.append(f"retired example {name}: {s} -> {v}")
+                else:
+                    keep.append([s, v])
+            self.state["observations"][name] = keep
+        return events
+
     def retract(self, s, r, o=None) -> dict:
         ids = [f["id"] for f in self._find(s, r, o)]
         if not ids:
             return {"removed": [], "proofs_dropped": 0, "review": []}
+        retired = self._retire(ids, f"retract {s} {r} {o or '*'}")
         out = self._drop(ids, f"retract {s} {r} {o or '*'}")
-        out["review"] = self.review()
+        out["review"] = retired + self.review()
         return out
 
     def correct(self, s, r, o) -> dict:
         ids = [f["id"] for f in self._find(s, r) if f["o"] != o]
+        retired = self._retire(ids, f"correct {s} {r} {o}") if ids else []
         out = self._drop(ids, f"correct {s} {r} {o}") if ids else {"removed": [], "proofs_dropped": 0}
         self.tell(s, r, o, source="correction")
-        out["review"] = self.review()
+        out["review"] = retired + self.review()
         return out
+
+    def correct_example(self, name, s, o) -> list[str]:
+        """The teacher replaces an earlier example. The old one is retired; the
+        procedure is re-checked and suspended if the new example contradicts it."""
+        obs = self.state["observations"].setdefault(name, [])
+        for old in [x for x in obs if x[0] == s]:
+            obs.remove(old)
+            self.state["retired"].setdefault(name, []).append(
+                {"s": s, "o": old[1], "turn": self.state["turn"], "reason": f"example corrected to {o}"})
+        return self.observe(name, s, o)
 
     def ask(self, s, r) -> dict:
         """Primitive recall. Geometric: unbind the partial query and decode the object role.
@@ -714,8 +751,10 @@ class Engine:
         ver = self.version(name)
         paths = [p for end, p in self.proofs(ver["base"], s) if end == got["value"]]
         ev = ver.get("evidence", {})
-        return (f"{got['via']} = {'+'.join(ver['seq'])} ({ver['status']}, {ev.get('observations', 0)} examples, "
-                f"{ev.get('blocking', 0)} open alternatives); path " + " | ".join(", ".join(p) for p in paths))
+        retired = len(self.state["retired"].get(name, []))
+        return (f"{got['via']} = {'+'.join(ver['seq'])} ({ver['status']}, {ev.get('observations', 0)} examples"
+                + (f", {retired} retired" if retired else "") + f", {ev.get('blocking', 0)} open alternatives); path "
+                + " | ".join(", ".join(p) for p in paths))
 
     def show(self, name) -> str:
         cap = self.state["capabilities"].get(name)
@@ -784,6 +823,13 @@ class Engine:
         if head == "derive" and len(rest) == 2:
             got = self.derive(rest[0], rest[1])  # derive NAME SUBJECT
             return f"derived {got['fact']} ({len(got['proofs'])} proofs)" if got["status"] == "derived" else got["status"]
+        if head == "correct" and rest and rest[0] == "example" and ":" in raw and "->" in raw:
+            name = raw.split(":", 1)[0].split()[-1]
+            lhs, rhs = raw.split(":", 1)[1].split("->")
+            events = self.correct_example(name, lhs.strip(), rhs.strip())
+            got = self.acquire(name)
+            msg = f"corrected example {name}: {lhs.strip()} -> {rhs.strip()}; {got['result']} {name}"
+            return msg + (f" {'+'.join(got['seq'])}" if "seq" in got else "") + (f"; {'; '.join(events)}" if events else "")
         if head == "correct" and len(rest) == 3:
             got = self.correct(*rest)
             return f"corrected {' '.join(rest)}; removed {len(got['removed'])}" + \
@@ -818,7 +864,10 @@ def main(argv) -> int:
         print("usage: python -m packetlm.engine STATE 'line' ['line' ...]")
         return 2
     t0 = time.process_time()
-    eng = Engine.open(argv[0])
+    flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False)}
+    kw = dict(flags[a] for a in argv if a in flags)
+    argv = [a for a in argv if a not in flags]
+    eng = Engine.open(argv[0], **kw)
     replies = [eng.turn(line) for line in argv[1:]]
     eng.save()
     print(json.dumps({"load": eng.report, "replies": replies, "stats": eng.stats,
