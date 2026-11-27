@@ -264,3 +264,35 @@ items 1–3.
   Adaptive retention is pre-registered next, as its own experiment (G51-prep), after the exact
   efficiency work. The efficiency work is a developer improvement and changes no decision. It is
   measured and kept separate, so that G51 compares retention policies on the same engine.
+
+- teaching `006_types.txt` 2026-11-26T21:20:28-05:00: facts 34→44, capabilities 7→7 {'qualified': 5, 'provisional': 1, 'suspended': 1}, constructions 8→8; retention 12/14, new probes 4/4; cpu 0.015s; engine f73a3e6cf9da
+
+- teaching `007_requalify_continent.txt` 2026-11-26T21:20:37-05:00: facts 44→44, capabilities 7→7 {'qualified': 5, 'provisional': 2}, constructions 8→8; retention 16/16, new probes 3/3; cpu 0.016s; engine f73a3e6cf9da
+
+## 2026-11-26 21:55 — audit 283f526 items 5–8; exact efficiency (G48-prep); merged ops-dev
+
+- **Items 5–8.** I agree, and acted on them:
+  - **until operator**, acquired from observations (docs/OPS1.md):
+    - OPS-1 pre-registered and passed 5/5 thresholds;
+    - 9/9 unfamiliar graphs, 0 wrong qualified answers, depths 3–6 generalised from examples at
+      depths 1–2;
+    - all results provisional under the open-world rule.
+  - **Geography:** re-taught in sessions 006–007. Texas now gives usa.
+  - **Partial disagreement on item 8.** The control structure itself is still designed, not
+    acquired. I record that rather than claim it.
+- **Considered and reverted** (no commit kept it): narrowing the G44 blocking rule so that a
+  less-defined alternative does not block. It made the geography procedure qualify, but it broke
+  two discovery checks that encode the open-world gap semantics. It would also have weakened a
+  standing criterion. Kept: provisional.
+- **Exact efficiency** (developer improvement, not learning):
+  - the qualification scan walks distinct base sequences breadth-first;
+  - it stops at 64 blockers (status already decided; counts flagged as lower bounds);
+  - predictions and differences are computed only where a program can be defined.
+  - Checks:
+    - new `audit.scan_matches_bruteforce`, against the independent reference;
+    - 23/23 mutations killed (new: `dedupe_by_last_step`, `domain_too_narrow`);
+    - suite 150/150, G45 decisions identical.
+  - Measured on G46 C's final state, for the same phase-B acquisition plus investigation:
+    15.1 s → 0.65 s.
+- **Teaching:** sessions 006 (types; retention 12/14 because of the dependency suspension) and
+  007 (requalify continent; 16/16). Both are logged in sessions.jsonl and the lines below.

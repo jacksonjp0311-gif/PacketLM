@@ -130,7 +130,8 @@
   "open_world_off": {
    "exit": 1,
    "failed": [
-    "audit.zero_support_conflict_blocks"
+    "audit.zero_support_conflict_blocks",
+    "audit.scan_matches_bruteforce"
    ],
    "verdict": "KILLED",
    "crash": null
@@ -138,7 +139,28 @@
   "prune_on_evidence_only": {
    "exit": 1,
    "failed": [
-    "audit.zero_support_conflict_blocks"
+    "audit.zero_support_conflict_blocks",
+    "audit.scan_matches_bruteforce"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "domain_too_narrow": {
+   "exit": 1,
+   "failed": [
+    "discovery.gap_survives_as_undetermined",
+    "discovery.gap_keeps_provisional_until_taught"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "dedupe_by_last_step": {
+   "exit": 1,
+   "failed": [
+    "discovery.gap_survives_as_undetermined",
+    "discovery.gap_keeps_provisional_until_taught",
+    "audit.open_world_blocks_longer_alternative",
+    "audit.scan_matches_bruteforce"
    ],
    "verdict": "KILLED",
    "crash": null
@@ -156,7 +178,8 @@
   "scan_short_horizon": {
    "exit": 1,
    "failed": [
-    "audit.open_world_blocks_longer_alternative"
+    "audit.open_world_blocks_longer_alternative",
+    "audit.scan_matches_bruteforce"
    ],
    "verdict": "KILLED",
    "crash": null
@@ -173,9 +196,9 @@
    "exit": 1,
    "failed": [],
    "verdict": "KILLED",
-   "crash": "TypeError: 'NoneType' object is not subscriptable"
+   "crash": "KeyError: 'x1'"
   }
  },
- "killed": 21,
- "total": 21
+ "killed": 23,
+ "total": 23
 }
