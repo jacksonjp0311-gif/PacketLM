@@ -1,0 +1,10 @@
+# 007 After 006, country@1 was suspended (contradicted by texas -> usa), and continent@1,
+# pinned to country@1, was suspended with it. That is the intended dependency rule,
+# and it cost two probes in 006 (see sessions.jsonl). The teacher requalifies continent
+# and updates the austin probe: country@2 is provisional under open-world qualification.
+options operators deepen=3
+requalify continent
+show continent
+expect which country is austin in => austin country usa [no construction for country] [provisional]
+expect what is porto continent => porto continent europe [no construction for continent] [provisional]
+expect what is dallas continent => dallas continent america [no construction for continent] [provisional]

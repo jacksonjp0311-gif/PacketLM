@@ -352,6 +352,38 @@ def audit_checks(tmp) -> dict:
     out["zero_support_conflict_blocks"] = gz["result"] == "provisional" and ["rel:s"] in gz.get("blocking", []) \
         and gz["scan"]["conflicts"] >= 1 and gz["scan"]["pruned_compatible"] >= 1 and qz.get("subject") == "x3" \
         and gz2["result"] == "qualified"
+    # the scan agrees with brute force: every primitive sequence up to the horizon,
+    # judged by the independent reference (blocker extensions compared as base sets)
+    bf = Engine(tmp / "brute.json", deepen=3)
+    for t in [("x1", "p", "y1"), ("x2", "p", "y2"), ("x3", "p", "y3"), ("x1", "q", "m1"), ("x2", "q", "m2"),
+              ("x3", "q", "m3"), ("m1", "r", "y1"), ("m2", "r", "y2"), ("m3", "r", "z3"), ("x3", "s", "w3"),
+              ("m1", "s", "y1"), ("y3", "r", "x1"), ("u", "t", "v")]:
+        bf.tell(*t)
+    bf.observe("bp", "x1", "y1")
+    bf.observe("bp", "x2", "y2")
+    bf.BLOCK_KEEP = 10 ** 6
+    gb = bf.acquire("bp")
+    ref = reference.index([(f["s"], f["r"], f["o"]) for f in bf.state["facts"]])
+    rels = sorted(ref)
+    ents = sorted({f["s"] for f in bf.state["facts"]} | {f["o"] for f in bf.state["facts"]})
+    one = lambda seq, e: (lambda r: next(iter(r)) if len(r) == 1 else None)(reference.run(ref, list(seq), e))
+    cand = gb.get("seq") and [x[4:] for x in gb["seq"]]
+    want = {e: one(cand, e) for e in ents} if cand else {}
+    brute = set()
+    for n in (1, 2, 3):
+        for seq in product(rels, repeat=n):
+            if list(seq) == cand:
+                continue
+            pv = {e: one(seq, e) for e in ents}
+            if any(pv[s] is not None and pv[s] != v for s, v in [("x1", "y1"), ("x2", "y2")]):
+                continue
+            sup = sum(pv[s] == v for s, v in [("x1", "y1"), ("x2", "y2")])
+            conflict = any(pv[e] is not None and want[e] is not None and pv[e] != want[e] for e in ents)
+            if conflict or (sup >= 1 and any(pv[e] != want[e] for e in ents)):
+                brute.add(seq)
+    mine_b = {tuple(x[4:] for x in b) for b in gb.get("blocking", [])}
+    out["scan_matches_bruteforce"] = bool(cand) and mine_b == brute and len(brute) > 0
+    out["_bruteforce"] = {"result": gb.get("result"), "engine": sorted(mine_b), "brute": sorted(brute)}
     out["_zero_support"] = {"first": gz.get("result"), "scan": {k: v for k, v in gz.get("scan", {}).items() if k != "assumption"},
                             "question": qz, "after": gz2.get("result")}
     # P1 (audit 283f526): retiring evidence requalifies; the earlier qualification stays in qualified_at
