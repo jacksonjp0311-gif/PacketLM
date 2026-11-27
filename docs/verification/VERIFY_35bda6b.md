@@ -185,9 +185,12 @@ The lock's creation and removal times cannot be checked from the repo (Low 2).
    - Neither receipt records the lock (its path, mtime or presence).
    - The lock times in G57.md are an unverifiable statement.
    - Suggest that the harnesses write head, porcelain status and lock mtime into each receipt.
-3. **One snapshot is charged to the tasks at N=16000 only.**
-   - Part S charges `srv.call` CPU, and the server snapshots every 64 calls. Padding uses 40 calls at N=16000 (fewer at smaller N), so the snapshot at call 64 lands inside the workload only at N=16000. That snapshot serializes 16k facts.
-   - The effect is small (one snapshot across 10 tasks) and favours no arm, but it is an O(N) cost inside the charged window at one size only.
+3. **One snapshot is charged to Xs's tasks at N=16000 only.**
+   - Part S charges `srv.call` CPU. The server snapshots after every 64 *journaled* calls, and read-only calls under `--indexed` are not journaled (serve.py `call`).
+   - Padding uses 41 journaled calls at N=16000 (9 fact batches + 32 capabilities), but only 3 and 11 at N=1000 and 4000.
+   - So at N=16000, the 64th journaled call lands inside the charged workload for **Xs** (its 23rd workload call). Xi journals only 20 workload calls, so it never reaches 64 there.
+   - The result is one O(N) snapshot (16k facts) in Xs's charged window, at N=16000 only.
+   - It is small (one snapshot across 10 tasks). It slightly inflates Xs's R_16000 and the Xs−Xi gap, and does not touch Xi's rule F decision.
 
 **Info**
 1. Seven G57 mutations survive a pure differential (see §1). The fingerprint fields `deps`, `known entity` and `library`, and the read-only restriction, are conservative rather than necessary. That is fine, and the builder's suite kills these mutations directly.
