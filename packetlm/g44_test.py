@@ -268,8 +268,8 @@ def fresh_process_checks(tmp) -> dict:
         "p2_reads_p1": p2.get("load") == {"loaded": "primary"} and p2["replies"][0] == "rex owns map"
             and p2["replies"][2] == "qualified grand rel:parent+rel:parent",
         "p3_uses_capability": p3.get("replies") == ["ann grand cy [no construction for grand]", "derived ann cap:grand cy (1 proofs)"],
-        "p4_correction_drops_derived": r4[0] == "corrected bea parent eve; removed 2; retired example grand: ann -> cy; retired example grand: bea -> dee",
-        "p5_sees_corrections": p5.get("replies") == ["rex owns key", "ann grand eve [no construction for grand]", "bea parent eve"],
+        "p4_correction_drops_derived": r4[0] == "corrected bea parent eve; removed 2; retired example grand: ann -> cy; retired example grand: bea -> dee; grand@1 provisional: evidence retired: no active examples",
+        "p5_sees_corrections": p5.get("replies") == ["rex owns key", "ann grand eve [no construction for grand] [provisional]", "bea parent eve"],
         "p6_recovery_reported": p6.get("load", {}).get("recovered") is True and p6["replies"] == ["rex owns key"],
         "_replies": {"p1": p1, "p2": p2, "p3": p3, "p4": p4, "p5": p5, "p6": p6},
     }
@@ -322,6 +322,58 @@ def audit_checks(tmp) -> dict:
     out["_hypotheses"] = {"live_stored": len(rec["live"]), "zero_support_stored": zero, "pruned": rec["pruned"],
                           "reference_live": ref_live, "reference_zero_support": ref_zero,
                           "evaluated_with_activation": rec["evaluated"], "evaluated_without": frec["evaluated"]}
+
+    # deepening: a shorter program that fits the examples is not qualified while a
+    # program one level longer also fits them but differs elsewhere (lookahead blocking)
+    eng = Engine(tmp / "look.json", deepen=3)
+    for t in [("x1", "p", "y1"), ("x2", "p", "y2"), ("x3", "p", "y3"), ("x1", "q", "m1"), ("x2", "q", "m2"),
+              ("x3", "q", "m3"), ("m1", "r", "y1"), ("m2", "r", "y2"), ("m3", "r", "z3")]:
+        eng.tell(*t)
+    eng.observe("hop", "x1", "y1")
+    eng.observe("hop", "x2", "y2")
+    g1 = eng.acquire("hop")
+    q = eng.investigate("hop")
+    eng.observe("hop", "x3", "y3")
+    g2 = eng.acquire("hop")
+    out["open_world_blocks_longer_alternative"] = g1["result"] == "provisional" and g1.get("seq") == ["rel:p"] \
+        and ["rel:q", "rel:r"] in g1.get("blocking", []) and q.get("subject") == "x3" and g2["result"] == "qualified" \
+        and eng.state["hypotheses"]["hop"]["scan"]["horizon"] == 3
+    # P0 (audit 283f526): an alternative with zero support that conflicts elsewhere still blocks;
+    # one whose image of the candidate's domain is empty is counted compatible, not eliminated
+    zw = Engine(tmp / "zero.json", deepen=2)
+    for t in [("x1", "p", "y1"), ("x2", "p", "y2"), ("x3", "p", "y3"), ("x3", "s", "w3"), ("u", "t", "v")]:
+        zw.tell(*t)
+    zw.observe("zp", "x1", "y1")
+    zw.observe("zp", "x2", "y2")
+    gz = zw.acquire("zp")
+    qz = zw.investigate("zp")
+    zw.observe("zp", "x3", "y3")
+    gz2 = zw.acquire("zp")
+    out["zero_support_conflict_blocks"] = gz["result"] == "provisional" and ["rel:s"] in gz.get("blocking", []) \
+        and gz["scan"]["conflicts"] >= 1 and gz["scan"]["pruned_compatible"] >= 1 and qz.get("subject") == "x3" \
+        and gz2["result"] == "qualified"
+    out["_zero_support"] = {"first": gz.get("result"), "scan": {k: v for k, v in gz.get("scan", {}).items() if k != "assumption"},
+                            "question": qz, "after": gz2.get("result")}
+    # P1 (audit 283f526): retiring evidence requalifies; the earlier qualification stays in qualified_at
+    rq = Engine(tmp / "requal.json", deepen=2)
+    for t in [("a1", "f", "b1"), ("a2", "f", "b2"), ("a3", "f", "b3"), ("a1", "g", "c1"), ("a2", "g", "b2"), ("a3", "g", "b3")]:
+        rq.tell(*t)
+    for x, y in [("a1", "b1"), ("a2", "b2")]:
+        rq.observe("rf", x, y)
+    r1 = rq.acquire("rf")
+    ev = rq.correct("a1", "f", "b9")
+    ver = rq.version("rf")
+    out["retirement_requalifies"] = r1["result"] == "qualified" and ver["status"] == "provisional" \
+        and len(ver.get("qualified_at", [])) == 1 and any("requalified on 1 active examples" in e for e in ev["review"])
+    out["_requalify"] = {"first": r1["result"], "review": ev["review"], "now": ver["status"], "qualified_at": ver.get("qualified_at")}
+    amb = Engine(tmp / "amb.json", deepen=3)
+    for t in [("x1", "p", "y1"), ("x1", "s", "y1"), ("x1", "q", "m1"), ("m1", "r", "y1")]:
+        amb.tell(*t)
+    amb.observe("two", "x1", "y1")
+    ga = amb.acquire("two")
+    out["deepen_stops_at_ambiguity"] = ga["result"] == "ambiguous" and amb.state["hypotheses"]["two"]["searched_len"] == 1 \
+        and sorted(map(tuple, ga["supported"])) == [("rel:p",), ("rel:s",)]
+    out["_lookahead"] = {"first": g1["result"], "blocking": g1.get("blocking"), "question": q, "after": g2["result"]}
 
     # 3: contradiction suspends; re-acquisition makes v2; teacher revokes
     eng = Engine(tmp / "a3.json")

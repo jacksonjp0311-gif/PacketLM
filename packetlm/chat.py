@@ -44,7 +44,9 @@ def run() -> dict:
     loaded = Engine.open(STATE)
     checks = {
         "two": list(loaded.state["capabilities"]) == ["tail", "location"],
-        "tail": loaded.turn("what is orion tail") == "orion hastail red",
+        # adapts to the corrected premise; since G46-prep the only example was retired, so the
+        # answer is marked provisional (audit 283f526 item 4; ledger 2026-11-26)
+        "tail": loaded.turn("what is orion tail") == "orion hastail red [provisional]",
         "location": loaded.turn("what is mira location") == "mira at dock",
         "age_abstains": loaded.turn("what is orion age") == "unknown",
         "generic": replies[7] == "orion hastail green",

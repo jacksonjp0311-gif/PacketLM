@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 MUTATIONS = {
     "judge_none_contradicts": ('    if pred is None:\n        return "undetermined"', '    if pred is None:\n        return "contradicted"'),
-    "blocking_ignored": ('status = "provisional" if blocking else "qualified"', 'status = "qualified"'),
+    "blocking_ignored": ('        status = "provisional" if blocking else "qualified"\n        record["candidate"]', '        status = "qualified"\n        record["candidate"]'),
     "review_noop": ('            if h["status"] == "contradicted":\n                events += self._set_status(name, ver["v"], "suspended"',
                     '            if False:\n                events += self._set_status(name, ver["v"], "suspended"'),
     "superseded_not_pinned": ('PINNED_OK = EXEC_OK + ("superseded",)', 'PINNED_OK = EXEC_OK'),
@@ -33,6 +33,11 @@ MUTATIONS = {
     "zero_support_dropped": ('                else:\n                    out.append(h)', '                elif h["support"]:\n                    out.append(h)'),
     "unanswered_lost": ('        if prior.get("unanswered"):', '        if False:'),
     "activation_overprunes": ('                if not nxt:\n                    pruned +=', '                if not nxt or p == prims[0]:\n                    pruned +='),
+    "open_world_off": ('                        if conflict or (support >= 1', '                        if (support >= 1'),
+    "prune_on_evidence_only": ('        walk([], [{e} for e in D], [])', '        walk([], [{e} if e in dict(obs) else set() for e in D], [])'),
+    "no_requalify": ('        out["review"] = retired + self.review() + self._requalify_retired()\n        return out\n\n    def correct_example', '        out["review"] = retired + self.review()\n        return out\n\n    def correct_example'),
+    "scan_short_horizon": ('        horizon = self.deepen if (max_len is None and self.deepen) else searched', '        horizon = searched'),
+    "deepen_past_ambiguity": ('                if any(h["status"] == "supported" for h in live):', '                if sum(h["status"] == "supported" for h in live) == 1:'),
     "compose_keeps_source": ('            row = g.compose([row], self._rows(rel))[0]', '            row = row | g.compose([row], self._rows(rel))[0]'),
 }
 

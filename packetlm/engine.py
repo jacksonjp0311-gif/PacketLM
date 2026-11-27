@@ -301,10 +301,12 @@ class Engine:
     def _retire(self, ids, reason) -> list[str]:
         """An example whose value was explained through a fact that is now changing
         was dependent evidence. It is retired (kept, with the reason), not counted
-        against the procedure. A capability keeps the status it earned; `show` and
-        `why` report the retirement."""
+        against the procedure. After the knowledge change the capability is
+        requalified on the evidence that remains (`_requalify`); the qualification it
+        earned earlier stays in `qualified_at` and `history`."""
         ids = set(ids)
         events = []
+        self._retired_names = getattr(self, "_retired_names", set())
         for name in list(self.state["observations"]):
             ver = self.version(name)
             if not ver or ver["status"] not in EXEC_OK:
@@ -316,6 +318,7 @@ class Engine:
                     self.state["retired"].setdefault(name, []).append(
                         {"s": s, "o": v, "turn": self.state["turn"], "reason": reason})
                     events.append(f"retired example {name}: {s} -> {v}")
+                    self._retired_names.add(name)
                 else:
                     keep.append([s, v])
             self.state["observations"][name] = keep
@@ -327,15 +330,44 @@ class Engine:
             return {"removed": [], "proofs_dropped": 0, "review": []}
         retired = self._retire(ids, f"retract {s} {r} {o or '*'}")
         out = self._drop(ids, f"retract {s} {r} {o or '*'}")
-        out["review"] = retired + self.review()
+        out["review"] = retired + self.review() + self._requalify_retired()
         return out
+
+    def _requalify_retired(self) -> list[str]:
+        names, self._retired_names = sorted(getattr(self, "_retired_names", set())), set()
+        events = []
+        for n in names:
+            events += self._requalify(n)
+        return events
+
+    def _requalify(self, name) -> list[str]:
+        """Current evidential status of the current version, from the examples still active."""
+        ver = self.version(name)
+        if not ver or ver["status"] not in EXEC_OK:
+            return []
+        obs = self.state["observations"].get(name, [])
+        if not obs:
+            return self._set_status(name, ver["v"], "provisional", "evidence retired: no active examples")
+        h = self.evaluate(ver["seq"], obs)
+        if h["status"] == "contradicted":
+            return self._set_status(name, ver["v"], "suspended", "contradicted by its observations")
+        if h["status"] != "supported":
+            return self._set_status(name, ver["v"], "provisional", "evidence retired: active examples do not all support it")
+        horizon = self.deepen or ver.get("evidence", {}).get("horizon") or len(ver["seq"])
+        scan = self._scan(name, ver["seq"], horizon)
+        blocking = scan.pop("blocking")
+        rec = self.state["hypotheses"].setdefault(name, {"live": []})
+        rec.update({"candidate": ver["seq"], "blocking": blocking, "scan": scan})
+        status = "provisional" if blocking else "qualified"
+        return self._set_status(name, ver["v"], status,
+                                f"requalified on {len(obs)} active examples after evidence retirement ({scan['blocking_n']} blocking)")
 
     def correct(self, s, r, o) -> dict:
         ids = [f["id"] for f in self._find(s, r) if f["o"] != o]
         retired = self._retire(ids, f"correct {s} {r} {o}") if ids else []
         out = self._drop(ids, f"correct {s} {r} {o}") if ids else {"removed": [], "proofs_dropped": 0}
         self.tell(s, r, o, source="correction")
-        out["review"] = retired + self.review()
+        out["review"] = retired + self.review() + self._requalify_retired()
         return out
 
     def correct_example(self, name, s, o) -> list[str]:
@@ -484,6 +516,8 @@ class Engine:
         if ver["status"] == status:
             return []
         ver["status"] = status
+        if status == "qualified":
+            ver.setdefault("qualified_at", []).append(self.state["turn"])  # historical, kept apart from current status
         ver.setdefault("history", []).append({"turn": self._tick(), "status": status, "reason": reason})
         events = [f"{name}@{v} {status}: {reason}"]
         if status not in EXEC_OK:
@@ -660,6 +694,14 @@ class Engine:
             out[e] = next(iter(r)) if r and len(r) == 1 else None
         return out
 
+    def _differs(self, seq, preds) -> bool:
+        """Extensional difference from a prediction table; stops at the first entity that differs."""
+        for e, v in preds.items():
+            r = self.execute(seq, e)
+            if (next(iter(r)) if r and len(r) == 1 else None) != v:
+                return True
+        return False
+
     def acquire(self, name, max_len=None) -> dict:
         if max_len is None and self.deepen:
             live, evaluated, contradicted, seen = [], 0, 0, set()
@@ -670,8 +712,8 @@ class Engine:
                 evaluated += ev
                 contradicted += co
                 pruned += self._pruned
-                if sum(h["status"] == "supported" for h in live) == 1:
-                    break
+                if any(h["status"] == "supported" for h in live):
+                    break  # deeper levels cannot remove a supported program
             searched = n
         else:
             searched = max_len or 2
@@ -695,21 +737,100 @@ class Engine:
                 self._set_status(name, cur["v"], "provisional", "several supported programs")
             return result
         cand = supported[0]
-        mine = self._predictions(cand["seq"])
-        blocking = [h["seq"] for h in live if h is not cand and h["support"] >= 1
-                    and self._predictions(h["seq"]) != mine]
+        horizon = self.deepen if (max_len is None and self.deepen) else searched
+        scan = self._scan(name, cand["seq"], horizon)
+        blocking = scan.pop("blocking")
         status = "provisional" if blocking else "qualified"
         record["candidate"] = cand["seq"]
         record["blocking"] = blocking
-        result.update({"result": status, "seq": cand["seq"], "blocking": blocking})
-        result["version"], result["events"] = self._adopt(name, cand, status, blocking)
+        record["scan"] = scan
+        record["selection"] = "shortest supported program; qualified only if no alternative within the horizon blocks"
+        evaluated += scan["evaluated"]
+        record["evaluated"] = evaluated
+        result["evaluated"] = evaluated
+        result.update({"result": status, "seq": cand["seq"], "blocking": blocking, "scan": scan})
+        result["version"], result["events"] = self._adopt(name, cand, status, blocking, scan)
         return result
 
-    def _adopt(self, name, h, status, blocking):
+    ASSUMPTION = ("open world over current knowledge, horizon H: every non-contradicted program of length <= H is "
+                  "an alternative, whatever its support. It blocks if it gives a defined value different from the "
+                  "candidate's on some entity (conflict), or if it has support and differs anywhere (G44 rule). "
+                  "A program whose image of the candidate's domain is empty cannot conflict there; it is counted "
+                  "as compatible on current knowledge, not eliminated. New facts can create conflicts: "
+                  "`requalify NAME` re-runs the check.")
+
+    def _scan(self, name, cand_seq, horizon) -> dict:
+        """Check every program up to the horizon against the candidate (prefix-shared walk).
+        Pruning here is computational: a pruned subtree is shown compatible on current knowledge
+        (empty image of the candidate's domain), not shown false. Symbolic row lookups."""
+        ref = self._idx()["ref"]
+        obs = self.state["observations"].get(name, [])
+        mine = self._predictions(cand_seq)
+        cand_base = tuple(self.expand(cand_seq))
+        D = [e for e, v in mine.items() if v is not None]
+        want = [mine[e] for e in D]
+        pos = {e: i for i, e in enumerate(D)}
+        obs_at = [(pos[s_], v) for s_, v in obs if s_ in pos]
+        prims = [(p, self.expand([p])) for p in self.primitives(name)]
+        prims = [(p, b) for p, b in prims if b is not None]
+        P = len(prims)
+        out = {"horizon": horizon, "domain": len(D), "scanned": 0, "evaluated": 0, "contradicted": 0,
+               "compatible": 0, "pruned_compatible": 0, "blocking_n": 0, "conflicts": 0, "assumption": self.ASSUMPTION}
+        blocking, seen = [], set()
+
+        def step(front, base):
+            new = []
+            for cur in front:
+                for r in base:
+                    if not cur:
+                        break
+                    m = ref.get(r, {})
+                    nxt = set()
+                    for x in cur:
+                        nxt |= m.get(x, set())
+                    cur = nxt
+                new.append(cur)
+            return new
+
+        def walk(prefix, front, bseq):
+            for p, pb in prims:
+                nf = step(front, pb)
+                depth = len(prefix) + 1
+                if not any(nf):
+                    out["pruned_compatible"] += sum(P ** k for k in range(horizon - depth + 1))
+                    continue
+                seq, nb = prefix + [p], bseq + pb
+                out["scanned"] += 1
+                key = tuple(nb)
+                if key != cand_base and key not in seen:
+                    seen.add(key)
+                    vals = [next(iter(f)) if len(f) == 1 else None for f in nf]
+                    out["evaluated"] += len(obs_at)
+                    if any(vals[i] is not None and vals[i] != v for i, v in obs_at):
+                        out["contradicted"] += 1
+                    else:
+                        support = sum(vals[i] == v for i, v in obs_at)
+                        conflict = any(x is not None and x != w for x, w in zip(vals, want))
+                        if conflict or (support >= 1 and self._differs(seq, mine)):
+                            out["blocking_n"] += 1
+                            out["conflicts"] += conflict
+                            if len(blocking) < 64:
+                                blocking.append(seq)
+                        else:
+                            out["compatible"] += 1
+                if depth < horizon:
+                    walk(seq, nf, nb)
+        walk([], [{e} for e in D], [])
+        return {**out, "blocking": blocking}
+
+    def _adopt(self, name, h, status, blocking, scan=None):
         cap = self.state["capabilities"].setdefault(name, {"current": None, "versions": [], "express": None})
         cur = self.version(name)
         evidence = {"observations": len(self.state["observations"].get(name, [])),
                     "support": h["support"], "blocking": len(blocking), "turn": self._tick()}
+        if scan:
+            evidence.update({"horizon": scan["horizon"], "blocking_total": scan["blocking_n"],
+                             "compatible": scan["compatible"], "pruned_compatible": scan["pruned_compatible"]})
         if cur and self.expand(cur["seq"]) == self.expand(h["seq"]) and cur["status"] in EXEC_OK + ("suspended",):
             cur["evidence"] = evidence
             return cur["v"], self._set_status(name, cur["v"], status, "requalified")
@@ -719,6 +840,8 @@ class Engine:
         ver = {"v": len(cap["versions"]) + 1, "seq": h["seq"], "base": self.expand(h["seq"]),
                "status": status, "evidence": evidence,
                "history": [{"turn": evidence["turn"], "status": status, "reason": "acquired"}]}
+        if status == "qualified":
+            ver["qualified_at"] = [evidence["turn"]]
         cap["versions"].append(ver)
         cap["current"] = ver["v"]
         return ver["v"], events
@@ -733,6 +856,9 @@ class Engine:
         if not rec:
             return {"result": "nothing to investigate"}
         live = [h["seq"] for h in rec["live"] if h["support"] >= 1]
+        for extra in ([rec["candidate"]] if rec.get("candidate") else []) + rec.get("blocking", []):
+            if extra not in live:
+                live.append(extra)  # open-world blockers can be resolved by a question too
         if len(live) <= 1:
             return {"result": "settled"}
         done = {s for s, _ in self.state["observations"].get(name, [])} | set(rec.get("unanswered", []))

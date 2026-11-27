@@ -1,0 +1,368 @@
+{
+  "schema": "packetlm.engine/2",
+  "checks": {
+    "memory.provenance_told": true,
+    "memory.derived_provenance": true,
+    "memory.correction_drops_derived": true,
+    "memory.correction_logged": true,
+    "memory.ambiguity_abstains": true,
+    "memory.ambiguity_resolved_by_correction": true,
+    "memory.retraction": true,
+    "constructions.induced_orders": true,
+    "constructions.osv_read": true,
+    "constructions.speak_roundtrip": true,
+    "constructions.unknown_word_abstains": true,
+    "constructions.word_clash_rejected": true,
+    "constructions.question_template_learned": true,
+    "constructions.question_unknown_form_unparsed": true,
+    "acquisition.one_observation_stays_pending": true,
+    "acquisition.accumulated_acquires": true,
+    "acquisition.library_control_finds_nothing": true,
+    "acquisition.library_reuse": true,
+    "acquisition.library_matches_deep_search": true,
+    "acquisition.binary_equals_walk": true,
+    "discovery.missing_is_undetermined": true,
+    "discovery.all_seeds_discovered": true,
+    "discovery.gap_survives_as_undetermined": true,
+    "discovery.start_gives_no_hint": true,
+    "discovery.targets_vary": true,
+    "discovery.asks_within_log2": true,
+    "discovery.start_has_nine_live": true,
+    "discovery.gap_keeps_provisional_until_taught": true,
+    "discovery.silent_oracle_adopts_nothing": true,
+    "persistence.roundtrip": true,
+    "persistence.backup_is_prior_generation": true,
+    "persistence.no_temp_left": true,
+    "persistence.checksum_tamper_recovers_loudly": true,
+    "persistence.binding_tamper_recovers_loudly": true,
+    "persistence.truncated_recovers": true,
+    "persistence.both_corrupt_raises": true,
+    "fresh_process.p1_new_state": true,
+    "fresh_process.p2_reads_p1": true,
+    "fresh_process.p3_uses_capability": true,
+    "fresh_process.p4_correction_drops_derived": true,
+    "fresh_process.p5_sees_corrections": true,
+    "fresh_process.p6_recovery_reported": true,
+    "audit.zero_support_kept": true,
+    "audit.activation_same_decision": true,
+    "audit.open_world_blocks_longer_alternative": true,
+    "audit.zero_support_conflict_blocks": true,
+    "audit.retirement_requalifies": true,
+    "audit.deepen_stops_at_ambiguity": true,
+    "audit.contradiction_suspends": true,
+    "audit.reacquired_as_v2": true,
+    "audit.teacher_revokes": true,
+    "audit.versions_pin_dependents": true,
+    "audit.identities_separate": true,
+    "audit.no_cycle_offered": true,
+    "audit.two_proofs_stored": true,
+    "audit.one_retraction_keeps_conclusion": true,
+    "audit.missing_construction_reported": true,
+    "audit.nested_validation": true,
+    "audit.ambiguous_path_undetermined": true,
+    "audit.multiple_conclusions_ambiguous": true,
+    "audit.example_correction_invalidates": true,
+    "audit.conflicting_observations_adopt_nothing": true
+  },
+  "measures": {
+    "acquisition.binary_measure": {
+      "compared": 18,
+      "nonempty": 9,
+      "agree": 18,
+      "evaluated_lib_depth2": 22,
+      "evaluated_nolib_depth3": 22
+    },
+    "discovery.discovery": [
+      {
+        "seed": 1,
+        "target": 2,
+        "live_at_start": 9,
+        "zero_support_kept": 0,
+        "asks": 3,
+        "seq": [
+          "rel:r2",
+          "rel:r2"
+        ],
+        "status": "provisional",
+        "blocking": [
+          [
+            "rel:rg",
+            "rel:rg"
+          ]
+        ],
+        "ok": true,
+        "gap_undetermined": true,
+        "start_uniform": true,
+        "provisional_then_qualified": true
+      },
+      {
+        "seed": 7,
+        "target": 5,
+        "live_at_start": 9,
+        "zero_support_kept": 0,
+        "asks": 3,
+        "seq": [
+          "rel:r5",
+          "rel:r5"
+        ],
+        "status": "provisional",
+        "blocking": [
+          [
+            "rel:rg",
+            "rel:rg"
+          ]
+        ],
+        "ok": true,
+        "gap_undetermined": true,
+        "start_uniform": true,
+        "provisional_then_qualified": true
+      },
+      {
+        "seed": 13,
+        "target": 4,
+        "live_at_start": 9,
+        "zero_support_kept": 0,
+        "asks": 3,
+        "seq": [
+          "rel:r4",
+          "rel:r4"
+        ],
+        "status": "provisional",
+        "blocking": [
+          [
+            "rel:rg",
+            "rel:rg"
+          ]
+        ],
+        "ok": true,
+        "gap_undetermined": true,
+        "start_uniform": true,
+        "provisional_then_qualified": true
+      },
+      {
+        "seed": 21,
+        "target": 2,
+        "live_at_start": 9,
+        "zero_support_kept": 0,
+        "asks": 3,
+        "seq": [
+          "rel:r2",
+          "rel:r2"
+        ],
+        "status": "provisional",
+        "blocking": [
+          [
+            "rel:rg",
+            "rel:rg"
+          ]
+        ],
+        "ok": true,
+        "gap_undetermined": true,
+        "start_uniform": true,
+        "provisional_then_qualified": true
+      },
+      {
+        "seed": 42,
+        "target": 1,
+        "live_at_start": 9,
+        "zero_support_kept": 0,
+        "asks": 3,
+        "seq": [
+          "rel:r1",
+          "rel:r1"
+        ],
+        "status": "provisional",
+        "blocking": [
+          [
+            "rel:rg",
+            "rel:rg"
+          ]
+        ],
+        "ok": true,
+        "gap_undetermined": true,
+        "start_uniform": true,
+        "provisional_then_qualified": true
+      }
+    ],
+    "fresh_process.replies": {
+      "p1": {
+        "load": {
+          "loaded": "new"
+        },
+        "replies": [
+          "construction owns sro",
+          "construction parent sro",
+          "recorded rex owns map",
+          "recorded ann parent bea",
+          "recorded bea parent cy",
+          "recorded cy parent dee",
+          "observed grand ann cy"
+        ],
+        "stats": {
+          "evaluations": 0,
+          "executions": 0,
+          "row_ops": 0,
+          "asks": 0
+        },
+        "cpu_s": 0.0007
+      },
+      "p2": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "rex owns map",
+          "observed grand bea dee",
+          "qualified grand rel:parent+rel:parent"
+        ],
+        "stats": {
+          "evaluations": 4,
+          "executions": 10,
+          "row_ops": 21,
+          "asks": 1
+        },
+        "cpu_s": 0.0022
+      },
+      "p3": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "ann grand cy [no construction for grand]",
+          "derived ann cap:grand cy (1 proofs)"
+        ],
+        "stats": {
+          "evaluations": 0,
+          "executions": 2,
+          "row_ops": 4,
+          "asks": 1
+        },
+        "cpu_s": 0.0024
+      },
+      "p4": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "corrected bea parent eve; removed 2; retired example grand: ann -> cy; retired example grand: bea -> dee; grand@1 provisional: evidence retired: no active examples",
+          "corrected rex owns key; removed 1"
+        ],
+        "stats": {
+          "evaluations": 0,
+          "executions": 0,
+          "row_ops": 0,
+          "asks": 0
+        },
+        "cpu_s": 0.0013
+      },
+      "p5": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "rex owns key",
+          "ann grand eve [no construction for grand] [provisional]",
+          "bea parent eve"
+        ],
+        "stats": {
+          "evaluations": 0,
+          "executions": 1,
+          "row_ops": 2,
+          "asks": 3
+        },
+        "cpu_s": 0.0023
+      },
+      "p6": {
+        "load": {
+          "loaded": "backup",
+          "recovered": true,
+          "primary_error": "Unterminated string starting at: line 1 column 7064 (char 7063)"
+        },
+        "replies": [
+          "rex owns key"
+        ],
+        "stats": {
+          "evaluations": 0,
+          "executions": 0,
+          "row_ops": 0,
+          "asks": 1
+        },
+        "cpu_s": 0.0013
+      }
+    },
+    "audit.hypotheses": {
+      "live_stored": 9,
+      "zero_support_stored": 0,
+      "pruned": 72,
+      "reference_live": 81,
+      "reference_zero_support": 72,
+      "evaluated_with_activation": 18,
+      "evaluated_without": 90
+    },
+    "audit.zero_support": {
+      "first": "provisional",
+      "scan": {
+        "horizon": 2,
+        "domain": 3,
+        "scanned": 2,
+        "evaluated": 2,
+        "contradicted": 0,
+        "compatible": 0,
+        "pruned_compatible": 10,
+        "blocking_n": 1,
+        "conflicts": 1
+      },
+      "question": {
+        "result": "question",
+        "subject": "x3"
+      },
+      "after": "qualified"
+    },
+    "audit.requalify": {
+      "first": "qualified",
+      "review": [
+        "retired example rf: a1 -> b1",
+        "rf@1 provisional: requalified on 1 active examples after evidence retirement (1 blocking)"
+      ],
+      "now": "provisional",
+      "qualified_at": [
+        9
+      ]
+    },
+    "audit.lookahead": {
+      "first": "provisional",
+      "blocking": [
+        [
+          "rel:q",
+          "rel:r"
+        ]
+      ],
+      "question": {
+        "result": "question",
+        "subject": "x3"
+      },
+      "after": "qualified"
+    },
+    "audit.versions": {
+      "nm_v2_status": "provisional",
+      "nm_v2_blocking": [
+        [
+          "rel:k",
+          "rel:m"
+        ]
+      ]
+    },
+    "audit.validation": {
+      "dangling": "dangling premise nope a b on p0 parent p1",
+      "missing_dep": "missing dependency cap:ghost@1 of great",
+      "dup": "duplicate fact p0 parent p1",
+      "badstatus": "bad version grand@1",
+      "cycle": "dependency cycle at cap:grand@1",
+      "checksum": "checksum mismatch",
+      "binding": "packet does not bind p0 parent p1"
+    }
+  },
+  "count": 62,
+  "failed": [],
+  "claim": "one engine; symbolic and bitwise; not a mind"
+}

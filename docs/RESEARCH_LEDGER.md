@@ -132,3 +132,77 @@ python -m packetlm.chat --interactive   # talk to the same engine
   stored + pruned = reference (72). With activation off, all 81 are stored.
 - Suite 11/11, 145 checks. Mutations 16/16 killed, including the new `activation_overprunes`.
 - Ablation flag: `--no-activation`.
+
+## 2026-11-26 21:40 — response to independent audit of 283f526 (docs/audits/AUDIT_283f526.md)
+
+James clarified that the audit is analysis to weigh, not a list of commands. Each item below gives
+my judgement and what I did. G46 had not been run when these changes were made. Its
+protocol (docs/G46.md) is unchanged, and the engine is frozen from the commit after this entry.
+
+Evidence found before the audit arrived (dev seed 999, not a registered seed). In a G46 phase-B
+family, `ef` was **qualified as `cap:ab`**: both programs gave the same value on the 2 examples.
+Iterative deepening stopped at length 1, so the length-2 truth was never considered as an
+alternative. This produced 6 wrong qualified transfer answers. It is a concrete instance of audit
+items 1–3.
+
+- **Item 1 (P0): pruning vs elimination. Agree.**
+  - Activation pruning during candidate search drops only programs with an empty image of the
+    observed subjects. Such programs have zero support, so they cannot be the supported
+    candidate. That use was sound for selection.
+  - It was not sound as an argument that they could not block. They are logically
+    undetermined, not false.
+  - Change: qualification now runs a separate scan, `Engine._scan`, over all programs up to the
+    horizon. It is pruned on the *candidate's domain*, not on the evidence.
+  - A pruned subtree is recorded as `pruned_compatible`: proved unable to give a defined
+    value different from the candidate's anywhere on current knowledge. Nothing is
+    recorded as eliminated.
+- **Item 2 (P0): zero-support alternatives. Agree, with a stated assumption.**
+  - Every non-contradicted program up to the horizon is an alternative, whatever its support.
+  - It blocks if it **conflicts**: some entity where both programs give a defined, different
+    value. It also blocks under the old G44 rule (support ≥1 and differs anywhere), so no
+    previous blocking condition was removed.
+  - The assumption is recorded verbatim in every scan (`Engine.ASSUMPTION`): open world over
+    *current knowledge*, horizon H. Not counting None-vs-value as a disagreement for
+    zero-support programs is the open-world reading: undefined is not a claim.
+  - Limitation: new facts can create conflicts later, and qualification is not re-scanned
+    automatically (`requalify NAME` does it).
+  - Check `audit.zero_support_conflict_blocks`; mutations `open_world_off` and
+    `prune_on_evidence_only` are both KILLED.
+- **Item 3 (P1): shortest vs unique. Agree.**
+  - Selection is still the shortest supported program; deepening stops at the first depth with a
+    supported program, since deeper levels cannot remove it.
+  - Identification is now separate: the scan covers *every* length up to the horizon
+    (`--deepen`, or the fixed max length), and any conflicting longer program blocks.
+  - Qualified now means "unique up to agreement on current knowledge within horizon H". It does
+    not mean unique over all programs. The horizon is recorded in each version's evidence.
+  - Several supported programs at the stopping depth still give `ambiguous`.
+  - Check `audit.open_world_blocks_longer_alternative`; mutation `scan_short_horizon` is KILLED.
+    Also new: `audit.deepen_stops_at_ambiguity` and mutation `deepen_past_ambiguity`.
+- **Item 4 (P1): requalify on retirement. Agree.**
+  - After a correction or retraction retires examples, the capability is requalified on the
+    examples that remain. With none left, or with only unsupporting ones, it becomes provisional;
+    otherwise the scan decides.
+  - Earlier qualification is kept apart from the current status, in `qualified_at` and `history`.
+  - This changes three previously expected replies:
+    - G44 `p4`/`p5`: grand@1 is now provisional after both its examples are retired.
+    - chat `tail`: still `orion hastail red`, now marked `[provisional]`.
+  - In each case the old expectation was updated. The value checked is unchanged and the marker
+    was added. Check `audit.retirement_requalifies`; mutation `no_requalify` is KILLED.
+- **Item 5: the geography failure. Agree that it is real.** Scheduled after G46.
+- **Items 6–8: richer programs, unfamiliar graphs, acquired abstractions.** I agree with the direction.
+  The order is still correctness first, then G46, then this. The key standard is the audit's own
+  item 8: the operators must be acquired from observations, not supplied as domain solvers.
+
+**Results on the fixed engine**
+- Suite: 11/11 modules, 149 checks, 0 failed; 10/10 smoke modules.
+- Mutations: 21/21 killed. Three are killed only by a crash: `library_off`,
+  `compose_keeps_source` and `no_backup_fallback`. Each of those raises from a test path rather
+  than failing a named check, which is a weaker kill and still to be tightened.
+- **G45 rerun: same outcome.** 18/18 thresholds; every domain decision, example count and
+  evaluation score is identical in all 3 seeds. Shuffled control identical: seed 101 still
+  qualifies one wrong program from shuffled evidence, because the shuffled examples are
+  consistent with a single program and nothing conflicts with it.
+- Cost of the scan: candidate evaluations per domain rose from 20 to 58–85. Engine CPU per
+  seed rose from 1.16–1.26 s to 1.21–1.41 s.
+- Evidence: `docs/evidence/g45_receipt_audit283.json`, `g44_receipt_audit283.json`,
+  `g44_audit_mutations.json`.
