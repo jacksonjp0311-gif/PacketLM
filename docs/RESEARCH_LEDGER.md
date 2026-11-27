@@ -664,3 +664,18 @@ the fix for G49 D1.
 **Part B:** `complete` on the G46 curriculum with the base engine. Arms C, E and K on new seeds
 61–67. Dev: K qualified 69/71 tasks, against 35 for C and E, with 0 wrong-qualified answers
 and no harm.
+
+## 2026-11-27 00:35: G50 registered results (docs/G50.md): PASS (A 11/11, B 4/4)
+
+Pre-registration commit b21cdd2.
+
+**Part A** (seeds 541–547):
+- D1 now passes: R's T1 at depth ≥ 4 is 1.000.
+- F qualifies 37/56 tasks (T1 11/14); 0 wrong-qualified.
+- 183/183 lying statements retracted.
+
+**Part B** (G46 base engine, seeds 61–67):
+- K qualifies 250/252 tasks, against 125 for E and 126 for C.
+- 0 wrong-qualified; no harm on G46 thresholds 1–6.
+- 27 statements retracted by corrections.
+- Whole-run CPU: K 211.7 s vs E 144.5 s.
