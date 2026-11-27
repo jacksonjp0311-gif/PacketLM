@@ -14,3 +14,7 @@ cpu_per_call alpha k 0.42; work metric = call+c_call events (1 per builtin regar
 (1) p3 block audit 30 sess 2508 calls 0 diffs (3520/3556 partitioned); x1 cross-tree XK64 vs 33565b0 XR64: 60 sess 4874 calls 0 per-call/final/journal diffs. p1,p2,p4,p5 running; mutdiff (5 mutants, no audit, dense) running.
 gate protocol: long-lived Server (not process per call); close snapshot charged to last family maint.
 ledger "every prediction held except part S point": charged-prop point 0.36[0.28,0.43] vs 0.49 and work 0.10[0.098,0.107] vs 0.082 also outside predicted CIs; comp A -1.07 vs -0.52 -> Low wording.
+(1) p1 real audit K3 40s/3224 calls, p2 dense audit 40/3392 (684 fallback), p4 append 12/3804 (K64 period 713x), p5 pad mix: 0 diffs all.
+mutdiff no-audit dense 30 sess/2608 calls: threshold_one_too_high, hit_filter_strict, so_pairs_skipped NOT detected at output level (outcome-neutral in random sessions); pair_dropped, small_part_dropped caught by ix_check at call 0. audit runs pending.
+instrument_recompute: 64/64 contrasts match first line.
+work_probe seed 291 (under load 15, so timings rough): hit set per 50 queries 995 (16k) -> 3943 (64k) = linear; H 43 const; small_part 1->8; recall fn CPU 7.4->14.6 ms; workload 36.8->65.2 ms; profile call count 107k->119k (=alpha 0.078, matches work). => linear term in pair-list traversal inside set.update (one c_call per list, size grows) -> work metric under-counts it. rerun probe at low load with process_time profiler.

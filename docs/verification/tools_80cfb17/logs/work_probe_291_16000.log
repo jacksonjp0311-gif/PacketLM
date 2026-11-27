@@ -1,0 +1,23 @@
+{"seed": 291, "n": 16000, "arm": "k", "sizes": {"facts": 16096, "small_part": 1, "small": 0, "pair_keys": 318859, "codes": 14046}, "workload_cpu_s_first_pass": 0.0368, "workload_cpu_s_counted_pass": 0.0326, "recall_fn_cpu_s": 0.0074, "counters": {"q": 50, "small_part": 50, "hit": 995, "H": 43, "cand": 50, "g57b_q": 0, "g57b_cand": 0, "t": 0.007433187000000174}}
+         107028 function calls (105254 primitive calls) in 0.153 seconds
+
+   Ordered by: internal time
+   List reduced from 202 to 14 due to restriction <14>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       20    0.043    0.002    0.043    0.002 {built-in method posix.fsync}
+    36044    0.015    0.000    0.015    0.000 {method 'get' of 'dict' objects}
+       50    0.009    0.000    0.009    0.000 {built-in method resource.getrusage}
+      180    0.007    0.000    0.033    0.000 /workspace/verify-80cfb17/packetlm/engine.py:1333(ask)
+       50    0.006    0.000    0.023    0.000 /workspace/verify-80cfb17/packetlm/engine.py:728(recall_partitioned)
+     4549    0.006    0.000    0.006    0.000 {built-in method builtins.len}
+      250    0.005    0.000    0.005    0.000 {built-in method posix.fspath}
+       50    0.004    0.000    0.006    0.000 /workspace/verify-80cfb17/packetlm/serve.py:112(_engine)
+     1140    0.004    0.000    0.005    0.000 /workspace/verify-80cfb17/packetlm/engine.py:114(_geom)
+       50    0.003    0.000    0.009    0.000 /usr/lib/python3.13/pathlib/_local.py:193(__eq__)
+      543    0.002    0.000    0.003    0.000 /workspace/verify-80cfb17/packetlm/geom.py:20(bits)
+      198    0.002    0.000    0.004    0.000 /usr/lib/python3.13/json/__init__.py:183(dumps)
+      198    0.002    0.000    0.002    0.000 /usr/lib/python3.13/json/encoder.py:205(iterencode)
+       30    0.002    0.000    0.003    0.000 /workspace/verify-80cfb17/packetlm/engine.py:1600(_review_routed)
+
+

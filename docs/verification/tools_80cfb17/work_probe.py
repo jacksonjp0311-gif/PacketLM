@@ -15,6 +15,11 @@ C = {"q": 0, "small_part": 0, "hit": 0, "H": 0, "cand": 0, "g57b_q": 0, "g57b_ca
 orig_p, orig_c = E.Memo.recall_partitioned, E.Memo.recall_candidates
 def rp(self, s, r, qi, k):
     t0 = time.process_time(); out = orig_p(self, s, r, qi, k); C["t"] += time.process_time() - t0
+    Q = E._geom().bits(qi); hit = set()
+    for i in range(len(Q)):
+        for j in range(i + 1, len(Q)):
+            hit.update(self.ix["pairs"].get(Q[i] * 4096 + Q[j], ()))
+    C["hit"] += len(hit); C["H"] += sum(1 for X in hit if (E._code_bits(X)[0] & qi).bit_count() >= k)
     C["q"] += 1; C["small_part"] += len(self.ix["small_part"]); C["cand"] += len(out); return out
 def rc(self, s, r):
     t0 = time.process_time(); out = orig_c(self, s, r); C["t"] += time.process_time() - t0
@@ -32,13 +37,16 @@ with tempfile.TemporaryDirectory() as d:
         for _, lines in work: srv.call(p, flags, lines)
         return time.process_time() - t0
     t_plain = run("plain")  # workload once (warms per-query memo; later passes hit the recall memo)
+    reps = []
+    for _ in range(3):
+        srv.cur.memo.recall.clear(); reps.append(run("rep"))
     E.Memo.recall_partitioned, E.Memo.recall_candidates = rp, rc
     # fresh recall memos so the counted pass does the queries again
     srv.cur.memo.recall.clear(); t_count = run("count")
     E.Memo.recall_partitioned, E.Memo.recall_candidates = orig_p, orig_c
-    srv.cur.memo.recall.clear(); pr = cProfile.Profile(); pr.enable(); run("prof"); pr.disable()
-    s = io.StringIO(); pstats.Stats(pr, stream=s).sort_stats("tottime").print_stats(14)
+    srv.cur.memo.recall.clear(); pr = cProfile.Profile(time.process_time); pr.enable(); run("prof"); pr.disable()
+    s = io.StringIO(); pstats.Stats(pr, stream=s).sort_stats("tottime").print_stats(25)
     srv.close()
 print(json.dumps({"seed": seed, "n": n, "arm": arm, "sizes": sizes, "workload_cpu_s_first_pass": round(t_plain, 4),
-                  "workload_cpu_s_counted_pass": round(t_count, 4), "recall_fn_cpu_s": round(C["t"], 4), "counters": C}))
+                  "workload_cpu_s_counted_pass": round(t_count, 4), "workload_cpu_s_recall_cleared_reps": [round(x, 4) for x in reps], "recall_fn_cpu_s": round(C["t"], 4), "counters": C}))
 print("\n".join(s.getvalue().splitlines()[:40]))
