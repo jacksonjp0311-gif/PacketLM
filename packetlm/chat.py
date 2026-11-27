@@ -1,8 +1,7 @@
-"""Causal.
+"""Speak through the saved construction.
 
-A new sentence is interpreted with the saved library.
-The same sentence with an empty library abstains.
-No fallback rebuild.
+The color is found. The sentence needs the construction.
+Without it, no sentence.
 Not a general mind.
 """
 
@@ -46,6 +45,17 @@ def apply_seq(field, seq, subject, objects):
             return None
     return cur
 
+def choose(library, meaning):
+    hits = [c for c in library if c and c.get("meaning") == meaning]
+    return hits[0] if len(hits) == 1 else None
+
+def express(construction, fact):
+    if not construction:
+        return None
+    s, r, o = fact
+    roles = {"s": s, "r": construction["word"], "o": o}
+    return " ".join(roles[role] for role in construction["order"])
+
 def turn(field, objects, library, seq, line):
     raw = line.lower().strip().rstrip("?").rstrip(".")
     parts = raw.split()
@@ -64,7 +74,8 @@ def turn(field, objects, library, seq, line):
         return f"recorded {fact[0]} {fact[1]} {fact[2]}"
     if len(parts) == 5 and parts[0] == "what" and parts[1] == "color" and parts[-1] == "tail":
         color = apply_seq(field, seq, parts[3], objects)
-        return f"{parts[3]} has a {color} tail" if color else "unknown"
+        spoken = express(choose(library, "hastail"), (parts[3], "hastail", color)) if color else None
+        return spoken or "unknown"
     if len(parts) == 4 and parts[0] == "what" and parts[1] == "does" and parts[3] == "own":
         owned = ask(field, parts[2], "owns", objects)
         return f"{parts[2]} owns {owned}" if owned else "unknown"
@@ -74,6 +85,7 @@ def fresh_library():
     return [
         induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))]),
         induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))]),
+        induce([("mira hastail green", ("mira", "hastail", "green")), ("sam hastail blue", ("sam", "hastail", "blue"))]),
     ]
 
 def run() -> dict:
@@ -86,17 +98,16 @@ def run() -> dict:
     replies = [turn(field, objects, lib, seq, line) for line in lines]
     save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None, "library": lib})
     loaded = load(STATE)
-    with_lib = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], tuple(loaded["seq"]), "luna isa dax")
-    without = turn(list(loaded["field"]), list(loaded["objects"]), [], tuple(loaded["seq"]), "luna isa dax")
+    spoken = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], tuple(loaded["seq"]), "what color is orion tail")
+    no_lang = [c for c in loaded["library"] if c.get("meaning") != "hastail"]
+    muted = turn(list(loaded["field"]), list(loaded["objects"]), no_lang, tuple(loaded["seq"]), "what color is orion tail")
     checks = {
-        "found": seq == ("isa", "tail"),
-        "orion_after": replies[10] == "orion has a red tail",
-        "saved_interprets": with_lib == "recorded luna isa dax",
-        "ablated_abstains": without == "unparsed",
-        "no_fallback": without != with_lib,
+        "spoken": spoken == "orion hastail red",
+        "muted": muted == "unknown",
+        "saved_interprets": turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], tuple(loaded["seq"]), "luna isa dax") == "recorded luna isa dax",
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "saved construction is required; empty library abstains"}
+    receipt = {**checks, "failed": failed, "claim": "color sentence needs the saved construction"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
