@@ -16,12 +16,34 @@ def index(triples):
     return idx
 
 
+LIMIT = 8
+
+
+def first_with(idx, r, q, t, x):
+    """Breadth-first along r from x: the nodes of the first level (1..LIMIT) holding q t."""
+    visited, level = {x}, [x]
+    for _ in range(LIMIT):
+        level = sorted({o for y in level for o in idx.get(r, {}).get(y, ())} - visited)
+        if not level:
+            return set()
+        found = {o for o in level if t in idx.get(q, {}).get(o, ())}
+        if found:
+            return found
+        visited.update(level)
+    return set()
+
+
 def run(idx, rels, subject):
     cur = {subject}
     for r in rels:
         nxt = set()
-        for x in cur:
-            nxt |= idx.get(r, {}).get(x, set())
+        if r.startswith("until:"):
+            _, rr, q, t = r.split(":")
+            for x in cur:
+                nxt |= first_with(idx, rr, q, t, x)
+        else:
+            for x in cur:
+                nxt |= idx.get(r, {}).get(x, set())
         cur = nxt
         if not cur:
             break

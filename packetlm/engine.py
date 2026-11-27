@@ -83,6 +83,9 @@ def _need(cond, msg):
         raise StateError(msg)
 
 
+MAX_ITER = 8
+
+
 def _deps_of(seq):
     return [s for s in seq if s.startswith("cap:")]
 
@@ -160,7 +163,8 @@ def _write_atomic(path: Path, data: bytes) -> None:
 
 
 class Engine:
-    def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True):
+    def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
+                 operators=False):
         self.path = Path(path)
         self.state = state if state is not None else empty_state()
         self.report = report or {"loaded": "new"}
@@ -171,6 +175,11 @@ class Engine:
         # predict nothing on any observation (undetermined, zero support). They are not
         # evaluated one by one; they are kept as a counted complement ("pruned"). Exact.
         self.activation = activation
+        # operators: also hypothesise bounded, predicate-terminated iteration steps
+        # `op:until:R:Q:T` (follow R, 1..MAX_ITER steps, stop at the first node x with
+        # x Q T). R, Q and T are proposed from the data (T from properties shared by the
+        # observed answers), not supplied per domain.
+        self.operators = operators
         self.stats = {"evaluations": 0, "executions": 0, "row_ops": 0, "asks": 0}
         self._cache = None
 
@@ -483,6 +492,8 @@ class Engine:
         for step in seq:
             if step.startswith("rel:"):
                 out.append(step[4:])
+            elif step.startswith("op:"):
+                out.append(step[3:])
             else:
                 name, v = _split_cap(step)
                 ver = self.version(name, v)
@@ -549,7 +560,7 @@ class Engine:
     def execute(self, seq, subject):
         """Run a program. Geometric: bit-row composition (geom.compose). Disabled: symbolic sets."""
         self.stats["executions"] += 1
-        base = self.expand(seq) if any(s.startswith(("rel:", "cap:")) for s in seq) else list(seq)
+        base = self.expand(seq) if any(s.startswith(("rel:", "cap:", "op:")) for s in seq) else list(seq)
         if base is None:
             return None
         idx = self._idx()
@@ -560,11 +571,74 @@ class Engine:
         g = _geom()
         row = 1 << idx["pos"][subject]
         for rel in base:
-            row = g.compose([row], self._rows(rel))[0]
-            self.stats["row_ops"] += 1
+            row = self._step_row(row, rel)
             if not row:
                 return set()
         return {idx["names"][i] for i in g.bits(row)}
+
+    def _mask(self, q, t):
+        """Bit row of the entities x with a fact x q t (the predicate of an until step)."""
+        idx = self._idx()
+        key = ("mask", q, t)
+        if key not in idx["rows"]:
+            m = 0
+            for x in idx["ref"].get(q, {}):
+                if t in idx["ref"][q][x]:
+                    m |= 1 << idx["pos"][x]
+            idx["rows"][key] = m
+        return idx["rows"][key]
+
+    def _step_row(self, row, token):
+        """One base step on a bit row. Plain relation: one composition. until:R:Q:T: for each
+        start node, compose with R until a node in the predicate mask appears (first level
+        only), at most MAX_ITER compositions, never revisiting nodes."""
+        g = _geom()
+        if not token.startswith("until:"):
+            self.stats["row_ops"] += 1
+            return g.compose([row], self._rows(token))[0]
+        _, r, q, t = token.split(":")
+        rows, mask, out = self._rows(r), self._mask(q, t), 0
+        for i in g.bits(row):
+            cur = seen = 1 << i
+            for _ in range(MAX_ITER):
+                nxt = g.compose([cur], rows)[0] & ~seen
+                self.stats["row_ops"] += 1
+                if not nxt:
+                    break
+                if nxt & mask:
+                    out |= nxt & mask
+                    break
+                seen |= nxt
+                cur = nxt
+        return out
+
+    def _step_set(self, front, token):
+        """The same step on python sets (geometry disabled, scans, reference agreement)."""
+        ref = self._idx()["ref"]
+        if not token.startswith("until:"):
+            m = ref.get(token, {})
+            out = set()
+            for x in front:
+                out |= m.get(x, set())
+            return out
+        _, r, q, t = token.split(":")
+        m, qm, out = ref.get(r, {}), ref.get(q, {}), set()
+        for x in front:
+            cur, seen = {x}, {x}
+            for _ in range(MAX_ITER):
+                nxt = set()
+                for y in cur:
+                    nxt |= m.get(y, set())
+                nxt -= seen
+                if not nxt:
+                    break
+                hits = {y for y in nxt if t in qm.get(y, ())}
+                if hits:
+                    out |= hits
+                    break
+                seen |= nxt
+                cur = nxt
+        return out
 
     def _rows(self, rel):
         idx = self._idx()
@@ -581,11 +655,10 @@ class Engine:
             return None
         for rel in base:
             if self.geometry:
-                front = _geom().compose([front], self._rows(rel))[0]
+                front = self._step_row(front, rel)
             else:
-                ref = self._idx()["ref"].get(rel, {})
-                front = set().union(*[ref.get(x, set()) for x in front]) if front else set()
-            self.stats["row_ops"] += 1
+                front = self._step_set(front, rel) if front else set()
+                self.stats["row_ops"] += 1
             if not front:
                 return front
         return front
@@ -614,10 +687,32 @@ class Engine:
         for rel in base:
             nxt = []
             for cur, prem in paths:
+                if rel.startswith("until:"):
+                    nxt += self._until_paths(cur, prem, rel)
+                    continue
                 for f in self._find(cur, rel):
                     nxt.append((f["o"], prem + [f["id"]]))
             paths = nxt[:256]
         return paths
+
+    def _until_paths(self, start, prem, token):
+        """Fact paths of one until step: the R facts climbed and the predicate fact at the stop."""
+        _, r, q, t = token.split(":")
+        level, seen = [(start, prem)], {start}
+        for _ in range(MAX_ITER):
+            nxt = []
+            for y, pr in level:
+                for f in self._find(y, r):
+                    if f["o"] not in seen:
+                        nxt.append((f["o"], pr + [f["id"]]))
+            if not nxt:
+                return []
+            hits = [(o, pr + [self._find(o, q, t)[0]["id"]]) for o, pr in nxt if self._find(o, q, t)]
+            if hits:
+                return hits
+            seen |= {o for o, _ in nxt}
+            level = nxt
+        return []
 
     # ---------- acquisition ----------
 
@@ -652,7 +747,21 @@ class Engine:
                 if any(dn == name for dn, _ in self._closure(n, ver["v"])):
                     continue  # would create a cycle
                 prims.append(f"cap:{n}@{ver['v']}")
+        if self.operators:
+            prims += self._operator_prims(name)
         return prims
+
+    def _operator_prims(self, name):
+        """until:R:Q:T steps. Predicates (Q, T) are the properties every observed answer
+        shares; R ranges over the told relations other than Q."""
+        ref = self._idx()["ref"]
+        vals = {v for _, v in self.state["observations"].get(name, [])}
+        common = None
+        for v in vals:
+            props = {(q, t) for q in ref if not q.startswith("cap:") for t in ref[q].get(v, ())}
+            common = props if common is None else common & props
+        rels = self.relations()
+        return [f"op:until:{r}:{q}:{t}" for q, t in sorted(common or ()) for r in rels if r != q]
 
     def hypotheses(self, name, max_len=2, min_len=1, seen=None):
         obs = self.state["observations"].get(name, [])
@@ -784,11 +893,7 @@ class Engine:
                 for r in base:
                     if not cur:
                         break
-                    m = ref.get(r, {})
-                    nxt = set()
-                    for x in cur:
-                        nxt |= m.get(x, set())
-                    cur = nxt
+                    cur = self._step_set(cur, r)
                 new.append(cur)
             return new
 
@@ -1078,7 +1183,7 @@ def main(argv) -> int:
         return 2
     t0 = time.process_time()
     flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False),
-             "--no-activation": ("activation", False)}
+             "--no-activation": ("activation", False), "--operators": ("operators", True)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):
