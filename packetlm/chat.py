@@ -1,7 +1,8 @@
-"""Second session.
+"""Causal.
 
-The constructions are saved.
-The resumed answer uses those, not a fresh induce.
+A new sentence is interpreted with the saved library.
+The same sentence with an empty library abstains.
+No fallback rebuild.
 Not a general mind.
 """
 
@@ -85,16 +86,17 @@ def run() -> dict:
     replies = [turn(field, objects, lib, seq, line) for line in lines]
     save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None, "library": lib})
     loaded = load(STATE)
-    resumed = turn(loaded["field"], loaded["objects"], loaded["library"], tuple(loaded["seq"]), "what color is orion tail")
+    with_lib = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], tuple(loaded["seq"]), "luna isa dax")
+    without = turn(list(loaded["field"]), list(loaded["objects"]), [], tuple(loaded["seq"]), "luna isa dax")
     checks = {
         "found": seq == ("isa", "tail"),
-        "missing_abstains": apply_seq(field, None, "orion", objects) is None,
         "orion_after": replies[10] == "orion has a red tail",
-        "resumed_from_saved_library": resumed == "orion has a red tail",
-        "library_saved": len(loaded.get("library", [])) == 2,
+        "saved_interprets": with_lib == "recorded luna isa dax",
+        "ablated_abstains": without == "unparsed",
+        "no_fallback": without != with_lib,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "resume uses the saved constructions"}
+    receipt = {**checks, "failed": failed, "claim": "saved construction is required; empty library abstains"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
@@ -103,10 +105,10 @@ def run() -> dict:
     return receipt
 
 def interactive():
-    state = load(STATE) if STATE.exists() else {"field": [], "objects": [], "seq": None, "library": fresh_library()}
+    state = load(STATE) if STATE.exists() else {"field": [], "objects": [], "seq": None, "library": []}
     field, objects = state.get("field", []), state.get("objects", [])
     seq = tuple(state["seq"]) if state.get("seq") else None
-    lib = state.get("library") or fresh_library()
+    lib = state.get("library") or []
     while True:
         try:
             line = input("> ")
