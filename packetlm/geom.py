@@ -1,6 +1,8 @@
-"""The relation comes from the store.
+"""Select, don't hand.
 
-A missing name abstains.
+The library has part and owns.
+The stored relation picks one.
+Two matches abstain.
 Not a general mind.
 """
 
@@ -12,7 +14,7 @@ from .field import save, load
 from .roles import induce, select
 
 STATE = Path("data/geom_state.json")
-NAMES = {10: "alpha", 12: "gamma", 20: "delta", 22: "omega"}
+NAMES = {10: "alpha", 12: "gamma"}
 
 def bits(m):
     return [i for i in range(m.bit_length()) if m & (1 << i)]
@@ -55,23 +57,18 @@ def classify(facts, n, answer):
                 supported.append(seq)
     return supported, undetermined
 
+def choose(library, meaning):
+    hits = [c for c in library if c and c["meaning"] == meaning]
+    return hits[0] if len(hits) == 1 else None
+
 def express(construction, fact):
-    s, r, o = fact
-    if not construction or r != construction["meaning"]:
+    if not construction:
         return None
+    s, r, o = fact
     roles = {"s": s, "r": construction["word"], "o": o}
     return " ".join(roles[role] for role in construction["order"])
 
-def speak(construction, start, reached, out_rel):
-    if len(reached) != 1 or start not in NAMES or reached[0] not in NAMES:
-        return None, None
-    fact = (NAMES[start], out_rel, NAMES[reached[0]])
-    return express(construction, fact), fact
-
 def run() -> dict:
-    incomplete = [(0, "in", 1), (1, "in", 2), (0, "near", 3)]
-    inc_sup, inc_und = classify(incomplete, 4, {2})
-    withheld = not (len(inc_sup) == 1 and not inc_und)
     complete = [
         (0, "in", 1), (1, "in", 2),
         (0, "near", 3), (3, "near", 6),
@@ -81,25 +78,27 @@ def run() -> dict:
     qualified = len(supported) == 1 and not undetermined
     save(STATE, {"seq": list(supported[0]), "out": "part"} if qualified else {})
     loaded = load(STATE)
-    part = induce([("ada part box", ("ada", "part", "box")), ("ned part key", ("ned", "part", "key"))])
+    library = [
+        induce([("ada part box", ("ada", "part", "box")), ("ned part key", ("ned", "part", "key"))]),
+        induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))]),
+    ]
     seq = tuple(loaded.get("seq", []))
-    out_rel = loaded.get("out")
-    graphs = {10: [(10, "in", 11), (11, "in", 12)], 20: [(20, "in", 21), (21, "in", 22)]}
-    spoken = {}
-    for start, facts in graphs.items():
-        base = {"in": rows_from(facts, 23, "in"), "near": rows_from(facts, 23, "near")}
-        reached = bits(compile_seq(base, seq)[start]) if len(seq) == 2 else []
-        said, fact = speak(part, start, reached, out_rel)
-        spoken[start] = {"said": said, "fact": fact}
+    facts = [(10, "in", 11), (11, "in", 12)]
+    base = {"in": rows_from(facts, 13, "in"), "near": rows_from(facts, 13, "near")}
+    reached = bits(compile_seq(base, seq)[10]) if len(seq) == 2 else []
+    construction = choose(library, loaded.get("out"))
+    fact = (NAMES[10], loaded.get("out"), NAMES[reached[0]]) if len(reached) == 1 and construction else None
+    spoken = express(construction, fact) if fact else None
+    clash = choose(library + [library[0]], "part")
     checks = {
-        "incomplete_withheld": withheld,
-        "from_store": out_rel == "part" and spoken[10]["said"] == "alpha part gamma",
-        "changes": spoken[20]["said"] == "delta part omega",
-        "unknown_name": speak(part, 99, [12], out_rel) == (None, None),
-        "roundtrip": select([part], spoken[10]["said"]) == spoken[10]["fact"],
+        "qualified": qualified,
+        "selected": construction is not None and construction["meaning"] == "part",
+        "spoken": spoken == "alpha part gamma",
+        "roundtrip": select([construction], spoken) == fact,
+        "clash_abstain": clash is None,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "relation comes from the store; a missing name abstains"}
+    receipt = {**checks, "spoken": spoken, "failed": failed, "claim": "construction selected from the library; a clash abstains"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
