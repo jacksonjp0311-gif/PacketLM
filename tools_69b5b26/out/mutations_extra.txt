@@ -1,0 +1,5 @@
+margin_ignored SURVIVED
+ambiguity_ignored SURVIVED
+self_not_excluded killed
+omega_empty killed
+several_unchecked killed

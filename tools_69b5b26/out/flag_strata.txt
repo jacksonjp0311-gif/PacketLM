@@ -1,0 +1,2 @@
+comp flagged by B depth {4: 31, 5: 18} of {2: 105, 3: 63, 4: 63, 5: 21} {'all_B': 3.08, 'all_C': 1.232, 'flag_B': 1.715, 'flag_C': 0.295, "('uses_lib', True)": 49}
+long flagged by B depth {4: 149, 5: 71} of {2: 420, 3: 252, 4: 252, 5: 84} {'all_B': 11.38, 'all_C': 4.817, 'flag_B': 6.229, 'flag_C': 1.305, "('uses_lib', True)": 220}

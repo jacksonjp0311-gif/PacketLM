@@ -1,0 +1,235 @@
+{
+ "comp:Ch": {
+  "final": {
+   "B1|agree": 236,
+   "B1|ambiguous": 10,
+   "B5|agree": 236,
+   "B5|ambiguous": 10,
+   "C5|agree": 236,
+   "C5|provisional": 10,
+   "final|ambiguous": 2,
+   "final|provisional": 4,
+   "final|qualified": 246
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 246,
+   "B1|ambiguous": 10,
+   "B5|agree": 246,
+   "B5|ambiguous": 10,
+   "C5|agree": 246,
+   "C5|provisional": 10
+  }
+ },
+ "comp:Bh": {
+  "final": {
+   "B1|agree": 240,
+   "B5|agree": 240,
+   "C5|agree": 240,
+   "final|ambiguous": 12,
+   "final|qualified": 240
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 250,
+   "B5|agree": 250,
+   "C5|agree": 250
+  }
+ },
+ "comp:Ph": {
+  "final": {
+   "B1|agree": 240,
+   "B5|agree": 240,
+   "C5|agree": 240,
+   "final|ambiguous": 12,
+   "final|qualified": 240
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 250,
+   "B5|agree": 250,
+   "C5|agree": 250
+  }
+ },
+ "comprep:Ch": {
+  "final": {
+   "B1|agree": 231,
+   "B1|ambiguous": 11,
+   "B5|agree": 231,
+   "B5|ambiguous": 11,
+   "C5|agree": 231,
+   "C5|provisional": 11,
+   "final|ambiguous": 1,
+   "final|provisional": 9,
+   "final|qualified": 242
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 247,
+   "B1|ambiguous": 11,
+   "B5|agree": 247,
+   "B5|ambiguous": 11,
+   "C5|agree": 247,
+   "C5|provisional": 11
+  }
+ },
+ "comprep:Bh": {
+  "final": {
+   "B1|agree": 239,
+   "B5|agree": 239,
+   "C5|agree": 239,
+   "final|ambiguous": 13,
+   "final|qualified": 239
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 255,
+   "B5|agree": 255,
+   "C5|agree": 255
+  }
+ },
+ "comprep:Ph": {
+  "final": {
+   "B1|agree": 239,
+   "B5|agree": 239,
+   "C5|agree": 239,
+   "final|ambiguous": 13,
+   "final|qualified": 239
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 255,
+   "B5|agree": 255,
+   "C5|agree": 255
+  }
+ },
+ "unrel:Ch": {
+  "final": {
+   "B1|agree": 168,
+   "B5|agree": 168,
+   "C5|agree": 168,
+   "final|qualified": 168
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 214,
+   "B5|agree": 214,
+   "C5|agree": 214
+  }
+ },
+ "unrel:Bh": {
+  "final": {
+   "B1|agree": 168,
+   "B5|agree": 168,
+   "C5|agree": 168,
+   "final|qualified": 168
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 214,
+   "B5|agree": 214,
+   "C5|agree": 214
+  }
+ },
+ "unrel:Ph": {
+  "final": {
+   "B1|agree": 168,
+   "B5|agree": 168,
+   "C5|agree": 168,
+   "final|qualified": 168
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 214,
+   "B5|agree": 214,
+   "C5|agree": 214
+  }
+ },
+ "mixed:Ch": {
+  "final": {
+   "B1|agree": 321,
+   "B1|ambiguous": 9,
+   "B5|agree": 321,
+   "B5|ambiguous": 9,
+   "C5|agree": 321,
+   "C5|provisional": 9,
+   "final|provisional": 6,
+   "final|qualified": 330
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 348,
+   "B1|ambiguous": 9,
+   "B5|agree": 348,
+   "B5|ambiguous": 9,
+   "C5|agree": 348,
+   "C5|provisional": 9
+  }
+ },
+ "mixed:Bh": {
+  "final": {
+   "B1|agree": 329,
+   "B5|agree": 329,
+   "C5|agree": 329,
+   "final|ambiguous": 7,
+   "final|qualified": 329
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 356,
+   "B5|agree": 356,
+   "C5|agree": 356
+  }
+ },
+ "mixed:Ph": {
+  "final": {
+   "B1|agree": 329,
+   "B5|agree": 329,
+   "C5|agree": 329,
+   "final|ambiguous": 7,
+   "final|qualified": 329
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 356,
+   "B5|agree": 356,
+   "C5|agree": 356
+  }
+ },
+ "long:Ch": {
+  "final": {
+   "B1|agree": 939,
+   "B1|ambiguous": 43,
+   "B5|agree": 939,
+   "B5|ambiguous": 43,
+   "C5|agree": 939,
+   "C5|provisional": 43,
+   "final|provisional": 26,
+   "final|qualified": 982
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 986,
+   "B1|ambiguous": 43,
+   "B5|agree": 986,
+   "B5|ambiguous": 43,
+   "C5|agree": 986,
+   "C5|provisional": 43
+  }
+ },
+ "long:Bh": {
+  "final": {
+   "B1|agree": 968,
+   "B5|agree": 968,
+   "C5|agree": 968,
+   "final|ambiguous": 40,
+   "final|qualified": 968
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 1015,
+   "B5|agree": 1015,
+   "C5|agree": 1015
+  }
+ },
+ "long:Ph": {
+  "final": {
+   "B1|agree": 968,
+   "B5|agree": 968,
+   "C5|agree": 968,
+   "final|ambiguous": 40,
+   "final|qualified": 968
+  },
+  "all_qualified_acquires": {
+   "B1|agree": 1015,
+   "B5|agree": 1015,
+   "C5|agree": 1015
+  }
+ }
+}

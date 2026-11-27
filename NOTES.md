@@ -9,3 +9,7 @@
   with Ph cost: comp +0.095 [+0.028,+0.178]; lib +0.034 [-0.016,+0.110].
 - teacher asks m1 comp: Ch 192 vs Bh 302 investigate asks; m2 Ch 281.
 - (6) unrel Bh m2: identical evaluations m1/m2 (11547); one task 422 fam20 = 120 ms (vs ~3 ms) + other seeds elevated.
+- shadow m2: 105/105 identical too. m2 Ch flagged: comp 10/246, comprep 11/242, mixed 9/330, long 43/982.
+- flagged comp tasks: B-depth 4: 31/63, depth 5: 18/21; carry 1.715 of Bh's 3.08 s task CPU; C saved 1.42 of 1.85 s total task saving (77%) on them. All use the library.
+- (3) decode audit: 105/105 reply streams equal registered, both margins; capidx decode filtered by exact list; cap decode checked vs exact copy (HDC never load-bearing for correctness).
+- (5) g44 191/191, G45 18/18, suite 11/11 mods 279/0, hdc 13/13, builder mutations 11/12 (investigate_first equivalent: best is None <=> score_b==0). Extra: margin_ignored SURVIVED (equiv at margin 1 only; margin 2 untested), ambiguity_ignored SURVIVED (real gap), 3 others killed.
