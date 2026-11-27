@@ -1,0 +1,889 @@
+{
+ "m1:comp": {
+  "csv_byte_equal": true,
+  "contrasts": [
+   [
+    "Ch+maint",
+    "Bh",
+    true,
+    "A_36 = +0.5497  [+0.5232, +0.5715] (95% paired bootstrap, S=7); delta-SE=0.0134; sign-flip p=0.01562; geometric-mean form=+0.5494"
+   ],
+   [
+    "Ch+maint",
+    "Ph+maint",
+    true,
+    "A_36 = +0.5194  [+0.4811, +0.5516] (95% paired bootstrap, S=7); delta-SE=0.0195; sign-flip p=0.01562; geometric-mean form=+0.5174"
+   ],
+   [
+    "Ch",
+    "Bh",
+    true,
+    "A_36 = +0.6001  [+0.5755, +0.6205] (95% paired bootstrap, S=7); delta-SE=0.0125; sign-flip p=0.01562; geometric-mean form=+0.6002"
+   ],
+   [
+    "Ch",
+    "Ph",
+    true,
+    "A_36 = +0.5506  [+0.5122, +0.5813] (95% paired bootstrap, S=7); delta-SE=0.0189; sign-flip p=0.01562; geometric-mean form=+0.5487"
+   ],
+   [
+    "Ph",
+    "Bh",
+    true,
+    "A_36 = +0.1102  [+0.0702, +0.1479] (95% paired bootstrap, S=7); delta-SE=0.0214; sign-flip p=0.01562; geometric-mean form=+0.1140"
+   ],
+   [
+    "Ph+maint",
+    "Bh",
+    true,
+    "A_36 = +0.0630  [+0.0265, +0.0978] (95% paired bootstrap, S=7); delta-SE=0.0201; sign-flip p=0.0625; geometric-mean form=+0.0663"
+   ],
+   [
+    "Ch+maint",
+    "Ch",
+    true,
+    "A_36 = -0.1262  [-0.1376, -0.1163] (95% paired bootstrap, S=7); delta-SE=0.0060; sign-flip p=0.01562; geometric-mean form=-0.1270"
+   ],
+   [
+    "Ph+maint",
+    "Ph",
+    true,
+    "A_36 = -0.0530  [-0.0595, -0.0476] (95% paired bootstrap, S=7); delta-SE=0.0033; sign-flip p=0.01562; geometric-mean form=-0.0538"
+   ]
+  ],
+  "resources_equal": true,
+  "other_equal": {
+   "work_split": true,
+   "maintenance_share": true,
+   "strata_B_depth": true,
+   "censoring": true,
+   "rate_ratio": true,
+   "in_run": true,
+   "emergence": true
+  },
+  "outcomes_equal": true
+ },
+ "m1:comprep": {
+  "csv_byte_equal": true,
+  "contrasts": [
+   [
+    "Ch+maint",
+    "Bh",
+    true,
+    "A_36 = +0.5463  [+0.5131, +0.5714] (95% paired bootstrap, S=7); delta-SE=0.0162; sign-flip p=0.01562; geometric-mean form=+0.5449"
+   ],
+   [
+    "Ch+maint",
+    "Ph+maint",
+    true,
+    "A_36 = +0.5212  [+0.4722, +0.5640] (95% paired bootstrap, S=7); delta-SE=0.0253; sign-flip p=0.01562; geometric-mean form=+0.5181"
+   ],
+   [
+    "Ch",
+    "Bh",
+    true,
+    "A_36 = +0.5964  [+0.5682, +0.6178] (95% paired bootstrap, S=7); delta-SE=0.0137; sign-flip p=0.01562; geometric-mean form=+0.5954"
+   ],
+   [
+    "Ch",
+    "Ph",
+    true,
+    "A_36 = +0.5513  [+0.5049, +0.5934] (95% paired bootstrap, S=7); delta-SE=0.0244; sign-flip p=0.01562; geometric-mean form=+0.5481"
+   ],
+   [
+    "Ph",
+    "Bh",
+    true,
+    "A_36 = +0.1006  [+0.0476, +0.1383] (95% paired bootstrap, S=7); delta-SE=0.0262; sign-flip p=0.03125; geometric-mean form=+0.1045"
+   ],
+   [
+    "Ph+maint",
+    "Bh",
+    true,
+    "A_36 = +0.0523  [+0.0004, +0.0893] (95% paired bootstrap, S=7); delta-SE=0.0257; sign-flip p=0.07812; geometric-mean form=+0.0557"
+   ],
+   [
+    "Ch+maint",
+    "Ch",
+    true,
+    "A_36 = -0.1243  [-0.1329, -0.1163] (95% paired bootstrap, S=7); delta-SE=0.0047; sign-flip p=0.01562; geometric-mean form=-0.1247"
+   ],
+   [
+    "Ph+maint",
+    "Ph",
+    true,
+    "A_36 = -0.0537  [-0.0593, -0.0487] (95% paired bootstrap, S=7); delta-SE=0.0030; sign-flip p=0.01562; geometric-mean form=-0.0545"
+   ]
+  ],
+  "resources_equal": true,
+  "other_equal": {
+   "work_split": true,
+   "maintenance_share": true,
+   "strata_B_depth": true,
+   "censoring": true,
+   "rate_ratio": true,
+   "in_run": true,
+   "emergence": true
+  },
+  "outcomes_equal": true
+ },
+ "m1:unrel": {
+  "csv_byte_equal": true,
+  "contrasts": [
+   [
+    "Ch+maint",
+    "Bh",
+    true,
+    "A_24 = -0.5168  [-0.5855, -0.4403] (95% paired bootstrap, S=7); delta-SE=0.0408; sign-flip p=0.01562; geometric-mean form=-0.5174"
+   ],
+   [
+    "Ch+maint",
+    "Ph+maint",
+    true,
+    "A_24 = -0.0104  [-0.0475, +0.0193] (95% paired bootstrap, S=7); delta-SE=0.0192; sign-flip p=0.75; geometric-mean form=-0.0093"
+   ],
+   [
+    "Ch",
+    "Bh",
+    true,
+    "A_24 = +0.2548  [+0.2221, +0.2870] (95% paired bootstrap, S=7); delta-SE=0.0183; sign-flip p=0.01562; geometric-mean form=+0.2557"
+   ],
+   [
+    "Ch",
+    "Ph",
+    true,
+    "A_24 = -0.0133  [-0.0521, +0.0231] (95% paired bootstrap, S=7); delta-SE=0.0213; sign-flip p=0.5156; geometric-mean form=-0.0128"
+   ],
+   [
+    "Ph",
+    "Bh",
+    true,
+    "A_24 = +0.2646  [+0.2518, +0.2822] (95% paired bootstrap, S=7); delta-SE=0.0085; sign-flip p=0.01562; geometric-mean form=+0.2651"
+   ],
+   [
+    "Ph+maint",
+    "Bh",
+    true,
+    "A_24 = -0.5012  [-0.5411, -0.4571] (95% paired bootstrap, S=7); delta-SE=0.0239; sign-flip p=0.01562; geometric-mean form=-0.5035"
+   ],
+   [
+    "Ch+maint",
+    "Ch",
+    true,
+    "A_24 = -1.0355  [-1.1011, -0.9808] (95% paired bootstrap, S=7); delta-SE=0.0337; sign-flip p=0.01562; geometric-mean form=-1.0386"
+   ],
+   [
+    "Ph+maint",
+    "Ph",
+    true,
+    "A_24 = -1.0414  [-1.1243, -0.9725] (95% paired bootstrap, S=7); delta-SE=0.0417; sign-flip p=0.01562; geometric-mean form=-1.0458"
+   ]
+  ],
+  "resources_equal": true,
+  "other_equal": {
+   "work_split": true,
+   "maintenance_share": true,
+   "strata_B_depth": true,
+   "censoring": true,
+   "rate_ratio": true,
+   "in_run": true,
+   "emergence": true
+  },
+  "outcomes_equal": true
+ },
+ "m1:mixed": {
+  "csv_byte_equal": true,
+  "contrasts": [
+   [
+    "Ch+maint",
+    "Bh",
+    true,
+    "A_48 = +0.4146  [+0.3765, +0.4472] (95% paired bootstrap, S=7); delta-SE=0.0197; sign-flip p=0.01562; geometric-mean form=+0.4122"
+   ],
+   [
+    "Ch+maint",
+    "Ph+maint",
+    true,
+    "A_48 = +0.4373  [+0.4059, +0.4664] (95% paired bootstrap, S=7); delta-SE=0.0168; sign-flip p=0.01562; geometric-mean form=+0.4346"
+   ],
+   [
+    "Ch",
+    "Bh",
+    true,
+    "A_48 = +0.5533  [+0.5244, +0.5777] (95% paired bootstrap, S=7); delta-SE=0.0149; sign-flip p=0.01562; geometric-mean form=+0.5519"
+   ],
+   [
+    "Ch",
+    "Ph",
+    true,
+    "A_48 = +0.5093  [+0.4795, +0.5365] (95% paired bootstrap, S=7); delta-SE=0.0156; sign-flip p=0.01562; geometric-mean form=+0.5061"
+   ],
+   [
+    "Ph",
+    "Bh",
+    true,
+    "A_48 = +0.0897  [+0.0213, +0.1579] (95% paired bootstrap, S=7); delta-SE=0.0384; sign-flip p=0.0625; geometric-mean form=+0.0927"
+   ],
+   [
+    "Ph+maint",
+    "Bh",
+    true,
+    "A_48 = -0.0403  [-0.1077, +0.0273] (95% paired bootstrap, S=7); delta-SE=0.0380; sign-flip p=0.3281; geometric-mean form=-0.0397"
+   ],
+   [
+    "Ch+maint",
+    "Ch",
+    true,
+    "A_48 = -0.3104  [-0.3309, -0.2914] (95% paired bootstrap, S=7); delta-SE=0.0111; sign-flip p=0.01562; geometric-mean form=-0.3118"
+   ],
+   [
+    "Ph+maint",
+    "Ph",
+    true,
+    "A_48 = -0.1429  [-0.1637, -0.1259] (95% paired bootstrap, S=7); delta-SE=0.0104; sign-flip p=0.01562; geometric-mean form=-0.1459"
+   ]
+  ],
+  "resources_equal": true,
+  "other_equal": {
+   "work_split": true,
+   "maintenance_share": true,
+   "strata_B_depth": true,
+   "censoring": true,
+   "rate_ratio": true,
+   "in_run": true,
+   "emergence": true
+  },
+  "outcomes_equal": true
+ },
+ "m1:long": {
+  "csv_byte_equal": true,
+  "contrasts": [
+   [
+    "Ch+maint",
+    "Bh",
+    true,
+    "A_144 = +0.4577  [+0.4359, +0.4779] (95% paired bootstrap, S=7); delta-SE=0.0117; sign-flip p=0.01562; geometric-mean form=+0.4574"
+   ],
+   [
+    "Ch+maint",
+    "Ph+maint",
+    true,
+    "A_144 = +0.4718  [+0.4556, +0.4890] (95% paired bootstrap, S=7); delta-SE=0.0094; sign-flip p=0.01562; geometric-mean form=+0.4715"
+   ],
+   [
+    "Ch",
+    "Bh",
+    true,
+    "A_144 = +0.5767  [+0.5595, +0.5926] (95% paired bootstrap, S=7); delta-SE=0.0091; sign-flip p=0.01562; geometric-mean form=+0.5765"
+   ],
+   [
+    "Ch",
+    "Ph",
+    true,
+    "A_144 = +0.5386  [+0.5237, +0.5528] (95% paired bootstrap, S=7); delta-SE=0.0082; sign-flip p=0.01562; geometric-mean form=+0.5384"
+   ],
+   [
+    "Ph",
+    "Bh",
+    true,
+    "A_144 = +0.0826  [+0.0559, +0.1092] (95% paired bootstrap, S=7); delta-SE=0.0148; sign-flip p=0.01562; geometric-mean form=+0.0825"
+   ],
+   [
+    "Ph+maint",
+    "Bh",
+    true,
+    "A_144 = -0.0266  [-0.0560, +0.0033] (95% paired bootstrap, S=7); delta-SE=0.0163; sign-flip p=0.1406; geometric-mean form=-0.0267"
+   ],
+   [
+    "Ch+maint",
+    "Ch",
+    true,
+    "A_144 = -0.2811  [-0.2935, -0.2695] (95% paired bootstrap, S=7); delta-SE=0.0067; sign-flip p=0.01562; geometric-mean form=-0.2812"
+   ],
+   [
+    "Ph+maint",
+    "Ph",
+    true,
+    "A_144 = -0.1190  [-0.1211, -0.1174] (95% paired bootstrap, S=7); delta-SE=0.0010; sign-flip p=0.01562; geometric-mean form=-0.1191"
+   ]
+  ],
+  "resources_equal": true,
+  "other_equal": {
+   "work_split": true,
+   "maintenance_share": true,
+   "strata_B_depth": true,
+   "censoring": true,
+   "rate_ratio": true,
+   "in_run": true,
+   "emergence": true
+  },
+  "outcomes_equal": true
+ },
+ "m1:gate_equal": true,
+ "m1:gate": {
+  "Q1_comp_positive": true,
+  "Q2_detail": {
+   "comp": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "comprep": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "unrel": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "mixed": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "long": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   }
+  },
+  "Q2_no_correctness_or_retention_loss": true,
+  "Q3_unrel_penalty_halved": true,
+  "Q4a_comp_replicates": true,
+  "Q4b_mixed_positive": true,
+  "PASS": true,
+  "verdict": "PASS",
+  "strata_qualified": {
+   "comp": {
+    "2": true,
+    "3": true,
+    "4": true,
+    "5": true
+   },
+   "comprep": {
+    "2": true,
+    "3": true,
+    "4": true,
+    "5": true
+   },
+   "mixed": {
+    "2": true,
+    "3": true,
+    "4": true,
+    "5": true
+   },
+   "long": {
+    "2": false,
+    "3": true,
+    "4": true,
+    "5": true
+   }
+  },
+  "deepest_first_comp": true,
+  "accumulation": {
+   "A_final_task_only": [
+    0.5767,
+    [
+     0.5595,
+     0.5926
+    ]
+   ],
+   "beta": [
+    0.0003,
+    [
+     0.0,
+     0.0007
+    ]
+   ],
+   "crosses_zero": true,
+   "plateau_below_zero": false,
+   "diverging_below_zero": false,
+   "rate_ratio": {
+    "slope_y": [
+     -0.00837,
+     [
+      -0.01078,
+      -0.00595
+     ]
+    ],
+    "s_savings": [
+     0.02324,
+     [
+      0.0201,
+      0.0268
+     ]
+    ],
+    "o_overhead": [
+     0.01487,
+     [
+      0.01148,
+      0.01782
+     ]
+    ],
+    "y_first": [
+     -0.50524,
+     [
+      -0.60431,
+      -0.4082
+     ]
+    ],
+    "y_last": [
+     -1.07739,
+     [
+      -1.24442,
+      -0.91018
+     ]
+    ],
+    "rate_ratio_o_over_s": 0.6399,
+    "predicted_crossover_family": -76.5,
+    "predicted_crossover_task": -453.0,
+    "families": 24
+   }
+  }
+ },
+ "m2:comp": {
+  "csv_byte_equal": true,
+  "contrasts": [
+   [
+    "Ch+maint",
+    "Bh",
+    true,
+    "A_36 = -0.0071  [-0.0546, +0.0368] (95% paired bootstrap, S=7); delta-SE=0.0255; sign-flip p=0.75; geometric-mean form=-0.0090"
+   ],
+   [
+    "Ch+maint",
+    "Ph+maint",
+    true,
+    "A_36 = -0.0678  [-0.1213, -0.0199] (95% paired bootstrap, S=7); delta-SE=0.0279; sign-flip p=0.09375; geometric-mean form=-0.0702"
+   ],
+   [
+    "Ch",
+    "Bh",
+    true,
+    "A_36 = +0.0406  [-0.0040, +0.0823] (95% paired bootstrap, S=7); delta-SE=0.0240; sign-flip p=0.2031; geometric-mean form=+0.0389"
+   ],
+   [
+    "Ch",
+    "Ph",
+    true,
+    "A_36 = -0.0663  [-0.1210, -0.0163] (95% paired bootstrap, S=7); delta-SE=0.0289; sign-flip p=0.09375; geometric-mean form=-0.0689"
+   ],
+   [
+    "Ph",
+    "Bh",
+    true,
+    "A_36 = +0.1003  [+0.0882, +0.1122] (95% paired bootstrap, S=7); delta-SE=0.0067; sign-flip p=0.01562; geometric-mean form=+0.1008"
+   ],
+   [
+    "Ph+maint",
+    "Bh",
+    true,
+    "A_36 = +0.0569  [+0.0466, +0.0677] (95% paired bootstrap, S=7); delta-SE=0.0061; sign-flip p=0.01562; geometric-mean form=+0.0572"
+   ],
+   [
+    "Ch+maint",
+    "Ch",
+    true,
+    "A_36 = -0.0497  [-0.0521, -0.0476] (95% paired bootstrap, S=7); delta-SE=0.0013; sign-flip p=0.01562; geometric-mean form=-0.0498"
+   ],
+   [
+    "Ph+maint",
+    "Ph",
+    true,
+    "A_36 = -0.0482  [-0.0519, -0.0450] (95% paired bootstrap, S=7); delta-SE=0.0019; sign-flip p=0.01562; geometric-mean form=-0.0485"
+   ]
+  ],
+  "resources_equal": true,
+  "other_equal": {
+   "work_split": true,
+   "maintenance_share": true,
+   "strata_B_depth": true,
+   "censoring": true,
+   "rate_ratio": true,
+   "in_run": true,
+   "emergence": true
+  },
+  "outcomes_equal": true
+ },
+ "m2:comprep": {
+  "csv_byte_equal": true,
+  "contrasts": [
+   [
+    "Ch+maint",
+    "Bh",
+    true,
+    "A_36 = +0.0121  [-0.0412, +0.0598] (95% paired bootstrap, S=7); delta-SE=0.0287; sign-flip p=0.75; geometric-mean form=+0.0102"
+   ],
+   [
+    "Ch+maint",
+    "Ph+maint",
+    true,
+    "A_36 = -0.0902  [-0.1523, -0.0397] (95% paired bootstrap, S=7); delta-SE=0.0313; sign-flip p=0.03125; geometric-mean form=-0.0933"
+   ],
+   [
+    "Ch",
+    "Bh",
+    true,
+    "A_36 = +0.0577  [+0.0063, +0.1049] (95% paired bootstrap, S=7); delta-SE=0.0278; sign-flip p=0.1094; geometric-mean form=+0.0561"
+   ],
+   [
+    "Ch",
+    "Ph",
+    true,
+    "A_36 = -0.0891  [-0.1541, -0.0370] (95% paired bootstrap, S=7); delta-SE=0.0325; sign-flip p=0.03125; geometric-mean form=-0.0924"
+   ],
+   [
+    "Ph",
+    "Bh",
+    true,
+    "A_36 = +0.1348  [+0.1221, +0.1490] (95% paired bootstrap, S=7); delta-SE=0.0075; sign-flip p=0.01562; geometric-mean form=+0.1359"
+   ],
+   [
+    "Ph+maint",
+    "Bh",
+    true,
+    "A_36 = +0.0938  [+0.0826, +0.1061] (95% paired bootstrap, S=7); delta-SE=0.0065; sign-flip p=0.01562; geometric-mean form=+0.0947"
+   ],
+   [
+    "Ch+maint",
+    "Ch",
+    true,
+    "A_36 = -0.0484  [-0.0516, -0.0458] (95% paired bootstrap, S=7); delta-SE=0.0016; sign-flip p=0.01562; geometric-mean form=-0.0487"
+   ],
+   [
+    "Ph+maint",
+    "Ph",
+    true,
+    "A_36 = -0.0473  [-0.0511, -0.0441] (95% paired bootstrap, S=7); delta-SE=0.0019; sign-flip p=0.01562; geometric-mean form=-0.0477"
+   ]
+  ],
+  "resources_equal": true,
+  "other_equal": {
+   "work_split": true,
+   "maintenance_share": true,
+   "strata_B_depth": true,
+   "censoring": true,
+   "rate_ratio": true,
+   "in_run": true,
+   "emergence": true
+  },
+  "outcomes_equal": true
+ },
+ "m2:unrel": {
+  "csv_byte_equal": true,
+  "contrasts": [
+   [
+    "Ch+maint",
+    "Bh",
+    true,
+    "A_24 = +0.0523  [-0.3117, +0.3030] (95% paired bootstrap, S=7); delta-SE=0.1749; sign-flip p=0.8125; geometric-mean form=-0.0335"
+   ],
+   [
+    "Ch+maint",
+    "Ph+maint",
+    true,
+    "A_24 = -0.0009  [-0.0237, +0.0200] (95% paired bootstrap, S=7); delta-SE=0.0122; sign-flip p=0.9844; geometric-mean form=-0.0010"
+   ],
+   [
+    "Ch",
+    "Bh",
+    true,
+    "A_24 = +0.5333  [+0.3557, +0.6488] (95% paired bootstrap, S=7); delta-SE=0.0824; sign-flip p=0.01562; geometric-mean form=+0.4914"
+   ],
+   [
+    "Ch",
+    "Ph",
+    true,
+    "A_24 = -0.0129  [-0.0361, +0.0094] (95% paired bootstrap, S=7); delta-SE=0.0127; sign-flip p=0.375; geometric-mean form=-0.0127"
+   ],
+   [
+    "Ph",
+    "Bh",
+    true,
+    "A_24 = +0.5392  [+0.3637, +0.6557] (95% paired bootstrap, S=7); delta-SE=0.0829; sign-flip p=0.01562; geometric-mean form=+0.4978"
+   ],
+   [
+    "Ph+maint",
+    "Bh",
+    true,
+    "A_24 = +0.0532  [-0.3162, +0.3068] (95% paired bootstrap, S=7); delta-SE=0.1787; sign-flip p=0.9062; geometric-mean form=-0.0325"
+   ],
+   [
+    "Ch+maint",
+    "Ch",
+    true,
+    "A_24 = -1.0304  [-1.0967, -0.9738] (95% paired bootstrap, S=7); delta-SE=0.0344; sign-flip p=0.01562; geometric-mean form=-1.0320"
+   ],
+   [
+    "Ph+maint",
+    "Ph",
+    true,
+    "A_24 = -1.0548  [-1.1161, -1.0017] (95% paired bootstrap, S=7); delta-SE=0.0311; sign-flip p=0.01562; geometric-mean form=-1.0558"
+   ]
+  ],
+  "resources_equal": true,
+  "other_equal": {
+   "work_split": true,
+   "maintenance_share": true,
+   "strata_B_depth": true,
+   "censoring": true,
+   "rate_ratio": true,
+   "in_run": true,
+   "emergence": true
+  },
+  "outcomes_equal": true
+ },
+ "m2:mixed": {
+  "csv_byte_equal": true,
+  "contrasts": [
+   [
+    "Ch+maint",
+    "Bh",
+    true,
+    "A_48 = -0.0207  [-0.0925, +0.0380] (95% paired bootstrap, S=7); delta-SE=0.0360; sign-flip p=0.5156; geometric-mean form=-0.0264"
+   ],
+   [
+    "Ch+maint",
+    "Ph+maint",
+    true,
+    "A_48 = -0.0945  [-0.1338, -0.0578] (95% paired bootstrap, S=7); delta-SE=0.0213; sign-flip p=0.01562; geometric-mean form=-0.0936"
+   ],
+   [
+    "Ch",
+    "Bh",
+    true,
+    "A_48 = +0.0961  [+0.0361, +0.1451] (95% paired bootstrap, S=7); delta-SE=0.0299; sign-flip p=0.0625; geometric-mean form=+0.0919"
+   ],
+   [
+    "Ch",
+    "Ph",
+    true,
+    "A_48 = -0.0971  [-0.1416, -0.0566] (95% paired bootstrap, S=7); delta-SE=0.0239; sign-flip p=0.01562; geometric-mean form=-0.0960"
+   ],
+   [
+    "Ph",
+    "Bh",
+    true,
+    "A_48 = +0.1761  [+0.1350, +0.2116] (95% paired bootstrap, S=7); delta-SE=0.0215; sign-flip p=0.01562; geometric-mean form=+0.1715"
+   ],
+   [
+    "Ph+maint",
+    "Bh",
+    true,
+    "A_48 = +0.0674  [+0.0149, +0.1147] (95% paired bootstrap, S=7); delta-SE=0.0276; sign-flip p=0.125; geometric-mean form=+0.0615"
+   ],
+   [
+    "Ch+maint",
+    "Ch",
+    true,
+    "A_48 = -0.1291  [-0.1429, -0.1171] (95% paired bootstrap, S=7); delta-SE=0.0071; sign-flip p=0.01562; geometric-mean form=-0.1304"
+   ],
+   [
+    "Ph+maint",
+    "Ph",
+    true,
+    "A_48 = -0.1318  [-0.1440, -0.1201] (95% paired bootstrap, S=7); delta-SE=0.0065; sign-flip p=0.01562; geometric-mean form=-0.1328"
+   ]
+  ],
+  "resources_equal": true,
+  "other_equal": {
+   "work_split": true,
+   "maintenance_share": true,
+   "strata_B_depth": true,
+   "censoring": true,
+   "rate_ratio": true,
+   "in_run": true,
+   "emergence": true
+  },
+  "outcomes_equal": true
+ },
+ "m2:long": {
+  "csv_byte_equal": true,
+  "contrasts": [
+   [
+    "Ch+maint",
+    "Bh",
+    true,
+    "A_144 = -0.1331  [-0.1622, -0.1063] (95% paired bootstrap, S=7); delta-SE=0.0155; sign-flip p=0.01562; geometric-mean form=-0.1335"
+   ],
+   [
+    "Ch+maint",
+    "Ph+maint",
+    true,
+    "A_144 = -0.0912  [-0.1185, -0.0644] (95% paired bootstrap, S=7); delta-SE=0.0154; sign-flip p=0.01562; geometric-mean form=-0.0918"
+   ],
+   [
+    "Ch",
+    "Bh",
+    true,
+    "A_144 = -0.0276  [-0.0530, -0.0048] (95% paired bootstrap, S=7); delta-SE=0.0134; sign-flip p=0.07812; geometric-mean form=-0.0279"
+   ],
+   [
+    "Ch",
+    "Ph",
+    true,
+    "A_144 = -0.0874  [-0.1144, -0.0601] (95% paired bootstrap, S=7); delta-SE=0.0155; sign-flip p=0.01562; geometric-mean form=-0.0879"
+   ],
+   [
+    "Ph",
+    "Bh",
+    true,
+    "A_144 = +0.0550  [+0.0378, +0.0753] (95% paired bootstrap, S=7); delta-SE=0.0104; sign-flip p=0.01562; geometric-mean form=+0.0552"
+   ],
+   [
+    "Ph+maint",
+    "Bh",
+    true,
+    "A_144 = -0.0383  [-0.0562, -0.0175] (95% paired bootstrap, S=7); delta-SE=0.0108; sign-flip p=0.03125; geometric-mean form=-0.0382"
+   ],
+   [
+    "Ch+maint",
+    "Ch",
+    true,
+    "A_144 = -0.1026  [-0.1064, -0.0996] (95% paired bootstrap, S=7); delta-SE=0.0019; sign-flip p=0.01562; geometric-mean form=-0.1027"
+   ],
+   [
+    "Ph+maint",
+    "Ph",
+    true,
+    "A_144 = -0.0987  [-0.1018, -0.0955] (95% paired bootstrap, S=7); delta-SE=0.0017; sign-flip p=0.01562; geometric-mean form=-0.0988"
+   ]
+  ],
+  "resources_equal": true,
+  "other_equal": {
+   "work_split": true,
+   "maintenance_share": true,
+   "strata_B_depth": true,
+   "censoring": true,
+   "rate_ratio": true,
+   "in_run": true,
+   "emergence": true
+  },
+  "outcomes_equal": true
+ },
+ "m2:gate_equal": true,
+ "m2:gate": {
+  "Q1_comp_positive": false,
+  "Q2_detail": {
+   "comp": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "comprep": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "unrel": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "mixed": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   },
+   "long": {
+    "wrong_qualified_0": true,
+    "retention_changed_0": true,
+    "sealed_correct_C_ge_B": true
+   }
+  },
+  "Q2_no_correctness_or_retention_loss": true,
+  "Q3_unrel_penalty_halved": true,
+  "Q4a_comp_replicates": false,
+  "Q4b_mixed_positive": false,
+  "PASS": false,
+  "verdict": "HOLD",
+  "strata_qualified": {
+   "comp": {
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": true
+   },
+   "comprep": {
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": true
+   },
+   "mixed": {
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": true
+   },
+   "long": {
+    "2": false,
+    "3": false,
+    "4": false,
+    "5": true
+   }
+  },
+  "deepest_first_comp": true,
+  "accumulation": {
+   "A_final_task_only": [
+    -0.0276,
+    [
+     -0.053,
+     -0.0048
+    ]
+   ],
+   "beta": [
+    -0.0004,
+    [
+     -0.0008,
+     0.0
+    ]
+   ],
+   "crosses_zero": false,
+   "plateau_below_zero": true,
+   "diverging_below_zero": false,
+   "rate_ratio": {
+    "slope_y": [
+     0.00075,
+     [
+      -0.00304,
+      0.00368
+     ]
+    ],
+    "s_savings": [
+     0.00651,
+     [
+      0.00367,
+      0.00933
+     ]
+    ],
+    "o_overhead": [
+     0.00726,
+     [
+      0.00488,
+      0.00991
+     ]
+    ],
+    "y_first": [
+     0.01755,
+     [
+      -0.05754,
+      0.10605
+     ]
+    ],
+    "y_last": [
+     0.0342,
+     [
+      -0.11077,
+      0.15698
+     ]
+    ],
+    "rate_ratio_o_over_s": 1.1145,
+    "predicted_crossover_family": null,
+    "families": 24
+   }
+  }
+ }
+}
