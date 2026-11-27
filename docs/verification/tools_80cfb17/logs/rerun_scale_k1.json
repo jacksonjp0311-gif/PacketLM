@@ -1,0 +1,188 @@
+{
+ "started": "2026-11-27T12:35:17-0500",
+ "finished": "2026-11-27T12:39:31-0500",
+ "seeds": [
+  291,
+  292
+ ],
+ "sizes": [
+  16000,
+  64000
+ ],
+ "tasks": 10,
+ "arms": [
+  "k"
+ ],
+ "provenance_start": {
+  "head": "19a6e27e53c7b849ab86de3bd272aab589c269dd",
+  "git_status_porcelain": "?? docs/verification/tools_80cfb17/logs/rerun_scale_k1.json",
+  "source_sha256": "ed6079c5ef30032dc1063ec00db10b4abac84e743f7faefd53c1714b53165520",
+  "engine_sha256": "7ded3684a16cf3ca6f785e7db1e67f22c0f9115ad30534c086083e477fa85143",
+  "harness_sha256": "17e6b36d955a195cfb7aff4818fc024e0c055cc5a9f95ff99d3baaf26efb11ca",
+  "ref_root": "/tmp/w33565b0",
+  "ref_head": "33565b051903ae787ad8ae3df8a63b11c6a27ef1",
+  "ref_clean": true,
+  "lock": null,
+  "loadavg": [
+   8.9462890625,
+   10.33544921875,
+   10.31396484375
+  ],
+  "at": "2026-11-27T12:35:18-0500"
+ },
+ "provenance_end": {
+  "head": "19a6e27e53c7b849ab86de3bd272aab589c269dd",
+  "git_status_porcelain": "?? docs/verification/tools_80cfb17/lean_diff.py\n?? docs/verification/tools_80cfb17/logs/adv/serve_crash_k.log\n?? docs/verification/tools_80cfb17/logs/rerun_scale_k1.json\n?? docs/verification/tools_80cfb17/serve_diff.py",
+  "source_sha256": "ed6079c5ef30032dc1063ec00db10b4abac84e743f7faefd53c1714b53165520",
+  "engine_sha256": "7ded3684a16cf3ca6f785e7db1e67f22c0f9115ad30534c086083e477fa85143",
+  "harness_sha256": "17e6b36d955a195cfb7aff4818fc024e0c055cc5a9f95ff99d3baaf26efb11ca",
+  "ref_root": "/tmp/w33565b0",
+  "ref_head": "33565b051903ae787ad8ae3df8a63b11c6a27ef1",
+  "ref_clean": true,
+  "lock": null,
+  "loadavg": [
+   5.3203125,
+   7.4443359375,
+   9.10205078125
+  ],
+  "at": "2026-11-27T12:39:31-0500"
+ },
+ "source_unchanged": true,
+ "guard_ref_is_33565b0": true,
+ "guard_replies_equal_ref": true,
+ "guard_state_equal_ref": true,
+ "guard_workload_answered": true,
+ "guard_no_snapshot_in_window": true,
+ "summary": {
+  "k": {
+   "mean_task_cpu_ms": {
+    "16000": 4.267,
+    "64000": 8.183
+   },
+   "pad_cpu_s": {
+    "16000": 7.013,
+    "64000": 114.154
+   },
+   "snapshot_cpu_ms": {
+    "16000": 677.35,
+    "64000": 3430.135
+   },
+   "alpha_16000_64000": [
+    0.4739,
+    [
+     0.3672,
+     0.5667
+    ],
+    {
+     "ratio": [
+      1.9288,
+      [
+       1.6638,
+       2.1938
+      ]
+     ]
+    }
+   ],
+   "alpha_amort_16000_64000": [
+    1.0907,
+    [
+     1.0781,
+     1.103
+    ],
+    {
+     "ratio": [
+      4.5357,
+      [
+       4.4574,
+       4.614
+      ]
+     ]
+    }
+   ],
+   "alpha_snapshot_16000_64000": [
+    1.1701,
+    [
+     1.1456,
+     1.1938
+    ],
+    {
+     "ratio": [
+      5.0638,
+      [
+       4.8948,
+       5.2329
+      ]
+     ]
+    }
+   ],
+   "alpha_charged_fixed_16000_64000": [
+    1.0907,
+    [
+     1.0781,
+     1.103
+    ],
+    {
+     "ratio": [
+      4.5357,
+      [
+       4.4574,
+       4.614
+      ]
+     ]
+    }
+   ],
+   "alpha_charged_prop_16000_64000": [
+    0.4627,
+    [
+     0.359,
+     0.5534
+    ],
+    {
+     "ratio": [
+      1.8993,
+      [
+       1.6449,
+       2.1536
+      ]
+     ]
+    }
+   ],
+   "alpha_work_16000_64000": [
+    0.0822,
+    [
+     0.0585,
+     0.1051
+    ],
+    {
+     "ratio": [
+      1.1207,
+      [
+       1.0845,
+       1.1569
+      ]
+     ]
+    }
+   ],
+   "alpha_pad_16000_64000": [
+    2.0123,
+    [
+     1.9992,
+     2.0251
+    ],
+    {
+     "ratio": [
+      16.2748,
+      [
+       15.9824,
+       16.5672
+      ]
+     ]
+    }
+   ]
+  }
+ },
+ "bounded_k": false,
+ "bounded_charged_k": false,
+ "bounded_work_k": true,
+ "bounded_charged_fixed_k": false
+}

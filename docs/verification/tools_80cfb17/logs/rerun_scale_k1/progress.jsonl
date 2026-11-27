@@ -1,0 +1,4 @@
+{"seed": 291, "n": 64000, "arm": "k", "mean_task_cpu_s": 0.007399, "pad_cpu_s": 117.1731, "state_sha256": "235c68d09a12d4107a7998d7b36d1b43191614640c790303221137998fec0190", "at": "12:37:19"}
+{"seed": 292, "n": 64000, "arm": "k", "mean_task_cpu_s": 0.008966, "pad_cpu_s": 111.135, "state_sha256": "347a4c5999a575d12254b83d6e4330ad9f87f4c5b3dc02e15bd79149df347112", "at": "12:39:15"}
+{"seed": 291, "n": 16000, "arm": "k", "mean_task_cpu_s": 0.004447, "pad_cpu_s": 7.0726, "state_sha256": "71f6cf8f2300a2afbe6880cf2dff2e5451d354975b4f1ba4fe10b6c3cd9eda4b", "at": "12:39:23"}
+{"seed": 292, "n": 16000, "arm": "k", "mean_task_cpu_s": 0.004087, "pad_cpu_s": 6.9536, "state_sha256": "346804fd2d1f832ee5beb2f1dcefc8b65adb4260651096ec511b6e75015db417", "at": "12:39:31"}

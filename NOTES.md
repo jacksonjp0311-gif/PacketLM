@@ -23,3 +23,4 @@ mutdiff WITH audit (real/dense/block, 20 sess 1983 calls each): threshold+1, hit
 bound_property.py: constructed near-boundary triples: 4.8M samples, ~840k eligible, 45 tight, 0 violations.
 external load: /workspace/nomad (other agent) wrote 1569 files 11:30-11:50 during registered run (64k seeds 293-297 ran 11:30-11:37; gate 11:40-11:52; gate start load 5.87). per-seed 64k k no obvious shift (291 pre-overlap 8.63 vs mean 9.02).
 rerun.sh started 12:33 (k 1 worker; gate comp301+unrel321; probe seed 292)
+## report written 12:5x; see VERIFY_80cfb17.md

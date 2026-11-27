@@ -1,1 +1,4 @@
 start 12:35:17 load 8.95 10.34 10.31
+scale rc=0 12:39:31 load 5.32 7.44 9.10
+gate rc=0 12:40:00 load 8.61 8.05 9.26
+probe done 12:42:06
