@@ -17,6 +17,7 @@ import time
 from pathlib import Path
 
 from .engine import HEngine
+from .plain import PlainEngine
 
 SNAPSHOT_EVERY = 64
 KNOWN = {"--answers", "--bounded", "--lean", "--no-library"}
@@ -29,7 +30,13 @@ def _cpu():
 def parse(flags):
     kw = {"library": True, "deepen": 5, "margin": 1}
     for f in flags:
-        if f == "--no-library":
+        if f == "--plain":
+            kw["plain"] = True
+        elif f.startswith("--check="):
+            kw["check"] = f.split("=", 1)[1]
+        elif f.startswith("--certifier="):
+            kw["certifier"] = f.split("=", 1)[1]
+        elif f == "--no-library":
             kw["library"] = False
         elif f.startswith("--margin="):
             kw["margin"] = int(f.split("=", 1)[1])
@@ -65,9 +72,10 @@ class Server:
 
     def open_path(self, path, flags):
         kw = parse(flags)
+        cls = PlainEngine if kw.pop("plain", False) else HEngine
         if path.exists():
             doc = json.loads(path.read_text())["state"]
-            eng = HEngine.from_doc(doc, **kw)
+            eng = cls.from_doc(doc, **kw)
             jp = Path(str(path) + ".journal")
             if jp.exists():  # replay (crash recovery); every record must reproduce its replies
                 for raw in jp.read_bytes().splitlines()[1:]:
@@ -76,7 +84,7 @@ class Server:
                     assert hashlib.sha256(json.dumps(got).encode()).hexdigest() == rec["replies_sha256"], "journal replay diverged"
             report = {"loaded": "primary"}
         else:
-            eng, report = HEngine(**kw), {"loaded": "new"}
+            eng, report = cls(**kw), {"loaded": "new"}
         self.cur = {"path": path, "flags": list(flags), "eng": eng, "since": 0, "jfh": None}
         self._snapshot()
         return report
@@ -116,6 +124,7 @@ class Server:
             self._snapshot()
         now = _cpu()
         stats = dict(eng.stats, **{"cum_" + k: v for k, v in eng.counters.items()})
+        stats["cum_code_collisions"] = sum(cb.collisions for cb in (eng.ent, eng.prim, eng.rel, eng.capcb))
         out = {"load": report, "replies": replies, "stats": stats, "cpu_s": round(time.process_time() - t0, 4),
                "cpu_total_s": round(now - self.mark, 4)}
         self.mark = now

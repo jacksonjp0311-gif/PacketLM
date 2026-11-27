@@ -135,6 +135,12 @@ def main(argv):
     sizes = [int(x) for x in argv[argv.index("--sizes") + 1].split(",")] if "--sizes" in argv else SIZES
     arms = argv[argv.index("--arms") + 1].split(",") if "--arms" in argv else list(FLAGS)
     name = argv[argv.index("--out") + 1] if "--out" in argv else "g60h_scale"
+    # G60H2 (docs/G60H2.md §6d): --config e = equal check (C) / base certificate meet-in-the-middle (P);
+    # p = e on the plain engine. Default (no --config) is G60H's registered configuration, unchanged.
+    cfg = argv[argv.index("--config") + 1] if "--config" in argv else None
+    if cfg in ("e", "p"):
+        FLAGS["hC"] = FLAGS["hC"] + ["--check=equal", "--certifier=mitm"] + (["--plain"] if cfg == "p" else [])
+        FLAGS["hP"] = FLAGS["hP"] + ["--certifier=mitm"] + (["--plain"] if cfg == "p" else [])
     OUT = ROOT / "artifacts" / name
     OUT.mkdir(parents=True, exist_ok=True)
     lock0 = LOCK.read_text().strip() if LOCK.exists() else None
@@ -164,7 +170,7 @@ def main(argv):
         S["decodes"] = sum(R[(s, n, a)]["hdc_counters"]["decodes"] for s in seeds for n in sizes)
         summ[a] = S
     rep = {"started": started, "finished": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "seeds": seeds, "sizes": sizes,
-           "summary": summ, "workers": int(os.environ.get("G60H_SCALE_WORKERS", "1")), "lock": {"start": lock0, "end": LOCK.read_text().strip() if LOCK.exists() else None},
+           "summary": summ, "flags": FLAGS, "workers": int(os.environ.get("G60H_SCALE_WORKERS", "1")), "lock": {"start": lock0, "end": LOCK.read_text().strip() if LOCK.exists() else None},
            "loadavg": {"start": load0, "end": os.getloadavg()}}
     if "hC" in summ and 16000 in sizes and 64000 in sizes:
         rep["bounded_hC"] = summ["hC"]["alpha_16000_64000"][1][1] < BOUND

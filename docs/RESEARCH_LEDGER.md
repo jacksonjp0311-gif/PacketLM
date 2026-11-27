@@ -1311,3 +1311,20 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - Predictions held except P‖B on comp (predicted to hold 0; registered +0.110).
 - Worth scaling (registered rule): **conditional** — the representation fixed the step-cost term; the
   remaining barrier is the cost of certifying library-based hypotheses. Stopped after the prototype.
+
+
+## 2026-11-27 14:05: G60H corrected after verification; G60H2 (equal check) registered
+
+- verify-69b5b26 (fe7f986) reproduced every G60H number but found the margin was in each arm's own
+  language (H1): ~20% of C's qualified programs, carrying 77% of its saving, are ambiguous under B's
+  base-language check; with B's certificate imposed the library term is ≈ 0 and the gate holds. The
+  verifier's wording is adopted as G60H's claim of record (docs/G60H.md §13); "the representation removed
+  the step cost" corrected to "the new engine (hash-keyed memory, deduplicated tuple search)"; cross-engine
+  ρ claims withdrawn as representation effects.
+- **G60H2 registered** (docs/G60H2.md): C must certify uniqueness by B's rule in base primitives at the
+  same margin, fully charged (`--check=equal`); certificate made cheap by meet in the middle for every arm
+  (exactly the DP's verdict; byte-identical replies on dev); image memo as state carriage (P gets it too);
+  counters complete and recorded; plain ablation; decoy curriculum; fresh seeds 501–567, part S 551–557;
+  thresholds as G60H. Dev predicts HOLD at both margins, library term < 0 (the certificate does not depend
+  on the proposal), the representation costing ≈ 1.5–2× plain dicts, decoy 0 wrong-qualified under the
+  equal check and > 0 under G60H's rule.

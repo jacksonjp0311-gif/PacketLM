@@ -93,6 +93,7 @@ class Codebook:
         self.hot = {}      # name -> onehot(code)
         self.key = {}      # (v0, v1) -> [names]  (cleanup of a bundle)
         self.collisions = 0
+        self.collided = set()  # codes shared by two or more names (their cleanup is not unique)
 
     def add(self, nm: str) -> int:
         c = self.code.get(nm)
@@ -100,7 +101,8 @@ class Codebook:
             return c
         c = code(nm)
         if c in self.name:
-            self.collisions += 1  # two names with one code: counted, the first keeps the exact cleanup
+            self.collisions += 1  # two names with one code: counted; users of the code fall back to exact copies
+            self.collided.add(c)
         else:
             self.name[c] = nm
         self.code[nm] = c
