@@ -794,6 +794,24 @@ def program_checks(tmp) -> dict:
     q = e4.investigate("up")
     out["prog_investigate_one_sided"] = q.get("result") == "question" and q.get("subject") == "x" and \
         e4.state["hypotheses"]["up"].get("supported_programs", 0) >= 2
+    # the question does not depend on fact storage order (retention restores reorder facts)
+    e6 = Engine(tmp / "prog6.json", programs=True)
+    facts = [("a", "in", "r"), ("a", "in", "w"), ("b", "in", "r"), ("b", "in", "w"), ("w", "kind", "Q"),
+             ("r", "kind", "R"), ("r", "tag", "u"), ("y", "in", "s2"), ("y", "in", "w"), ("s2", "kind", "R"),
+             ("x", "in", "s"), ("x", "in", "w"), ("s", "kind", "R")]
+    for t in facts:
+        e6.tell(*t)
+    e6.observe("up", "a", "r")
+    e6.observe("up", "b", "r")
+    e6.acquire("up")
+    e7 = Engine(tmp / "prog7.json", programs=True)
+    for t in reversed(facts):
+        e7.tell(*t)
+    e7.observe("up", "a", "r")
+    e7.observe("up", "b", "r")
+    e7.acquire("up")
+    q6, q7 = e6.investigate("up"), e7.investigate("up")
+    out["prog_question_independent_of_fact_order"] = q6.get("result") == "question" and q6 == q7
     # programs off: no program tokens are ever hypothesised
     e5 = Engine(tmp / "prog5.json", deepen=3)
     for t in tri:

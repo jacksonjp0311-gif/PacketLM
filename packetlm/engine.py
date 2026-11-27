@@ -1213,7 +1213,9 @@ class Engine:
         done = {s for s, _ in self.state["observations"].get(name, [])} | set(rec.get("unanswered", []))
         preds = {tuple(h): self._predictions(h) for h in live}
         best, best_score = None, 0
-        for e in self.entities():
+        # programs mode: ties broken by entity name, not by fact storage order, which adaptive
+        # retention changes when it restores a component (G48 H6 failure, docs/G48.md)
+        for e in (sorted(self.entities()) if self.programs else self.entities()):
             if e in done:
                 continue
             if self.programs:

@@ -421,3 +421,40 @@ arms.
 
 **Registration.** Both runs use the post-verification cost rules (whole-process CPU, all
 calls, maintenance included) and more seeds: G48 has 7, G47-AR has 5.
+
+## 2026-11-26 23:15 — G48 and G47-AR registered results (docs/G48.md, docs/G47_AR.md)
+
+**G48 (seeds 481–487): NOT passed as registered, 6 of 7 checks.**
+- **Passes.** P accuracy is 1.000 in every class: T1 n 434, T2 168, T3 126, T4 434.
+  - Depth ≥ 3 is 1.000 (n 378), including depths 6–7 (n 42).
+  - Wrong-qualified: 0, with 14 qualified tasks (all T3) and 126 qualified answers.
+  - Controls: X T1–3 is 0.000; S is 0.0009.
+- **H6 FAILS.** On seeds 481 and 487, the adaptive arm asked different investigate questions in
+  round-2 T4. The programs and every sealed answer were identical.
+  - **Mechanism:** investigate breaks ties in fact-storage order, and a retention restore
+    appends facts, which changes that order.
+  - **Fix, after the run:** programs mode iterates entities sorted by name, with a new check
+    and mutation (40/40 killed). The registered FAIL stays; confirming the fix needs a new
+    registered run.
+- **Base-engine hazard, not changed so G44–G47 stay comparable:** base investigate has the same
+  order dependence. ARET H-R1 did not trigger it, but a future registered retention run on the
+  base engine should either fix it under pre-registration or compare at the same strictness.
+
+**G47-AR (seeds 11–55, S = 5): H-AR1 no harm PASS, H-AR2 PASS.**
+- Whole-run, whole-process CPU, maintenance and startup included: W/K is 0.70–0.73 and Y/L is
+  0.72–0.74. Each is lower on 5/5 seeds.
+- Descriptive LA instrument: `A(W+maint‖K+maint)` = +0.288 and `A(Y+maint‖L+maint)` = +0.271,
+  S = 5 with p = 0.0625.
+- G47 H3 holds on 5/5 seeds.
+- Per acquired capability at depth 3: Y 0.25 < L 0.35 < M 0.40–0.45 s.
+
+**Leakage.** 0 of 1214 new item and sealed tokens occur in `data/`.
+
+**Status.** g44 102/102; suite 189/189 across 11/11 modules; mutations 40/40 with 0 crash
+kills; G45 18/18.
+
+**Next.**
+- A pre-registered G48 replication with the order-independent investigate, on new seeds, to
+  settle H6.
+- Then the teacher protocol extension (`-> none` / `-> several`), so the one-sided ambiguity
+  can be answered for sealed-adjacent items.

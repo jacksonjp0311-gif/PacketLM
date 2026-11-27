@@ -51,6 +51,7 @@ MUTATIONS = {
     "prog_deps_hidden": ('            out += progs.deps(s)  # capabilities used inside', '            pass  # capabilities used inside'),
     "prog_investigate_defined_only": ('                if not known or len(set(allp)) < 2:', '                if len(set(known)) < 2:'),
     "prog_scan_ignored": ('        status = "qualified" if complete and not blockers else "provisional"', '        status = "qualified"'),
+    "prog_order_dependent_ties": ('        for e in (sorted(self.entities()) if self.programs else self.entities()):', '        for e in self.entities():'),
     "static_ignores_archive": ('        if ret and retention == "static" and ret["archived"]:', '        if False:'),
     "no_requalify": ('        out["review"] = retired + self.review() + self._requalify_retired()\n        return out\n\n    def correct_example', '        out["review"] = retired + self.review()\n        return out\n\n    def correct_example'),
     "scan_short_horizon": ('        horizon = self.deepen if (max_len is None and self.deepen) else searched', '        horizon = searched'),

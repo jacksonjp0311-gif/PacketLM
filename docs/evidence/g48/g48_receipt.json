@@ -1,0 +1,468 @@
+{
+ "metrics": {
+  "P": {
+   "by_class": {
+    "T1": {
+     "accuracy": 1.0,
+     "n": 434
+    },
+    "T2": {
+     "accuracy": 1.0,
+     "n": 168
+    },
+    "T3": {
+     "accuracy": 1.0,
+     "n": 126
+    },
+    "T4": {
+     "accuracy": 1.0,
+     "n": 434
+    }
+   },
+   "T1_depth_ge3": {
+    "accuracy": 1.0,
+    "n": 378
+   },
+   "T1_depth_6_7_transfer": {
+    "accuracy": 1.0,
+    "n": 42
+   },
+   "all": {
+    "accuracy": 1.0,
+    "n": 1162
+   },
+   "T123": {
+    "accuracy": 1.0,
+    "n": 728
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 14,
+   "provisional_tasks": 42,
+   "answers_from_qualified": 126,
+   "status": [
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified"
+   ],
+   "T4_library_uses": 14,
+   "cpu_s": 7.229,
+   "cpu_total_s": 19.69,
+   "processes": 448,
+   "final_state_bytes": {
+    "481": 126162,
+    "482": 126101,
+    "483": 126764,
+    "484": 124446,
+    "485": 128464,
+    "486": 126481,
+    "487": 125537
+   }
+  },
+  "X": {
+   "by_class": {
+    "T1": {
+     "accuracy": 0.0,
+     "n": 434
+    },
+    "T2": {
+     "accuracy": 0.0,
+     "n": 168
+    },
+    "T3": {
+     "accuracy": 0.0,
+     "n": 126
+    },
+    "T4": {
+     "accuracy": 0.0645,
+     "n": 434
+    }
+   },
+   "T1_depth_ge3": {
+    "accuracy": 0.0,
+    "n": 378
+   },
+   "T1_depth_6_7_transfer": {
+    "accuracy": 0.0,
+    "n": 42
+   },
+   "all": {
+    "accuracy": 0.0241,
+    "n": 1162
+   },
+   "T123": {
+    "accuracy": 0.0,
+    "n": 728
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "provisional_tasks": 14,
+   "answers_from_qualified": 0,
+   "status": [
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none"
+   ],
+   "T4_library_uses": 0,
+   "cpu_s": 2.455,
+   "cpu_total_s": 10.61,
+   "processes": 295,
+   "final_state_bytes": {
+    "481": 114256,
+    "482": 114167,
+    "483": 115030,
+    "484": 112610,
+    "485": 116609,
+    "486": 114506,
+    "487": 113992
+   }
+  },
+  "S": {
+   "by_class": {
+    "T1": {
+     "accuracy": 0.0023,
+     "n": 434
+    },
+    "T2": {
+     "accuracy": 0.0,
+     "n": 168
+    },
+    "T3": {
+     "accuracy": 0.0,
+     "n": 126
+    },
+    "T4": {
+     "accuracy": 0.0,
+     "n": 434
+    }
+   },
+   "T1_depth_ge3": {
+    "accuracy": 0.0026,
+    "n": 378
+   },
+   "T1_depth_6_7_transfer": {
+    "accuracy": 0.0,
+    "n": 42
+   },
+   "all": {
+    "accuracy": 0.0009,
+    "n": 1162
+   },
+   "T123": {
+    "accuracy": 0.0014,
+    "n": 728
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "provisional_tasks": 1,
+   "answers_from_qualified": 0,
+   "status": [
+    "suspended",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "provisional",
+    "none",
+    "none",
+    "none",
+    "suspended",
+    "none",
+    "none",
+    "none"
+   ],
+   "T4_library_uses": 0,
+   "cpu_s": 131.191,
+   "cpu_total_s": 139.278,
+   "processes": 295,
+   "final_state_bytes": {
+    "481": 112537,
+    "482": 112014,
+    "483": 112856,
+    "484": 110479,
+    "485": 114525,
+    "486": 112210,
+    "487": 112853
+   }
+  },
+  "A": {
+   "by_class": {
+    "T1": {
+     "accuracy": 1.0,
+     "n": 434
+    },
+    "T2": {
+     "accuracy": 1.0,
+     "n": 168
+    },
+    "T3": {
+     "accuracy": 1.0,
+     "n": 126
+    },
+    "T4": {
+     "accuracy": 1.0,
+     "n": 434
+    }
+   },
+   "T1_depth_ge3": {
+    "accuracy": 1.0,
+    "n": 378
+   },
+   "T1_depth_6_7_transfer": {
+    "accuracy": 1.0,
+    "n": 42
+   },
+   "all": {
+    "accuracy": 1.0,
+    "n": 1162
+   },
+   "T123": {
+    "accuracy": 1.0,
+    "n": 728
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 14,
+   "provisional_tasks": 42,
+   "answers_from_qualified": 126,
+   "status": [
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified",
+    "provisional",
+    "provisional",
+    "provisional",
+    "qualified"
+   ],
+   "T4_library_uses": 14,
+   "cpu_s": 4.384,
+   "cpu_total_s": 16.906,
+   "processes": 448,
+   "final_state_bytes": {
+    "481": 28728,
+    "482": 28719,
+    "483": 28719,
+    "484": 28718,
+    "485": 28713,
+    "486": 28714,
+    "487": 28718
+   }
+  }
+ },
+ "thresholds": {
+  "H1_P_per_class_ge_0.95": true,
+  "H2_P_T1_depth_ge3_ge_0.95": true,
+  "H3_P_wrong_qualified_0": true,
+  "H4_X_T123_le_0.5": true,
+  "H5_S_all_le_0.10": true,
+  "H6_A_replies_identical_to_P": false,
+  "source_unchanged": true
+ },
+ "all_pass": false,
+ "source_sha256": "6a61c9d64bf00682ec17b97c6c7e1911b8a1617a211350fd04321628895d3bf2",
+ "seeds": [
+  481,
+  482,
+  483,
+  484,
+  485,
+  486,
+  487
+ ]
+}
