@@ -1,0 +1,1 @@
+{"seed": 101, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 300, "calls": 10611, "readonly_calls": 5870, "gated": 32748, "reply_diffs": 0, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 0, "readonly_known_replies": 30146, "readonly_ambiguous_replies": 2509}

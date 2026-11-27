@@ -1,0 +1,4 @@
+applied g57_packets_stale_after_rebuild to packetlm/engine.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 1583, "readonly_calls": 759, "gated": 3883, "reply_diffs": 16, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 47, "readonly_known_replies": 4004, "readonly_ambiguous_replies": 212}
+{"session": 2, "call": 16, "lines": ["what is e7 zz.", "What is e5 mm?", "what is zq aa", "what is e4 mm."], "errors": {"REF": null, "IDX": "StateError: memo packets out of step with the index", "IDX2": "StateError: memo packets out of step with the index"}}
+{"session": 3, "call": 15, "lines": ["ask e5 bb", "What is e3 aa?", "ask n0 aa", "What is e0 aa?"], "errors": {"REF": null, "IDX": "StateError: memo packets out of step with the index", "IDX2": "StateError: memo packets out of step with the index"}}

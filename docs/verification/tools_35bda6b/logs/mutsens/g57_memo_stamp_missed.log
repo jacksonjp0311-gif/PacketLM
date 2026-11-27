@@ -1,0 +1,4 @@
+applied g57_memo_stamp_missed to packetlm/engine.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 2476, "readonly_calls": 1345, "gated": 7904, "reply_diffs": 20, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 0, "readonly_known_replies": 6940, "readonly_ambiguous_replies": 494}
+{"session": 8, "call": 15, "line": "ask e7 kk", "replies": {"REF": "unknown", "IDX": "e7 kk e6 [no construction for kk] [provisional]", "IDX2": "e7 kk e6 [no construction for kk] [provisional]"}}
+{"session": 15, "call": 18, "line": "what is e2 bb", "replies": {"REF": "unknown", "IDX": "e2 bb e7 [no construction for bb] [provisional]", "IDX2": "e2 bb e7 [no construction for bb] [provisional]"}}

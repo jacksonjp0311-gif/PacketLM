@@ -1,0 +1,4 @@
+applied g57_append_path_skips_one to packetlm/engine.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 396, "readonly_calls": 0, "gated": 0, "reply_diffs": 0, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 80}
+{"session": 0, "call": 4, "lines": ["what is e2 qq", "what is n0 qq.", "what is e2 r0", "What is e5 bb?"], "errors": {"REF": null, "IDX": "StateError: memo packets out of step with the index", "IDX2": "StateError: memo packets out of step with the index"}}
+{"session": 1, "call": 4, "lines": ["ask zq bb", "what is e1 aa", "what is e3 bb.", "what is n0 mm"], "errors": {"REF": null, "IDX": "StateError: memo packets out of step with the index", "IDX2": "StateError: memo packets out of step with the index"}}

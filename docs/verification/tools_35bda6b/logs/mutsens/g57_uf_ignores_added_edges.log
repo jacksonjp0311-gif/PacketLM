@@ -1,0 +1,3 @@
+applied g57_uf_ignores_added_edges to packetlm/engine.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 2740, "readonly_calls": 1505, "gated": 8449, "reply_diffs": 1, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 0, "readonly_known_replies": 7689, "readonly_ambiguous_replies": 598}
+{"session": 73, "call": 21, "line": "what is e2 bb.", "replies": {"REF": "e2 bb e2 [no construction for bb] [provisional]", "IDX": "e2 bb e2 [no construction for bb]", "IDX2": "e2 bb e2 [no construction for bb]"}}

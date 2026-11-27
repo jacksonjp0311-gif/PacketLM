@@ -1,0 +1,4 @@
+applied g57_gate_ignores_capabilities to packetlm/engine.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 2402, "readonly_calls": 1300, "gated": 7649, "reply_diffs": 15, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 0, "readonly_known_replies": 6676, "readonly_ambiguous_replies": 431}
+{"session": 2, "call": 6, "line": "what is e3 mm", "replies": {"REF": "e3 mm e1 [no construction for mm] [provisional]", "IDX": "e3 mm e1 [no construction for mm]", "IDX2": "e3 mm e1 [no construction for mm]"}}
+{"session": 5, "call": 7, "line": "ask e8 kk", "replies": {"REF": "e8 kk e5 [no construction for kk] [provisional]", "IDX": "e8 kk e5 [no construction for kk]", "IDX2": "e8 kk e5 [no construction for kk]"}}

@@ -1,0 +1,4 @@
+applied g57_region_seeds_only to packetlm/engine.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 2499, "readonly_calls": 1352, "gated": 7682, "reply_diffs": 1, "state_diffs": 10, "final_bytes_diffs": 0, "errors": 0, "readonly_known_replies": 6927, "readonly_ambiguous_replies": 472}
+{"session": 2, "call": 17, "lines": ["fact e8 r1 n2"], "state_diff": true}
+{"session": 11, "call": 21, "lines": ["correct e0 r0 e3"], "state_diff": true}

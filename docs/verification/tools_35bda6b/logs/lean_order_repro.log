@@ -1,0 +1,3 @@
+non-lean: {"load": {"loaded": "primary"}, "replies": ["corrected a r q; removed 1; retired example zz: a -> b; retired example aa: a -> b"], "stats": {"evaluations": 6, "executions": 14, "row_ops": 22, "asks": 0, "grown_requalified": 2}, "cpu_s": 0.0023, "cpu_total_s": 0.0287}
+--lean: {"load": {"loaded": "primary"}, "replies": ["corrected a r q; removed 1; retired example zz: a -> b; retired example aa: a -> b"], "stats": {"evaluations": 6, "executions": 14, "row_ops": 22, "asks": 0, "grown_requalified": 2}, "cpu_s": 0.0019, "cpu_total_s": 0.0277}
+rc 0

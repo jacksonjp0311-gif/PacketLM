@@ -1,0 +1,3 @@
+{"load": {"loaded": "new"}, "replies": ["recorded a ra b", "recorded c ra d", "recorded e ra f", "qualified kk rel:ra", "qualified kk rel:ra", "recorded a ra x", "v1 rel:ra provisional; current v1; examples 2 active, 0 retired", "e kk f [no construction for kk] [provisional]"], "stats": {"evaluations": 7, "executions": 14, "row_ops": 20, "asks": 1, "grown_requalified": 1}, "cpu_s": 0.002, "cpu_total_s": 0.0298}
+candidate None | status provisional | history [{'turn': 5, 'status': 'qualified', 'reason': 'acquired'}, {'turn': 9, 'status': 'provisional', 'reason': 're-acquisition found no candidate'}]
+rc 0

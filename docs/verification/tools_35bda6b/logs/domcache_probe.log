@@ -1,0 +1,2 @@
+{"seed": 301, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 100, "calls": 3374, "readonly_calls": 1861, "gated": 10486, "reply_diffs": 0, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 0, "readonly_known_replies": 9432, "readonly_ambiguous_replies": 886}
+domcache {'hit': 379, 'stale': 0, 'calls': 781}

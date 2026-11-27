@@ -1,0 +1,4 @@
+applied g57_gate_ignores_stamps to packetlm/engine.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 1464, "readonly_calls": 728, "gated": 4681, "reply_diffs": 68, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 0, "readonly_known_replies": 4172, "readonly_ambiguous_replies": 55}
+{"session": 1, "call": 10, "line": "what is e4 bb", "replies": {"REF": "ambiguous: e3 or e5?", "IDX": "e4 bb e5 [no construction for bb] [provisional]", "IDX2": "e4 bb e5 [no construction for bb] [provisional]"}}
+{"session": 3, "call": 9, "line": "what is e0 bb.", "replies": {"REF": "ambiguous: e0 or e3?", "IDX": "e0 bb e0 [no construction for bb] [provisional]", "IDX2": "e0 bb e0 [no construction for bb] [provisional]"}}

@@ -1,0 +1,270 @@
+{
+ "guards": {
+  "exact_replies_and_state_i_equal_s": true,
+  "no_wrong_qualified_C": true,
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ },
+ "comp": {
+  "primary": [
+   [
+    "Ci+maint",
+    "Bi",
+    "A_36 = -0.9045  [-0.9926, -0.8342] (95% paired bootstrap, S=7); delta-SE=0.0429; sign-flip p=0.01562; geometric-mean form=-0.9101"
+   ],
+   [
+    "Ci+maint",
+    "Bs",
+    "A_36 = -0.8927  [-0.9609, -0.8390] (95% paired bootstrap, S=7); delta-SE=0.0357; sign-flip p=0.01562; geometric-mean form=-0.8972"
+   ],
+   [
+    "Ci+maint",
+    "Cs+maint",
+    "A_36 = +0.0319  [+0.0248, +0.0399] (95% paired bootstrap, S=7); delta-SE=0.0042; sign-flip p=0.01562; geometric-mean form=+0.0318"
+   ]
+  ],
+  "secondary": [
+   [
+    "Bi",
+    "Bs",
+    "A_36 = +0.0062  [-0.0040, +0.0166] (95% paired bootstrap, S=7); delta-SE=0.0057; sign-flip p=0.2812; geometric-mean form=+0.0068"
+   ],
+   [
+    "Pi+maint",
+    "Ps+maint",
+    "A_36 = +0.0620  [+0.0563, +0.0673] (95% paired bootstrap, S=7); delta-SE=0.0031; sign-flip p=0.01562; geometric-mean form=+0.0616"
+   ],
+   [
+    "Ci+maint",
+    "Pi+maint",
+    "A_36 = -0.4332  [-0.4883, -0.3879] (95% paired bootstrap, S=7); delta-SE=0.0278; sign-flip p=0.01562; geometric-mean form=-0.4359"
+   ],
+   [
+    "Cs+maint",
+    "Bs",
+    "A_36 = -0.9551  [-1.0295, -0.8898] (95% paired bootstrap, S=7); delta-SE=0.0385; sign-flip p=0.01562; geometric-mean form=-0.9595"
+   ],
+   [
+    "Ci",
+    "Bi",
+    "A_36 = -0.7840  [-0.8652, -0.7173] (95% paired bootstrap, S=7); delta-SE=0.0409; sign-flip p=0.01562; geometric-mean form=-0.7893"
+   ],
+   [
+    "Fi+maint",
+    "Fs+maint",
+    "A_36 = +0.2213  [+0.2022, +0.2463] (95% paired bootstrap, S=7); delta-SE=0.0124; sign-flip p=0.01562; geometric-mean form=+0.2210"
+   ],
+   [
+    "Ci+maint",
+    "Fi+maint",
+    "A_36 = -8.1558  [-8.5889, -7.7126] (95% paired bootstrap, S=7); delta-SE=0.2423; sign-flip p=0.01562; geometric-mean form=-8.1759"
+   ]
+  ],
+  "cpu": {
+   "Cs": 48.938,
+   "Ci": 47.376,
+   "Bs": 25.031,
+   "Bi": 24.875,
+   "Ps": 35.24,
+   "Pi": 33.056,
+   "Fs": 6.644,
+   "Fi": 5.174
+  },
+  "maint": {
+   "Cs": 5.192,
+   "Ci": 2.997,
+   "Ps": 5.277,
+   "Pi": 3.187,
+   "Fs": 3.305,
+   "Fi": 1.99
+  },
+  "outcomes": {
+   "Cs": {
+    "tasks": 252,
+    "solved": 252,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0
+   },
+   "Ci": {
+    "tasks": 252,
+    "solved": 252,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0
+   },
+   "Bs": {
+    "tasks": 252,
+    "solved": 246,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bi": {
+    "tasks": 252,
+    "solved": 246,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Ps": {
+    "tasks": 252,
+    "solved": 246,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pi": {
+    "tasks": 252,
+    "solved": 246,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Fs": {
+    "tasks": 252,
+    "solved": 128,
+    "qualified": 124,
+    "censored": 126,
+    "uses_library": 84,
+    "wrong_qualified_sealed": 0
+   },
+   "Fi": {
+    "tasks": 252,
+    "solved": 128,
+    "qualified": 124,
+    "censored": 126,
+    "uses_library": 84,
+    "wrong_qualified_sealed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true,
+   "F": true
+  }
+ },
+ "unrel": {
+  "primary": [
+   [
+    "Ci+maint",
+    "Bi",
+    "A_24 = -6.3555  [-6.3555, -6.3555] (95% paired bootstrap, S=1); delta-SE=nan; sign-flip p=1; geometric-mean form=-6.3555"
+   ],
+   [
+    "Ci+maint",
+    "Bs",
+    "A_24 = -6.0655  [-6.0655, -6.0655] (95% paired bootstrap, S=1); delta-SE=nan; sign-flip p=1; geometric-mean form=-6.0655"
+   ],
+   [
+    "Ci+maint",
+    "Cs+maint",
+    "A_24 = +0.5917  [+0.5917, +0.5917] (95% paired bootstrap, S=1); delta-SE=nan; sign-flip p=1; geometric-mean form=+0.5917"
+   ]
+  ],
+  "secondary": [
+   [
+    "Bi",
+    "Bs",
+    "A_24 = +0.0394  [+0.0394, +0.0394] (95% paired bootstrap, S=1); delta-SE=nan; sign-flip p=1; geometric-mean form=+0.0394"
+   ],
+   [
+    "Pi+maint",
+    "Ps+maint",
+    "A_24 = +0.5964  [+0.5964, +0.5964] (95% paired bootstrap, S=1); delta-SE=nan; sign-flip p=1; geometric-mean form=+0.5964"
+   ],
+   [
+    "Ci+maint",
+    "Pi+maint",
+    "A_24 = -0.0207  [-0.0207, -0.0207] (95% paired bootstrap, S=1); delta-SE=nan; sign-flip p=1; geometric-mean form=-0.0207"
+   ],
+   [
+    "Cs+maint",
+    "Bs",
+    "A_24 = -16.3044  [-16.3044, -16.3044] (95% paired bootstrap, S=1); delta-SE=nan; sign-flip p=1; geometric-mean form=-16.3044"
+   ],
+   [
+    "Ci",
+    "Bi",
+    "A_24 = -3.4023  [-3.4023, -3.4023] (95% paired bootstrap, S=1); delta-SE=nan; sign-flip p=1; geometric-mean form=-3.4023"
+   ]
+  ],
+  "cpu": {
+   "Cs": 2.194,
+   "Ci": 0.896,
+   "Bs": 0.127,
+   "Bi": 0.122,
+   "Ps": 2.175,
+   "Pi": 0.878
+  },
+  "maint": {
+   "Cs": 1.665,
+   "Ci": 0.36,
+   "Ps": 1.654,
+   "Pi": 0.358
+  },
+  "outcomes": {
+   "Cs": {
+    "tasks": 24,
+    "solved": 24,
+    "qualified": 24,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Ci": {
+    "tasks": 24,
+    "solved": 24,
+    "qualified": 24,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bs": {
+    "tasks": 24,
+    "solved": 24,
+    "qualified": 24,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bi": {
+    "tasks": 24,
+    "solved": 24,
+    "qualified": 24,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Ps": {
+    "tasks": 24,
+    "solved": 24,
+    "qualified": 24,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pi": {
+    "tasks": 24,
+    "solved": 24,
+    "qualified": 24,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true
+  }
+ }
+}

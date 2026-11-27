@@ -1,0 +1,4 @@
+applied g57_by_rel_wrong_relation to packetlm/engine.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 160, "readonly_calls": 0, "gated": 0, "reply_diffs": 43, "state_diffs": 37, "final_bytes_diffs": 0, "errors": 0}
+{"session": 0, "call": 1, "lines": ["example aa: e3 -> e4", "example aa: e5 -> e4", "example aa: e4 -> e2"], "state_diff": true}
+{"session": 1, "call": 1, "lines": ["example mm: e1 -> e3", "example mm: e4 -> e5", "example mm: e2 -> e1"], "state_diff": true}

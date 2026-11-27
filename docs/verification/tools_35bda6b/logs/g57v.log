@@ -1,0 +1,270 @@
+{
+ "guards": {
+  "exact_replies_and_state_i_equal_s": true,
+  "no_wrong_qualified_C": true,
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ },
+ "comp": {
+  "primary": [
+   [
+    "Ci+maint",
+    "Bi",
+    "A_36 = -1.0994  [-1.2395, -0.9800] (95% paired bootstrap, S=2); delta-SE=0.1289; sign-flip p=0.5; geometric-mean form=-1.1058"
+   ],
+   [
+    "Ci+maint",
+    "Bs",
+    "A_36 = -1.1046  [-1.1917, -1.0269] (95% paired bootstrap, S=2); delta-SE=0.0821; sign-flip p=0.5; geometric-mean form=-1.1077"
+   ],
+   [
+    "Ci+maint",
+    "Cs+maint",
+    "A_36 = +0.0229  [-0.0052, +0.0504] (95% paired bootstrap, S=2); delta-SE=0.0278; sign-flip p=1; geometric-mean form=+0.0230"
+   ]
+  ],
+  "secondary": [
+   [
+    "Bi",
+    "Bs",
+    "A_36 = -0.0025  [-0.0237, +0.0213] (95% paired bootstrap, S=2); delta-SE=0.0224; sign-flip p=1; geometric-mean form=-0.0009"
+   ],
+   [
+    "Pi+maint",
+    "Ps+maint",
+    "A_36 = +0.0658  [+0.0618, +0.0693] (95% paired bootstrap, S=2); delta-SE=0.0037; sign-flip p=0.5; geometric-mean form=+0.0656"
+   ],
+   [
+    "Ci+maint",
+    "Pi+maint",
+    "A_36 = -0.4850  [-0.5500, -0.4273] (95% paired bootstrap, S=2); delta-SE=0.0611; sign-flip p=0.5; geometric-mean form=-0.4874"
+   ],
+   [
+    "Cs+maint",
+    "Bs",
+    "A_36 = -1.1539  [-1.3080, -1.0164] (95% paired bootstrap, S=2); delta-SE=0.1453; sign-flip p=0.5; geometric-mean form=-1.1573"
+   ],
+   [
+    "Ci",
+    "Bi",
+    "A_36 = -0.9680  [-1.1025, -0.8532] (95% paired bootstrap, S=2); delta-SE=0.1239; sign-flip p=0.5; geometric-mean form=-0.9739"
+   ],
+   [
+    "Fi+maint",
+    "Fs+maint",
+    "A_36 = +0.2072  [+0.1988, +0.2152] (95% paired bootstrap, S=2); delta-SE=0.0082; sign-flip p=0.5; geometric-mean form=+0.2070"
+   ],
+   [
+    "Ci+maint",
+    "Fi+maint",
+    "A_36 = -9.4350  [-9.7415, -9.1352] (95% paired bootstrap, S=2); delta-SE=0.3031; sign-flip p=0.5; geometric-mean form=-9.4339"
+   ]
+  ],
+  "cpu": {
+   "Cs": 16.034,
+   "Ci": 15.667,
+   "Bs": 7.444,
+   "Bi": 7.463,
+   "Ps": 11.293,
+   "Pi": 10.55,
+   "Fs": 1.894,
+   "Fi": 1.501
+  },
+  "maint": {
+   "Cs": 1.675,
+   "Ci": 0.981,
+   "Ps": 1.685,
+   "Pi": 0.948,
+   "Fs": 1.005,
+   "Fi": 0.634
+  },
+  "outcomes": {
+   "Cs": {
+    "tasks": 72,
+    "solved": 72,
+    "qualified": 71,
+    "censored": 0,
+    "uses_library": 42,
+    "wrong_qualified_sealed": 0
+   },
+   "Ci": {
+    "tasks": 72,
+    "solved": 72,
+    "qualified": 71,
+    "censored": 0,
+    "uses_library": 42,
+    "wrong_qualified_sealed": 0
+   },
+   "Bs": {
+    "tasks": 72,
+    "solved": 71,
+    "qualified": 71,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bi": {
+    "tasks": 72,
+    "solved": 71,
+    "qualified": 71,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Ps": {
+    "tasks": 72,
+    "solved": 71,
+    "qualified": 71,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pi": {
+    "tasks": 72,
+    "solved": 71,
+    "qualified": 71,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Fs": {
+    "tasks": 72,
+    "solved": 38,
+    "qualified": 36,
+    "censored": 36,
+    "uses_library": 24,
+    "wrong_qualified_sealed": 0
+   },
+   "Fi": {
+    "tasks": 72,
+    "solved": 38,
+    "qualified": 36,
+    "censored": 36,
+    "uses_library": 24,
+    "wrong_qualified_sealed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true,
+   "F": true
+  }
+ },
+ "unrel": {
+  "primary": [
+   [
+    "Ci+maint",
+    "Bi",
+    "A_24 = -5.4729  [-5.8740, -5.1367] (95% paired bootstrap, S=2); delta-SE=0.3658; sign-flip p=0.5; geometric-mean form=-5.4949"
+   ],
+   [
+    "Ci+maint",
+    "Bs",
+    "A_24 = -6.0088  [-6.2717, -5.7489] (95% paired bootstrap, S=2); delta-SE=0.2614; sign-flip p=0.5; geometric-mean form=-6.0054"
+   ],
+   [
+    "Ci+maint",
+    "Cs+maint",
+    "A_24 = +0.6065  [+0.6009, +0.6116] (95% paired bootstrap, S=2); delta-SE=0.0053; sign-flip p=0.5; geometric-mean form=+0.6063"
+   ]
+  ],
+  "secondary": [
+   [
+    "Bi",
+    "Bs",
+    "A_24 = -0.0828  [-0.1850, +0.0182] (95% paired bootstrap, S=2); delta-SE=0.1016; sign-flip p=1; geometric-mean form=-0.0786"
+   ],
+   [
+    "Pi+maint",
+    "Ps+maint",
+    "A_24 = +0.5914  [+0.5902, +0.5925] (95% paired bootstrap, S=2); delta-SE=0.0012; sign-flip p=0.5; geometric-mean form=+0.5914"
+   ],
+   [
+    "Ci+maint",
+    "Pi+maint",
+    "A_24 = +0.0066  [+0.0020, +0.0109] (95% paired bootstrap, S=2); delta-SE=0.0044; sign-flip p=0.5; geometric-mean form=+0.0064"
+   ],
+   [
+    "Cs+maint",
+    "Bs",
+    "A_24 = -16.8096  [-17.7206, -15.9090] (95% paired bootstrap, S=2); delta-SE=0.9058; sign-flip p=0.5; geometric-mean form=-16.7918"
+   ],
+   [
+    "Ci",
+    "Bi",
+    "A_24 = -2.8714  [-3.0634, -2.7105] (95% paired bootstrap, S=2); delta-SE=0.1751; sign-flip p=0.5; geometric-mean form=-2.8829"
+   ]
+  ],
+  "cpu": {
+   "Cs": 4.668,
+   "Ci": 1.837,
+   "Bs": 0.262,
+   "Bi": 0.284,
+   "Ps": 4.526,
+   "Pi": 1.849
+  },
+  "maint": {
+   "Cs": 3.453,
+   "Ci": 0.738,
+   "Ps": 3.415,
+   "Pi": 0.75
+  },
+  "outcomes": {
+   "Cs": {
+    "tasks": 48,
+    "solved": 48,
+    "qualified": 48,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Ci": {
+    "tasks": 48,
+    "solved": 48,
+    "qualified": 48,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bs": {
+    "tasks": 48,
+    "solved": 48,
+    "qualified": 48,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bi": {
+    "tasks": 48,
+    "solved": 48,
+    "qualified": 48,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Ps": {
+    "tasks": 48,
+    "solved": 48,
+    "qualified": 48,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pi": {
+    "tasks": 48,
+    "solved": 48,
+    "qualified": 48,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true
+  }
+ }
+}

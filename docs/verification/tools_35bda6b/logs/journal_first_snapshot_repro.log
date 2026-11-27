@@ -1,0 +1,19 @@
+files: ['s.json', 's.json.bak', 's.json.journal'] | journal head: {"schema": "packetlm.journal/1", "base": "98811961a8f0bd440db33944a9f710153c74c96372a7e5813ca8e4a9e5f09858"}
+reopen: ['a kk b [no construction for kk]']
+after deleting s.json and s.json.bak: ['s.json.journal']
+Traceback (most recent call last):
+  File "/workspace/pl-verify/docs/verification/tools_35bda6b/journal_first_snapshot_repro.py", line 26, in <module>
+    print("new call on the reset path:", Server().call(st, F, ["what is a kk"])["replies"], "(a fresh per-process engine: unknown)")
+                                         ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/pl-verify/packetlm/serve.py", line 204, in call
+    o = self.cur = self.open_path(path, kw, list(flags))
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/pl-verify/packetlm/serve.py", line 156, in open_path
+    _need(head.get("base") is not None and eng.report.get("loaded") != "new",
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          "journal without its base snapshot (reset a path by deleting STATE, STATE.bak and STATE.journal)")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/pl-verify/packetlm/engine.py", line 128, in _need
+    raise StateError(msg)
+packetlm.engine.StateError: journal without its base snapshot (reset a path by deleting STATE, STATE.bak and STATE.journal)
+rc 1

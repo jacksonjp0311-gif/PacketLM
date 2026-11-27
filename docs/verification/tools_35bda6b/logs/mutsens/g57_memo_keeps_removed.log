@@ -1,0 +1,4 @@
+applied g57_memo_keeps_removed to packetlm/engine.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 2601, "readonly_calls": 1421, "gated": 7904, "reply_diffs": 16, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 0, "readonly_known_replies": 7267, "readonly_ambiguous_replies": 552}
+{"session": 15, "call": 19, "line": "what is e2 r1", "replies": {"REF": "unknown", "IDX": "e2 r1 e7 [no construction for r1]", "IDX2": "e2 r1 e7 [no construction for r1]"}}
+{"session": 16, "call": 21, "line": "what is e1 w2", "replies": {"REF": "unknown", "IDX": "e1 r2 e5 [no construction for r2]", "IDX2": "e1 r2 e5 [no construction for r2]"}}

@@ -1,0 +1,4 @@
+applied g57_memo_ignores_added to packetlm/engine.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 2467, "readonly_calls": 1339, "gated": 7378, "reply_diffs": 24, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 0, "readonly_known_replies": 6883, "readonly_ambiguous_replies": 425}
+{"session": 1, "call": 26, "line": "what is e2 r0", "replies": {"REF": "ambiguous: e0 or e4 or n1?", "IDX": "e2 r0 e0 [no construction for r0]", "IDX2": "e2 r0 e0 [no construction for r0]"}}
+{"session": 9, "call": 37, "line": "What is e7 w3?", "replies": {"REF": "ambiguous: e1 or e6?", "IDX": "e7 r1 e1 [no construction for r1]", "IDX2": "e7 r1 e1 [no construction for r1]"}}

@@ -1,0 +1,4 @@
+applied g57_readonly_any_line to packetlm/serve.py
+{"seed": 201, "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 80, "calls": 2112, "readonly_calls": 1107, "gated": 5943, "reply_diffs": 0, "state_diffs": 0, "final_bytes_diffs": 0, "errors": 42, "readonly_known_replies": 5827, "readonly_ambiguous_replies": 308}
+{"session": 1, "call": 9, "lines": ["what is e1 aa", "What is zq bb?", "fact e4 r2 e1", "what is e2 aa"], "errors": {"REF": null, "IDX": "StateError: read-only call changed the state", "IDX2": null}}
+{"session": 6, "call": 24, "lines": ["what is e2 bb", "what is e5 zz.", "fact e3 r1 e3", "what is e0 zz."], "errors": {"REF": null, "IDX": "StateError: read-only call changed the state", "IDX2": null}}
