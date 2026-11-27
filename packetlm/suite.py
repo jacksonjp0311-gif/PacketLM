@@ -10,9 +10,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-SUITE = ["g37_test", "system", "bridge", "roles", "runtime", "chat", "qualify", "geom", "g44_test"]
+SUITE = ["g37_test", "system", "bridge", "roles", "runtime", "chat", "qualify", "geom", "g44_test", "legacy_checks"]
 SMOKE = ["crossdomain", "demo", "feedoffer", "gap", "gaptest", "learn", "memory", "nexttoken", "train", "vocab"]
-RECEIPT = {"g37_test": "g37_receipt.json", "g44_test": "g44_receipt.json"}
+RECEIPT = {"g37_test": "g37_receipt.json", "g44_test": "g44_receipt.json", "legacy_checks": "legacy_receipt.json"}
 
 
 def count(name) -> tuple[int, int]:
@@ -22,8 +22,6 @@ def count(name) -> tuple[int, int]:
     if name == "g37_test":
         return len(data["tests"]), len(data["failed"])
     n = sum(1 for v in data.values() if isinstance(v, bool))
-    if name == "geom" and isinstance(data.get("spoken"), str):
-        n += 1  # geom's "spoken" check is overwritten by the spoken string in its receipt; it still gates exit
     return n, len(data["failed"])
 
 

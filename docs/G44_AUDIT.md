@@ -56,3 +56,33 @@ The mutation run in `packetlm/mutations.py` must show it can.
 
 Independent reference: `packetlm/reference.py` (dict-of-sets, no shared code).
 Engine execution, judgement and learning must agree with it on every case tested.
+
+## Result
+
+Engine schema 2 (`packetlm/engine.py`), reference `packetlm/reference.py`,
+`packetlm/legacy_checks.py`, `packetlm/mutations.py`.
+
+- `python -m packetlm.suite`: 10 of 10 modules pass, with 125 named checks and 0
+  failures (historical 47, G44 56, legacy invariants 22). All 10 smoke modules run.
+- `python -m packetlm.mutations`: 15 of 15 single mutations are killed
+  (`docs/evidence/g44_audit_mutations.json`). Three are killed by a crash rather
+  than a named check: no backup fallback, library off, and compose keeping its source.
+- Zero-support hypotheses kept: 81 live (72 with zero support) in the 8-relation
+  discovery world, equal to the reference's 81.
+- Discovery: on all 5 seeds, the target was found in 3 questions, but as
+  **provisional**: the `rg+rg` gap is a blocking undetermined alternative. After
+  the missing `rg` facts are taught it becomes **qualified**. Under v1 this
+  was reported as fully acquired, which the audit correctly rejected.
+- Validation rejects 7 of 7 corruption classes and recovers from the backup, with a report.
+
+### Failure evidence
+
+`docs/evidence/g44_audit_run1_failed.json`: in the first run, 1 of 55 failed
+(`silent_oracle_adopts_nothing`). This was a real engine bug: `acquire()` overwrote the
+hypothesis record and lost the list of questions the oracle could not answer.
+It was fixed by carrying the list over. Mutation `unanswered_lost` now guards it.
+
+### Finding
+
+`memory.py`'s own prompt opens 0 packets (0 hops), so its receipt has always
+measured nothing. This is recorded in `legacy_receipt.json` findings, not hidden.

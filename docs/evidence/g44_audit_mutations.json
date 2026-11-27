@@ -1,0 +1,134 @@
+{
+  "mutations": {
+    "judge_none_contradicts": {
+      "exit": 1,
+      "failed": [
+        "discovery.missing_is_undetermined",
+        "discovery.gap_survives_as_undetermined",
+        "discovery.gap_keeps_provisional_until_taught",
+        "audit.zero_support_kept",
+        "audit.contradiction_suspends",
+        "audit.versions_pin_dependents",
+        "audit.ambiguous_path_undetermined"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "blocking_ignored": {
+      "exit": 1,
+      "failed": [
+        "discovery.gap_keeps_provisional_until_taught",
+        "audit.contradiction_suspends"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "review_noop": {
+      "exit": 1,
+      "failed": [
+        "fresh_process.p4_correction_drops_derived",
+        "fresh_process.p5_sees_corrections",
+        "audit.contradiction_suspends",
+        "audit.reacquired_as_v2"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "superseded_not_pinned": {
+      "exit": 1,
+      "failed": [
+        "audit.versions_pin_dependents"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "cycle_offered": {
+      "exit": 1,
+      "failed": [
+        "audit.no_cycle_offered"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "first_proof_only": {
+      "exit": 1,
+      "failed": [
+        "audit.two_proofs_stored",
+        "audit.one_retraction_keeps_conclusion"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "tms_all_or_nothing": {
+      "exit": 1,
+      "failed": [
+        "audit.one_retraction_keeps_conclusion"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "expression_borrows": {
+      "exit": 1,
+      "failed": [
+        "fresh_process.p3_uses_capability",
+        "fresh_process.p5_sees_corrections",
+        "audit.missing_construction_reported"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "no_dangling_check": {
+      "exit": 1,
+      "failed": [
+        "audit.nested_validation"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "no_backup_fallback": {
+      "exit": 1,
+      "failed": [],
+      "verdict": "KILLED",
+      "crash": "packetlm.engine.StateError: no valid state: {'primary': 'checksum mismatch'}"
+    },
+    "ambiguity_off": {
+      "exit": 1,
+      "failed": [
+        "memory.ambiguity_abstains",
+        "audit.multiple_conclusions_ambiguous"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "library_off": {
+      "exit": 1,
+      "failed": [],
+      "verdict": "KILLED",
+      "crash": "KeyError: 'great'"
+    },
+    "zero_support_dropped": {
+      "exit": 1,
+      "failed": [
+        "audit.zero_support_kept"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "unanswered_lost": {
+      "exit": 1,
+      "failed": [
+        "discovery.silent_oracle_adopts_nothing"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "compose_keeps_source": {
+      "exit": 1,
+      "failed": [],
+      "verdict": "KILLED",
+      "crash": "KeyError: 'great'"
+    }
+  },
+  "killed": 15,
+  "total": 15
+}

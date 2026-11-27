@@ -89,7 +89,7 @@ def run() -> dict:
         "clash_abstain": clash is None,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "spoken": spoken, "failed": failed, "claim": "construction selected from the library; a clash abstains"}
+    receipt = {**checks, "spoken_text": spoken, "failed": failed, "claim": "construction selected from the library; a clash abstains"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
