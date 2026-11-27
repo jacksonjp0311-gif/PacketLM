@@ -32,7 +32,8 @@ from .packets import Packet
 from .roles import induce, select
 from . import reference
 
-SCHEMA = "packetlm.engine/2"
+SCHEMA = "packetlm.engine/3"  # packets are derived by bind, never stored
+SCHEMA_V2 = "packetlm.engine/2"  # stored per-fact packets; accepted only to migrate, fully checked
 EXEC_OK = ("qualified", "provisional")
 PINNED_OK = EXEC_OK + ("superseded",)  # a pinned dependent keeps its old definition
 VER_STATUS = ("qualified", "provisional", "suspended", "revoked", "superseded")
@@ -96,7 +97,10 @@ def _split_cap(step):
 
 
 def validate(doc) -> dict:
-    _need(isinstance(doc, dict) and doc.get("schema") == SCHEMA, "schema mismatch")
+    """Full nested validation. Schema 3 facts carry no packet (bind is derived on demand);
+    a schema-2 document is accepted only for migration and its stored packets must bind."""
+    _need(isinstance(doc, dict) and doc.get("schema") in (SCHEMA, SCHEMA_V2), "schema mismatch")
+    v2 = doc["schema"] == SCHEMA_V2
     state = doc.get("state")
     _need(isinstance(state, dict), "state missing")
     _need(doc.get("checksum") == _checksum(state), "checksum mismatch")
@@ -106,12 +110,19 @@ def validate(doc) -> dict:
         _need(isinstance(state.get(key), typ), f"bad field {key}")
     ids = set()
     for f in state["facts"]:
-        for key, typ in {"id": str, "s": str, "r": str, "o": str, "bits": str, "count": int, "supports": list}.items():
+        keys = {"id": str, "s": str, "r": str, "o": str, "supports": list}
+        if v2:
+            keys.update({"bits": str, "count": int})
+        for key, typ in keys.items():
             _need(isinstance(f.get(key), typ), f"bad fact key {key}")
+        if not v2:
+            _need("bits" not in f and "count" not in f, f"schema 3 stores no packet; bind is derived: {f.get('id')}")
         _need(f["id"] == f"{f['s']} {f['r']} {f['o']}", f"bad fact id {f['id']}")
         _need(f["id"] not in ids, f"duplicate fact {f['id']}")
         ids.add(f["id"])
-        _need(bind(f["s"], f["r"], f["o"]).bits.hex() == f["bits"], f"packet does not bind {f['id']}")
+        if v2:
+            pkt = bind(f["s"], f["r"], f["o"])
+            _need(pkt.bits.hex() == f["bits"] and pkt.count == f["count"], f"packet does not bind {f['id']}")
         _need(f["supports"], f"unsupported fact {f['id']}")
         for sp in f["supports"]:
             _need(sp.get("kind") in ("told", "derived") and isinstance(sp.get("premises"), list)
@@ -182,6 +193,7 @@ class Engine:
         self.operators = operators
         self.stats = {"evaluations": 0, "executions": 0, "row_ops": 0, "asks": 0}
         self._cache = None
+        self._known_bytes = None  # sha256 of the primary bytes this process validated or wrote
 
     # ---------- persistence ----------
 
@@ -197,7 +209,9 @@ class Engine:
                 errors[label] = "missing"
                 continue
             try:
-                state = validate(json.loads(p.read_text()))
+                raw = p.read_bytes()
+                doc = json.loads(raw)
+                state = validate(doc)
             except (ValueError, StateError) as exc:
                 errors[label] = str(exc)
                 continue
@@ -205,7 +219,14 @@ class Engine:
             if label == "backup":
                 report["recovered"] = True
                 report["primary_error"] = errors["primary"]
-            return cls(path, state, report, **kw)
+            if doc["schema"] == SCHEMA_V2:  # explicit, reported migration; the v2 file becomes the backup on save
+                for f in state["facts"]:
+                    del f["bits"], f["count"]
+                report["migrated"] = f"{SCHEMA_V2} -> {SCHEMA}: {len(state['facts'])} stored packets checked and dropped"
+            eng = cls(path, state, report, **kw)
+            if label == "primary" and doc["schema"] == SCHEMA:
+                eng._known_bytes = hashlib.sha256(raw).hexdigest()
+            return eng
         raise StateError(f"no valid state: {errors}")
 
     def save(self) -> None:
@@ -213,12 +234,16 @@ class Engine:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         if self.path.exists():
             try:
-                validate(json.loads(self.path.read_text()))
-                _write_atomic(self.path.with_name(self.path.name + ".bak"), self.path.read_bytes())
+                cur = self.path.read_bytes()
+                if hashlib.sha256(cur).hexdigest() != self._known_bytes:  # bytes this process did not validate
+                    validate(json.loads(cur))
+                _write_atomic(self.path.with_name(self.path.name + ".bak"), cur)
             except (ValueError, StateError):
                 pass  # never back up a corrupt primary over a good backup
         doc = {"schema": SCHEMA, "checksum": _checksum(self.state), "state": self.state}
-        _write_atomic(self.path, json.dumps(doc).encode())
+        data = json.dumps(doc).encode()
+        _write_atomic(self.path, data)
+        self._known_bytes = hashlib.sha256(data).hexdigest()
         try:
             dfd = os.open(self.path.parent, os.O_RDONLY)
             os.fsync(dfd)
@@ -277,9 +302,7 @@ class Engine:
                        for sp in fact["supports"]):
                 fact["supports"].append(support)
             return fact
-        pkt = bind(s, r, o)
-        fact = {"id": f"{s} {r} {o}", "s": s, "r": r, "o": o, "bits": pkt.bits.hex(),
-                "count": pkt.count, "supports": [support]}
+        fact = {"id": f"{s} {r} {o}", "s": s, "r": r, "o": o, "supports": [support]}
         self.state["facts"].append(fact)
         self._dirty()
         return fact
@@ -403,11 +426,12 @@ class Engine:
             q = partial(s, r)
             qi = int.from_bytes(q.bits, "big")
             found = []
-            for f in self.state["facts"]:
-                pkt = Packet(bits=bytes.fromhex(f["bits"]), count=f["count"])
-                if pkt.score(q) <= 0:
+            if "packets" not in idx:  # derived on demand, never stored (schema 3)
+                idx["packets"] = [int.from_bytes(bind(f["s"], f["r"], f["o"]).bits, "big") for f in self.state["facts"]]
+            for p in idx["packets"]:
+                if 2 * (qi & p).bit_count() - p.bit_count() <= 0:  # Packet.score
                     continue
-                got = idx["decode"].get(pack(int.from_bytes(pkt.bits, "big") ^ qi).bits)
+                got = idx["decode"].get(pack(p ^ qi).bits)
                 if got and got not in found:
                     found.append(got)
             found = sorted(found)

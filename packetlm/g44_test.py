@@ -14,7 +14,7 @@ import sys
 import tempfile
 from itertools import product
 from pathlib import Path
-from .engine import Engine, StateError, judge, _checksum, SCHEMA
+from .engine import Engine, StateError, judge, _checksum, SCHEMA, SCHEMA_V2
 from .field import add as field_add, ask as field_ask, bind
 from . import reference
 
@@ -216,13 +216,20 @@ def persistence_checks(tmp) -> dict:
     roundtrip = re1.state == eng.state and re1.report == {"loaded": "primary"}
     backup_is_prior = bak.read_text() == gen1
     doc = json.loads(path.read_text())
+    f0 = dict(doc["state"]["facts"][0])
     doc["state"]["facts"][0]["o"] = "zzz"
     path.write_text(json.dumps(doc))
     r_sum = Engine.open(path)
     doc["state"]["facts"][0]["id"] = "p0 parent zzz"
+    doc = as_schema2(doc)  # stored packets (schema 2) of the ORIGINAL fact, then the tamper above
+    doc["state"]["facts"][0]["bits"] = bind(f0["s"], f0["r"], f0["o"]).bits.hex()
     doc["checksum"] = _checksum(doc["state"])
     path.write_text(json.dumps(doc))
     r_bind = Engine.open(path)
+    good_bak = bak.read_text()
+    r_bind.save()  # loaded from backup: the tampered primary must not become the backup
+    corrupt_not_backed_up = bak.read_text() == good_bak and Engine.open(path).report == {"loaded": "primary"}
+    bak.write_text(good_bak)  # the truncation steps below start from the good backup either way
     path.write_text("{not json")
     r_trunc = Engine.open(path)
     bak.write_text("{also bad")
@@ -237,6 +244,7 @@ def persistence_checks(tmp) -> dict:
         "no_temp_left": not any(p.suffix == ".tmp" for p in tmp.iterdir()),
         "checksum_tamper_recovers_loudly": r_sum.report.get("recovered") is True and "checksum" in r_sum.report["primary_error"],
         "binding_tamper_recovers_loudly": r_bind.report.get("recovered") is True and "bind" in r_bind.report["primary_error"],
+        "corrupt_primary_not_backed_up": corrupt_not_backed_up,
         "truncated_recovers": r_trunc.report.get("loaded") == "backup" and len(r_trunc.state["facts"]) == 9,
         "both_corrupt_raises": both == "raised",
     }
@@ -272,6 +280,38 @@ def fresh_process_checks(tmp) -> dict:
         "p5_sees_corrections": p5.get("replies") == ["rex owns key", "ann grand eve [no construction for grand] [provisional]", "bea parent eve"],
         "p6_recovery_reported": p6.get("load", {}).get("recovered") is True and p6["replies"] == ["rex owns key"],
         "_replies": {"p1": p1, "p2": p2, "p3": p3, "p4": p4, "p5": p5, "p6": p6},
+    }
+
+
+def as_schema2(doc) -> dict:
+    """Test-side writer of the old format: every fact carries its stored packet."""
+    doc = copy.deepcopy(doc)
+    for f in doc["state"]["facts"]:
+        pkt = bind(f["s"], f["r"], f["o"])
+        f["bits"], f["count"] = pkt.bits.hex(), pkt.count
+    doc["schema"] = SCHEMA_V2
+    doc["checksum"] = _checksum(doc["state"])
+    return doc
+
+
+def migration_checks(tmp) -> dict:
+    """A schema-2 state is checked in full, migrated explicitly and reported; answers do not change."""
+    path = tmp / "m.json"
+    eng = grand_engine(path)
+    eng.save()
+    before = [eng.turn(q) for q in ("what is p0 grand", "what is p1 parent", "what is p9 parent")]
+    path.write_text(json.dumps(as_schema2(json.loads(path.read_text()))))
+    m = Engine.open(path)
+    after = [m.turn(q) for q in ("what is p0 grand", "what is p1 parent", "what is p9 parent")]
+    m.save()
+    again = Engine.open(path)
+    return {
+        "v2_migrates_reported": "migrated" in m.report and m.report["loaded"] == "primary",
+        "v2_migration_same_answers": before == after and after[0] != "unknown",
+        "v3_saved_without_packets": json.loads(path.read_text())["schema"] == SCHEMA
+            and all("bits" not in f for f in json.loads(path.read_text())["state"]["facts"])
+            and again.report == {"loaded": "primary"},
+        "v2_kept_as_backup": json.loads((tmp / "m.json.bak").read_text())["schema"] == SCHEMA_V2,
     }
 
 
@@ -512,7 +552,7 @@ def audit_checks(tmp) -> dict:
     def checksum(st):
         st["turn"] += 1
 
-    def binding(st):
+    def binding(st):  # schema 3 must not carry a stored packet at all
         st["facts"][0]["bits"] = bind("a", "b", "c").bits.hex()
 
     errs = {k: corrupt(tmp, k, fn) for k, fn in [("dangling", dangling), ("missing_dep", missing_dep), ("dup", dup),
@@ -558,6 +598,7 @@ def run() -> dict:
             "discovery": discovery_checks(tmp),
             "persistence": persistence_checks(tmp),
             "fresh_process": fresh_process_checks(tmp),
+            "migration": migration_checks(tmp),
             "audit": audit_checks(tmp),
         }
     checks = {f"{sec}.{k}": bool(v) for sec, c in sections.items() for k, v in c.items() if not k.startswith("_")}
