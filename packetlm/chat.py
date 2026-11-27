@@ -1,7 +1,7 @@
-"""Generic question.
+"""Route.
 
-what is X Y applies the found sequence.
-The sentence still needs the construction.
+The asked relation selects the operator.
+Age is not tail. It abstains.
 Not a general mind.
 """
 
@@ -56,7 +56,7 @@ def express(construction, fact):
     roles = {"s": s, "r": construction["word"], "o": o}
     return " ".join(roles[role] for role in construction["order"])
 
-def turn(field, objects, library, seq, line):
+def turn(field, objects, library, operators, line):
     raw = line.lower().strip().rstrip("?").rstrip(".")
     parts = raw.split()
     if len(parts) == 4 and parts[0] == "correct":
@@ -73,8 +73,12 @@ def turn(field, objects, library, seq, line):
                 objects.append(t)
         return f"recorded {fact[0]} {fact[1]} {fact[2]}"
     if len(parts) == 4 and parts[0] == "what" and parts[1] == "is":
-        value = apply_seq(field, seq, parts[2], objects)
-        spoken = express(choose(library, "hastail"), (parts[2], "hastail", value)) if value else None
+        asked = parts[3]
+        op = next((o for o in operators if o["in"] == asked), None)
+        if not op:
+            return "unknown"
+        value = apply_seq(field, tuple(op["seq"]), parts[2], objects)
+        spoken = express(choose(library, op["out"]), (parts[2], op["out"], value)) if value else None
         return spoken or "unknown"
     if len(parts) == 4 and parts[0] == "what" and parts[1] == "does" and parts[3] == "own":
         owned = ask(field, parts[2], "owns", objects)
@@ -93,22 +97,22 @@ def run() -> dict:
     add(field, "mira", "isa", "dax")
     add(field, "dax", "tail", "green")
     seq = discover(field, [("mira", "green")], objects)
+    operators = [{"in": "tail", "seq": list(seq), "out": "hastail"}] if seq else []
     lib = fresh_library()
     lines = [ln for ln in Path("data/dialogue.txt").read_text().splitlines() if ln.strip()]
-    replies = [turn(field, objects, lib, seq, line) for line in lines]
-    save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None, "library": lib})
+    replies = [turn(field, objects, lib, operators, line) for line in lines]
+    save(STATE, {"field": field, "objects": objects, "operators": operators, "library": lib})
     loaded = load(STATE)
-    spoken = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], tuple(loaded["seq"]), "what is orion tail")
-    no_lang = [c for c in loaded["library"] if c.get("meaning") != "hastail"]
-    muted = turn(list(loaded["field"]), list(loaded["objects"]), no_lang, tuple(loaded["seq"]), "what is orion tail")
+    spoken = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is orion tail")
+    age = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is orion age")
     checks = {
-        "spoken": spoken == "orion hastail red",
-        "muted": muted == "unknown",
+        "routed": spoken == "orion hastail red",
+        "age_abstains": age == "unknown",
         "generic": replies[7] == "orion hastail green",
-        "saved_interprets": turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], tuple(loaded["seq"]), "luna isa dax") == "recorded luna isa dax",
+        "saved_interprets": turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "luna isa dax") == "recorded luna isa dax",
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "what is X Y; sentence still needs the construction"}
+    receipt = {**checks, "failed": failed, "claim": "asked relation selects the operator; age abstains"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
@@ -117,10 +121,9 @@ def run() -> dict:
     return receipt
 
 def interactive():
-    state = load(STATE) if STATE.exists() else {"field": [], "objects": [], "seq": None, "library": []}
+    state = load(STATE) if STATE.exists() else {"field": [], "objects": [], "operators": [], "library": []}
     field, objects = state.get("field", []), state.get("objects", [])
-    seq = tuple(state["seq"]) if state.get("seq") else None
-    lib = state.get("library") or []
+    operators, lib = state.get("operators") or [], state.get("library") or []
     while True:
         try:
             line = input("> ")
@@ -128,8 +131,8 @@ def interactive():
             break
         if line.strip() in {"quit", "exit"}:
             break
-        print(turn(field, objects, lib, seq, line))
-        save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None, "library": lib})
+        print(turn(field, objects, lib, operators, line))
+        save(STATE, {"field": field, "objects": objects, "operators": operators, "library": lib})
 
 if __name__ == "__main__":
     if "--interactive" in sys.argv:
