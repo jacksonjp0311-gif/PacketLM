@@ -917,3 +917,13 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - **docs/G53.md:** the L1 decision text now labels G51's 3.87× as descriptive (not a registered
   contrast).
 - **Tests:** g44 133/133, suite 221/221 (11/11), G45 18/18, mutations 92/92.
+
+## 2026-11-27 04:05: chunk stop
+
+- The registered G55 run (seeds 561–567) has **not** been started. It is estimated at over 1 h,
+  and the chunk instruction was to pre-register option 3 if time remains, then stop. No G55 seed
+  has been consumed.
+- The PR body is updated to head 0d686b5. It adds:
+  - the G54 and G55 rows;
+  - the verify-050bebd section;
+  - the tests, Limitations and Next sections.
