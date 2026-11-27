@@ -123,7 +123,9 @@ class Server:
         sc = o.memo.scope if eng.incremental else None
         o.since_full += 1
         if sc is not None and sc["ok"] and o.since_full < self.full_every and o.memo.ix_valid(eng.state) \
-                and _valid_scoped(eng.state, sc["touched"], o.memo.ix["byid"]):
+                and _valid_scoped(eng.state, sc["touched"], o.memo.ix["byid"],
+                                  *((sc.get("caps", set()), None if sc.get("obs_all") else sc.get("obs", set()))
+                                    if eng.routed else (None, None))):
             o.memo.counts["scoped_validations"] += 1
             return
         if eng.incremental:

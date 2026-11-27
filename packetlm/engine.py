@@ -309,7 +309,7 @@ def _valid_fast(doc, checksum_ok=False) -> bool:
     return True
 
 
-def _valid_scoped(state, touched, byid) -> bool:
+def _valid_scoped(state, touched, byid, caps_scope=None, obs_scope=None) -> bool:
     """G57b change-scoped validation: `_valid_fast`'s checks with the per-fact checks run only on the
     facts this call appended or gave a new support (`touched`), premises resolved through the
     persistent index (`byid`, the ids of every fact). Sound only when the call removed nothing and
@@ -361,11 +361,18 @@ def _valid_scoped(state, touched, byid) -> bool:
     for name, rs in state["retired"].items():
         if not all(isinstance(x, dict) and {"s", "o", "reason"} <= set(x) for x in rs):
             return False
-    for name, obs in state["observations"].items():
+    # G58 (`--routed`): the observation and capability checks only on what this call wrote
+    # (`obs_scope`, `caps_scope`: names); versions are append-only and their seqs never change, so a
+    # new dependency cycle must pass through a version written in this call. The periodic full
+    # validation (FULL_VALIDATE_EVERY) covers the rest, as for facts.
+    for name, obs in (state["observations"].items() if obs_scope is None
+                      else ((n, state["observations"][n]) for n in obs_scope if n in state["observations"])):
         if not all(isinstance(o, list) and len(o) == 2 for o in obs):
             return False
     caps = state["capabilities"]
-    for name, cap in caps.items():
+    if caps_scope is not None and any(n not in caps for n in caps_scope):
+        return False
+    for name, cap in (caps.items() if caps_scope is None else ((n, caps[n]) for n in caps_scope)):
         if not isinstance(cap.get("versions"), list):
             return False
         cur = cap.get("current")
@@ -385,7 +392,7 @@ def _valid_scoped(state, touched, byid) -> bool:
             name, v = _split_cap(node)
             for d in _deps_of(caps[name]["versions"][v - 1]["seq"]):
                 visit(d, stack | {node})
-        for name, cap in caps.items():
+        for name, cap in (caps.items() if caps_scope is None else ((n, caps[n]) for n in caps_scope)):
             for ver in cap["versions"]:
                 visit(f"cap:{name}@{ver['v']}", frozenset())  # (scoped copy)
     except StateError:
@@ -505,7 +512,16 @@ class Memo:
         # `review` found the capability's current version not contradicted; `clo[(n, v, seq)]` the
         # dependency closure of a version (a version's seq never changes, and it is part of the key)
         self.rv = {}
+        self.rvx = None  # G58: the last review's generation, tick, closed set and relation -> names map
+        self.rv_obs = set()  # G58: capabilities whose observations changed since the last review
+        self.rv_dirty = set()  # G58: (name, v) whose status changed, and names with a new version, since then
         self.clo = {}
+        # `lib_gen` is bumped by every write that can change what `primitives` offers (a status change,
+        # a new version); `lib` caches the offered capabilities and the routing tables per generation
+        self.lib_gen = 0
+        self.pin_gen = 0  # G58: bumped when a version enters or leaves PINNED_OK (what `expand` checks)
+        self.pfirst = {}  # G58: primitive -> (pin_gen, base, first relation)
+        self.lib = {}
         self.pb = {}  # G58: (name, v, seq) -> the version's expanded base, valid while every status is PINNED_OK
 
     def packet_of(self, t):
@@ -1042,6 +1058,10 @@ class Engine:
                 else:
                     keep.append([s, v])
             self.state["observations"][name] = keep
+        if self.memo is not None:
+            self.memo.rvx = None  # G58: observations rewritten; the next review is a full pass
+            if self.memo.scope is not None:
+                self.memo.scope["obs_all"] = True
         return events
 
     def retract(self, s, r, o=None) -> dict:
@@ -1095,6 +1115,10 @@ class Engine:
         """The teacher replaces an earlier example. The old one is retired; the
         procedure is re-checked and suspended if the new example contradicts it."""
         obs = self.state["observations"].setdefault(name, [])
+        if self.memo is not None:
+            self.memo.rv_obs.add(name)  # G58
+            if self.memo.scope is not None:
+                self.memo.scope.setdefault("obs", set()).add(name)
         for old in [x for x in obs if x[0] == s]:
             obs.remove(old)
             self.state["retired"].setdefault(name, []).append(
@@ -1324,7 +1348,14 @@ class Engine:
         ver = self.version(name, v)
         if ver["status"] == status:
             return []
-        ver["status"] = status
+        old_status, ver["status"] = ver["status"], status
+        if self.memo is not None:
+            self.memo.lib_gen += 1  # G58: what `primitives` offers may change
+            if (old_status in PINNED_OK) != (status in PINNED_OK):
+                self.memo.pin_gen += 1
+            self.memo.rv_dirty.add((name, v))
+            if self.memo.scope is not None:
+                self.memo.scope.setdefault("caps", set()).add(name)
         if status == "qualified":
             ver.setdefault("qualified_at", []).append(self.state["turn"])  # historical, kept apart from current status
         ver.setdefault("history", []).append({"turn": self._tick(), "status": status, "reason": reason})
@@ -1345,25 +1376,124 @@ class Engine:
 
     def review(self) -> list[str]:
         """Re-check every executable capability against its own observations."""
+        if self.routed:
+            return self._review_routed()
         events = []
-        rv = self.memo.rv if self.routed else None
         for name, cap in self.state["capabilities"].items():
             ver = self.version(name)
             if not ver or ver["status"] not in EXEC_OK:
                 continue
+            h = self.evaluate(ver["seq"], self.state["observations"].get(name, []))
+            if h["status"] == "contradicted":
+                events += self._set_status(name, ver["v"], "suspended", "contradicted by its observations")
+        return events
+
+    def _review_routed(self) -> list[str]:
+        """G58 (docs/G58.md §2a): `review` with the same evaluations' outcomes and the same events in
+        the same order. A capability is re-evaluated only if its fingerprint (`_review_fp`: everything
+        `evaluate` reads) may differ from the one of its last non-contradicted evaluation.
+        Fast pass (the closed set is the same and the capability records object is the same as at the
+        last review): only the candidates -- capabilities whose observations changed, that read a
+        relation with triples added or removed since then (stamps), whose own status or versions
+        changed, or whose closure holds a version whose status changed -- are visited, in capability
+        order; every other one has an unchanged fingerprint. If a status changes during the pass,
+        every later capability is visited with its full fingerprint. Otherwise (full pass) every
+        capability's fingerprint is computed and compared."""
+        events = []
+        memo, caps, rv = self.memo, self.state["capabilities"], self.memo.rv
+        self._idx()  # syncs the memo stamps
+        gen0 = memo.lib_gen
+        closed = frozenset(self.state.get("complete", {}))
+        X = memo.rvx
+        fast = None
+        if X is not None and X["caps"] == id(caps):
+            fast = set(memo.rv_obs)
+            for x in X["closed"] ^ closed:  # closed-world judgment changed at these subjects
+                fast |= X["subj"].get(x, set())
+            for r, t in memo.stamp.items():
+                if t > X["tick"]:
+                    fast |= X["rel"].get(r, set())
+            for dn, dv in memo.rv_dirty:  # the capability itself, and every one whose closure holds it
+                fast.add(dn)
+                fast |= X["dep"].get((dn, dv), set()) if dv is not None else X["depn"].get(dn, set())
+            order = X["order"]
+            if len(caps) > len(order):
+                for n in list(caps)[len(order):]:
+                    order[n] = len(order)
+                    fast.add(n)
+        covered = True
+        seen = {}  # name -> (base, deps, observed subjects) of each capability visited
+
+        def visit(name, full_fp=True):
+            nonlocal covered
+            ver = self.version(name)
+            if not ver or ver["status"] not in EXEC_OK:
+                return
             obs = self.state["observations"].get(name, [])
-            if rv is not None:
-                fp = self._review_fp(name, ver, obs)
-                if fp is not None and rv.get(name) == fp:
-                    self.memo.counts["g58_review_skipped"] += 1
-                    continue  # G58: the same inputs as a review that found it not contradicted
+            fp = self._review_fp(name, ver, obs)
+            if fp is not None and rv.get(name) == fp:
+                memo.counts["g58_review_skipped"] += 1
+                seen[name] = (fp[4], fp[3], [o[0] for o in obs])
+                return
             h = self.evaluate(ver["seq"], obs)
             if h["status"] == "contradicted":
-                if rv is not None:
-                    rv.pop(name, None)
-                events += self._set_status(name, ver["v"], "suspended", "contradicted by its observations")
-            elif rv is not None and fp is not None:
+                rv.pop(name, None)
+                events.extend(self._set_status(name, ver["v"], "suspended", "contradicted by its observations"))
+            elif fp is not None:
                 rv[name] = fp
+                seen[name] = (fp[4], fp[3], [o[0] for o in obs])
+            else:
+                covered = False
+
+        if fast is not None:
+            todo = sorted((order[n], n) for n in fast if n in caps)
+            memo.counts["g58_review_fast"] += 1
+            memo.counts["g58_review_unseen"] += len(caps) - len(todo)
+            last = -1
+            for k, n in todo:
+                if memo.lib_gen != gen0:
+                    break
+                visit(n)
+                last = k
+            if memo.lib_gen != gen0:
+                # a status changed during the pass: every later capability with its full fingerprint
+                done = {n for k, n in todo if k <= last}
+                for n in list(caps)[last + 1:]:
+                    if n not in done:
+                        visit(n)
+                memo.rvx = None
+            elif covered and all(b for b, _, _ in seen.values()):
+                for n, (b, ds, subj) in seen.items():  # maps grow (stale entries only add candidates)
+                    for r in b:
+                        X["rel"].setdefault(r, set()).add(n)
+                    for dn, dv, _ in ds:
+                        X["dep"].setdefault((dn, dv), set()).add(n)
+                        X["depn"].setdefault(dn, set()).add(n)
+                    for x in subj:
+                        X["subj"].setdefault(x, set()).add(n)
+                X["tick"], X["closed"] = memo.tick, closed
+            else:
+                memo.rvx = None
+        else:
+            memo.counts["g58_review_full"] += 1
+            for n in list(caps):
+                visit(n)
+            all_seen = all(n in seen for n in caps if (self.version(n) or {}).get("status") in EXEC_OK)
+            if memo.lib_gen == gen0 and covered and all_seen and all(b for b, _, _ in seen.values()):
+                rel, dep, depn, subj = {}, {}, {}, {}
+                for n, (b, ds, ss) in seen.items():
+                    for r in b:
+                        rel.setdefault(r, set()).add(n)
+                    for dn, dv, _ in ds:
+                        dep.setdefault((dn, dv), set()).add(n)
+                        depn.setdefault(dn, set()).add(n)
+                    for x in ss:
+                        subj.setdefault(x, set()).add(n)
+                memo.rvx = {"caps": id(caps), "closed": closed, "tick": memo.tick, "rel": rel, "dep": dep,
+                            "depn": depn, "subj": subj, "order": {n: i for i, n in enumerate(caps)}}
+            else:
+                memo.rvx = None
+        memo.rv_obs, memo.rv_dirty = set(), set()
         return events
 
     def _review_fp(self, name, ver, obs):
@@ -1610,15 +1740,16 @@ class Engine:
         """Programs of length n whose image of the start set never empties; returns (seqs, pruned)."""
         out, pruned, P = [], 0, len(prims)
 
-        first = {p: self._first_rel(p) for p in prims}
         idx = self._idx()
         by_first = {}
         if self.routed:
             # G58: primitives indexed by their first base relation; a node visits only those that
             # leave its frontier, in the original order. Each skipped one adds P^(n-len-1) to
             # `pruned`, exactly as the loop below would (same count, same programs, same order).
-            for i, p in enumerate(prims):
-                by_first.setdefault(first[p], []).append(i)
+            _, _, by_first = self._routing(prims)
+            first = None
+        else:
+            first = {p: self._first_rel(p) for p in prims}
 
         def walk(prefix, front):
             nonlocal pruned
@@ -1633,7 +1764,7 @@ class Engine:
                 pruned += (P - len(ii)) * P ** (n - len(prefix) - 1)
                 visit = [prims[i] for i in ii]
             for p in visit:
-                if first[p] not in here:  # relevance index: no edge leaves the frontier (exact)
+                if first is not None and first[p] not in here:  # relevance index: no edge leaves the frontier (exact)
                     pruned += P ** (n - len(prefix) - 1)
                     continue
                 nxt = self._image(front, p)
@@ -1686,6 +1817,10 @@ class Engine:
 
     def observe(self, name, subject, value) -> list[str]:
         obs = self.state["observations"].setdefault(name, [])
+        if self.memo is not None:
+            self.memo.rv_obs.add(name)  # G58
+            if self.memo.scope is not None:
+                self.memo.scope.setdefault("obs", set()).add(name)
         if [subject, value] not in obs:
             obs.append([subject, value])
         self._tick()
@@ -1705,8 +1840,67 @@ class Engine:
             status = "undetermined"
         return {"seq": list(seq), "status": status, "support": marks.count("supported")}
 
+    def _lib_key(self, name):
+        caps = self.state["capabilities"]
+        return (self.memo.lib_gen, id(caps), len(caps), name, self.use_library, self.qualified_library)
+
+    def _routing(self, prims):
+        """G58: the routing tables for a primitive list (cached per library generation and list):
+        each primitive's base (`expand([p])`), its first base relation, and the indices by first
+        relation. A cached base is checked as `_expand_fast` does (statuses PINNED_OK)."""
+        caps = self.state["capabilities"]
+        key = (self.memo.lib_gen, id(caps), len(caps), tuple(prims))
+        c = self.memo.lib.get(("route", key))
+        if c is None:
+            if len(self.memo.lib) > 4096:
+                self.memo.lib.clear()
+            # each primitive's base and first relation, kept while no version entered or left
+            # PINNED_OK (`expand` of a fixed seq depends on nothing else)
+            pf, pg = self.memo.pfirst, self.memo.pin_gen
+            bases, first = [], []
+            for p in prims:
+                e = pf.get(p)
+                if e is None or e[0] != pg:
+                    b = self._expand_fast([p])
+                    e = pf[p] = (pg, b, None if not b else (b[0].split(":")[1] if b[0].startswith("until:") else b[0]))
+                bases.append(e[1])
+                first.append(e[2])
+            by_first = {}
+            for i, f in enumerate(first):
+                by_first.setdefault(f, []).append(i)
+            c = self.memo.lib[("route", key)] = (bases, first, by_first)
+            self.memo.counts["g58_route_built"] += 1
+        else:
+            self.memo.counts["g58_route_cached"] += 1
+        return c
+
+    def _scan_table(self, names):
+        """G58: `_scan`'s primitive table (bounded): (primitive, base tuple) for those that expand,
+        each one's first base relation, and the indices by first relation -- the same values the
+        scan builds, cached per library generation and primitive list."""
+        caps = self.state["capabilities"]
+        key = ("scan", self.memo.lib_gen, id(caps), len(caps), tuple(names))
+        c = self.memo.lib.get(key)
+        if c is None:
+            if len(self.memo.lib) > 4096:
+                self.memo.lib.clear()
+            bases, _, _ = self._routing(names)
+            prims = [(p, tuple(b)) for p, b in zip(names, bases) if b is not None]
+            first = {p: (pb[0].split(":")[1] if pb[0].startswith("until:") else pb[0]) for p, pb in prims}
+            by_first = {}
+            for i, (p, pb) in enumerate(prims):
+                by_first.setdefault(first[p], []).append(i)
+            c = self.memo.lib[key] = (prims, first, by_first)
+        return c
+
     def primitives(self, name):
         prims = [f"rel:{r}" for r in self.relations()]
+        if self.routed and not self.operators:
+            key = ("caps", self._lib_key(name))
+            caps = self.memo.lib.get(key)
+            if caps is None:
+                caps = self.memo.lib[key] = self._offered(name)
+            return prims + caps
         if self.use_library:
             for n in sorted(self.state["capabilities"]):
                 ver = self.version(n)
@@ -1721,6 +1915,21 @@ class Engine:
         if self.operators:
             prims += self._operator_prims(name)
         return prims
+
+    def _offered(self, name):
+        """The capability part of `primitives` (the same loop), for the G58 cache."""
+        out = []
+        if self.use_library:
+            for n in sorted(self.state["capabilities"]):
+                ver = self.version(n)
+                if n == name or not ver or ver["status"] not in EXEC_OK:
+                    continue
+                if self.qualified_library and ver["status"] != "qualified":
+                    continue
+                if any(dn == name for dn, _ in self._closure_cached(n, ver)):
+                    continue
+                out.append(f"cap:{n}@{ver['v']}")
+        return out
 
     def _operator_prims(self, name):
         """until:R:Q:T steps. Predicates (Q, T) are the properties every observed answer
@@ -1996,8 +2205,13 @@ class Engine:
         obs_at = [(pos[s_], v) for s_, v in obs if s_ in pos]
         closed_at = {pos[x] for x in self._closed() if x in pos}  # G49: closed-world at `complete` subjects
         jf = lambda i, o, v: judge_closed(o, v) if i in closed_at else judge_set(o, v)  # noqa: E731
-        prims = [(p, self._expand_fast([p]) if self.routed else self.expand([p])) for p in self.primitives(name)]
-        prims = [(p, tuple(b) if self.bounded else b) for p, b in prims if b is not None]
+        scan_tab = None
+        if self.routed and self.bounded:
+            scan_tab = self._scan_table(self.primitives(name))  # G58: cached per library generation
+            prims = scan_tab[0]
+        else:
+            prims = [(p, self.expand([p])) for p in self.primitives(name)]
+            prims = [(p, tuple(b) if self.bounded else b) for p, b in prims if b is not None]
         P = len(prims)
         out = {"horizon": horizon, "domain": len(D), "domain_set": sorted(D), "scanned": 0, "evaluated": 0, "contradicted": 0,
                "compatible": 0, "pruned_compatible": 0, "blocking_n": 0, "conflicts": 0, "assumption": self.ASSUMPTION}
@@ -2045,10 +2259,14 @@ class Engine:
         out.update({"duplicates": 0, "truncated": False})
         level, seen = [([], ({i: {e} for i, e in enumerate(D)} if self.bounded else [{e} for e in D]), ())], {()}
         E0 = set()
-        first = {p: (pb[0].split(":")[1] if pb[0].startswith("until:") else pb[0]) for p, pb in prims}
         outrel = self._idx()["out"]
-        by_first = {}
-        if self.bounded:
+        if scan_tab is not None:
+            first, by_first = scan_tab[1], scan_tab[2]
+            out["pruned_counting"] = "visited nodes only (--bounded)"
+        else:
+            first = {p: (pb[0].split(":")[1] if pb[0].startswith("until:") else pb[0]) for p, pb in prims}
+            by_first = {}
+        if self.bounded and scan_tab is None:
             # G53: primitives indexed by their first base relation; a node visits only those that
             # leave its frontier, in the original primitive order. The skipped ones are exactly the
             # relevance-pruned ones (empty image whatever the path), so no decision changes; only
@@ -2119,6 +2337,8 @@ class Engine:
             # is not itself qualified; its closed or open judgment is only relative to that version
             status = "provisional"
         cap = self.state["capabilities"].setdefault(name, {"current": None, "versions": [], "express": None})
+        if self.memo is not None and self.memo.scope is not None:
+            self.memo.scope.setdefault("caps", set()).add(name)  # G58: this record is written here
         cur = self.version(name)
         evidence = {"observations": len(self.state["observations"].get(name, [])),
                     "support": h["support"], "blocking": len(blocking), "turn": self._tick()}
@@ -2143,6 +2363,11 @@ class Engine:
             ver["domain"] = list(domain)  # verification M2 of b2bb9b8: the scope "qualified" was decided on
         cap["versions"].append(ver)
         cap["current"] = ver["v"]
+        if self.memo is not None:
+            self.memo.lib_gen += 1  # G58
+            self.memo.rv_dirty.add((name, None))
+            if self.memo.scope is not None:
+                self.memo.scope.setdefault("caps", set()).add(name)
         return ver["v"], events
 
     def revoke(self, name) -> list[str]:
