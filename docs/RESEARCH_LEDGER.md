@@ -36,3 +36,35 @@ Failure kept: `docs/evidence/g44_audit_run1_failed.json` (real bug, fixed).
 
 Open: G44 qualification is up to the external auditor. Search depth is at most 3 in
 tests. Hypothesis space grows as P², and P³ with the library.
+
+## 2026-11-26 20:45 — PRE-REGISTERED: learning amortization metric (before any measurement)
+
+Central hypothesis (docs/STANDING_DIRECTIVE.md): acquiring, abstracting and reusing
+verified capabilities can make later acquisition cheaper.
+
+**A_n = 1 − C_continual(n) / C_baseline(n)** over the first n tasks of one fixed task sequence.
+
+- Continual learner: one persistent engine state across the sequence, library on.
+- Baseline: an empty-memory learner. It gets a fresh state per task, is taught the same
+  facts and the same examples for that task, and has the library off.
+- Both use the same search strategy: iterative deepening, length 1, then 2, then 3,
+  stopping at the first length with a unique supported candidate. Both get the same
+  example budget and the same investigation budget.
+- Equal accuracy is required. A_n is reported only where both reach the same accuracy
+  on the same sealed evaluation queries. Otherwise the accuracy gap is reported
+  instead, and A_n is marked not comparable.
+- C counts everything the learner does for the task: process CPU time for load,
+  schema validation, teaching, acquisition (candidate generation and evaluation),
+  qualification (blocking-alternative checks), investigation, evaluation queries,
+  and the atomic save. That covers storage, retrieval, maintenance and execution.
+  CPU time is the primary cost. Secondary costs, reported alongside: engine
+  operation counts (hypothesis evaluations, program executions, bit-row ops,
+  asks), saved state bytes, and examples plus questions used.
+- Controls reported with A_n: frozen learner (library frozen after the first
+  phase), shuffled-evidence learner, geometry-disabled learner (`--no-geometry`),
+  and the reference learner (`reference.learn`).
+- Sign convention: A_n > 0 means the continual learner was cheaper. Negative values
+  are reported as they are. No threshold is tuned after observation.
+- Developer changes vs acquired improvement: the engine source sha256 is
+  recorded and frozen for every A_n run. Any change between runs is a developer
+  improvement, not a learned one.
