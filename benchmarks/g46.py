@@ -280,7 +280,8 @@ def _arm_body(seed, arm, fams, sealed_all, d, persistent, flags, rng, log, tasks
                           "acquired": acquired, "evidence": evidence, "asked": asked,
                           "searched_len": hyp.get("searched_len"), "pruned": hyp.get("pruned"),
                           "correct": sum(r["ok"] for r in rows), "n_sealed": len(rows), "rows": rows,
-                          "cost": stat_sum(log, a0, a1), "state_bytes": size})
+                          "cost": stat_sum(log, a0, a1), "eval_cpu_s": log[a1 - 1]["cpu_s"] if a1 > a0 else 0.0,
+                          "state_bytes": size})
         fam_rec = {"family": fi, "phase": fam["phase"]}
         if arm != "B":
             T = Teach(persistent, flags, log)
