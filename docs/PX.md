@@ -115,7 +115,7 @@ Source unchanged.
 |---|---|
 | PXA1 | **pass**: R has 0 wrong-qualified answers |
 | PXA2 | **pass**: V ≡ R on 7/7 seeds |
-| PXA3 | **pass**: spurious-answer rate on no-value items is R 2.39% (33/1383) vs P 5.79% (78/1346) |
+| PXA3 | **pass as registered**: spurious-answer rate on no-value items is R 2.39% (33/1383) vs P 5.79% (78/1346). **Restated (verification P2 of e944840):** almost all of this comes from T1, where R adopts nothing (accuracy 0.000). Without T1 the rates are P 3.09% (36/1164) vs R 2.72% (33/1215). |
 | PXB1 | **pass**: on seed 33, E passes threshold 6. C reproduces the registered failure. |
 | PXB2 | **pass**: E passes every threshold 1–6 that C passes on seeds 11–55, with 0 wrong-qualified answers |
 
@@ -154,7 +154,7 @@ Source unchanged.
   | T3 | 0 | 0 |
 
 **Qualification: no gain.**
-- G48 worlds: P and R have 0 qualified tasks; the program scan cannot complete within its budget.
+- G48 worlds: P and R have 0 qualified tasks. Every scan stops on 16 genuine open-world blockers, not on the budget (corrected per verification P3 of e944840).
 - G46: C and E have 18 qualified on every seed, and E's 18 non-qualified tasks are provisional
   where C's were.
 - The statements removed one *ambiguity*: seed 33 went from ambiguous to an adopted provisional
@@ -170,13 +170,16 @@ Source unchanged.
 
 **Reading.**
 1. `!none`/`!several` fix the seed-33 failure without weakening the open world.
-2. They improve abstention.
+2. They improve abstention only slightly once T1 is set aside (3.1% → 2.7%). The headline 5.8% → 2.4% is mostly T1, where R adopts nothing (verification P2 of e944840).
 3. They expose that P's perfect T1 score partly rested on a program that is wrong where the
    truth has no value.
 4. Once that program is refuted, depth generalization in T1 is **not identifiable** from depth
    ≤ 2 answers. P's 1.000 came from an Occam accident, not from evidence.
-5. Moving provisional to qualified needs one of two things, neither of which PX provides:
-   - a scan that completes: an exact pruned program scan, analogous to the base engine's
-     prefix-shared walk;
-   - a principled source of closed-world evidence (e.g. a teacher statement that an item's
-     relevant facts are complete).
+5. Moving provisional to qualified needs a principled source of closed-world evidence (e.g. a
+   teacher statement that an item's relevant facts are complete).
+   - **Correction (verification P3 of e944840).** An earlier version of this item also blamed the
+     200k scan budget and proposed an exact scan. That was wrong. Every programs-mode scan in PX
+     and G48R2 stopped at ≤ 982 programs because it had found 16 genuine blockers; none came near
+     the budget.
+   - The exact scan built in G49 confirms this: it completes on every task and finds thousands of
+     blocking behaviours (docs/G49.md).

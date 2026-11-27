@@ -85,6 +85,20 @@ def judge_set(out, ans):
     return judge(next(iter(out)) if len(out) == 1 else None, ans)
 
 
+def judge_closed(out, ans):
+    """G49 `complete X` (docs/G49.md): the teacher states that every fact about every entity
+    reachable from X is told. A program's output at X is then final, so an observation at X is
+    judged closed-world: the prediction set must be exactly what was stated. Not executable (None)
+    stays undetermined (a dependency, not a fact gap)."""
+    if out is None:
+        return "undetermined"
+    if ans == NONE:
+        return "supported" if not out else "contradicted"
+    if ans == SEVERAL:
+        return "supported" if len(out) >= 2 else "contradicted"
+    return "supported" if out == {ans} else "contradicted"
+
+
 def outcome(out):
     """The answer class a full prediction set stands for (PX investigate)."""
     if not out:
@@ -367,6 +381,8 @@ class Engine:
                 fact["supports"].append(support)
             return fact
         fact = {"id": f"{s} {r} {o}", "s": s, "r": r, "o": o, "supports": [support]}
+        if kind == "told" and not r.startswith("cap:") and self.state.get("complete"):
+            self._fc_violated(s, f"new fact {s} {r} {o}")
         self.state["facts"].append(fact)
         self._dirty()
         return fact
@@ -375,6 +391,12 @@ class Engine:
         """Truth maintenance: remove facts, then any proof that used them or a dropped program.
         A conclusion stays while one independent proof remains."""
         removed = set(ids)
+        if self.state.get("complete"):
+            byid = {f["id"]: f for f in self.state["facts"]}
+            for i in sorted(removed):
+                f = byid.get(i)
+                if f and not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]):
+                    self._fc_violated(f["s"], f"removed fact {i}")
         dropped_proofs = 0
         changed = True
         while changed:
@@ -892,7 +914,7 @@ class Engine:
         for s, v in observations:
             self.stats["evaluations"] += 1
             out = self.execute(seq, s)
-            marks.append(judge_set(out, v))
+            marks.append(self._judge(s, out, v))
         if "contradicted" in marks:
             status = "contradicted"
         elif marks and all(m == "supported" for m in marks):
@@ -919,7 +941,7 @@ class Engine:
         """until:R:Q:T steps. Predicates (Q, T) are the properties every observed answer
         shares; R ranges over the told relations other than Q."""
         ref = self._idx()["ref"]
-        vals = {v for _, v in self.state["observations"].get(name, [])}
+        vals = {v for _, v in self.state["observations"].get(name, []) if v not in (NONE, SEVERAL)}  # L3 of e944840
         common = None
         for v in vals:
             props = {(q, t) for q in ref if not q.startswith("cap:") for t in ref[q].get(v, ())}
@@ -998,6 +1020,12 @@ class Engine:
         return False
 
     def acquire(self, name, max_len=None) -> dict:
+        obs0 = self.state["observations"].get(name, [])
+        if obs0 and not any(v not in (NONE, SEVERAL) for _, v in obs0):
+            # verification P1 of e944840: statements only rule programs out; with no value example
+            # nothing has been shown, so nothing is adopted (an empty-supported program would answer)
+            return {"name": name, "result": "none", "reason": "no value example", "evaluated": 0,
+                    "pruned": 0, "live": 0, "zero_support": 0}
         if self.programs and max_len is None:
             return self._acquire_programs(name)
         if max_len is None and self.deepen:
@@ -1065,7 +1093,7 @@ class Engine:
         sub = {q: {x: ts for x, ts in m.items() if x in comp} for q, m in ctx.ref.items()}
         guards = progs.proposals(sub, obs)
         dom = sorted(e for e in self.entities() if e in comp)
-        ind = progs.Inducer(ctx, obs, dom, (rels, caps), guards)
+        ind = progs.Inducer(ctx, obs, dom, (rels, caps), guards, closed=self._closed())
         ev0 = self.stats["evaluations"]
         k, sup = ind.search()
         classes = {}
@@ -1095,19 +1123,25 @@ class Engine:
         # full horizon (MAX_SIZE), as the base engine's deepening budget (audit 283f526 P0;
         # verification N2 of 82dd0a2: the candidate-size horizon was the removed short horizon)
         horizon = progs.MAX_SIZE
-        blockers, complete, examined = ind.scan(cand, cand_pred, horizon=horizon)
+        # G49: exact pruned scan (programs.Exact, proven against brute force); same open-world rule,
+        # every program up to MAX_SIZE is decided, grouped by behaviour (docs/G49.md)
+        ex = progs.Exact(ind).run(cand, cand_pred)
+        blockers, complete, examined = ex["blockers"], ex["complete"], ex["programs"]
         status = "qualified" if complete and not blockers else "provisional"
         scan = {"horizon": horizon, "domain": len(dom), "scanned": examined, "complete": complete,
-                "budget": progs.SCAN_BUDGET, "blocking_n": len(blockers), "compatible": 0, "pruned_compatible": 0,
+                "method": "exact", "budget": progs.EXACT_BUDGET, "combos": ex["combos"],
+                "behaviours": ex["behaviours"], "blocking_behaviours": ex["blocking_behaviours"],
+                "universe": ex["universe"],
+                "blocking_n": len(blockers), "compatible": 0, "pruned_compatible": 0,
                 "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an "
-                              "alternative; qualified only if that enumeration completes within the budget "
-                              "with no blocker."}
+                              "alternative; qualified only if every program is decided (exact scan "
+                              "completes) with no blocker."}
         blocking = [[b] for b in blockers]
         h = {"seq": [progs.fmt(cand)], "status": "supported", "support": len(obs)}
         record.update({"candidate": h["seq"], "blocking": blocking, "scan": scan,
                        "selection": "smallest supported G48 program; qualified only if the open-world scan completes "
                                     "with no blocker"})
-        record["evaluated"] = ind.examined + examined
+        record["evaluated"] = ind.examined + ex["combos"]
         result.update({"result": status, "seq": h["seq"], "blocking": blocking, "scan": scan,
                        "evaluated": record["evaluated"]})
         result["version"], result["events"] = self._adopt(name, h, status, blocking, scan)
@@ -1135,6 +1169,8 @@ class Engine:
         want = [mine[e] for e in D]
         pos = {e: i for i, e in enumerate(D)}
         obs_at = [(pos[s_], v) for s_, v in obs if s_ in pos]
+        closed_at = {pos[x] for x in self._closed() if x in pos}  # G49: closed-world at `complete` subjects
+        jf = lambda i, o, v: judge_closed(o, v) if i in closed_at else judge_set(o, v)  # noqa: E731
         prims = [(p, self.expand([p])) for p in self.primitives(name)]
         prims = [(p, b) for p, b in prims if b is not None]
         P = len(prims)
@@ -1188,10 +1224,10 @@ class Engine:
                     if key != cand_base:
                         vals = [next(iter(f)) if len(f) == 1 else None for f in nf]
                         out["evaluated"] += len(obs_at)
-                        if any(judge_set(nf[i], v) == "contradicted" for i, v in obs_at):
+                        if any(jf(i, nf[i], v) == "contradicted" for i, v in obs_at):
                             out["contradicted"] += 1
                         else:
-                            support = sum(judge_set(nf[i], v) == "supported" for i, v in obs_at)
+                            support = sum(jf(i, nf[i], v) == "supported" for i, v in obs_at)
                             conflict = any(x is not None and x != w for x, w in zip(vals, want))
                             if conflict or (support >= 1 and self._differs(seq, mine)):
                                 out["blocking_n"] += 1
@@ -1405,6 +1441,65 @@ class Engine:
         ret_mod.touch(ret, toks)
 
     def turn(self, line: str) -> str:
+        reply = self._turn(line)
+        if getattr(self, "_fc_names", None):
+            self._fc_requalify()
+        return reply
+
+    # ---------- G49: scoped closed-world statements (`complete X`, docs/G49.md) ----------
+
+    def _closed(self) -> set:
+        return set(self.state.get("complete", {}))
+
+    def _judge(self, s, out, v):
+        return judge_closed(out, v) if s in self.state.get("complete", {}) else judge_set(out, v)
+
+    def _reach(self, x) -> list:
+        """Entities reachable from x along told facts (outgoing), x included: every fact a program
+        run from x can read has its subject here."""
+        adj = {}
+        for f in self.state["facts"]:
+            if not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]):
+                adj.setdefault(f["s"], set()).add(f["o"])
+        seen, todo = {x}, [x]
+        while todo:
+            for z in adj.get(todo.pop(), ()):
+                if z not in seen:
+                    seen.add(z)
+                    todo.append(z)
+        return sorted(seen)
+
+    def complete(self, x) -> str:
+        if self.retention == "adaptive":
+            return "complete is not supported with adaptive retention"
+        clo = self._reach(x)
+        self.state.setdefault("complete", {})[x] = {"turn": self._tick(), "closure": clo}
+        self._dirty()
+        self._fc_touch({n for n, obs in self.state["observations"].items() if any(s_ == x for s_, _ in obs)})
+        return f"complete {x} ({len(clo)} entities)"
+
+    def _fc_touch(self, names):
+        self._fc_names = getattr(self, "_fc_names", set()) | set(names)
+
+    def _fc_violated(self, s, why):
+        """A told fact added or removed with its subject inside a stated closure falsifies that
+        statement: it is retracted (kept in complete_log) and the capabilities observed there are
+        re-acquired on open-world judgment."""
+        cm = self.state.get("complete", {})
+        hit = [x for x, e in cm.items() if s in e["closure"]]
+        for x in hit:
+            e = cm.pop(x)
+            self.state.setdefault("complete_log", []).append(
+                {"x": x, "stated": e["turn"], "retracted": self.state["turn"], "reason": why})
+            self._fc_touch({n for n, obs in self.state["observations"].items() if any(s_ == x for s_, _ in obs)})
+
+    def _fc_requalify(self):
+        names, self._fc_names = sorted(self._fc_names), set()
+        for n in names:
+            if self.state["observations"].get(n):
+                self.acquire(n)
+
+    def _turn(self, line: str) -> str:
         if self.retention == "adaptive":
             self._retain(line)
         raw = line.strip().rstrip("?").rstrip(".").lower()
@@ -1427,6 +1522,8 @@ class Engine:
                 return "unparsed"
             c = self.learn_construction([(sent, (so[0], meaning, so[1])) for sent, so in pairs])
             return f"construction {meaning} {''.join(c['order'])}" if c else "construction rejected"
+        if head == "complete" and len(rest) >= 1:
+            return "; ".join(self.complete(x) for x in rest)
         if head == "fact" and len(rest) == 3:
             self.tell(*rest, source="fact")
             return f"recorded {' '.join(rest)}"

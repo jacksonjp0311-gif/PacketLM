@@ -582,3 +582,45 @@ extension (PX).
     that less-defined blockers can be refuted;
   - a T1 design where depth 3 is answerable and depth ≥ 4 sealed, to test whether recursion is
     identifiable with negative evidence.
+
+## 2026-11-26 23:35: verify-e944840 response and G49 pre-registration (docs/G49.md)
+
+**Verification e944840 (branch verify-e944840 @ 92bec2a, not modified).** Everything reproduced.
+Three medium findings:
+
+- **P1: accepted and fixed.** With no value observation, nothing is adopted in either mode.
+  Covered by 2 checks and a mutation.
+- **P2: accepted.** PX.md and the PR now say that the spurious-answer gain is mostly T1, where R
+  adopts nothing. Without T1 it is 3.09% → 2.72%.
+- **P3: accepted.** My PX.md diagnosis, that the scan budget blocks qualification, was wrong;
+  it is corrected.
+  - The exact pruned scan I had already built (priority 1, before P3 arrived) **confirms P3
+    independently**. It completes on every dev task and finds 10–6048 blocking behaviours per
+    task.
+  - It is kept as an exact decision procedure, proven against brute force, and not as a
+    qualification route.
+  - Its cost is reported honestly: it is **more** expensive in the engine than the old scan,
+    which stopped early.
+  - Effort was moved to `complete X` (priority 2) and the T1 redesign (priority 3), as steered.
+
+**Lows:**
+- L1: start time and HEAD are now in receipts (G49 onward).
+- L3: fixed, with a check and a mutation.
+- L4 and L5: fixed for G49 onward. PX's own abstention items cannot be recovered from its raw
+  data, which kept only spurious items; they were queried, never taught.
+- **L2: not changed, and recorded as open.** Sorting the base pool would alter the question
+  order in every registered G46 run, and the hazard only arises with base engine plus adaptive
+  retention, which no run uses.
+
+**G49 dev (seeds 4991 and 4992; committed):**
+- F qualified 9/16 tasks with 0 wrong-qualified answers; R qualified 0/16.
+- With depth 3 answerable, R and F reach 1.000 at depth ≥ 4.
+- L: 40/40 false statements retracted; 0 qualified answers in the window.
+
+The first form of FC3 failed on dev, for a legitimate reason: N's statements about entities
+that were later asked are correctly judged closed. FC3 was restated as an untouched-task
+control **before** registration. This is recorded here, not hidden.
+
+**Box note.** The box was replaced at about 23:35. Three edits made after about 23:33 were lost
+and redone identically: the px mutation site, the `fc_evaluate_closed_at_complete` check, and
+this entry. The tests were rerun after the redo.

@@ -14,7 +14,7 @@ import sys
 import tempfile
 from itertools import product
 from pathlib import Path
-from .engine import Engine, StateError, judge, judge_set, _checksum, SCHEMA, SCHEMA_V2
+from .engine import Engine, StateError, judge, judge_set, judge_closed, _checksum, SCHEMA, SCHEMA_V2
 from .field import add as field_add, ask as field_ask, bind
 from . import reference
 from . import programs as progs
@@ -906,6 +906,85 @@ def px_checks(tmp) -> dict:
     return out
 
 
+def g49_checks(tmp) -> dict:
+    """G49: exact pruned scan, P1 guard (statements alone adopt nothing), `complete X` (docs/G49.md)."""
+    from . import scan_exact_proof as proof
+    out = {}
+    rng = random.Random(4949)
+    same, cases, closed_cases = True, 0, 0
+    for _ in range(14):
+        ctx, obs, ents, steps, guards, closed = proof.world(rng)
+        ind = progs.Inducer(ctx, obs, ents, steps, guards, closed=closed)
+        _, sup = ind.search()
+        cand = sup[0] if sup else next(ind.programs(1))
+        pred = {e: progs.run(ctx, cand, e) for e in ind.domain}
+        order, count = proof.brute(ind, cand, pred)
+        ex = progs.Exact(ind).run(cand, pred, keep=10 ** 9)
+        same &= ex["complete"] and ex["blockers"] == order and ex["programs"] == count
+        cases += 1
+        closed_cases += bool(closed)
+    out["exact_scan_equals_brute_force"] = same and cases == 14 and closed_cases >= 3
+    # P1 of e944840: a statement alone never founds a capability, in either mode
+    for mode, kw in (("programs", {"programs": True, "answers": True}), ("base", {"deepen": 2, "answers": True})):
+        e = Engine(tmp / f"p1{mode}.json", **kw)
+        e.tell("a", "p", "b")
+        e.tell("b", "p", "c")
+        e.observe("k", "c", "!none")
+        r = e.acquire("k")
+        v0 = e.version("k")
+        e.observe("k", "a", "b")
+        r2 = e.acquire("k")
+        out[f"p1_statement_alone_adopts_nothing_{mode}"] = r["result"] == "none" and not v0 \
+            and r2["result"] in ("qualified", "provisional")
+
+    def fcw(path, programs):
+        e = Engine(path, deepen=2, programs=programs)
+        for t in [("a", "r1", "x"), ("a", "r2", "m"), ("m", "r3", "x"), ("b", "r1", "x2"), ("c", "r1", "x3"),
+                  ("c", "r2", "m3"), ("m3", "r3", "x3")]:
+            e.tell(*t)
+        e.observe("h", "a", "x")
+        e.observe("h", "b", "x2")
+        return e, e.acquire("h")
+    table = [(set(), "x", "contradicted"), ({"x"}, "x", "supported"), ({"x", "y"}, "x", "contradicted"),
+             (set(), "!several", "contradicted"), ({"x"}, "!none", "contradicted"), (None, "x", "undetermined")]
+    out["fc_judge_table"] = all(judge_closed(o, a) == w for o, a, w in table) and \
+        all(progs.judge_closed(o, a) == w for o, a, w in table if o is not None)
+    for mode in ("base", "programs"):
+        e, r = fcw(tmp / f"fc{mode}.json", mode == "programs")
+        unobs = e.turn("complete c")  # scope: no observation at c, nothing changes
+        st0 = e.version("h")["status"]
+        obs = e.state["observations"]["h"]
+        alt = ["prog:rel:r2>rel:r3"] if mode == "programs" else ["rel:r2", "rel:r3"]
+        ev0 = e.evaluate(alt, obs)["status"]
+        msg = e.turn("complete b")
+        st1 = e.version("h")["status"]
+        ev1 = e.evaluate(alt, obs)["status"]
+        out[f"fc_evaluate_closed_at_complete_{mode}"] = ev0 != "contradicted" and ev1 == "contradicted"
+        e.turn("fact b r4 z")  # falsifies the statement: retracted, re-acquired open-world
+        st2 = e.version("h")["status"]
+        log = e.state.get("complete_log", [])
+        out[f"fc_less_defined_refuted_qualifies_{mode}"] = r["result"] == "provisional" and r["blocking"] and \
+            msg.startswith("complete b") and st1 == "qualified"
+        out[f"fc_scope_unobserved_changes_nothing_{mode}"] = unobs.startswith("complete c") and st0 == "provisional"
+        out[f"fc_violation_retracts_and_demotes_{mode}"] = st2 == "provisional" and \
+            [x["x"] for x in log] == ["b"] and "b" not in e.state.get("complete", {}) and "c" in e.state["complete"]
+    e, r = fcw(tmp / "fcdrop.json", False)
+    e.turn("complete b")
+    e.retract("b", "r1")  # a removed told fact inside the closure falsifies it too
+    out["fc_removed_fact_retracts"] = [x["x"] for x in e.state.get("complete_log", [])] == ["b"]
+    eo = Engine(tmp / "l3.json", deepen=2, operators=True)
+    for t in [("a", "p", "b"), ("b", "kind", "T"), ("c", "p", "d"), ("d", "kind", "T")]:
+        eo.tell(*t)
+    eo.observe("u", "a", "b")
+    eo.observe("u", "c", "d")
+    before = eo._operator_prims("u")
+    eo.observe("u", "b", "!none")
+    out["l3_statement_not_operator_answer"] = bool(before) and eo._operator_prims("u") == before
+    ea = Engine(tmp / "fcret.json", deepen=2, retention="adaptive")
+    out["fc_refused_with_adaptive_retention"] = ea.turn("complete b").startswith("complete is not supported")
+    return out
+
+
 def run() -> dict:
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
@@ -914,7 +993,7 @@ def run() -> dict:
                         ("acquisition", acquisition_checks), ("discovery", discovery_checks),
                         ("persistence", persistence_checks), ("fresh_process", fresh_process_checks),
                         ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks),
-                        ("programs", program_checks), ("px", px_checks)]:
+                        ("programs", program_checks), ("px", px_checks), ("g49", g49_checks)]:
             # a section that raises is a failed check (named), not a crash that hides the other sections
             try:
                 sections[sec] = fn(tmp)  # no pseudo-check when it completes (verification L3 of 82dd0a2)
