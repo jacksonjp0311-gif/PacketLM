@@ -1328,3 +1328,23 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   thresholds as G60H. Dev predicts HOLD at both margins, library term < 0 (the certificate does not depend
   on the proposal), the representation costing ≈ 1.5–2× plain dicts, decoy 0 wrong-qualified under the
   equal check and > 0 under G60H's rule.
+
+
+## 2026-11-27 14:15: G60H2 registered results — HOLD at +1 and +2 under the equal check
+
+- Run at 448651f (clean) under the lock 13:51:23–13:57:56 EST; part S 1 worker, gates 4 workers; load
+  0.79–2.64, no competing heavy process; instrument 70297af pinned; guards held; 0 counter errors.
+- **Margin 1 (primary): HOLD.** A(Ce+maint‖Be) comp −0.022 [−0.047, +0.006], comprep −0.060, unrel
+  −0.818 (Q3 holds), mixed −0.060, long +0.066 [−0.092, +0.204]; Q2 holds (0 wrong-qualified, C = B
+  sealed correct). Library term comp −0.407 [−0.457, −0.360], negative everywhere; P‖B comp +0.366.
+- **Margin 2: HOLD** (comp −0.048 [−0.098, +0.015]; library term comp −0.426).
+- **Ablation:** plain dicts/sets give identical replies (105/105) and less CPU: A(HDC‖plain) C+maint comp
+  −0.488 [−0.519, −0.456] — the representation costs.
+- **Decoy:** equal check 0 wrong-qualified; G60H's own-language rule 68.
+- **Part S:** bounded (hC α_task 0.113 [0.049, 0.172]).
+- Exactness: DP vs MITM certificate 105/105 identical; tests 24/0; mutations 32/33 (1 equivalent).
+- Failed predictions: margin-2 comp predicted positive (registered −0.048, CI spans 0); comprep m1 CI
+  below 0 (predicted spanning 0).
+- Reading: with an equal certificate the library adds only proposal cost; the saving of long-lived arms
+  is state carriage; G60H's gains were neither the library's under an equal check nor the
+  representation's. Open: reuse certificate work itself (pre-registered).

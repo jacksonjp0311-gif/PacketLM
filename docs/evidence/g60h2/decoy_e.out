@@ -1,0 +1,107 @@
+{
+ "guards": {
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ },
+ "gate": null,
+ "decoy": {
+  "primary": [
+   [
+    "Ce+maint",
+    "Be",
+    "A_18 = -0.1797  [-0.2455, -0.1109] (95% paired bootstrap, S=7); delta-SE=0.0374; sign-flip p=0.01562; geometric-mean form=-0.1778"
+   ],
+   [
+    "Ce+maint",
+    "Pe+maint",
+    "A_18 = -0.5502  [-0.5985, -0.5083] (95% paired bootstrap, S=7); delta-SE=0.0251; sign-flip p=0.01562; geometric-mean form=-0.5489"
+   ]
+  ],
+  "outcomes": {
+   "Ce": {
+    "sealed_correct": 580,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Be": {
+    "sealed_correct": 580,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   },
+   "Pe": {
+    "sealed_correct": 580,
+    "wrong_qualified_sealed": 0,
+    "transfer_wrong_qualified": 0,
+    "retention_changed": 0
+   }
+  },
+  "counters": {
+   "Ce": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 116,
+    "cum_sig_decodes": 12053,
+    "cum_collisions": 0,
+    "cum_key_collision_reads": 0,
+    "cum_sig_spurious": 0,
+    "cum_sig_missing": 0,
+    "cum_isig_spurious": 0,
+    "cum_isig_missing": 0,
+    "cum_capidx_spurious": 0,
+    "cum_capidx_missing": 0,
+    "cum_inv_collisions": 0,
+    "cum_code_collision_reads": 0,
+    "cum_cert_runs": 305,
+    "cum_prop_runs": 305,
+    "cum_prop_agree": 127,
+    "cum_prop_differ": 0,
+    "cum_prop_none": 0,
+    "cum_code_collisions": 0
+   },
+   "Be": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 116,
+    "cum_sig_decodes": 7020,
+    "cum_collisions": 0,
+    "cum_key_collision_reads": 0,
+    "cum_sig_spurious": 0,
+    "cum_sig_missing": 0,
+    "cum_isig_spurious": 0,
+    "cum_isig_missing": 0,
+    "cum_capidx_spurious": 0,
+    "cum_capidx_missing": 0,
+    "cum_inv_collisions": 0,
+    "cum_code_collision_reads": 0,
+    "cum_cert_runs": 305,
+    "cum_prop_runs": 0,
+    "cum_prop_agree": 0,
+    "cum_prop_differ": 0,
+    "cum_prop_none": 0,
+    "cum_code_collisions": 0
+   },
+   "Pe": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 116,
+    "cum_sig_decodes": 7020,
+    "cum_collisions": 0,
+    "cum_key_collision_reads": 0,
+    "cum_sig_spurious": 0,
+    "cum_sig_missing": 0,
+    "cum_isig_spurious": 0,
+    "cum_isig_missing": 0,
+    "cum_capidx_spurious": 0,
+    "cum_capidx_missing": 0,
+    "cum_inv_collisions": 0,
+    "cum_code_collision_reads": 0,
+    "cum_cert_runs": 305,
+    "cum_prop_runs": 0,
+    "cum_prop_agree": 0,
+    "cum_prop_differ": 0,
+    "cum_prop_none": 0,
+    "cum_code_collisions": 0
+   }
+  }
+ }
+}

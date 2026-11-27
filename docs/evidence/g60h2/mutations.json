@@ -1,0 +1,320 @@
+{
+ "total": 33,
+ "killed": 32,
+ "survived": [
+  "investigate_first"
+ ],
+ "runs": [
+  {
+   "name": "library_ignored",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL library_reuse_and_no_library_same_answers AssertionError(['a', 'b', 'ab'])",
+    "FAIL equal_check_refuses_the_library_decoy AssertionError()",
+    "FAIL equal_check_adopts_the_certified_program_when_the_proposal_differs AssertionError('dp')"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "no_blocking",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL blocking_alternative_makes_provisional AssertionError({'result': 'qualified', 'seq': ['rel:a']})",
+    "FAIL margin_two_sees_two_levels_further AssertionError('dp')",
+    "FAIL equal_check_adopts_the_certified_program_when_the_proposal_differs AssertionError('dp')"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "no_prune",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL dead_tuples_are_pruned AssertionError({'searched_len': 1, 'pruned': 0, 'evaluated': 27})"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "no_dedupe",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL learns_composition_and_answers AssertionError('need knowledge for a+b | b+a')",
+    "FAIL library_reuse_and_no_library_same_answers AssertionError(['a', 'b'])",
+    "FAIL correction_propagates AssertionError()"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "domain_ignored",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL outside_domain_is_provisional AssertionError()"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "decode_unchecked",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL capability_decode_error_falls_back_and_is_counted TypeError(\"'NoneType' object is not subscriptable\")"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "touched_check_off",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL validation_catches_corruption AssertionError(3)"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "full_check_off",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL validation_catches_corruption AssertionError(3)"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "capidx_not_rebuilt",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL demoted_capability_leaves_index AssertionError('capability index mismatch')"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "investigate_first",
+   "file": "packetlm/hdc/engine.py",
+   "killed": false,
+   "failing_checks": [],
+   "equivalent": "the extra clause only fires when score <= score_b = 0 with score > 0, impossible"
+  },
+  {
+   "name": "correct_keeps_old",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL correction_propagates AssertionError()",
+    "FAIL plain_engine_answers_identically AssertionError([('qualified t rel:a+rel:b', 'qualified t rel:a+rel:b'), ('qualified t rel:a+rel:b', 'qualified t rel:a+rel:b'), ('settled', 'settled'), ('qualified ab cap:t@1', 'qualified ab cap:t@1'), ('qualified ab cap:t@1', 'qualified ab cap:t@1'), ('settled', 'settled'), ('qualified u rel:a', 'qualified u rel:a'), ('x3 t z0', 'x3 t z0'), ('corrected x0 a y3; removed 1', 'corrected x0 a y3; removed 1'), ('ambiguous: z1 or z3?', 'x0 t z3'), ('none v', 'none v'), ('settled', 'settled')])"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "journal_not_replayed",
+   "file": "packetlm/hdc/serve.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL serve_journal_replay_and_reopen AssertionError((['x3 ab z0'], {'load': {'loaded': 'primary'}, 'replies': ['unknown'], 'stats': {'evaluations': 0, 'executions': 0, 'row_ops': 0, 'asks': 1, 'cleanup_checks': 0, 'cum_decode_errors': 0, 'cum_decodes': 0, 'cum_sig_decodes': 0, 'cum_collisions': 0, 'cum_key_collision_reads': 0, 'cum_sig_spurious': 0, 'cum_sig_missing': 0, 'cum_isig_spurious': 0, 'cum_isig_missing': 0, 'cum_capidx_spurious': 0, 'cum_capidx_missing': 0, 'cum_inv_collisions': 0, 'cum_code_collision_reads': 0, 'cum_cert_runs': 0, 'cum_prop_runs': 0, 'cum_prop_agree': 0, 'cum_prop_differ': 0, 'cum_prop_none': 0, 'cum_code_collisions': 0}, 'cpu_s': 0.0003, 'cpu_total_s': 0.0003}))"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "ambiguity_ignored",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL ambiguity_is_reported_and_investigated AssertionError(({}, 'qualified t rel:a+rel:c'))",
+    "FAIL equal_check_refuses_the_library_decoy AssertionError()"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "margin_ignored_dp",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL margin_two_sees_two_levels_further AssertionError('dp')",
+    "FAIL mitm_certificate_equals_dp AssertionError((11, 'HEngine', 'blockers', [((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_0'}), frozenset({'n0_2'}), frozenset({'n1_0'}), frozenset({'n0_2'}), frozenset()), ['a', 'c', 'c'])], [((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_0'}), frozenset({'n0_2'}), frozenset({'n1_0'}), frozenset({'n0_2'}), frozenset()), ['a', 'c', 'c']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n0_3'}), frozenset({'n0_1'}), frozenset(), frozenset()), ['a', 'a', 'b', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset()), ['a', 'a', 'c', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset(), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset()), ['a', 'b', 'b', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset(), frozenset({'n0_2'}), frozenset({'n0_2'}), frozenset()), ['a', 'b', 'c', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset({'n0_3'}), frozenset({'n0_1'}), frozenset({'n0_3'}), frozenset()), ['a', 'c', 'b', 'b'])]))"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "self_not_excluded",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL learns_composition_and_answers RecursionError('maximum recursion depth exceeded')",
+    "FAIL library_reuse_and_no_library_same_answers RecursionError('maximum recursion depth exceeded')",
+    "FAIL correction_propagates RecursionError('maximum recursion depth exceeded')"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "omega_empty",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL learns_composition_and_answers AssertionError()",
+    "FAIL blocking_alternative_makes_provisional AssertionError({'result': 'qualified', 'seq': ['rel:a']})",
+    "FAIL ambiguity_is_reported_and_investigated AssertionError(({}, 'qualified t rel:a+rel:c'))"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "several_unchecked",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL statements_none_several AssertionError({'result': 'ambiguous'})"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "margin_ignored_mitm",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL margin_two_sees_two_levels_further AssertionError('mitm')",
+    "FAIL mitm_certificate_equals_dp AssertionError((11, 'HEngine', 'blockers', [((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_0'}), frozenset({'n0_2'}), frozenset({'n1_0'}), frozenset({'n0_2'}), frozenset()), ['a', 'c', 'c']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n0_3'}), frozenset({'n0_1'}), frozenset(), frozenset()), ['a', 'a', 'b', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset()), ['a', 'a', 'c', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset(), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset()), ['a', 'b', 'b', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset(), frozenset({'n0_2'}), frozenset({'n0_2'}), frozenset()), ['a', 'b', 'c', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset({'n0_3'}), frozenset({'n0_1'}), frozenset({'n0_3'}), frozenset()), ['a', 'c', 'b', 'b'])], [((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_0'}), frozenset({'n0_2'}), frozenset({'n1_0'}), frozenset({'n0_2'}), frozenset()), ['a', 'c', 'c'])]))"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "equal_check_skipped",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL equal_check_refuses_the_library_decoy AssertionError()",
+    "FAIL equal_check_adopts_the_certified_program_when_the_proposal_differs AssertionError('dp')"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "library_form_always",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL equal_check_adopts_the_certified_program_when_the_proposal_differs AssertionError('dp')"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "mitm_no_prune",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL mitm_prunes_dead_prefixes AssertionError({'searched_len': 1, 'pruned': 0, 'evaluated': 4})"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "mitm_seen_ignored",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL mitm_certificate_equals_dp AssertionError((47, 'HEngine', 'blockers', [((frozenset({'n1_2'}), frozenset(), frozenset(), frozenset({'n1_2'}), frozenset({'n1_3'}), frozenset({'n1_2'}), frozenset(), frozenset()), ['a', 'b', 'a']), ((frozenset({'n1_2'}), frozenset(), frozenset(), frozenset({'n1_3'}), frozenset({'n1_2'}), frozenset({'n1_2'}), frozenset({'n1_2'}), frozenset({'n1_2'})), ['b', 'b', 'a'])], [((frozenset({'n1_2'}), frozenset(), frozenset(), frozenset({'n1_2'}), frozenset({'n0_1'}), frozenset({'n1_3'}), frozenset(), frozenset()), ['a', 'a', 'a']), ((frozenset({'n1_2'}), frozenset(), frozenset(), frozenset({'n1_2'}), frozenset({'n1_3'}), frozenset({'n1_2'}), frozenset(), frozenset()), ['a', 'b', 'a']), ((frozenset({'n1_2'}), frozenset(), frozenset(), frozenset({'n1_3'}), frozenset({'n1_2'}), frozenset({'n1_2'}), frozenset({'n1_2'}), frozenset({'n1_2'})), ['b', 'b', 'a'])]))"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "mitm_not_lexmin",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL mitm_certificate_equals_dp AssertionError((33, 'HEngine', 'blockers', [((frozenset({'n1_0'}), frozenset(), frozenset({'n1_0'}), frozenset({'n1_0'}), frozenset({'n1_0'}), frozenset(), frozenset({'n0_2'}), frozenset()), ['a', 'b', 'a', 'c', 'c']), ((frozenset({'n1_0'}), frozenset(), frozenset({'n1_0'}), frozenset({'n1_0'}), frozenset({'n1_2'}), frozenset(), frozenset({'n1_0'}), frozenset()), ['a', 'c', 'c', 'b', 'b'])], [((frozenset({'n1_0'}), frozenset(), frozenset({'n1_0'}), frozenset({'n1_0'}), frozenset({'n1_0'}), frozenset(), frozenset({'n0_2'}), frozenset()), ['a', 'b', 'a', 'c', 'c']), ((frozenset({'n1_0'}), frozenset(), frozenset({'n1_0'}), frozenset({'n1_0'}), frozenset({'n1_2'}), frozenset(), frozenset({'n1_0'}), frozenset()), ['a', 'c', 'c', 'b', 'c'])]))"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "mitm_suffix_truncated",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL mitm_certificate_equals_dp AssertionError((19, 'HEngine', 'blockers', [((frozenset({'n1_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n1_3'}), frozenset({'n1_2'}), frozenset(), frozenset({'n1_3'})), ['b', 'c', 'a', 'b']), ((frozenset({'n1_3'}), frozenset(), frozenset(), frozenset({'n1_2'}), frozenset({'n1_3'}), frozenset(), frozenset(), frozenset()), ['b', 'c', 'b', 'c']), ((frozenset({'n1_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n1_3'}), frozenset(), frozenset(), frozenset({'n1_0'})), ['b', 'c', 'c', 'b'])], [((frozenset({'n1_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n1_3'}), frozenset({'n1_2'}), frozenset(), frozenset({'n1_3'})), ['b', 'c', 'a', 'b']), ((frozenset({'n1_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n1_3'}), frozenset(), frozenset(), frozenset({'n1_0'})), ['b', 'c', 'c', 'b'])]))"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "inverse_not_written",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL mitm_certificate_equals_dp AssertionError((11, 'HEngine', 'blockers', [((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_0'}), frozenset({'n0_2'}), frozenset({'n1_0'}), frozenset({'n0_2'}), frozenset()), ['a', 'c', 'c']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n0_3'}), frozenset({'n0_1'}), frozenset(), frozenset()), ['a', 'a', 'b', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset()), ['a', 'a', 'c', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset(), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset()), ['a', 'b', 'b', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset(), frozenset({'n0_2'}), frozenset({'n0_2'}), frozenset()), ['a', 'b', 'c', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset({'n0_3'}), frozenset({'n0_1'}), frozenset({'n0_3'}), frozenset()), ['a', 'c', 'b', 'b'])], [((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_0'}), frozenset({'n0_2'}), frozenset({'n1_0'}), frozenset({'n0_2'}), frozenset()), ['a', 'c', 'c'])]))"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "pcache_kept_on_tell",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL certificate_memo_follows_new_facts_and_corrections AssertionError(('correct y3 c z1', {'X': ['x0', 'x1', 'x2'], 'found': 2, 'groups': [((frozenset({'z0'}), frozenset({'z1'}), frozenset({'z0'})), ['a', 'c']), ((frozenset({'z0'}), frozenset({'z1'}), frozenset({'z1'})), ['b', 'c'])], 'blockers': [], 'searched': 2, 'pruned': 0}, {'X': ['x0', 'x1', 'x2'], 'found': 2, 'groups': [((frozenset({'z0'}), frozenset({'z1'}), frozenset({'z0'})), ['a', 'c'])], 'blockers': [], 'searched': 2, 'pruned': 0}))"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "collision_not_counted",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL collisions_are_counted_and_lose_nothing AssertionError({'decode_errors': 0, 'decodes': 1, 'sig_decodes': 8, 'collisions': 0, 'key_collision_reads': 26, 'sig_spurious': 0, 'sig_missing': 0, 'isig_spurious': 0, 'isig_missing': 0, 'capidx_spurious': 0, 'capidx_missing': 0, 'inv_collisions': 6, 'code_collision_reads': 34, 'cert_runs': 0, 'prop_runs': 0, 'prop_agree': 0, 'prop_differ': 0, 'prop_none': 0, 'code': 5})"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "collision_no_spill",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL collisions_are_counted_and_lose_nothing AssertionError({'same': False, 'c': {'decode_errors': 0, 'decodes': 1, 'sig_decodes': 6, 'collisions': 0, 'key_collision_reads': 21, 'sig_spurious': 0, 'sig_missing': 0, 'isig_spurious': 0, 'isig_missing': 0, 'capidx_spurious': 0, 'capidx_missing': 0, 'inv_collisions': 5, 'code_collision_reads': 17, 'cert_runs': 0, 'prop_runs': 0, 'prop_agree': 0, 'prop_differ': 0, 'prop_none': 0, 'code': 5}})"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "code_collision_unchecked",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL collisions_are_counted_and_lose_nothing AssertionError({'same': False, 'c': {'decode_errors': 0, 'decodes': 0, 'sig_decodes': 9, 'collisions': 7, 'key_collision_reads': 19, 'sig_spurious': 0, 'sig_missing': 0, 'isig_spurious': 0, 'isig_missing': 0, 'capidx_spurious': 0, 'capidx_missing': 0, 'inv_collisions': 6, 'code_collision_reads': 0, 'cert_runs': 0, 'prop_runs': 0, 'prop_agree': 0, 'prop_differ': 0, 'prop_none': 0, 'code': 5}})"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "signature_unchecked",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL signature_and_index_decode_errors_are_counted AssertionError()"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "capidx_unchecked",
+   "file": "packetlm/hdc/engine.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL signature_and_index_decode_errors_are_counted AssertionError()"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "plain_no_inverse",
+   "file": "packetlm/hdc/plain.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL mitm_certificate_equals_dp AssertionError((11, 'PlainEngine', 'blockers', [((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_0'}), frozenset({'n0_2'}), frozenset({'n1_0'}), frozenset({'n0_2'}), frozenset()), ['a', 'c', 'c']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n0_3'}), frozenset({'n0_1'}), frozenset(), frozenset()), ['a', 'a', 'b', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset()), ['a', 'a', 'c', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset(), frozenset({'n0_1'}), frozenset({'n0_1'}), frozenset()), ['a', 'b', 'b', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset(), frozenset({'n0_2'}), frozenset({'n0_2'}), frozenset()), ['a', 'b', 'c', 'b']), ((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_1'}), frozenset({'n0_3'}), frozenset({'n0_1'}), frozenset({'n0_3'}), frozenset()), ['a', 'c', 'b', 'b'])], [((frozenset({'n0_3'}), frozenset(), frozenset(), frozenset({'n0_0'}), frozenset({'n0_2'}), frozenset({'n1_0'}), frozenset({'n0_2'}), frozenset()), ['a', 'c', 'c'])]))",
+    "FAIL plain_engine_answers_identically KeyError(('y3', 'a'))"
+   ],
+   "equivalent": null
+  },
+  {
+   "name": "plain_no_library",
+   "file": "packetlm/hdc/plain.py",
+   "killed": true,
+   "failing_checks": [
+    "FAIL plain_engine_answers_identically AssertionError([('qualified t rel:a+rel:b', 'qualified t rel:a+rel:b'), ('qualified t rel:a+rel:b', 'qualified t rel:a+rel:b'), ('settled', 'settled'), ('qualified ab cap:t@1', 'qualified ab rel:a+rel:b'), ('qualified ab cap:t@1', 'qualified ab rel:a+rel:b'), ('settled', 'settled'), ('qualified u rel:a', 'qualified u rel:a'), ('x3 t z0', 'x3 t z0'), ('corrected x0 a y3; removed 1', 'corrected x0 a y3; removed 1'), ('x0 t z3', 'x0 t z3'), ('none v', 'none v'), ('settled', 'settled')])"
+   ],
+   "equivalent": null
+  }
+ ]
+}

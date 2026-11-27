@@ -1,0 +1,25 @@
+ok   codes_algebra
+ok   learns_composition_and_answers
+ok   library_reuse_and_no_library_same_answers
+ok   statements_none_several
+ok   correction_propagates
+ok   outside_domain_is_provisional
+ok   validation_catches_corruption
+ok   capability_decode_error_falls_back_and_is_counted
+ok   serve_journal_replay_and_reopen
+ok   blocking_alternative_makes_provisional
+ok   demoted_capability_leaves_index
+ok   dead_tuples_are_pruned
+ok   ambiguity_is_reported_and_investigated
+ok   margin_two_sees_two_levels_further
+ok   equal_check_refuses_the_library_decoy
+ok   equal_check_keeps_library_form_when_it_agrees
+ok   mitm_certificate_equals_dp
+ok   equal_check_adopts_the_certified_program_when_the_proposal_differs
+ok   mitm_prunes_dead_prefixes
+ok   certificate_memo_follows_new_facts_and_corrections
+ok   plain_engine_answers_identically
+ok   collisions_are_counted_and_lose_nothing
+ok   signature_and_index_decode_errors_are_counted
+ok   no_engine_import_from_existing
+{"checks": 24, "failed": 0}

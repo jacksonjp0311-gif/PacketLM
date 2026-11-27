@@ -1,0 +1,47 @@
+== 13:51:23 load 0.79 1.36 1.41
+ 630614 27.1    03:09:29 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:51:53 load 0.93 1.34 1.40
+ 795730 88.2       00:29 python3 benchmarks/g60h_scale.py --config e --seeds 551,552,553,554,555,556,557 --out g60h2_reg_scale
+ 630614 27.0    03:09:59 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:52:23 load 1.85 1.52 1.46
+ 796600  267       00:00 /usr/bin/python3 -m amortization /workspace/g60h/artifacts/g60h2_reg_e1/comp_cpu_total_s.csv --cont Ce+maint --base Ce --n 36 --bootstr
+ 630614 26.9    03:10:29 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:52:53 load 2.05 1.60 1.48
+ 797340  115       00:04 /usr/bin/python3 -m amortization /workspace/g60h/artifacts/g60h2_reg_e1/long_cpu_total_s.csv --cont Ce+maint --base Be --n 144 --bootst
+ 630614 26.9    03:10:59 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:53:23 load 1.81 1.59 1.48
+ 797610  180       00:00 /usr/bin/python3 -m amortization /workspace/g60h/artifacts/g60h2_reg_e1/long_cpu_total_s.csv --cont Ce+maint --base Ce --n 144 --bootst
+ 630614 27.0    03:11:29 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:53:53 load 1.57 1.55 1.47
+ 798076  122       00:03 /usr/bin/python3 -m amortization /workspace/g60h/artifacts/g60h2_reg_e1/long_lines.csv --cont Ce+maint --base Pe+maint --n 144 --bootst
+ 630614 26.9    03:11:59 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:54:23 load 2.64 1.83 1.57
+ 630614 26.9    03:12:29 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:54:53 load 2.55 1.90 1.60
+ 799239  145       00:01 /usr/bin/python3 -m amortization /workspace/g60h/artifacts/g60h2_reg_e2/long_cpu_total_s.csv --cont Ce+maint --base Pe+maint --n 144 --
+ 630614 26.8    03:12:59 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:55:23 load 1.99 1.83 1.59
+ 799467  118       00:04 /usr/bin/python3 -m amortization /workspace/g60h/artifacts/g60h2_reg_e2/long_cpu_total_s.csv --cont Ce+maint --base Ce --n 144 --bootst
+ 630614 26.8    03:13:29 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:55:53 load 1.60 1.75 1.57
+ 799986 60.0       00:00 python3 benchmarks/g60h2.py --config p --margin 1 --out g60h2_reg_p1
+ 799984 46.6       00:00 python3 benchmarks/g60h2.py --config p --margin 1 --out g60h2_reg_p1
+ 799985 46.6       00:00 python3 benchmarks/g60h2.py --config p --margin 1 --out g60h2_reg_p1
+ 799990 46.6       00:00 /usr/bin/python3 -m packetlm.hdc.serve
+ 799991 46.6       00:00 /usr/bin/python3 -m packetlm.hdc.serve
+ 799992 46.6       00:00 /usr/bin/python3 -m packetlm.hdc.serve
+ 799983 43.7       00:00 python3 benchmarks/g60h2.py --config p --margin 1 --out g60h2_reg_p1
+ 799993 33.3       00:00 /usr/bin/python3 -m packetlm.hdc.serve
+ 630614 26.8    03:13:59 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:56:23 load 2.18 1.88 1.62
+ 800483  505       00:00 /usr/bin/python3 -m amortization /workspace/g60h/artifacts/g60h2_reg_p1/comprep_lines.csv --cont Cp+maint --base Pp+maint --n 36 --boot
+ 630614 26.9    03:14:29 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:56:53 load 2.15 1.91 1.64
+ 801117  136       00:02 /usr/bin/python3 -m amortization /workspace/g60h/artifacts/g60h2_reg_p1/long_cpu_total_s.csv --cont Cp --base Bp --n 144 --bootstrap 50
+ 630614 26.8    03:14:59 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:57:23 load 1.70 1.82 1.62
+ 801351  117       00:04 /usr/bin/python3 -m amortization /workspace/g60h/artifacts/g60h2_reg_p1/long_cpu_total_s.csv --cont Pp+maint --base Pp --n 144 --bootst
+ 630614 26.7    03:15:29 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+== 13:57:53 load 1.74 1.81 1.62
+ 802034  650       00:00 /usr/bin/python3 -m amortization /workspace/g60h/artifacts/g60h2_reg_decoy_o/decoy_cpu_total_s.csv --cont Co --base Bo --n 18 --bootstr
+ 630614 26.7    03:15:59 /exec-daemon/node --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs

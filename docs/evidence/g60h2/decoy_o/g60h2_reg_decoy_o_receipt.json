@@ -1,0 +1,1865 @@
+{
+ "started": "2026-11-27T13:57:51-0500",
+ "head": "448651f57c740a89bddc77c9eeaafba6aa0d2e88",
+ "git_status_porcelain": "",
+ "harness_sha256": "563570c94dfb50844a93276b83cc73220b240412fec031f8428e129bd5d1191d",
+ "config": "o",
+ "flags": {
+  "Co": [
+   "--answers",
+   "--bounded",
+   "--lean",
+   "--check=own",
+   "--certifier=mitm",
+   "--margin=1"
+  ],
+  "Bo": [
+   "--answers",
+   "--no-library",
+   "--bounded",
+   "--lean",
+   "--certifier=mitm",
+   "--margin=1"
+  ],
+  "Po": [
+   "--answers",
+   "--no-library",
+   "--bounded",
+   "--lean",
+   "--certifier=mitm",
+   "--margin=1"
+  ]
+ },
+ "instrument": {
+  "path": "/workspace/vendor/learning-amortization",
+  "head": "70297af",
+  "pinned": true,
+  "unmodified": true
+ },
+ "seeds": {
+  "decoy": [
+   561,
+   562,
+   563,
+   564,
+   565,
+   566,
+   567
+  ]
+ },
+ "engine_sha256": "187d772729ac47dee8d0d7158930b9af67ce797b06bb06d144024cd22390477f",
+ "margin": 1,
+ "curricula": {
+  "decoy": {
+   "n": 18,
+   "per_seed": {
+    "561": {
+     "Co": {
+      "tasks": 18,
+      "solved": 15,
+      "sealed_correct": 75,
+      "sealed_n": 90,
+      "qualified": 18,
+      "status": {
+       "qualified": 18
+      },
+      "censored": 0,
+      "uses_library": 3,
+      "wrong_qualified_sealed": 15,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0728,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": false,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "7d524a061168dfd7b16e3a7b695e844fbbccb7d3bec2cd8f9056db11e85accef",
+      "final_state_sha256": "6a0591d49e380b2a5b046ea83758b04574431b5a91bead681b0147e76a7021a2",
+      "calls": 68
+     },
+     "Bo": {
+      "tasks": 18,
+      "solved": 17,
+      "sealed_correct": 85,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0823,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "f6d006939390f1052ec2f350d04a5a602cc7a5104596db01e620f8d1b4fee83b",
+      "final_state_sha256": null,
+      "calls": 55
+     },
+     "Po": {
+      "tasks": 18,
+      "solved": 17,
+      "sealed_correct": 85,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0575,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "5f829e9773c951c76534793ecfa37791d92f26909a481ac5f9b866ec058406cb",
+      "final_state_sha256": "f1cc591d831f10a2aad7e718fff83d81400c6a73d8a0dfaf40cf2a4695916517",
+      "calls": 73
+     }
+    },
+    "562": {
+     "Co": {
+      "tasks": 18,
+      "solved": 14,
+      "sealed_correct": 70,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "provisional": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 4,
+      "wrong_qualified_sealed": 15,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0706,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": false,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "c5253e89d1d99c4058103f035bac897d28172e10fa9bf435194bcd8104ae4699",
+      "final_state_sha256": "aa695e5cdea17b51cd40731c848861c673049d2a98b38c6f13c961e2e36110d2",
+      "calls": 67
+     },
+     "Bo": {
+      "tasks": 18,
+      "solved": 17,
+      "sealed_correct": 85,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0783,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "6d654fbcd4ac02566c8ac5694c2a0e96d12bd18e800a2fdd88627969b1f75f59",
+      "final_state_sha256": null,
+      "calls": 55
+     },
+     "Po": {
+      "tasks": 18,
+      "solved": 17,
+      "sealed_correct": 85,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0591,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "a5d34161d444ab05f46e416e452867e10dd9b6f205a3eee8b67688712d5c7c37",
+      "final_state_sha256": "a43b555eb5a0d491df6d073f44c93dbf6a7e72229ec82daad254686fa900647c",
+      "calls": 73
+     }
+    },
+    "563": {
+     "Co": {
+      "tasks": 18,
+      "solved": 14,
+      "sealed_correct": 71,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "provisional": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 4,
+      "wrong_qualified_sealed": 15,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0733,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": false,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "b562df2ef58bd31446b96f83b67bb525a52686c93e3fbda8e9d94dc8e7a27229",
+      "final_state_sha256": "db8eafd4cf44ef56d6852397ceba2bbb5ab6a07132c412da88f91a700c702581",
+      "calls": 78
+     },
+     "Bo": {
+      "tasks": 18,
+      "solved": 16,
+      "sealed_correct": 80,
+      "sealed_n": 90,
+      "qualified": 16,
+      "status": {
+       "ambiguous": 2,
+       "qualified": 16
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.078,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "6c60dd3a338ff21252ed8721373c2bf2c71a17788f2e88577452425aea329abd",
+      "final_state_sha256": null,
+      "calls": 68
+     },
+     "Po": {
+      "tasks": 18,
+      "solved": 16,
+      "sealed_correct": 80,
+      "sealed_n": 90,
+      "qualified": 16,
+      "status": {
+       "ambiguous": 2,
+       "qualified": 16
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0618,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0de7360080d60e675ca87e98615d4a5c28cb8e554712e8ce96c3860a21c20d5e",
+      "final_state_sha256": "fa50b1834d8b0a381a564607c962e1895f369a4977fbe05630f827ad345d9f4f",
+      "calls": 86
+     }
+    },
+    "564": {
+     "Co": {
+      "tasks": 18,
+      "solved": 15,
+      "sealed_correct": 79,
+      "sealed_n": 90,
+      "qualified": 16,
+      "status": {
+       "provisional": 2,
+       "qualified": 16
+      },
+      "censored": 0,
+      "uses_library": 3,
+      "wrong_qualified_sealed": 3,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0788,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": false,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "81dd4c7e5d096649b070b753c6fe529a28a8cf1a26af245a35db768d3ba671ff",
+      "final_state_sha256": "00fa96ee3578d410d0410e887c0266aa5d3b97dea3c63228540799c7442c65a3",
+      "calls": 77
+     },
+     "Bo": {
+      "tasks": 18,
+      "solved": 16,
+      "sealed_correct": 80,
+      "sealed_n": 90,
+      "qualified": 16,
+      "status": {
+       "ambiguous": 2,
+       "qualified": 16
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0803,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "db2f61be265f41134e06f94037a3c5cccdedff02da1cb54a48ec98decded9c8f",
+      "final_state_sha256": null,
+      "calls": 59
+     },
+     "Po": {
+      "tasks": 18,
+      "solved": 16,
+      "sealed_correct": 80,
+      "sealed_n": 90,
+      "qualified": 16,
+      "status": {
+       "ambiguous": 2,
+       "qualified": 16
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0567,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "a3ac9a77ec6f8b66e6868edc7baf97d54ed7554bdb714246886df39f1a3b8bbb",
+      "final_state_sha256": "6036e2446337060b32dad89302c4370adb1e67db065e201e98a45fcae1f7505d",
+      "calls": 77
+     }
+    },
+    "565": {
+     "Co": {
+      "tasks": 18,
+      "solved": 15,
+      "sealed_correct": 78,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "provisional": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 3,
+      "wrong_qualified_sealed": 8,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0745,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": false,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "1640b8d14d18b10a781d76e2f8b0fea4867ace433d1d3c3a1671a872f2e6b7fb",
+      "final_state_sha256": "928bccd045681272f5316f39b7e174fa92f4523b339173a61e9506ea16990570",
+      "calls": 79
+     },
+     "Bo": {
+      "tasks": 18,
+      "solved": 17,
+      "sealed_correct": 85,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0762,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "9549df6f38447411ccbfb28d423fe7a331d8091a019cea3415d610baec865490",
+      "final_state_sha256": null,
+      "calls": 63
+     },
+     "Po": {
+      "tasks": 18,
+      "solved": 17,
+      "sealed_correct": 85,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.057,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "a74d4cfcc901447d2826213b22f40281aed864c930569f6bbfed0de34c13e051",
+      "final_state_sha256": "97b6c0ef7f697cd138a5984b5cecea9ff2719abaa564422af5df818938d996c6",
+      "calls": 81
+     }
+    },
+    "566": {
+     "Co": {
+      "tasks": 18,
+      "solved": 14,
+      "sealed_correct": 73,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "provisional": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 4,
+      "wrong_qualified_sealed": 12,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0745,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": false,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "8d6d97504c9e11e1a85a9d846ef8cb7d34d69499a340fbb12c22fc1e4a2d6a0c",
+      "final_state_sha256": "3fc8d3b167722192ae4eff8096872c065c254fc981ffadf1e152cac360233f76",
+      "calls": 70
+     },
+     "Bo": {
+      "tasks": 18,
+      "solved": 17,
+      "sealed_correct": 85,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0761,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "5a0e4180345fbc21d9be4ec2d5cea1a0cc8a5c795e4d204f38d0d6aa753fbc7e",
+      "final_state_sha256": null,
+      "calls": 57
+     },
+     "Po": {
+      "tasks": 18,
+      "solved": 17,
+      "sealed_correct": 85,
+      "sealed_n": 90,
+      "qualified": 17,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 17
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0537,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "174248a6e0e420fa380169cb5a0dab334cd15bb928f4e684499dd76bd7208020",
+      "final_state_sha256": "326b4b02d4355fbbec80ac68351177f1f7e7552934f09a5955ab5db816b560fa",
+      "calls": 75
+     }
+    },
+    "567": {
+     "Co": {
+      "tasks": 18,
+      "solved": 16,
+      "sealed_correct": 80,
+      "sealed_n": 90,
+      "qualified": 16,
+      "status": {
+       "ambiguous": 1,
+       "provisional": 1,
+       "qualified": 16
+      },
+      "censored": 0,
+      "uses_library": 1,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0851,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "c61410209a61a69f22f22afff03c28c12f30947cfaa54b5303f147e17f8f68b2",
+      "final_state_sha256": "558f7c2436133fe93c4e8b04c192b5f415d1fda078879dce1cd8517aca1a20e3",
+      "calls": 87
+     },
+     "Bo": {
+      "tasks": 18,
+      "solved": 16,
+      "sealed_correct": 80,
+      "sealed_n": 90,
+      "qualified": 16,
+      "status": {
+       "ambiguous": 2,
+       "qualified": 16
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0814,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "eff08ba15fc04dae5d9b06b43f80bfbe4b5f19b122b0e00bd9e63f102f58598b",
+      "final_state_sha256": null,
+      "calls": 70
+     },
+     "Po": {
+      "tasks": 18,
+      "solved": 16,
+      "sealed_correct": 80,
+      "sealed_n": 90,
+      "qualified": 16,
+      "status": {
+       "ambiguous": 2,
+       "qualified": 16
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "transfer_wrong_qualified": 0,
+      "retention_changed": 0,
+      "cpu_total_all_s": 0.0636,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0aba537f32c6f5705656afb3b21a5af40ea66a5f57121ac0fac396900e31486a",
+      "final_state_sha256": "cb3a58a0c7c05c4cce3ac415092a34d5ddf7fd58522658d2807936169a4cb05f",
+      "calls": 88
+     }
+    }
+   },
+   "outcomes": {
+    "Co": {
+     "tasks": 126,
+     "solved": 103,
+     "sealed_correct": 526,
+     "sealed_n": 630,
+     "qualified": 118,
+     "censored": 0,
+     "uses_library": 22,
+     "wrong_qualified_sealed": 68,
+     "transfer_wrong_qualified": 0,
+     "retention_changed": 0
+    },
+    "Bo": {
+     "tasks": 126,
+     "solved": 116,
+     "sealed_correct": 580,
+     "sealed_n": 630,
+     "qualified": 116,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0,
+     "transfer_wrong_qualified": 0,
+     "retention_changed": 0
+    },
+    "Po": {
+     "tasks": 126,
+     "solved": 116,
+     "sealed_correct": 580,
+     "sealed_n": 630,
+     "qualified": 116,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0,
+     "transfer_wrong_qualified": 0,
+     "retention_changed": 0
+    }
+   },
+   "counters": {
+    "Co": {
+     "cum_decode_errors": 0,
+     "cum_decodes": 125,
+     "cum_sig_decodes": 8379,
+     "cum_collisions": 0,
+     "cum_key_collision_reads": 0,
+     "cum_sig_spurious": 0,
+     "cum_sig_missing": 0,
+     "cum_isig_spurious": 0,
+     "cum_isig_missing": 0,
+     "cum_capidx_spurious": 0,
+     "cum_capidx_missing": 0,
+     "cum_inv_collisions": 0,
+     "cum_code_collision_reads": 0,
+     "cum_cert_runs": 0,
+     "cum_prop_runs": 0,
+     "cum_prop_agree": 0,
+     "cum_prop_differ": 0,
+     "cum_prop_none": 0,
+     "cum_code_collisions": 0
+    },
+    "Bo": {
+     "cum_decode_errors": 0,
+     "cum_decodes": 116,
+     "cum_sig_decodes": 7020,
+     "cum_collisions": 0,
+     "cum_key_collision_reads": 0,
+     "cum_sig_spurious": 0,
+     "cum_sig_missing": 0,
+     "cum_isig_spurious": 0,
+     "cum_isig_missing": 0,
+     "cum_capidx_spurious": 0,
+     "cum_capidx_missing": 0,
+     "cum_inv_collisions": 0,
+     "cum_code_collision_reads": 0,
+     "cum_cert_runs": 305,
+     "cum_prop_runs": 0,
+     "cum_prop_agree": 0,
+     "cum_prop_differ": 0,
+     "cum_prop_none": 0,
+     "cum_code_collisions": 0
+    },
+    "Po": {
+     "cum_decode_errors": 0,
+     "cum_decodes": 116,
+     "cum_sig_decodes": 7020,
+     "cum_collisions": 0,
+     "cum_key_collision_reads": 0,
+     "cum_sig_spurious": 0,
+     "cum_sig_missing": 0,
+     "cum_isig_spurious": 0,
+     "cum_isig_missing": 0,
+     "cum_capidx_spurious": 0,
+     "cum_capidx_missing": 0,
+     "cum_inv_collisions": 0,
+     "cum_code_collision_reads": 0,
+     "cum_cert_runs": 305,
+     "cum_prop_runs": 0,
+     "cum_prop_agree": 0,
+     "cum_prop_differ": 0,
+     "cum_prop_none": 0,
+     "cum_code_collisions": 0
+    }
+   },
+   "reply_stream_sha256": {
+    "561:Co": "7d524a061168dfd7b16e3a7b695e844fbbccb7d3bec2cd8f9056db11e85accef",
+    "561:Bo": "f6d006939390f1052ec2f350d04a5a602cc7a5104596db01e620f8d1b4fee83b",
+    "561:Po": "5f829e9773c951c76534793ecfa37791d92f26909a481ac5f9b866ec058406cb",
+    "562:Co": "c5253e89d1d99c4058103f035bac897d28172e10fa9bf435194bcd8104ae4699",
+    "562:Bo": "6d654fbcd4ac02566c8ac5694c2a0e96d12bd18e800a2fdd88627969b1f75f59",
+    "562:Po": "a5d34161d444ab05f46e416e452867e10dd9b6f205a3eee8b67688712d5c7c37",
+    "563:Co": "b562df2ef58bd31446b96f83b67bb525a52686c93e3fbda8e9d94dc8e7a27229",
+    "563:Bo": "6c60dd3a338ff21252ed8721373c2bf2c71a17788f2e88577452425aea329abd",
+    "563:Po": "0de7360080d60e675ca87e98615d4a5c28cb8e554712e8ce96c3860a21c20d5e",
+    "564:Co": "81dd4c7e5d096649b070b753c6fe529a28a8cf1a26af245a35db768d3ba671ff",
+    "564:Bo": "db2f61be265f41134e06f94037a3c5cccdedff02da1cb54a48ec98decded9c8f",
+    "564:Po": "a3ac9a77ec6f8b66e6868edc7baf97d54ed7554bdb714246886df39f1a3b8bbb",
+    "565:Co": "1640b8d14d18b10a781d76e2f8b0fea4867ace433d1d3c3a1671a872f2e6b7fb",
+    "565:Bo": "9549df6f38447411ccbfb28d423fe7a331d8091a019cea3415d610baec865490",
+    "565:Po": "a74d4cfcc901447d2826213b22f40281aed864c930569f6bbfed0de34c13e051",
+    "566:Co": "8d6d97504c9e11e1a85a9d846ef8cb7d34d69499a340fbb12c22fc1e4a2d6a0c",
+    "566:Bo": "5a0e4180345fbc21d9be4ec2d5cea1a0cc8a5c795e4d204f38d0d6aa753fbc7e",
+    "566:Po": "174248a6e0e420fa380169cb5a0dab334cd15bb928f4e684499dd76bd7208020",
+    "567:Co": "c61410209a61a69f22f22afff03c28c12f30947cfaa54b5303f147e17f8f68b2",
+    "567:Bo": "eff08ba15fc04dae5d9b06b43f80bfbe4b5f19b122b0e00bd9e63f102f58598b",
+    "567:Po": "0aba537f32c6f5705656afb3b21a5af40ea66a5f57121ac0fac396900e31486a"
+   },
+   "cpu_total": {
+    "Co": 0.53,
+    "Bo": 0.553,
+    "Po": 0.409
+   },
+   "analyses": {
+    "primary": [
+     {
+      "cont": "Co+maint",
+      "base": "Bo",
+      "n": 18,
+      "rc": 0,
+      "report": "A_18 = +0.0416  [+0.0053, +0.0796] (95% paired bootstrap, S=7); delta-SE=0.0211; sign-flip p=0.125; geometric-mean form=+0.0428\ncensored tasks: Co+maint=23, Bo=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0050 per task  [-0.0159, +0.0072]\nA_n curve (seed-mean costs): [-0.111  0.102 -0.03   0.012  0.08   0.057  0.075  0.108  0.06   0.078\n  0.1    0.099  0.11   0.125  0.085  0.086  0.098  0.042]\nbreak-even n (seed-mean costs): 4",
+      "err": ""
+     },
+     {
+      "cont": "Co+maint",
+      "base": "Po+maint",
+      "n": 18,
+      "rc": 0,
+      "report": "A_18 = -0.2936  [-0.3508, -0.2370] (95% paired bootstrap, S=7); delta-SE=0.0317; sign-flip p=0.01562; geometric-mean form=-0.2932\ncensored tasks: Co+maint=23, Po+maint=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0036 per task  [-0.0171, +0.0115]\nA_n curve (seed-mean costs): [-0.095 -0.245 -0.349 -0.329 -0.36  -0.302 -0.271 -0.299 -0.317 -0.298\n -0.324 -0.298 -0.291 -0.299 -0.283 -0.283 -0.298 -0.294]\nbreak-even n (seed-mean costs): None",
+      "err": ""
+     }
+    ],
+    "secondary": [
+     {
+      "cont": "Co",
+      "base": "Bo",
+      "n": 18,
+      "rc": 0,
+      "report": "A_18 = +0.2226  [+0.1828, +0.2607] (95% paired bootstrap, S=7); delta-SE=0.0222; sign-flip p=0.01562; geometric-mean form=+0.2245\ncensored tasks: Co=23, Bo=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0070 per task  [-0.0053, +0.0204]\nA_n curve (seed-mean costs): [-0.111  0.102  0.074  0.096  0.149  0.164  0.171  0.194  0.178  0.186\n  0.2    0.223  0.226  0.234  0.226  0.22   0.226  0.223]\nbreak-even n (seed-mean costs): 2",
+      "err": ""
+     },
+     {
+      "cont": "Co",
+      "base": "Po",
+      "n": 18,
+      "rc": 0,
+      "report": "A_18 = -0.3867  [-0.4914, -0.2856] (95% paired bootstrap, S=7); delta-SE=0.0579; sign-flip p=0.01562; geometric-mean form=-0.3863\ncensored tasks: Co=23, Po=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0067 per task  [-0.0206, +0.0085]\nA_n curve (seed-mean costs): [-0.095 -0.245 -0.393 -0.362 -0.393 -0.375 -0.329 -0.358 -0.388 -0.358\n -0.387 -0.365 -0.352 -0.359 -0.352 -0.348 -0.364 -0.387]\nbreak-even n (seed-mean costs): None",
+      "err": ""
+     },
+     {
+      "cont": "Po",
+      "base": "Bo",
+      "n": 18,
+      "rc": 0,
+      "report": "A_18 = +0.4394  [+0.4105, +0.4663] (95% paired bootstrap, S=7); delta-SE=0.0154; sign-flip p=0.01562; geometric-mean form=+0.4406\ncensored tasks: Po=10, Bo=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0137 per task  [+0.0079, +0.0193]\nA_n curve (seed-mean costs): [-0.015  0.279  0.335  0.336  0.389  0.392  0.376  0.407  0.408  0.401\n  0.423  0.431  0.428  0.436  0.428  0.422  0.433  0.439]\nbreak-even n (seed-mean costs): 2",
+      "err": ""
+     },
+     {
+      "cont": "Po+maint",
+      "base": "Bo",
+      "n": 18,
+      "rc": 0,
+      "report": "A_18 = +0.2591  [+0.2330, +0.2853] (95% paired bootstrap, S=7); delta-SE=0.0146; sign-flip p=0.01562; geometric-mean form=+0.2599\ncensored tasks: Po+maint=10, Bo=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0014 per task  [-0.0074, +0.0050]\nA_n curve (seed-mean costs): [-0.015  0.279  0.236  0.257  0.323  0.276  0.273  0.313  0.286  0.289\n  0.32   0.306  0.311  0.326  0.287  0.288  0.305  0.259]\nbreak-even n (seed-mean costs): 2",
+      "err": ""
+     },
+     {
+      "cont": "Co+maint",
+      "base": "Co",
+      "n": 18,
+      "rc": 0,
+      "report": "A_18 = -0.2328  [-0.2521, -0.2144] (95% paired bootstrap, S=7); delta-SE=0.0107; sign-flip p=0.01562; geometric-mean form=-0.2342\ncensored tasks: Co+maint=23, Co=23\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0121 per task  [-0.0147, -0.0094]\nA_n curve (seed-mean costs): [ 0.     0.    -0.112 -0.092 -0.082 -0.129 -0.115 -0.107 -0.144 -0.133\n -0.126 -0.159 -0.15  -0.143 -0.182 -0.172 -0.165 -0.233]\nbreak-even n (seed-mean costs): None",
+      "err": ""
+     },
+     {
+      "cont": "Po+maint",
+      "base": "Po",
+      "n": 18,
+      "rc": 0,
+      "report": "A_18 = -0.3215  [-0.3502, -0.2942] (95% paired bootstrap, S=7); delta-SE=0.0156; sign-flip p=0.01562; geometric-mean form=-0.3230\ncensored tasks: Po+maint=10, Po=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0152 per task  [-0.0184, -0.0122]\nA_n curve (seed-mean costs): [ 0.     0.    -0.148 -0.119 -0.108 -0.192 -0.166 -0.158 -0.205 -0.186\n -0.179 -0.219 -0.204 -0.196 -0.246 -0.231 -0.225 -0.321]\nbreak-even n (seed-mean costs): None",
+      "err": ""
+     }
+    ],
+    "resources": {
+     "evaluations": [
+      {
+       "cont": "Co+maint",
+       "base": "Bo",
+       "n": 18,
+       "rc": 0,
+       "report": "A_18 = -0.4365  [-0.5332, -0.3605] (95% paired bootstrap, S=7); delta-SE=0.0482; sign-flip p=0.01562; geometric-mean form=-0.4346\ncensored tasks: Co+maint=23, Bo=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0101 per task  [-0.0283, +0.0073]\nA_n curve (seed-mean costs): [ 0.356  0.195 -0.483 -0.357 -0.289 -0.432 -0.333 -0.307 -0.452 -0.39\n -0.376 -0.422 -0.381 -0.366 -0.423 -0.39  -0.375 -0.437]\nbreak-even n (seed-mean costs): None",
+       "err": ""
+      },
+      {
+       "cont": "Co+maint",
+       "base": "Po+maint",
+       "n": 18,
+       "rc": 0,
+       "report": "A_18 = -0.4365  [-0.5332, -0.3605] (95% paired bootstrap, S=7); delta-SE=0.0482; sign-flip p=0.01562; geometric-mean form=-0.4346\ncensored tasks: Co+maint=23, Po+maint=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0101 per task  [-0.0283, +0.0073]\nA_n curve (seed-mean costs): [ 0.356  0.195 -0.483 -0.357 -0.289 -0.432 -0.333 -0.307 -0.452 -0.39\n -0.376 -0.422 -0.381 -0.366 -0.423 -0.39  -0.375 -0.437]\nbreak-even n (seed-mean costs): None",
+       "err": ""
+      }
+     ],
+     "lines": [
+      {
+       "cont": "Co+maint",
+       "base": "Bo",
+       "n": 18,
+       "rc": 0,
+       "report": "A_18 = +0.1793  [+0.1778, +0.1806] (95% paired bootstrap, S=7); delta-SE=0.0008; sign-flip p=0.01562; geometric-mean form=+0.1793\ncensored tasks: Co+maint=23, Bo=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0174 per task  [-0.0204, -0.0147]\nA_n curve (seed-mean costs): [0.    0.473 0.34  0.256 0.393 0.309 0.265 0.35  0.275 0.248 0.311 0.244\n 0.225 0.276 0.212 0.199 0.242 0.179]\nbreak-even n (seed-mean costs): 2",
+       "err": ""
+      },
+      {
+       "cont": "Co+maint",
+       "base": "Po+maint",
+       "n": 18,
+       "rc": 0,
+       "report": "A_18 = +0.0031  [+0.0014, +0.0046] (95% paired bootstrap, S=7); delta-SE=0.0009; sign-flip p=0.03125; geometric-mean form=+0.0031\ncensored tasks: Co+maint=23, Po+maint=10\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0000 per task  [-0.0002, +0.0002]\nA_n curve (seed-mean costs): [0.    0.    0.004 0.003 0.002 0.004 0.003 0.003 0.002 0.002 0.002 0.003\n 0.003 0.003 0.003 0.003 0.003 0.003]\nbreak-even n (seed-mean costs): 3",
+       "err": ""
+      }
+     ]
+    },
+    "parsed": {
+     "Co+maint||Bo": {
+      "A": [
+       0.0416,
+       [
+        0.0053,
+        0.0796
+       ]
+      ],
+      "beta": [
+       -0.005,
+       [
+        -0.0159,
+        0.0072
+       ]
+      ],
+      "A_n_curve": [
+       -0.111,
+       0.102,
+       -0.03,
+       0.012,
+       0.08,
+       0.057,
+       0.075,
+       0.108,
+       0.06,
+       0.078,
+       0.1,
+       0.099,
+       0.11,
+       0.125,
+       0.085,
+       0.086,
+       0.098,
+       0.042
+      ]
+     },
+     "Co+maint||Po+maint": {
+      "A": [
+       -0.2936,
+       [
+        -0.3508,
+        -0.237
+       ]
+      ],
+      "beta": [
+       -0.0036,
+       [
+        -0.0171,
+        0.0115
+       ]
+      ],
+      "A_n_curve": [
+       -0.095,
+       -0.245,
+       -0.349,
+       -0.329,
+       -0.36,
+       -0.302,
+       -0.271,
+       -0.299,
+       -0.317,
+       -0.298,
+       -0.324,
+       -0.298,
+       -0.291,
+       -0.299,
+       -0.283,
+       -0.283,
+       -0.298,
+       -0.294
+      ]
+     },
+     "Co||Bo": {
+      "A": [
+       0.2226,
+       [
+        0.1828,
+        0.2607
+       ]
+      ],
+      "beta": [
+       0.007,
+       [
+        -0.0053,
+        0.0204
+       ]
+      ],
+      "A_n_curve": [
+       -0.111,
+       0.102,
+       0.074,
+       0.096,
+       0.149,
+       0.164,
+       0.171,
+       0.194,
+       0.178,
+       0.186,
+       0.2,
+       0.223,
+       0.226,
+       0.234,
+       0.226,
+       0.22,
+       0.226,
+       0.223
+      ]
+     },
+     "Co||Po": {
+      "A": [
+       -0.3867,
+       [
+        -0.4914,
+        -0.2856
+       ]
+      ],
+      "beta": [
+       -0.0067,
+       [
+        -0.0206,
+        0.0085
+       ]
+      ],
+      "A_n_curve": [
+       -0.095,
+       -0.245,
+       -0.393,
+       -0.362,
+       -0.393,
+       -0.375,
+       -0.329,
+       -0.358,
+       -0.388,
+       -0.358,
+       -0.387,
+       -0.365,
+       -0.352,
+       -0.359,
+       -0.352,
+       -0.348,
+       -0.364,
+       -0.387
+      ]
+     },
+     "Po||Bo": {
+      "A": [
+       0.4394,
+       [
+        0.4105,
+        0.4663
+       ]
+      ],
+      "beta": [
+       0.0137,
+       [
+        0.0079,
+        0.0193
+       ]
+      ],
+      "A_n_curve": [
+       -0.015,
+       0.279,
+       0.335,
+       0.336,
+       0.389,
+       0.392,
+       0.376,
+       0.407,
+       0.408,
+       0.401,
+       0.423,
+       0.431,
+       0.428,
+       0.436,
+       0.428,
+       0.422,
+       0.433,
+       0.439
+      ]
+     },
+     "Po+maint||Bo": {
+      "A": [
+       0.2591,
+       [
+        0.233,
+        0.2853
+       ]
+      ],
+      "beta": [
+       -0.0014,
+       [
+        -0.0074,
+        0.005
+       ]
+      ],
+      "A_n_curve": [
+       -0.015,
+       0.279,
+       0.236,
+       0.257,
+       0.323,
+       0.276,
+       0.273,
+       0.313,
+       0.286,
+       0.289,
+       0.32,
+       0.306,
+       0.311,
+       0.326,
+       0.287,
+       0.288,
+       0.305,
+       0.259
+      ]
+     },
+     "Co+maint||Co": {
+      "A": [
+       -0.2328,
+       [
+        -0.2521,
+        -0.2144
+       ]
+      ],
+      "beta": [
+       -0.0121,
+       [
+        -0.0147,
+        -0.0094
+       ]
+      ],
+      "A_n_curve": [
+       0.0,
+       0.0,
+       -0.112,
+       -0.092,
+       -0.082,
+       -0.129,
+       -0.115,
+       -0.107,
+       -0.144,
+       -0.133,
+       -0.126,
+       -0.159,
+       -0.15,
+       -0.143,
+       -0.182,
+       -0.172,
+       -0.165,
+       -0.233
+      ]
+     },
+     "Po+maint||Po": {
+      "A": [
+       -0.3215,
+       [
+        -0.3502,
+        -0.2942
+       ]
+      ],
+      "beta": [
+       -0.0152,
+       [
+        -0.0184,
+        -0.0122
+       ]
+      ],
+      "A_n_curve": [
+       0.0,
+       0.0,
+       -0.148,
+       -0.119,
+       -0.108,
+       -0.192,
+       -0.166,
+       -0.158,
+       -0.205,
+       -0.186,
+       -0.179,
+       -0.219,
+       -0.204,
+       -0.196,
+       -0.246,
+       -0.231,
+       -0.225,
+       -0.321
+      ]
+     }
+    },
+    "parsed_resources": {
+     "evaluations": {
+      "Co+maint||Bo": {
+       "A": [
+        -0.4365,
+        [
+         -0.5332,
+         -0.3605
+        ]
+       ],
+       "beta": [
+        -0.0101,
+        [
+         -0.0283,
+         0.0073
+        ]
+       ],
+       "A_n_curve": [
+        0.356,
+        0.195,
+        -0.483,
+        -0.357,
+        -0.289,
+        -0.432,
+        -0.333,
+        -0.307,
+        -0.452,
+        -0.39,
+        -0.376,
+        -0.422,
+        -0.381,
+        -0.366,
+        -0.423,
+        -0.39,
+        -0.375,
+        -0.437
+       ]
+      },
+      "Co+maint||Po+maint": {
+       "A": [
+        -0.4365,
+        [
+         -0.5332,
+         -0.3605
+        ]
+       ],
+       "beta": [
+        -0.0101,
+        [
+         -0.0283,
+         0.0073
+        ]
+       ],
+       "A_n_curve": [
+        0.356,
+        0.195,
+        -0.483,
+        -0.357,
+        -0.289,
+        -0.432,
+        -0.333,
+        -0.307,
+        -0.452,
+        -0.39,
+        -0.376,
+        -0.422,
+        -0.381,
+        -0.366,
+        -0.423,
+        -0.39,
+        -0.375,
+        -0.437
+       ]
+      }
+     },
+     "lines": {
+      "Co+maint||Bo": {
+       "A": [
+        0.1793,
+        [
+         0.1778,
+         0.1806
+        ]
+       ],
+       "beta": [
+        -0.0174,
+        [
+         -0.0204,
+         -0.0147
+        ]
+       ],
+       "A_n_curve": [
+        0.0,
+        0.473,
+        0.34,
+        0.256,
+        0.393,
+        0.309,
+        0.265,
+        0.35,
+        0.275,
+        0.248,
+        0.311,
+        0.244,
+        0.225,
+        0.276,
+        0.212,
+        0.199,
+        0.242,
+        0.179
+       ]
+      },
+      "Co+maint||Po+maint": {
+       "A": [
+        0.0031,
+        [
+         0.0014,
+         0.0046
+        ]
+       ],
+       "beta": [
+        0.0,
+        [
+         -0.0002,
+         0.0002
+        ]
+       ],
+       "A_n_curve": [
+        0.0,
+        0.0,
+        0.004,
+        0.003,
+        0.002,
+        0.004,
+        0.003,
+        0.003,
+        0.002,
+        0.002,
+        0.002,
+        0.003,
+        0.003,
+        0.003,
+        0.003,
+        0.003,
+        0.003,
+        0.003
+       ]
+      }
+     }
+    },
+    "work_split": {
+     "evaluations": {
+      "vs_B": {
+       "work": "evaluations",
+       "A_cpu": [
+        0.0416,
+        [
+         0.0027,
+         0.0793
+        ]
+       ],
+       "A_work": [
+        -0.4365,
+        [
+         -0.5332,
+         -0.3591
+        ]
+       ],
+       "rho": [
+        0.6672,
+        [
+         0.6311,
+         0.7014
+        ]
+       ],
+       "identity_residual": 1.1102230246251565e-16
+      },
+      "vs_P": {
+       "work": "evaluations",
+       "A_cpu": [
+        -0.2936,
+        [
+         -0.3509,
+         -0.2355
+        ]
+       ],
+       "A_work": [
+        -0.4365,
+        [
+         -0.5332,
+         -0.3591
+        ]
+       ],
+       "rho": [
+        0.9005,
+        [
+         0.8701,
+         0.93
+        ]
+       ],
+       "identity_residual": 2.220446049250313e-16
+      }
+     },
+     "executions": {
+      "vs_B": {
+       "work": "executions",
+       "A_cpu": [
+        0.0416,
+        [
+         0.0027,
+         0.0793
+        ]
+       ],
+       "A_work": [
+        0.1388,
+        [
+         0.1148,
+         0.1628
+        ]
+       ],
+       "rho": [
+        1.1128,
+        [
+         1.0789,
+         1.1551
+        ]
+       ],
+       "identity_residual": 1.1102230246251565e-16
+      },
+      "vs_P": {
+       "work": "executions",
+       "A_cpu": [
+        -0.2936,
+        [
+         -0.3509,
+         -0.2355
+        ]
+       ],
+       "A_work": [
+        0.0553,
+        [
+         0.0203,
+         0.0925
+        ]
+       ],
+       "rho": [
+        1.3693,
+        [
+         1.307,
+         1.4091
+        ]
+       ],
+       "identity_residual": 0.0
+      }
+     },
+     "row_ops": {
+      "vs_B": {
+       "work": "row_ops",
+       "A_cpu": [
+        0.0416,
+        [
+         0.0027,
+         0.0793
+        ]
+       ],
+       "A_work": [
+        0.152,
+        [
+         0.1281,
+         0.1765
+        ]
+       ],
+       "rho": [
+        1.1302,
+        [
+         1.096,
+         1.1725
+        ]
+       ],
+       "identity_residual": -1.1102230246251565e-16
+      },
+      "vs_P": {
+       "work": "row_ops",
+       "A_cpu": [
+        -0.2936,
+        [
+         -0.3509,
+         -0.2355
+        ]
+       ],
+       "A_work": [
+        0.0712,
+        [
+         0.0367,
+         0.1082
+        ]
+       ],
+       "rho": [
+        1.3928,
+        [
+         1.329,
+         1.4336
+        ]
+       ],
+       "identity_residual": 2.220446049250313e-16
+      }
+     }
+    },
+    "strata_B_depth": {
+     "2": {
+      "tasks": 84,
+      "A": [
+       0.2619,
+       [
+        0.2333,
+        0.2919
+       ]
+      ]
+     },
+     "4": {
+      "tasks": 42,
+      "A": [
+       0.1819,
+       [
+        0.1166,
+        0.25
+       ]
+      ]
+     }
+    },
+    "censoring": {
+     "censored_cont": 23,
+     "censored_base": 10,
+     "tasks": 126,
+     "recorded_A_is": "undetermined (both censored)",
+     "A_recorded_task_only": [
+      0.2226,
+      [
+       0.1819,
+       0.2599
+      ]
+     ],
+     "censoring_interval": null,
+     "matched_subset_tasks": 101,
+     "A_matched_task_only": [
+      0.1515,
+      [
+       0.1041,
+       0.1957
+      ]
+     ]
+    },
+    "rate_ratio": {
+     "slope_y": [
+      -0.022,
+      [
+       -0.07499,
+       0.02895
+      ]
+     ],
+     "s_savings": [
+      0.00479,
+      [
+       -0.09721,
+       0.09552
+      ]
+     ],
+     "o_overhead": [
+      -0.01721,
+      [
+       -0.07187,
+       0.02985
+      ]
+     ],
+     "y_first": [
+      -0.10088,
+      [
+       -0.28578,
+       0.07489
+      ]
+     ],
+     "y_last": [
+      -0.23228,
+      [
+       -0.41636,
+       -0.06636
+      ]
+     ],
+     "rate_ratio_o_over_s": -3.5915,
+     "predicted_crossover_family": -10.08,
+     "predicted_crossover_task": -54.5,
+     "families": 6
+    },
+    "rate_ratio_per_seed": {
+     "561": {
+      "slope_y": [
+       -0.07951,
+       [
+        -0.07951,
+        -0.07951
+       ]
+      ],
+      "s_savings": [
+       0.04796,
+       [
+        0.04796,
+        0.04796
+       ]
+      ],
+      "o_overhead": [
+       -0.03155,
+       [
+        -0.03155,
+        -0.03155
+       ]
+      ],
+      "y_first": [
+       -0.05449,
+       [
+        -0.05449,
+        -0.05449
+       ]
+      ],
+      "y_last": [
+       -0.64891,
+       [
+        -0.64891,
+        -0.64891
+       ]
+      ],
+      "rate_ratio_o_over_s": -0.6579,
+      "predicted_crossover_family": -1.84,
+      "predicted_crossover_task": -5.0,
+      "families": 6
+     },
+     "562": {
+      "slope_y": [
+       -0.04524,
+       [
+        -0.04524,
+        -0.04524
+       ]
+      ],
+      "s_savings": [
+       0.04596,
+       [
+        0.04596,
+        0.04596
+       ]
+      ],
+      "o_overhead": [
+       0.00071,
+       [
+        0.00071,
+        0.00071
+       ]
+      ],
+      "y_first": [
+       0.10008,
+       [
+        0.10008,
+        0.10008
+       ]
+      ],
+      "y_last": [
+       -0.21016,
+       [
+        -0.21016,
+        -0.21016
+       ]
+      ],
+      "rate_ratio_o_over_s": 0.0155,
+      "predicted_crossover_family": -5.43,
+      "predicted_crossover_task": -26.6,
+      "families": 6
+     },
+     "563": {
+      "slope_y": [
+       0.07757,
+       [
+        0.07757,
+        0.07757
+       ]
+      ],
+      "s_savings": [
+       -0.22974,
+       [
+        -0.22974,
+        -0.22974
+       ]
+      ],
+      "o_overhead": [
+       -0.15217,
+       [
+        -0.15217,
+        -0.15217
+       ]
+      ],
+      "y_first": [
+       -0.49497,
+       [
+        -0.49497,
+        -0.49497
+       ]
+      ],
+      "y_last": [
+       -0.08307,
+       [
+        -0.08307,
+        -0.08307
+       ]
+      ],
+      "rate_ratio_o_over_s": "s <= 0",
+      "predicted_crossover_family": null,
+      "families": 6
+     },
+     "564": {
+      "slope_y": [
+       -0.00522,
+       [
+        -0.00522,
+        -0.00522
+       ]
+      ],
+      "s_savings": [
+       0.01684,
+       [
+        0.01684,
+        0.01684
+       ]
+      ],
+      "o_overhead": [
+       0.01162,
+       [
+        0.01162,
+        0.01162
+       ]
+      ],
+      "y_first": [
+       -0.14015,
+       [
+        -0.14015,
+        -0.14015
+       ]
+      ],
+      "y_last": [
+       0.09259,
+       [
+        0.09259,
+        0.09259
+       ]
+      ],
+      "rate_ratio_o_over_s": 0.69,
+      "predicted_crossover_family": -42.02,
+      "predicted_crossover_task": -246.1,
+      "families": 6
+     },
+     "565": {
+      "slope_y": [
+       0.05945,
+       [
+        0.05945,
+        0.05945
+       ]
+      ],
+      "s_savings": [
+       -0.1254,
+       [
+        -0.1254,
+        -0.1254
+       ]
+      ],
+      "o_overhead": [
+       -0.06595,
+       [
+        -0.06595,
+        -0.06595
+       ]
+      ],
+      "y_first": [
+       -0.34765,
+       [
+        -0.34765,
+        -0.34765
+       ]
+      ],
+      "y_last": [
+       -0.0438,
+       [
+        -0.0438,
+        -0.0438
+       ]
+      ],
+      "rate_ratio_o_over_s": "s <= 0",
+      "predicted_crossover_family": null,
+      "families": 6
+     },
+     "566": {
+      "slope_y": [
+       -0.02291,
+       [
+        -0.02291,
+        -0.02291
+       ]
+      ],
+      "s_savings": [
+       0.07311,
+       [
+        0.07311,
+        0.07311
+       ]
+      ],
+      "o_overhead": [
+       0.05021,
+       [
+        0.05021,
+        0.05021
+       ]
+      ],
+      "y_first": [
+       -0.0567,
+       [
+        -0.0567,
+        -0.0567
+       ]
+      ],
+      "y_last": [
+       -0.26889,
+       [
+        -0.26889,
+        -0.26889
+       ]
+      ],
+      "rate_ratio_o_over_s": 0.6867,
+      "predicted_crossover_family": -7.98,
+      "predicted_crossover_task": -41.9,
+      "families": 6
+     },
+     "567": {
+      "slope_y": [
+       -0.13814,
+       [
+        -0.13814,
+        -0.13814
+       ]
+      ],
+      "s_savings": [
+       0.20482,
+       [
+        0.20482,
+        0.20482
+       ]
+      ],
+      "o_overhead": [
+       0.06668,
+       [
+        0.06668,
+        0.06668
+       ]
+      ],
+      "y_first": [
+       0.28768,
+       [
+        0.28768,
+        0.28768
+       ]
+      ],
+      "y_last": [
+       -0.46373,
+       [
+        -0.46373,
+        -0.46373
+       ]
+      ],
+      "rate_ratio_o_over_s": 0.3256,
+      "predicted_crossover_family": 1.39,
+      "predicted_crossover_task": 14.3,
+      "families": 6
+     }
+    },
+    "emergence": {
+     "reuse": {
+      "uses_to_caps_histogram": {
+       "1": 42
+      },
+      "max_uses": 1,
+      "gini": 0.0,
+      "distinct_profiles_across_seeds": 5,
+      "capabilities_used": 42
+     },
+     "depth": {
+      "Co": {
+       "2": 104,
+       "4": 20,
+       "3": 2
+      },
+      "Bo": {
+       "2": 84,
+       "4": 42
+      }
+     }
+    }
+   }
+  }
+ },
+ "guards": {
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ },
+ "finished": "2026-11-27T13:57:56-0500",
+ "lock": {
+  "start": "g60h2 2026-11-27T13:51:23-0500 448651f",
+  "end": "g60h2 2026-11-27T13:51:23-0500 448651f"
+ },
+ "loadavg": {
+  "start": [
+   1.45751953125,
+   1.7529296875,
+   1.59814453125
+  ],
+  "end": [
+   1.7412109375,
+   1.80712890625,
+   1.61669921875
+  ]
+ }
+}
