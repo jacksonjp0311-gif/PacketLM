@@ -295,4 +295,26 @@ items 1–3.
   - Measured on G46 C's final state, for the same phase-B acquisition plus investigation:
     15.1 s → 0.65 s.
 - **Teaching:** sessions 006 (types; retention 12/14 because of the dependency suspension) and
-  007 (requalify continent; 16/16). Both are logged in sessions.jsonl and the lines below.
+  007 (requalify continent; 16/16). Both are logged in sessions.jsonl and the lines above.
+
+## 2026-11-26 21:57 — v3 re-measurement results (docs/G46_V3.md; evidence docs/evidence/v3/)
+
+- **Decisions:** unchanged in every engine arm and seed. G46 stays **not passed (26/27)**:
+  seed 33 threshold 6 fails at the same task.
+- **G46 `A_36(C‖B)`:** −7.00 → **−2.15** [−2.17, −2.14].
+- **`A^reuse_36(C‖P)`:** +0.225 → **+0.115** [+0.106, +0.132]; break-even 28 → 24.
+- **G46-U:** `A_24(C‖B)` −23.1 → −19.3; `A(C‖P)` ≈ 0.
+- **G47:**
+  - H3 still true. **H5 flips to true**: at depth 3 the library arm is cheaper per acquired task.
+  - `A(K‖Q)` = −0.41 and `A(L‖M)` = −0.25 (replicate). Both are lower bounds, because the
+    primitive arms are censored.
+- **Host stall in the first G47 v3 run:** five ~34 s outliers, all at about the same time.
+  - A deterministic replay of one of them gave identical work in 2.7 s.
+  - I ran **one declared replicate** in isolation, with no outliers.
+  - Both runs are kept and reported. I did not rerun again to get a better number.
+- **Interpretation:** about two thirds of the v2 penalty was implementation. The rest is the
+  utility problem. Per-call cost scales with state size: load re-checks each fact's binding,
+  and save runs two more full validations.
+- **Next:**
+  1. v4: exact persistence work, in progress on ops-dev.
+  2. The ARET adaptive-retention experiment, pre-registered before any run.
