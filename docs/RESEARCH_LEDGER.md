@@ -939,7 +939,7 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   descriptive line. Evidence-gated re-asks are allowed only if their soundness is preserved and
   pre-registered. Design to be pre-registered as G56 before any measurement.
 
-## 2026-11-27 04:45: G56 pre-registration (long-lived engine protocol, equal charging)
+## 2026-11-27 04:20: G56 pre-registration (long-lived engine protocol, equal charging)
 
 - **Mechanism:** `packetlm/serve.py`.
   - One process serves many calls. A fresh `Engine` handles each call over an in-memory state.
@@ -968,7 +968,7 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - **G55 registered run:** still running. Its L32 calls take minutes each on the shared box. G56 may
   run concurrently; load is recorded.
 
-## 2026-11-27 04:45: G55 registered run failed; G56 first start aborted; verify-3e2783c response
+## 2026-11-27 04:33: G55 registered run failed; G56 first start aborted; verify-3e2783c response
 
 - **G55 registered run FAILED** at 04:22:14 EST.
   - Cause: an L32 call exceeded the 600 s per-call wall limit (L32_562). Load average was up to
@@ -1013,3 +1013,23 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   - The `g54_lean_persistence_guarantees` tamper edit was re-anchored to the new key order; its
     intent is unchanged.
 - **Tests:** g44 142/142, suite 230/230 (11/11), G45 18/18, mutations 101/101 (0 crash kills).
+
+## 2026-11-27 04:40: G56 registered results (amendment 1; comp 181–187, unrel 191–197)
+
+- Run at 6d9c1d8 (clean), 04:33:49–04:35:24 EST, with no other builder job; load average 0.98 →
+  4.49. All guards held: E (every Xs reply stream equals its Xl twin, all roles, 14 seeds),
+  0 wrong-qualified, instrument pinned, source unchanged.
+- **Ms claimed on both curricula.** A(Cs+maint‖Cl+maint) = **+0.396 [+0.376, +0.417]** (comp) and
+  **+0.704 [+0.699, +0.710]** (unrel), with identical replies.
+- **L1s no claim:** −1.126 [−1.231, −1.039] (2.13×). **L3s no claim:** −16.99 [−17.35, −16.65]
+  (18.0×).
+- **L2s no claim:** −0.531 [−0.606, −0.454] (comp); −0.001 [−0.026, +0.029] (unrel).
+- **Secondary (per-process, same seeds):** A(Cl+maint‖Bl) = −0.698 (comp, 1.70×) and −3.159 (unrel,
+  4.16×). The protocol cuts B most: A(Bs‖Bl) = +0.518 (comp), +0.932 (unrel).
+- **Structural answer:** under equal charging the gap widens, so the per-process floor was hiding
+  part of it. What remains:
+  - unrel: 77% maintenance re-asks (504 calls × 22 ms vs Bs's 2 ms per call);
+  - comp: per-call acquisition and scan work over the library-extended space (49 vs 26 ms per call).
+- All predictions held. Evidence: `docs/evidence/g56/` (receipt, CSVs, raw logs).
+- **Next:** state-proportional cost (evidence-gated re-asks with an exactness argument; recall and
+  scans indexed by relation and component). Each needs its own pre-registration.
