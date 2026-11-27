@@ -650,3 +650,17 @@ Pre-registration commit 9535318; seeds 531–537.
 **L window:** 81 qualified answers, 0 wrong; the predicted harm did not occur on these seeds.
 
 **Cost:** F's whole-process CPU is 1.66× R's.
+
+## 2026-11-27 00:20: G50 pre-registration (docs/G50.md)
+
+**Tie-break: smallest closure first.** Among equally splitting subjects, investigate now asks
+the one with the smallest closure (entities reachable along told facts), then by name. This is
+the fix for G49 D1.
+- Dev: seed 5006 reproduced D1 before the change; after it, 32/32 tasks were correct.
+- Covered by 2 checks and 3 mutations (63/63).
+
+**Part A:** G49's harness and thresholds on new seeds 541–547, plus X1 with seed 5050.
+
+**Part B:** `complete` on the G46 curriculum with the base engine. Arms C, E and K on new seeds
+61–67. Dev: K qualified 69/71 tasks, against 35 for C and E, with 0 wrong-qualified answers
+and no harm.

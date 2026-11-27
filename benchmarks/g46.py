@@ -30,6 +30,7 @@ FLAGS = {"C": [], "B": ["--no-library"], "P": ["--no-library"], "F": [], "S": []
          "G": ["--no-geometry"], "N": ["--no-activation"]}
 CLI_ARMS = list(FLAGS)
 RICH = set()  # arms whose teacher states `!none` / `!several` (docs/PX.md); empty for G46/G47
+COMPLETE = set()  # arms whose teacher states `complete s` for every subject it answers (docs/G50.md)
 DEEPEN = {}  # per-arm depth budget; G46 uses 5 for every arm (G47 reuses this harness)
 N_CALL_BUDGET_S = 120  # amendment 1 (docs/G46.md): per-call wall budget for the activation ablation only
 
@@ -234,6 +235,8 @@ def _arm_body(seed, arm, fams, sealed_all, d, persistent, flags, rng, log, tasks
                 first = list(vals)
                 if task.get("contradiction") and arm != "S":
                     first[0] = task["contradiction"]
+                if arm in COMPLETE and ex:
+                    lines.append(f"complete {' '.join(ex)}")  # G50: the told closures are complete
                 lines += [f"example {name}: {s} -> {v}" for s, v in zip(ex, first)]
                 rr = T(*lines)
                 status = rr[-1].split()[0] if ex else None
@@ -242,11 +245,13 @@ def _arm_body(seed, arm, fams, sealed_all, d, persistent, flags, rng, log, tasks
                     status = msg.split("; ")[1].split()[0]
                 evidence = [[s, v] for s, v in zip(ex, vals)]
                 pending, n = None, 0
+                pre = []  # G50: `complete subj` sent just before an answered example
                 while n < 4 and status != "qualified" and ex:
-                    rr = T(*([pending] if pending else []), f"investigate {name}")
+                    rr = T(*(pre + [pending] if pending else []), f"investigate {name}")
                     n += 1
                     if pending and pending.startswith("example"):
-                        status = rr[0].split()[0]
+                        status = rr[len(pre)].split()[0]
+                    pre = []
                     pending = None
                     if status == "qualified":
                         break
@@ -261,6 +266,7 @@ def _arm_body(seed, arm, fams, sealed_all, d, persistent, flags, rng, log, tasks
                         st_ = "!none" if tv[0] == "undef" else "!several"
                         evidence.append([subj, st_])
                         pending = f"example {name}: {subj} -> {st_}"
+                        pre = [f"complete {subj}"] if arm in COMPLETE else []
                         continue
                     if subj in sealed_all or tv[0] != "val":
                         pending = f"unanswered {name}: {subj}"
@@ -271,10 +277,11 @@ def _arm_body(seed, arm, fams, sealed_all, d, persistent, flags, rng, log, tasks
                         val = rng.choice(others) if others else val
                     evidence.append([subj, val])
                     pending = f"example {name}: {subj} -> {val}"
+                    pre = [f"complete {subj}"] if arm in COMPLETE else []
                 if pending:
-                    rr = T(pending)
+                    rr = T(*(pre if pending.startswith("example") else []), pending)
                     if pending.startswith("example"):
-                        status = rr[0].split()[0]
+                        status = rr[len(pre)].split()[0]
             items = [(s, name, truth(triples, task["hidden"], s)) for s in fam["sealed"]]
             rows = ask(T, items)
             a1 = len(log)

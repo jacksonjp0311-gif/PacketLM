@@ -1285,7 +1285,12 @@ class Engine:
         preds = {tuple(h): (self._outcomes(h) if self.answers else self._predictions(h)) for h in live}
         best, best_score = None, 0
         # programs mode: ties broken by entity name, not by fact storage order, which adaptive
-        # retention changes when it restores a component (G48 H6 failure, docs/G48.md)
+        # retention changes when it restores a component (G48 H6 failure, docs/G48.md).
+        # G50 (docs/G50.md, G49 D1 failure): among equally splitting subjects, the one with the
+        # smallest closure (entities reachable along told facts) first, then the name. A smaller
+        # closure means fewer facts the answer can depend on; it is order-independent.
+        size = self._closure_sizes() if self.programs else {}
+        tie = (lambda e: (size.get(e, 0), e)) if self.programs else None  # noqa: E731
         for e in self._question_pool(name):
             if e in done:
                 continue
@@ -1296,7 +1301,7 @@ class Engine:
                 if len(set(allp)) < 2:
                     continue
                 score = min(len(allp) - allp.count(c) for c in set(allp))
-                if score > best_score:
+                if score > best_score or (tie and score == best_score and score and tie(e) < tie(best)):
                     best, best_score = e, score
                 continue
             if self.programs:
@@ -1308,7 +1313,7 @@ class Engine:
                 if not known or len(set(allp)) < 2:
                     continue
                 score = min(len(allp) - known.count(v) for v in set(known))
-                if score > best_score:
+                if score > best_score or (score == best_score and score and tie(e) < tie(best)):
                     best, best_score = e, score
                 continue
             known = [p[e] for p in preds.values() if p[e] is not None]
@@ -1453,6 +1458,27 @@ class Engine:
 
     def _judge(self, s, out, v):
         return judge_closed(out, v) if s in self.state.get("complete", {}) else judge_set(out, v)
+
+    def _closure_sizes(self) -> dict:
+        """Number of entities reachable from each entity along told facts (itself included);
+        exact, computed once per index (G50 tie-break)."""
+        idx = self._idx()
+        if "closure_sizes" not in idx:
+            adj = {}
+            for f in self.state["facts"]:
+                if not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]):
+                    adj.setdefault(f["s"], set()).add(f["o"])
+            sizes = {}
+            for x in idx["names"]:
+                seen, todo = {x}, [x]
+                while todo:
+                    for z in adj.get(todo.pop(), ()):
+                        if z not in seen:
+                            seen.add(z)
+                            todo.append(z)
+                sizes[x] = len(seen)
+            idx["closure_sizes"] = sizes
+        return idx["closure_sizes"]
 
     def _reach(self, x) -> list:
         """Entities reachable from x along told facts (outgoing), x included: every fact a program

@@ -980,6 +980,18 @@ def g49_checks(tmp) -> dict:
     before = eo._operator_prims("u")
     eo.observe("u", "b", "!none")
     out["l3_statement_not_operator_answer"] = bool(before) and eo._operator_prims("u") == before
+    # G50 tie-break: equally splitting subjects -> smallest closure first, then name
+    for ans in (False, True):
+        et = Engine(tmp / f"tb{ans}.json", programs=True, answers=ans)
+        for t in [("a", "r1", "x"), ("a", "r2", "x"), ("b", "r1", "x"), ("b", "r2", "z"), ("z", "r3", "w"),
+                  ("w", "r3", "v"), ("c", "r1", "x"), ("c", "r2", "q")]:
+            et.tell(*t)
+        et.observe("h", "a", "x")
+        rr = et.acquire("h")
+        sizes = et._closure_sizes()
+        q = et.investigate("h")
+        out[f"g50_tiebreak_smallest_closure_{'answers' if ans else 'values'}"] = rr["result"] == "ambiguous" and \
+            sizes["b"] == 5 and sizes["c"] == 3 and q.get("subject") == "c"
     ea = Engine(tmp / "fcret.json", deepen=2, retention="adaptive")
     out["fc_refused_with_adaptive_retention"] = ea.turn("complete b").startswith("complete is not supported")
     return out
