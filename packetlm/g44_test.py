@@ -283,6 +283,95 @@ def fresh_process_checks(tmp) -> dict:
     }
 
 
+def retention_script(seed=5, families=8):
+    """Calls (lists of lines) over unrelated families, with fillers that age old families,
+    retention probes that touch all of them, a late correction, a relation shared by two
+    entity-disjoint families, a construction sentence and a full listing."""
+    rng = random.Random(seed)
+    calls = [["construct owns: ada owns box = ada box; ned owns key = ned key"]]
+    asked = []
+    for k in range(families):
+        ra = "f0a" if k == families - 1 else f"f{k}a"  # last family shares a relation with family 0
+        rb = f"f{k}b"
+        L = [[f"e{k}_{l}_{j}" for j in range(4)] for l in range(3)]
+        facts = []
+        for j in range(4):
+            facts.append((L[0][j], ra, L[1][rng.randrange(4)]))
+            facts.append((L[1][j], rb, L[2][rng.randrange(4)]))
+        val = {s: next(o2 for s1, r1, o1 in facts if s1 == s and r1 == ra
+                       for s2, r2, o2 in facts if s2 == o1 and r2 == rb) for s in L[0]}
+        t = f"t{k}"
+        calls.append([f"fact {a} {b} {c}" for a, b, c in facts] +
+                     [f"example {t}: {L[0][0]} -> {val[L[0][0]]}", f"example {t}: {L[0][1]} -> {val[L[0][1]]}"])
+        calls.append([f"investigate {t}"])
+        calls.append([f"example {t}: {L[0][2]} -> {val[L[0][2]]}", f"investigate {t}"])
+        calls.append([f"what is {L[0][3]} {t}", f"what is {L[0][0]} {ra}"])
+        if k == 2:
+            calls.append([f"{L[0][0]} owns cup2", f"what is {L[0][0]} owns"])
+        for _ in range(9):
+            calls.append([f"what is {L[1][rng.randrange(4)]} {rb}"])
+        asked.append((L[0][3], t))
+        if k == 4:
+            calls.append([f"correct {L0_1} {r1a} {L1_1}" for L0_1, r1a, L1_1 in [("e1_0_3", "f1a", "e1_1_0")]] +
+                         ["what is e1_0_3 t1"])
+        if k % 3 == 2:
+            calls.append([f"what is {s} {t}" for s, t in asked])
+    calls.append(["capabilities"])
+    calls.append(["show t0", "why e0_0_0 t0", "what is e3_0_3 t3"])
+    return calls
+
+
+def retention_checks(tmp) -> dict:
+    """Adaptive retention must be invisible in every reply (differential against static),
+    must actually archive and restore (not vacuous), and must never delete an archive file."""
+    calls = retention_script()
+    st, ad = tmp / "ret_static.json", tmp / "ret_adaptive.json"
+    same, archived, restored, smallest = True, 0, 0, 1.0
+    diffs = []
+    for lines in calls:
+        e1 = Engine.open(st, deepen=3)
+        r1 = [e1.turn(x) for x in lines]
+        e1.save()
+        e2 = Engine.open(ad, deepen=3, retention="adaptive")
+        r2 = [e2.turn(x) for x in lines]
+        e2.save()
+        archived += e2.stats.get("archived", 0)
+        restored += e2.stats.get("restored", 0)
+        smallest = min(smallest, ad.stat().st_size / st.stat().st_size)
+        if r1 != r2:
+            same = False
+            diffs.append({"lines": lines, "static": r1, "adaptive": r2})
+    folder = ad.with_name(ad.name + ".archive")
+    files = sorted(p.name for p in folder.glob("*.json"))
+    events = [json.loads(x) for x in (folder / "events.jsonl").read_text().splitlines()] if folder.exists() else []
+    ever = {e["archived"] for e in events if "archived" in e}
+    from .retention import GUARD, line_tokens
+    recent_ok = True
+    for e in events:
+        if "archived" in e:
+            i = e["call"] - 1  # adaptive call k is script call k-1
+            seen = set().union(*(line_tokens(x, {"lexicon": {}, "library": []}) for c in calls[max(0, i - GUARD + 1):i + 1] for x in c))
+            recent_ok = recent_ok and not (seen & set(e["tokens"]))
+    from .retention import refs, refs_walk
+    st_doc = json.loads(st.read_text())["state"]
+    refs_ok = all(sorted(refs(v)) == sorted(refs_walk(v)) for key in ("capabilities", "hypotheses", "observations")
+                  for v in st_doc[key].values()) and len(st_doc["hypotheses"]) >= 8
+    final = Engine.open(ad)  # static open restores everything, loudly
+    return {
+        "adaptive_matches_static": same,
+        "adaptive_archives_and_restores": archived >= 3 and restored >= 3,
+        "archive_never_deleted": all(f"{sha}.json" in files for sha in ever) and len(ever) >= 3,
+        "adaptive_hot_state_smaller": smallest < 0.6,
+        "refs_regex_matches_walk": refs_ok,
+        "rearchive_reuses_file": len(files) < archived,
+        "gate_keeps_recently_touched": recent_ok and any("archived" in e for e in events),
+        "static_open_restores_all": "restored_all" in final.report and not final.state["retention"]["archived"]
+            and sorted(final.state["capabilities"]) == sorted(Engine.open(st).state["capabilities"]),
+        "_retention": {"archived": archived, "restored": restored, "smallest_ratio": round(smallest, 3),
+                       "calls": len(calls), "diffs": diffs[:3]},
+    }
+
+
 def as_schema2(doc) -> dict:
     """Test-side writer of the old format: every fact carries its stored packet."""
     doc = copy.deepcopy(doc)
@@ -599,6 +688,7 @@ def run() -> dict:
             "persistence": persistence_checks(tmp),
             "fresh_process": fresh_process_checks(tmp),
             "migration": migration_checks(tmp),
+            "retention": retention_checks(tmp),
             "audit": audit_checks(tmp),
         }
     checks = {f"{sec}.{k}": bool(v) for sec, c in sections.items() for k, v in c.items() if not k.startswith("_")}

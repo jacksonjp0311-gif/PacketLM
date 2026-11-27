@@ -31,6 +31,7 @@ from .field import bind, partial, pack, bits_for
 from .packets import Packet
 from .roles import induce, select
 from . import reference
+from . import retention as ret_mod
 
 SCHEMA = "packetlm.engine/3"  # packets are derived by bind, never stored
 SCHEMA_V2 = "packetlm.engine/2"  # stored per-fact packets; accepted only to migrate, fully checked
@@ -108,6 +109,12 @@ def validate(doc) -> dict:
              "capabilities": dict, "observations": dict, "retired": dict, "hypotheses": dict}
     for key, typ in types.items():
         _need(isinstance(state.get(key), typ), f"bad field {key}")
+    if "retention" in state:
+        ret = state["retention"]
+        _need(isinstance(ret, dict) and isinstance(ret.get("call"), int) and isinstance(ret.get("touch"), dict)
+              and isinstance(ret.get("archived"), dict), "bad retention record")
+        for sha, e in ret["archived"].items():
+            _need(isinstance(e.get("tokens"), list) and len(sha) == 64, f"bad archive entry {sha[:12]}")
     ids = set()
     for f in state["facts"]:
         keys = {"id": str, "s": str, "r": str, "o": str, "supports": list}
@@ -175,7 +182,7 @@ def _write_atomic(path: Path, data: bytes) -> None:
 
 class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
-                 operators=False):
+                 operators=False, retention="static"):
         self.path = Path(path)
         self.state = state if state is not None else empty_state()
         self.report = report or {"loaded": "new"}
@@ -194,6 +201,19 @@ class Engine:
         self.stats = {"evaluations": 0, "executions": 0, "row_ops": 0, "asks": 0}
         self._cache = None
         self._known_bytes = None  # sha256 of the primary bytes this process validated or wrote
+        # retention: "static" keeps everything hot; "adaptive" archives rarely touched
+        # knowledge components (docs/ARET.md) and restores them before any line naming them.
+        _need(retention in ("static", "adaptive"), f"bad retention {retention}")
+        self.retention = retention
+        self._archive_dir = self.path.with_name(self.path.name + ".archive")
+        self._archived_tok = None
+        ret = self.state.get("retention")
+        if ret and retention == "static" and ret["archived"]:
+            for sha in sorted(ret["archived"]):
+                ret_mod.restore(self.state, ret, self._archive_dir, sha)
+            self.report["restored_all"] = "static retention: every archived component restored"
+        if retention == "adaptive":
+            self.state.setdefault("retention", ret_mod.empty())["call"] += 1
 
     # ---------- persistence ----------
 
@@ -230,6 +250,12 @@ class Engine:
         raise StateError(f"no valid state: {errors}")
 
     def save(self) -> None:
+        if self.retention == "adaptive":
+            for comp, why in ret_mod.decide(self.state, self.state["retention"]):
+                ret_mod.archive(self.state, self.state["retention"], self._archive_dir, comp, why)
+                self.stats["archived"] = self.stats.get("archived", 0) + 1
+                self._dirty()
+                self._archived_tok = None
         validate({"schema": SCHEMA, "checksum": _checksum(self.state), "state": self.state})
         self.path.parent.mkdir(parents=True, exist_ok=True)
         if self.path.exists():
@@ -427,7 +453,8 @@ class Engine:
             qi = int.from_bytes(q.bits, "big")
             found = []
             if "packets" not in idx:  # derived on demand, never stored (schema 3)
-                idx["packets"] = [int.from_bytes(bind(f["s"], f["r"], f["o"]).bits, "big") for f in self.state["facts"]]
+                idx["packets"] = [bits_for(f["s"], 0) ^ bits_for(f["r"], 1) ^ bits_for(f["o"], 2)  # == bind(...) as int
+                                  for f in self.state["facts"]]
             for p in idx["packets"]:
                 if 2 * (qi & p).bit_count() - p.bit_count() <= 0:  # Packet.score
                     continue
@@ -1157,7 +1184,27 @@ class Engine:
 
     # ---------- turns: one controlled-language interface for people and tests ----------
 
+    def _retain(self, line: str) -> None:
+        """Adaptive retention: restore every archived component this line can read, then
+        record the touch. `capabilities` (a listing of everything) restores everything."""
+        ret = self.state["retention"]
+        toks = ret_mod.line_tokens(line, self.state)
+        if ret["archived"]:
+            if self._archived_tok is None:
+                self._archived_tok = {t: sha for sha, e in ret["archived"].items() for t in e["tokens"]}
+            want = set(ret["archived"]) if line.strip().lower() == "capabilities" else \
+                {self._archived_tok[t] for t in toks if t in self._archived_tok}
+            for sha in sorted(want):
+                ret_mod.restore(self.state, ret, self._archive_dir, sha)
+                self.stats["restored"] = self.stats.get("restored", 0) + 1
+            if want:
+                self._dirty()
+                self._archived_tok = None
+        ret_mod.touch(ret, toks)
+
     def turn(self, line: str) -> str:
+        if self.retention == "adaptive":
+            self._retain(line)
         raw = line.strip().rstrip("?").rstrip(".").lower()
         parts = raw.split()
         if not parts:
@@ -1266,7 +1313,8 @@ def main(argv) -> int:
         return 2
     t0 = time.process_time()
     flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False),
-             "--no-activation": ("activation", False), "--operators": ("operators", True)}
+             "--no-activation": ("activation", False), "--operators": ("operators", True),
+             "--adaptive-retention": ("retention", "adaptive")}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):
