@@ -1214,3 +1214,24 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   stratum and predict the deepest crosses first; decompose 1 − A_cpu = (1 − A_work) × op-cost ratio;
   secondary resources (evaluations, teaching lines); censoring interval plus the matched 247-task
   subset; the emergence log format of docs/invariants/INVARIANTS.md §2 (one JSON line per milestone).
+
+
+## 2026-11-27 09:55: G58 registered results (library scaling 261–267; comp 271–277, unrel 281–287)
+
+- Run at f1adcfb (clean) under `/workspace/REGISTERED_RUN.lock` (09:48:41–09:52:00 EST), no other
+  CPU work of ours; instrument 70297af pinned; per-arm writes; all guards held (j/r = the 8994490
+  checkout's replies and state at every (seed, L); Xr = Xj replies and state bytes in every role and
+  seed; 0 wrong-qualified).
+- **Library scaling: material (stop rule) yes on both baselines.** Xr R64_1024 = 1.99 [1.55, 2.31]
+  vs 8994490 14.74 (half = 7.37); R0_1024 = 2.62 [2.39, 2.85] vs 45.15. Task CPU at 1,024
+  capabilities 136.2 → 6.3 ms. **Not flat** (upper 2.31 > 1.25). Snapshot cost rose with the Low 1
+  index check (L = 1024: 75 → 314 ms; amortized Xr R64_1024 5.48, reported).
+- **L1r no claim** −0.744 [−0.864, −0.628]; **L2r** −0.483; **L3r no claim** −1.898 [−2.090,
+  −1.725]; **Mr** comp +0.010 [−0.001, +0.023] not claimed, unrel **+0.094 [+0.071, +0.117]
+  claimed**. Outcomes identical Xj/Xr; comp C 252 vs B/P 246 solved (not accuracy-matched).
+  All predictions held.
+- (2) relevance-scoped requalification: measured, deferred (no target on the curricula; not
+  byte-exact). (3) retention economics: not done. Both queued.
+- Tests at registration: g44 174/174, suite 262/262, G45 18/18, mutations 169/170 (survivor: the
+  documented equivalent `g57b_drop_keeps_scope`). Evidence: `docs/evidence/g58/`. Next: G59 (not
+  started).
