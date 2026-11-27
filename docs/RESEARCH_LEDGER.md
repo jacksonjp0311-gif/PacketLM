@@ -927,3 +927,14 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   - the G54 and G55 rows;
   - the verify-050bebd section;
   - the tests, Limitations and Next sections.
+
+## 2026-11-27 04:00: G55 registered run started; per-call protocol approved
+
+- Decision (delegated by James, 03:59): run G55 exactly as pre-registered at 0d686b5
+  (F8/F32/L32, seeds 561–567, `python3 benchmarks/g55.py --out g55`) even though dev predicts
+  Q fails. Started 04:00 EST, in the background, source unchanged since 0d686b5.
+- Per-call protocol approved with the control rule: every arm (C, B, P, F) gets the identical
+  long-lived engine / loading protocol; B starts each task from a fresh in-memory empty state.
+  Report the new protocol's contrasts, with the old per-process accounting as a secondary
+  descriptive line. Evidence-gated re-asks are allowed only if their soundness is preserved and
+  pre-registered. Design to be pre-registered as G56 before any measurement.
