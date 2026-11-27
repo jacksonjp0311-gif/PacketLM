@@ -1,9 +1,9 @@
-"""Gate.
+"""Speak what transferred.
 
-Unique and fully judged, or withhold.
-The gate does not name the target sequence.
-Transfer stays.
-Not a proven advantage. Not a general mind.
+Incomplete still withholds.
+The sequence still compiles on a new graph.
+The conclusion is spoken through an acquired construction.
+Not a general mind.
 """
 
 from __future__ import annotations
@@ -11,6 +11,7 @@ import json
 from itertools import product
 from pathlib import Path
 from .field import save, load
+from .roles import induce, select
 
 STATE = Path("data/geom_state.json")
 
@@ -42,12 +43,6 @@ def compile_seq(base, seq):
         rows = compose(rows, base[rel])
     return rows
 
-def walk(facts, start, seq):
-    cur = {start}
-    for rel in seq:
-        cur = {o for s, r, o in facts if r == rel and s in cur}
-    return cur
-
 def classify(facts, n, answer):
     rels = sorted({r for _, r, _ in facts})
     base = {rel: rows_from(facts, n, rel) for rel in rels}
@@ -61,11 +56,15 @@ def classify(facts, n, answer):
                 supported.append(seq)
     return supported, undetermined
 
+def express(construction, fact):
+    s, r, o = fact
+    if not construction or r != construction["meaning"]:
+        return None
+    roles = {"s": s, "r": construction["word"], "o": o}
+    return " ".join(roles[role] for role in construction["order"])
+
 def run() -> dict:
-    incomplete = [
-        (0, "in", 1), (1, "in", 2),
-        (0, "near", 3),
-    ]
+    incomplete = [(0, "in", 1), (1, "in", 2), (0, "near", 3)]
     inc_sup, inc_und = classify(incomplete, 4, {2})
     withheld = not (len(inc_sup) == 1 and not inc_und)
     complete = [
@@ -81,19 +80,19 @@ def run() -> dict:
     seq = tuple(loaded.get("seq", []))
     new_base = {"in": rows_from(new_facts, 13, "in"), "near": rows_from(new_facts, 13, "near")}
     compiled = compile_seq(new_base, seq) if len(seq) == 2 else None
+    reached = bits(compiled[10]) if compiled else []
+    part = induce([("ada part box", ("ada", "part", "box")), ("ned part key", ("ned", "part", "key"))])
+    spoken = express(part, ("n10", "part", "n12")) if reached == [12] else None
+    back = select([part], spoken) if spoken else None
     checks = {
         "incomplete_withheld": withheld,
         "qualified": qualified,
-        "gate_unnamed": qualified and len(supported) == 1,
-        "transferred": compiled is not None and bits(compiled[10]) == sorted(walk(new_facts, 10, seq)),
+        "transferred": reached == [12],
+        "spoken": spoken == "n10 part n12",
+        "roundtrip": back == ("n10", "part", "n12"),
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {
-        **checks,
-        "seq": loaded.get("seq"),
-        "failed": failed,
-        "claim": "incomplete withholds; complete qualifies; sequence transfers"
-    }
+    receipt = {**checks, "spoken": spoken, "failed": failed, "claim": "transferred conclusion spoken through an acquired construction"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
