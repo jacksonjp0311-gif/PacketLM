@@ -1409,7 +1409,215 @@ def serve_checks(tmp: Path) -> dict:
         except SE as exc:
             return "retired" in str(exc) and s6.cur is None
     guarded("g56_serve_memory_state_validated", validated)
+
+    def first_snapshot_crash():
+        # verification S1 of d6cbcf3: crash after a snapshot is written, before the journal restarts
+        # (the first snapshot after a new path's empty one)
+        p = tmp / "s_fs.json"
+        s7 = serve.Server(64)
+        s7.call(p, SERVE_FLAGS, ["fact a ra b", "example kk: a -> b"])
+        s7._engine(s7.cur).save()
+        s7.cur.jfh.close()
+        s8 = serve.Server()
+        r = s8.call(p, SERVE_FLAGS, ["what is a kk"])
+        ok = r["replies"] == ["a kk b [no construction for kk]"] and "contained" in r["load"].get("journal_dropped", "")
+        s8.close()
+        # the same crash, but the journal holds a call the primary does not: refused, not dropped
+        p2 = tmp / "s_fs2.json"
+        s9 = serve.Server(64)
+        s9.call(p2, SERVE_FLAGS, ["fact a ra b", "example kk: a -> b"])
+        s9._engine(s9.cur).save()
+        s9.call(p2, SERVE_FLAGS, ["fact c ra d"])  # journaled after the primary was written
+        s9.cur.jfh.close()
+        try:
+            serve.Server().call(p2, SERVE_FLAGS, ["what is a kk"])
+            refused = False
+        except SE as exc:
+            refused = "does not extend" in str(exc)
+        return ok and refused
+    guarded("g56_serve_first_snapshot_crash_recovers", first_snapshot_crash)
+
+    def stale_journal():
+        # verification Low 1 of d6cbcf3: deleting STATE and STATE.bak leaves a journal of deleted state
+        p = tmp / "s_st.json"
+        s10 = serve.Server(64)
+        s10.call(p, SERVE_FLAGS, ["fact a ra b", "example kk: a -> b"])
+        s10.cur.jfh.close()
+        for q in (p, tmp / "s_st.json.bak"):
+            if q.exists():
+                q.unlink()
+        try:
+            serve.Server().call(p, SERVE_FLAGS, ["what is a kk"])
+            return False
+        except SE as exc:
+            return "base snapshot" in str(exc)
+    guarded("g56_serve_stale_journal_refused", stale_journal)
+
+    def per_process_refuses():
+        # verification Low 2 of d6cbcf3: a per-process engine does not read past an unclosed journal
+        p = tmp / "s_pp.json"
+        s11 = serve.Server(64)
+        s11.call(p, SERVE_FLAGS, ["fact a ra b"])
+        s11.cur.jfh.close()
+        r = subprocess.run([sys.executable, "-m", "packetlm.engine", str(p), *SERVE_FLAGS, "what is a ra"],
+                           capture_output=True, text=True)
+        s12 = serve.Server()
+        s12.call(p, SERVE_FLAGS, ["what is a ra"])
+        s12.close()  # closed: the journal holds only its header again
+        r2 = subprocess.run([sys.executable, "-m", "packetlm.engine", str(p), *SERVE_FLAGS, "what is a ra"],
+                            capture_output=True, text=True)
+        return r.returncode == 3 and "unclosed" in r.stdout and r2.returncode == 0
+    guarded("g56_engine_refuses_unclosed_journal", per_process_refuses)
     return out
+
+def g57_checks(tmp: Path) -> dict:
+    """G57 (`--indexed`): memoized recall, relation-grouped rows, component classes and the
+    evidence-gated re-ask give the non-indexed, always-re-ask engine's replies and state bytes
+    (docs/G57.md). Each check is guarded: an exception fails that check by name."""
+    from . import serve, g57_diff
+    from .engine import Memo, StateError as SE, bits_for
+    from collections import Counter
+    import random as _r
+    out = {}
+
+    def guarded(name, fn):
+        try:
+            out[name] = bool(fn())
+        except Exception as exc:  # noqa: BLE001
+            out[name] = False
+            out["_" + name + "_error"] = f"{type(exc).__name__}: {exc}"[:200]
+
+    def differential():
+        # targeted scenarios (one per way a cached answer can go stale) + random adversarial sessions
+        r = g57_diff.run(n=40, seed=57)
+        out["_differential"] = {k: v for k, v in r.items() if k != "mismatch"}
+        return r["ok"] and r["gated_answers"] > 0 and r["readonly_calls"] > 0 and r["sessions"] == 40 + len(g57_diff.SCENARIOS)
+    guarded("g57_differential_replies_and_state_equal", differential)
+
+    def memo_recall():
+        rng = _r.Random(5)
+        ents, rels = [f"x{i}" for i in range(30)], ["p", "q", "r"]
+        m, trip = Memo(), []
+        for step in range(60):
+            if trip and rng.random() < 0.3:
+                trip.pop(rng.randrange(len(trip)))  # removal anywhere (not only appends)
+            else:
+                trip.append((rng.choice(ents), rng.choice(rels), rng.choice(ents)))
+            m.sync(list(trip))
+            for _ in range(5):
+                s_, r_ = rng.choice(ents), rng.choice(rels)
+                qi = bits_for(s_, 0) ^ bits_for(r_, 1)
+                ref = Counter(t for t in trip if 2 * (qi & Memo.packet(t)).bit_count() - Memo.packet(t).bit_count() > 0)
+                if (s_, r_) in m.recall and m.recall[(s_, r_)] != ref:
+                    return False
+                m.recall.setdefault((s_, r_), ref)
+            if [p for p, _ in m.pkl] != [Memo.packet(t) for t in trip]:
+                return False
+        return len(m.recall) > 50
+    guarded("g57_memo_recall_equals_reference", memo_recall)
+
+    def stamps():
+        m = Memo()
+        m.sync([("a", "p", "b")])
+        s1 = m.stamp["p"]
+        m.sync([("a", "p", "b"), ("c", "q", "d")])  # unrelated relation: p's stamp unchanged
+        same = m.stamp["p"] == s1
+        m.sync([("c", "q", "d")])  # removal only
+        return same and m.stamp["p"] > s1 and m.stamp["q"] < m.stamp["p"]
+    guarded("g57_stamps_on_add_and_remove", stamps)
+
+    def components():
+        rng = _r.Random(9)
+        ents = [f"y{i}" for i in range(25)]
+        m, trip = Memo(), []
+        for step in range(80):
+            if trip and rng.random() < 0.25:
+                trip.pop(rng.randrange(len(trip)))
+            else:
+                trip.append((rng.choice(ents), rng.choice(["p", "cap:z"]), rng.choice(ents)))
+            m.sync(list(trip))
+            adj = {}
+            for s_, r_, o_ in trip:
+                if not r_.startswith("cap:"):
+                    adj.setdefault(s_, set()).add(o_)
+                    adj.setdefault(o_, set()).add(s_)
+            seeds, grown = set(rng.sample(ents + ["new1"], 2)), set(rng.sample(ents + ["new2"], 2))
+            seen, todo = set(seeds), list(seeds)
+            while todo:
+                for y in adj.get(todo.pop(), ()):
+                    if y not in seen:
+                        seen.add(y)
+                        todo.append(y)
+            if m.region_hits(seeds, grown) != bool(grown & seen):
+                return False
+        return True
+    guarded("g57_component_classes_equal_bfs", components)
+
+    def by_rel_rows():
+        eng = Engine(tmp / "g57r.json", indexed=True)
+        ref = Engine(tmp / "g57r2.json")
+        for t in [("a", "p", "b"), ("b", "q", "c"), ("c", "p", "d"), ("d", "q", "a"), ("a", "p", "c")]:
+            eng.tell(*t)
+            ref.tell(*t)
+        return all(eng._rows(r) == ref._rows(r) for r in ("p", "q", "zz")) and eng._rows("p") != eng._rows("q")
+    guarded("g57_by_rel_rows_equal", by_rel_rows)
+
+    def fingerprint():
+        srv = serve.Server()
+        p = tmp / "g57fp.json"
+        fl = g57_diff.BASE + ["--indexed"]
+        srv.call(p, fl, ["fact s1 k t1", "fact t1 m u1", "fact u1 m w1"])
+        srv.call(p, fl, ["example nm: s1 -> u1"])
+        srv.call(p, fl, ["example far: s1 -> w1"])
+        eng = srv._engine(srv.cur)
+        eng.readonly_call = True
+        fp0 = eng._answer_fp("s1", "far")
+        # a dependency's record (not far's own) changes
+        st = srv.cur.state
+        st["capabilities"]["nm"]["express"] = "zzz"
+        eng._cap_fp = {}
+        dep = eng._answer_fp("s1", "far") != fp0
+        st["capabilities"]["nm"]["express"] = None
+        eng._cap_fp = {}
+        back = eng._answer_fp("s1", "far") == fp0
+        unknown = eng._answer_fp("nobody", "far")
+        known = (unknown[:4] == fp0[:4]) and unknown[4] is False and fp0[4] is True
+        lib0 = eng._answer_fp("s1", "far")[5]
+        st["library"].append({"name": "zz_test"})  # any change to the construction library
+        eng._cap_fp = {}
+        lib = eng._answer_fp("s1", "far")[5] != lib0
+        srv.cur = None
+        return dep and back and known and lib
+    guarded("g57_fingerprint_covers_dependencies_entity_library", fingerprint)
+
+    def readonly():
+        lines_ok = all(serve.readonly_line(x) for x in ["what is a b", "What is A b?", "ask a b", "  what is a b.  "])
+        lines_no = not any(serve.readonly_line(x) for x in ["what is a", "fact a b c", "ask a", "what was a b",
+                                                            "correct a b c", "example z: a -> b"])
+        srv = serve.Server(check_readonly=True)
+        p = tmp / "g57ro.json"
+        fl = g57_diff.BASE + ["--indexed"]
+        srv.call(p, fl, ["fact a p b"])
+        j0 = Path(str(p) + ".journal").stat().st_size
+        r = srv.call(p, fl, ["what is a p", "ask a p"])
+        j1 = Path(str(p) + ".journal").stat().st_size
+        mixed = srv.call(p, fl, ["what is a p", "fact c p d"])
+        j2 = Path(str(p) + ".journal").stat().st_size
+        # a read-only call that changed the state is caught by the check
+        orig = Engine.turn
+        Engine.turn = lambda self, line: (self.state.__setitem__("turn", self.state["turn"] + 99), orig(self, line))[1]
+        try:
+            srv.call(p, fl, ["what is a p"])
+            caught = False
+        except SE:
+            caught = True
+        finally:
+            Engine.turn = orig
+        return lines_ok and lines_no and r.get("readonly") and j1 == j0 and not mixed.get("readonly") and j2 > j1 \
+            and caught
+    guarded("g57_readonly_calls_detected_checked_not_journaled", readonly)
+    return out
+
 
 def verify_3e2783c_checks(tmp: Path) -> dict:
     """verify-3e2783c: M1 (dict order is observable, so every protocol keeps insertion order),
@@ -1490,7 +1698,8 @@ def run() -> dict:
                         ("persistence", persistence_checks), ("fresh_process", fresh_process_checks),
                         ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks),
                         ("programs", program_checks), ("px", px_checks), ("g49", g49_checks),
-                        ("serve", serve_checks), ("verify_3e2783c", verify_3e2783c_checks)]:
+                        ("serve", serve_checks), ("verify_3e2783c", verify_3e2783c_checks),
+                        ("g57", g57_checks)]:
             # a section that raises is a failed check (named), not a crash that hides the other sections
             try:
                 sections[sec] = fn(tmp)  # no pseudo-check when it completes (verification L3 of 82dd0a2)

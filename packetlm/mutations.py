@@ -29,7 +29,7 @@ MUTATIONS = {
     "no_dangling_check": ('_need(p in ids, f"dangling premise', '_need(True or p in ids, f"dangling premise'),
     "no_backup_fallback": ('for label, p in (("primary", path), ("backup", bak)):', 'for label, p in (("primary", path),):'),
     "ambiguity_off": ('            found = sorted(found)\n        if not found:\n            return {"status": "unknown", "value": None}\n        if len(found) > 1:\n            return {"status": "ambiguous"', '            found = sorted(found)\n        if not found:\n            return {"status": "unknown", "value": None}\n        if False:\n            return {"status": "ambiguous"'),
-    "g54_lean_ambiguity_off": ('found.append(got)\n        found = sorted(found)\n        if not found:\n            return {"status": "unknown", "value": None}\n        if len(found) > 1:', 'found.append(got)\n        found = sorted(found)\n        if not found:\n            return {"status": "unknown", "value": None}\n        if False:'),
+    'g54_lean_ambiguity_off': ('found.append(got)\n        found = sorted(found)\n        if not found:\n            return {"status": "unknown", "value": None}\n        if len(found) > 1:\n            return {"status": "ambiguous", "value": None, "candidates": found}\n        return {"status": "known", "value": found[0]}\n\n    def _ask_indexed', 'found.append(got)\n        found = sorted(found)\n        if not found:\n            return {"status": "unknown", "value": None}\n        if False:\n            return {"status": "ambiguous", "value": None, "candidates": found}\n        return {"status": "known", "value": found[0]}\n\n    def _ask_indexed'),  # re-anchored for G57 (the block also ends _ask_indexed)
     "library_off": ('        if self.use_library:\n            for n in sorted', '        if False:\n            for n in sorted'),
     "zero_support_dropped": ('                else:\n                    out.append(h)', '                elif h["support"]:\n                    out.append(h)'),
     "unanswered_lost": ('        if prior.get("unanswered"):', '        if False:'),
@@ -93,7 +93,7 @@ MUTATIONS = {
     "g53_sparse_conflict_ignored": ('conflict = any(len(f) == 1 and next(iter(f)) != want[i] for i, f in nf.items())', 'conflict = False'),
     "g53_skip_ignores_basis": ('                        and ver.get("evidence", {}).get("basis") == self._basis(n)):', '                        ):'),
     "s1_growth_ignored": ('        if getattr(self, "_grown", None) and not line.strip().lower().startswith("fact "):\n            self._flush_growth()', '        pass'),
-    "s1_region_is_domain_only": ('            region = self._component(set(ver.get("domain", [])) | {s_ for s_, _ in obs})', '            region = {s_ for s_, _ in obs}'),
+    's1_region_is_domain_only': ('                hit = bool(grown & self._component(seeds))', '                hit = bool(grown & {s_ for s_, _ in obs})'),  # re-anchored for G57 (non-indexed path; same intent)
     "l1_dependency_status_ignored": ('        if status == "qualified" and self._deps_unqualified(h["seq"]):', '        if False:'),
     "l1_no_demotion_propagation": ('            elif status == "provisional" and dep["status"] == "qualified":', '            elif False:'),
     "g54_lean_checksum_accepts_any": ('            ok = hashlib.sha256(raw[m.end():-1]).hexdigest() == doc["checksum"]', '            ok = True'),
@@ -110,7 +110,7 @@ MUTATIONS = {
     "low1_trailing_text_accepted": ('        if end == len(text) - 1:', '        if end > 0:'),
     # G56: the long-lived protocol (packetlm/serve.py)
     "g56_serve_no_journal_record": ('        o.jfh.write((json.dumps({"flags": list(flags), "lines": list(lines), "replies_sha256": _rhash(replies)})\n                     + "\\n").encode())', '        pass', "serve.py"),
-    "g56_serve_replay_unverified": ('                    _need(_rhash(got) == rec["replies_sha256"], f"journal replay diverged at record {k}")', '                    pass', "serve.py"),
+    'g56_serve_replay_unverified': ('            _need(_rhash(got) == rec["replies_sha256"], f"journal replay diverged at record {k}")', '            pass', 'serve.py'),  # re-anchored (replay moved to Server._replay)
     "g56_serve_new_path_reuses_state": ('        if o is None or o.path != path or o.flags != list(flags):', '        if o is None:', "serve.py"),
     "g56_serve_memory_unvalidated": ('        validate_lean({"schema": SCHEMA, "checksum": None, "state": eng.state}, checksum_ok=True)', '        pass', "serve.py"),
     "g56_serve_journal_base_ignored": ('            if head["base"] == have:', '            if True:', "serve.py"),
@@ -119,6 +119,31 @@ MUTATIONS = {
     "deepen_past_ambiguity": ('                if any(h["status"] == "supported" for h in live):', '                if sum(h["status"] == "supported" for h in live) == 1:'),
     "compose_skips_bit": ('            acc |= b_rows[low.bit_length() - 1]\n            row ^= low', '            acc |= b_rows[low.bit_length() - 1]\n            row ^= low\n            row &= row - 1', "geom.py"),
     "compose_keeps_source": ('            return g.compose([row], self._rows(token))[0]', '            return row | g.compose([row], self._rows(token))[0]'),
+    # G57: --indexed (memoized recall, relation-grouped rows, component classes, gated re-asks)
+    'g57_gate_ignores_stamps': ('        stamps = tuple(self.memo.stamp.get(r, 0) for r in base) if base is not None else None', '        stamps = None', 'engine.py'),
+    'g57_gate_ignores_capabilities': ('        return (target, tuple(sorted((n, self._cap_hash(n)) for n in caps)), rels, stamps,', '        return (target, (), rels, stamps,', 'engine.py'),
+    'g57_gate_ignores_dependencies': ('                for d in _deps_of(ver["seq"]):\n                    todo.append(_split_cap(d)[0])', '                pass', 'engine.py'),
+    'g57_gate_ignores_known_entity': ('                s in self._idx()["pos"], self._cap_fp["lib"])', '                True, self._cap_fp["lib"])', 'engine.py'),
+    'g57_memo_keeps_removed': ('            for t, c in removed.items():\n                if t in ent:', '            for t, c in ():\n                if t in ent:', 'engine.py'),
+    'g57_memo_ignores_added': ('            for t, c in added.items():\n                if self.passes(qi, self.packet_of(t)):', '            for t, c in ():\n                if self.passes(qi, self.packet_of(t)):', 'engine.py'),
+    'g57_memo_stamp_missed': ('        for t in list(added) + list(removed):\n            self.stamp[t[1]] = self.tick', '        for t in list(added):\n            self.stamp[t[1]] = self.tick', 'engine.py'),
+    'g57_readonly_any_line': ('        ro = bool(o.memo is not None and lines and all(readonly_line(x) for x in lines))', '        ro = bool(o.memo is not None and lines and any(readonly_line(x) for x in lines))', 'serve.py'),
+    'g57_gate_outside_readonly': ('        return self.readonly_call and self.memo is not None and self.geometry and not self.programs \\', '        return self.memo is not None and self.geometry and not self.programs \\', 'engine.py'),
+    'g57_by_rel_wrong_relation': ('                sel = idx["by_rel"].get(rel, [])', '                sel = idx["by_rel"].get(rel, [])[1:]', 'engine.py'),
+    'g57_gate_ignores_library': ('                s in self._idx()["pos"], self._cap_fp["lib"])', '                s in self._idx()["pos"], "")', 'engine.py'),
+    'g57_uf_keeps_removed_edges': ('                self.uf = None  # an edge may be gone: rebuild the classes on next use', '                pass', 'engine.py'),
+    'g57_uf_ignores_added_edges': ('                for t in added:\n                    if not t[1].startswith("cap:"):\n                        self._union(t[0], t[2])', '                pass', 'engine.py'),
+    'g57_region_ignores_seeds': ('        return any(g in seeds or (g in self.uf and self._find(g) in roots) for g in grown)', '        return any((g in self.uf and self._find(g) in roots) for g in grown)', 'engine.py'),
+    'g57_packets_stale_after_rebuild': ('            self.pkl = [(p, p.bit_count()) for p in map(self.packet_of, triples)]\n', '', 'engine.py'),
+    'g57_append_path_skips_one': ('            new = triples[len(last):]', '            new = triples[len(last) + 1:]', 'engine.py'),
+    'g57_readonly_unchecked': ('                _need(_state_digest(eng.state) == before, "read-only call changed the state")', '                pass', 'serve.py'),
+    # verify-d6cbcf3: first-snapshot recovery (S1), stale journals (Low 1), per-process refusal (Low 2), finish (Info)
+    'd6_no_empty_snapshot_for_new_path': ('            self._snapshot(o)  # a new path: an empty snapshot first, so every journal names a base', '            self._journal_start(o, None)', 'serve.py'),
+    'd6_contained_journal_unverified': ('                _need(hashlib.sha256(json.dumps(got).encode()).hexdigest() == have,', '                _need(True,', 'serve.py'),
+    'd6_engine_reads_past_unclosed_journal': ('    if jp.exists() and len(jp.read_bytes().splitlines()) > 1:', '    if False:', 'engine.py'),
+    'd6_serve_call_skips_finish': ('        replies = [eng.turn(x) for x in lines]\n        eng.finish()\n        if ro:', '        replies = [eng.turn(x) for x in lines]\n        if ro:', 'serve.py'),
+    'g57_indexed_ambiguity_off': ('found.append(got)\n        found = sorted(found)\n        if not found:\n            return {"status": "unknown", "value": None}\n        if len(found) > 1:\n            return {"status": "ambiguous", "value": None, "candidates": found}\n        return {"status": "known", "value": found[0]}\n\n    def _decode', 'found.append(got)\n        found = sorted(found)\n        if not found:\n            return {"status": "unknown", "value": None}\n        if False:\n            return {"status": "ambiguous", "value": None, "candidates": found}\n        return {"status": "known", "value": found[0]}\n\n    def _decode'),
+    'g57_region_seeds_only': ('                hit = self.memo.region_hits(seeds, grown)', '                hit = bool(grown & seeds)'),
 }
 
 

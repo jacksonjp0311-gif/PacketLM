@@ -1033,3 +1033,49 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - All predictions held. Evidence: `docs/evidence/g56/` (receipt, CSVs, raw logs).
 - **Next:** state-proportional cost (evidence-gated re-asks with an exactness argument; recall and
   scans indexed by relation and component). Each needs its own pre-registration.
+
+## 2026-11-27 05:05: G57 pre-registration (state-proportional cost, `--indexed`)
+
+- Request 04:40: evidence-gated maintenance re-asks and relation/component-indexed recall and scans,
+  byte-identical to the non-indexed, always-re-ask engine, measured under serve with all arms equal.
+- **Mechanism** (docs/G57.md §2): relation-grouped rows; memoized recall maintained by exact
+  multiset differences; union-find component classes for the growth re-scan; re-asks inside
+  read-only calls answered from a fingerprint (target and dependency records, base relations and
+  their change stamps, entity knownness, library); read-only calls not re-validated or journaled,
+  with a state-hash check in tests.
+- **Exactness:** argument in G57.md §2; g44 section `g57` (7 checks) including an adversarial
+  differential test (8 targeted scenarios + random sessions) against serve without `--indexed`;
+  19 mutations. Pre-run differential: 1008 sessions, 17,221 calls, 9,089 gated answers, 0
+  mismatches.
+- **Design:** arms Xs and Xi for C, B, P, F under serve; seeds comp 201–207, unrel 211–217 (sealed);
+  L1i/L3i = A(Ci+maint‖Bi), co-primary A(Ci+maint‖Bs), Mi = A(Ci+maint‖Cs+maint); guard Ei
+  (replies and final state bytes). Per-arm results written as each finishes.
+- **Dev (S = 2):** Mi +0.04 (comp), +0.61 (unrel); L1i −1.1, L3i −5.0. Predictions: Mi claimed on
+  unrel (comp small); L1i and L3i no claim. The remaining unrel gap is per-call O(state) work: index
+  build, `relations()`, validation of mutating calls, first-ask recall passes.
+- **Folded in before registration (same commit):**
+  - **verify-d6cbcf3** (a12a07c; serve verified exact over 340 adversarial sessions and 787 kill -9
+    points; G54/G56 hashes and A values reproduced). S1 (Medium, first-snapshot crash leaves the
+    path unopenable): fixed — empty snapshot at open for a new path; a journal based on the backup
+    is replayed onto it and dropped only if the result is exactly the primary's state text. Low 1
+    (stale journal resurrects deleted state): refused. Low 2 (per-process engine ignores an
+    unclosed journal): refused with exit 3. Low 3: G55 failure time corrected to about 04:10:30
+    (call timeout; 04:22:14 was the pool re-raise) and the 17 s first G56 start named as a load
+    source. Info: `d6_serve_call_skips_finish` mutation. G56.md §2 claim corrected. 3 checks,
+    4 mutations.
+  - **Audit of d6cbcf3 (James-forwarded; analysis, weighed):** adopted (a) differential scenarios
+    for alternative paths, contradictions, retractions and capability replacement (3 added; 11
+    total); (b) outcomes (solved, qualified, censored, library use) reported separately, and the
+    contrasts stated as not perfectly accuracy-matched (G56 comp C 252 vs B 247 solved); (c) part
+    S, cost against padded unrelated state with rule F (flat iff R_16000 upper CI ≤ 1.25); (d)
+    index build and maintenance inside charged CPU. Queued: indexed symbolic-execution baseline,
+    sparse geometric activation, adaptive capability routing. Disagreement recorded: the audit
+    frames unrelated knowledge "remaining dormant" as the fix; dev part S shows that exact gating
+    and indexes for recall/components are not sufficient on their own — the per-call fact-index
+    build and whole-state validation of every mutating call still scale with total state, so
+    dormancy needs incremental indexes and delta validation, which G57 does not register.
+  - **Roadmap II adopted** (05:12): `docs/ROADMAP_II.txt` and the mapping `docs/ROADMAP_II_MAP.md`;
+    experiment numbering kept. G57 = its selective computational activation; next G58 adaptive
+    capability economics, then G59 the amortization qualification gate.
+- **Tests at registration:** g44 152/152, suite 240/240 (11/11), G45 18/18, mutations 124/124
+  (0 crash kills; 3 re-anchored for moved code, same intent).

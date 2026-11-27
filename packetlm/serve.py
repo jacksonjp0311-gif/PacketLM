@@ -42,7 +42,7 @@ import sys
 import time
 from pathlib import Path
 
-from .engine import Engine, StateError, SCHEMA, validate_lean, parse_cli, empty_state, _need
+from .engine import _read_doc, Engine, Memo, StateError, SCHEMA, validate_lean, parse_cli, empty_state, _need
 
 SNAPSHOT_EVERY = 64
 JOURNAL_SCHEMA = "packetlm.journal/1"
@@ -64,26 +64,41 @@ def _file_checksum(p: Path):
         return None
 
 
+def readonly_line(line: str) -> bool:
+    """G57: a line `Engine._turn` answers as a question (`what is S W` / `ask S W`, after the same
+    normalization). That branch only reads the state (docs/G57.md §2)."""
+    parts = line.strip().rstrip("?").rstrip(".").lower().split()
+    return (len(parts) == 4 and parts[0] == "what" and parts[1] == "is") or (len(parts) == 3 and parts[0] == "ask")
+
+
+def _state_digest(state) -> str:
+    return hashlib.sha256(json.dumps(state).encode()).hexdigest()
+
+
 class Open:
     """The one state path held in memory."""
 
     def __init__(self, path: Path, kw: dict, flags: list):
         self.path, self.kw, self.flags = path, kw, flags
+        self.memo = Memo() if kw.get("indexed") else None  # G57: lives as long as the open state
         self.state, self.report, self.known, self.since = None, None, None, 0
         self.jpath = path.with_name(path.name + ".journal")
         self.jfh = None
 
 
 class Server:
-    def __init__(self, snapshot_every=SNAPSHOT_EVERY):
+    def __init__(self, snapshot_every=SNAPSHOT_EVERY, check_readonly=None):
         self.cur: Open | None = None
+        # tests and the differential check: verify that every read-only call left the state unchanged
+        self.check_readonly = bool(int(os.environ.get("PACKETLM_CHECK_READONLY", "0"))) if check_readonly is None \
+            else check_readonly
         self.every = snapshot_every
         self.mark = 0.0  # CPU at the end of the previous charged request
 
     # ---------- persistence ----------
 
     def _engine(self, o: Open) -> Engine:
-        eng = Engine(o.path, o.state, dict(o.report), **o.kw)
+        eng = Engine(o.path, o.state, dict(o.report), **o.kw, **({"memo": o.memo} if o.memo is not None else {}))
         eng._known_bytes = o.known
         return eng
 
@@ -104,6 +119,26 @@ class Server:
         o.state, o.known, o.since = eng.state, eng._known_bytes, 0
         self._journal_start(o, _file_checksum(o.path))
 
+    @staticmethod
+    def _replay(path: Path, o: Open, lines) -> tuple:
+        """Replay journal records onto o.state through fresh engines; every record must reproduce its
+        reply hash (no silent reconstruction). A torn final record is ignored."""
+        state, done = o.state, 0
+        for k, raw in enumerate(lines[1:], 1):
+            try:
+                rec = json.loads(raw)
+            except ValueError:
+                _need(k == len(lines) - 1, "journal record corrupt before its end")
+                break  # a torn final record: its call never returned a reply
+            e = Engine(path, state, dict(o.report), **parse_cli(rec["flags"])[0])
+            e._known_bytes = o.known
+            got = [e.turn(x) for x in rec["lines"]]
+            e.finish()
+            _need(_rhash(got) == rec["replies_sha256"], f"journal replay diverged at record {k}")
+            state = e.state
+            done += 1
+        return state, done
+
     def open_path(self, path: Path, kw: dict, flags: list) -> Open:
         _need(kw.get("lean"), "the long-lived protocol requires --lean snapshots")
         # adaptive retention counts engine constructions as calls; not supported by this protocol
@@ -115,34 +150,36 @@ class Server:
             lines = o.jpath.read_bytes().splitlines()
             head = json.loads(lines[0]) if lines else {}
             _need(head.get("schema") == JOURNAL_SCHEMA, "journal header invalid")
+            # verification Low 1 of d6cbcf3: every journal extends a snapshot (a new path gets an empty
+            # one at open, below). A journal naming no base, or beside no state file, belongs to
+            # deleted state; it is refused, never replayed onto an empty state.
+            _need(head.get("base") is not None and eng.report.get("loaded") != "new",
+                  "journal without its base snapshot (reset a path by deleting STATE, STATE.bak and STATE.journal)")
             have = _file_checksum(path) if eng.report.get("loaded") == "primary" else \
                 _file_checksum(path.with_name(path.name + ".bak"))
-            if eng.report.get("loaded") == "new":
-                have = None
-            bak = _file_checksum(path.with_name(path.name + ".bak"))
             if head["base"] == have:
-                done = 0
-                for k, raw in enumerate(lines[1:], 1):
-                    try:
-                        rec = json.loads(raw)
-                    except ValueError:
-                        _need(k == len(lines) - 1, "journal record corrupt before its end")
-                        break  # a torn final record: its call never returned a reply
-                    e = Engine(path, o.state, dict(o.report), **parse_cli(rec["flags"])[0])
-                    e._known_bytes = o.known
-                    got = [e.turn(x) for x in rec["lines"]]
-                    e.finish()
-                    _need(_rhash(got) == rec["replies_sha256"], f"journal replay diverged at record {k}")
-                    o.state = e.state
-                    done += 1
+                o.state, done = self._replay(path, o, lines)
                 o.report = {**o.report, "journal_replayed": done}
-            elif head["base"] is not None and head["base"] == bak and eng.report.get("loaded") == "primary":
-                o.report = {**o.report, "journal_dropped": "contained in the primary snapshot"}
             else:
-                raise StateError("journal does not extend the loaded snapshot")
+                # verification S1 of d6cbcf3: a crash between a snapshot and the journal restart.
+                # Replay the journal onto the base it names; it is contained in the loaded primary
+                # iff the result is exactly the primary's state text.
+                bak = path.with_name(path.name + ".bak")
+                _need(eng.report.get("loaded") == "primary" and head["base"] == _file_checksum(bak),
+                      "journal does not extend the loaded snapshot")
+                doc, ok = _read_doc(bak.read_bytes())
+                _need(ok, "journal base snapshot fails its checksum")
+                base = Open(path, kw, flags)
+                base.state, base.report, base.known = doc["state"], dict(o.report), None
+                got, done = self._replay(path, base, lines)
+                _need(hashlib.sha256(json.dumps(got).encode()).hexdigest() == have,
+                      "journal does not extend the loaded snapshot")
+                o.report = {**o.report, "journal_dropped": f"contained in the primary snapshot ({done} records)"}
             self._snapshot(o)  # replayed calls become a snapshot; the journal restarts on it
+        elif eng.report.get("loaded") == "new":
+            self._snapshot(o)  # a new path: an empty snapshot first, so every journal names a base
         else:
-            self._journal_start(o, _file_checksum(path) if path.exists() else None)
+            self._journal_start(o, _file_checksum(path))
         return o
 
     def close(self) -> None:
@@ -169,8 +206,22 @@ class Server:
         else:
             report = {"loaded": "memory"}
         eng = self._engine(o)
+        # G57 (a): a call whose lines are all questions under --indexed is read-only. Its state was
+        # validated and journaled when it was last changed, so it is neither re-validated nor
+        # journaled; its re-asks may be answered from the memo (Engine._gated).
+        ro = bool(o.memo is not None and lines and all(readonly_line(x) for x in lines))
+        eng.readonly_call = ro
+        before = _state_digest(eng.state) if ro and self.check_readonly else None
         replies = [eng.turn(x) for x in lines]
         eng.finish()
+        if ro:
+            if before is not None:
+                _need(_state_digest(eng.state) == before, "read-only call changed the state")
+            now = _cpu()
+            out = {"load": report, "replies": replies, "stats": eng.stats, "cpu_s": round(time.process_time() - t0, 4),
+                   "cpu_total_s": round(now - self.mark, 4), "readonly": True}
+            self.mark = now
+            return out
         validate_lean({"schema": SCHEMA, "checksum": None, "state": eng.state}, checksum_ok=True)
         o.state = eng.state
         o.jfh.write((json.dumps({"flags": list(flags), "lines": list(lines), "replies_sha256": _rhash(replies)})

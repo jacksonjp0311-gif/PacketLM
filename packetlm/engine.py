@@ -20,6 +20,7 @@ Uncertainty policy (docs/G44.md):
 """
 
 from __future__ import annotations
+import copy
 import hashlib
 import json
 import os
@@ -27,6 +28,7 @@ import re
 import resource
 import sys
 import time
+from collections import Counter
 from itertools import product
 from pathlib import Path
 from .field import bind, partial, pack, bits_for
@@ -353,15 +355,129 @@ def _write_atomic(path: Path, data: bytes) -> None:
     os.replace(tmp, path)
 
 
+class Memo:
+    """G57 (`--indexed`): exact caches that outlive one call when a long-lived server keeps them
+    (packetlm/serve.py), and are fresh per process otherwise. They hold no state and never change a
+    reply (docs/G57.md §2).
+
+    - `base`: the multiset of fact triples the caches reflect. `sync` (run whenever the engine builds
+      its fact index) applies the difference to the current triples, so the caches always agree
+      with the index that the per-call engine itself would use.
+    - `stamp[r]`: bumped whenever a triple with relation r is added or removed.
+    - `recall[(s, r)]`: the triples whose packets pass the geometric recall test for the query
+      (s, r), i.e. 2|q&p| - |p| > 0. Recall is decided by exactly these packets, so a new or removed
+      triple changes the entry only if its own packet passes; each is tested once.
+    - `answers[(s, word)]`: (fingerprint, answer) for re-asks inside read-only calls."""
+
+    def __init__(self):
+        self.base = Counter()
+        self.last = []
+        self.stamp = {}
+        self.tick = 0
+        self.recall = {}
+        self.answers = {}
+        self.pk = {}
+        self.pkl = []  # (packet, popcount) of each triple in `last`, in order
+        self.uf = None  # union-find over non-cap fact edges; None = rebuild on next use
+
+    def packet_of(self, t):
+        p = self.pk.get(t)
+        if p is None:
+            p = self.pk[t] = self.packet(t)
+        return p
+
+    def _find(self, x):
+        uf = self.uf
+        root = x
+        while uf[root] != root:
+            root = uf[root]
+        while uf[x] != root:
+            uf[x], x = root, uf[x]
+        return root
+
+    def _union(self, a, b):
+        uf = self.uf
+        uf.setdefault(a, a)
+        uf.setdefault(b, b)
+        ra, rb = self._find(a), self._find(b)
+        if ra != rb:
+            uf[max(ra, rb)] = min(ra, rb)
+
+    def region_hits(self, seeds, grown) -> bool:
+        """`grown & _component(seeds)` is non-empty, decided from components kept across calls:
+        the BFS region is the seeds plus every entity joined to a seed by non-cap fact edges, i.e.
+        the seeds plus the union-find classes of the seeds that have edges."""
+        if self.uf is None:
+            self.uf = {}
+            for t in self.base:
+                if not t[1].startswith("cap:"):
+                    self._union(t[0], t[2])
+        roots = {self._find(x) for x in seeds if x in self.uf}
+        return any(g in seeds or (g in self.uf and self._find(g) in roots) for g in grown)
+
+    @staticmethod
+    def packet(t):
+        return bits_for(t[0], 0) ^ bits_for(t[1], 1) ^ bits_for(t[2], 2)
+
+    @staticmethod
+    def passes(qi, p):
+        x = qi & p
+        return bool(x) and 2 * x.bit_count() - p.bit_count() > 0
+
+    def sync(self, triples) -> None:
+        last = self.last
+        if len(triples) >= len(last) and triples[:len(last)] == last:
+            if len(triples) == len(last):
+                return
+            new = triples[len(last):]
+            added, removed = Counter(new), Counter()  # facts appended (the common case)
+            cur = self.base + added
+            self.pkl += [(p, p.bit_count()) for p in map(self.packet_of, new)]
+        else:
+            cur = Counter(triples)
+            self.pkl = [(p, p.bit_count()) for p in map(self.packet_of, triples)]
+            if cur == self.base:
+                self.last = list(triples)
+                return
+            added, removed = cur - self.base, self.base - cur
+        self.last = list(triples)
+        self.tick += 1
+        for t in list(added) + list(removed):
+            self.stamp[t[1]] = self.tick
+        for (s_, r_), ent in self.recall.items():
+            qi = bits_for(s_, 0) ^ bits_for(r_, 1)
+            for t, c in removed.items():
+                if t in ent:
+                    ent[t] -= c
+                    if ent[t] <= 0:
+                        del ent[t]
+            for t, c in added.items():
+                if self.passes(qi, self.packet_of(t)):
+                    ent[t] += c
+        if self.uf is not None:
+            if any(not t[1].startswith("cap:") for t in removed):
+                self.uf = None  # an edge may be gone: rebuild the classes on next use
+            else:
+                for t in added:
+                    if not t[1].startswith("cap:"):
+                        self._union(t[0], t[2])
+        self.base = cur
+
+
 class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
                  operators=False, retention="static", programs=False, answers=False, qualified_library=False,
-                 bounded=False, lean=False, closed_guards=None):
+                 bounded=False, lean=False, closed_guards=None, indexed=False, memo=None):
         self.path = Path(path)
         self.qualified_library = qualified_library  # G51: library offers only qualified capabilities
         # G55 (option 3): guard budget under `complete`, independent of the observations; None = MAX_GUARDS
         self.closed_guards = progs.MAX_GUARDS if closed_guards is None else closed_guards
         self.lean = lean  # G54: exact per-call cost bounds (persistence, geometric recall)
+        # G57: relation-indexed rows, incremental exact recall, gated re-asks (docs/G57.md)
+        self.indexed = indexed
+        self.memo = (memo if memo is not None else Memo()) if indexed else None
+        self.readonly_call = False  # set by serve.py for a call whose lines are all questions
+        self._cap_fp = {}
         self.bounded = bounded  # G53: exact cost bounds (memoized scan images; no re-scan of settled versions)
         self.state = state if state is not None else empty_state()
         self.report = report or {"loaded": "new"}
@@ -529,6 +645,8 @@ class Engine:
             self._cache = {"names": names, "pos": pos, "decode": decode, "rows": {}, "out": out,
                            "triples": triples, "ref": reference.index(triples),
                            "byid": {f["id"]: f for f in self.state["facts"]}}
+            if self.memo is not None:
+                self.memo.sync(triples)
         return self._cache
 
     def _dirty(self):
@@ -708,6 +826,8 @@ class Engine:
             q = partial(s, r)
             qi = int.from_bytes(q.bits, "big")
             found = []
+            if self.memo is not None:
+                return self._ask_indexed(idx, s, r, qi)
             if "packets" not in idx:  # derived on demand, never stored (schema 3)
                 idx["packets"] = [bits_for(f["s"], 0) ^ bits_for(f["r"], 1) ^ bits_for(f["o"], 2)  # == bind(...) as int
                                   for f in self.state["facts"]]
@@ -742,6 +862,33 @@ class Engine:
             got = self._decode().get(pack(p ^ qi).bits)
             if got and got not in found:
                 found.append(got)
+        found = sorted(found)
+        if not found:
+            return {"status": "unknown", "value": None}
+        if len(found) > 1:
+            return {"status": "ambiguous", "value": None, "candidates": found}
+        return {"status": "known", "value": found[0]}
+
+    def _ask_indexed(self, idx, s, r, qi) -> dict:
+        """G57: the geometric recall of `ask` from the memo. The reference decides recall by the
+        packets that pass 2|q&p| - |p| > 0 and decodes each residue p ^ q against this index's
+        names; the memo holds exactly the passing triples for (s, r) (a full pass over this index's
+        packets the first time, maintained by `Memo.sync` after that), and decoding is unchanged.
+        The reference de-duplicates and sorts, so the order of the passing packets does not matter."""
+        ent = self.memo.recall.get((s, r))
+        if ent is None:
+            # the reference's test, 2|q&p| - |p| > 0, over this index's triples (memo.pkl is aligned
+            # with them: sync ran when this index was built)
+            _need(len(self.memo.pkl) == len(idx["triples"]), "memo packets out of step with the index")
+            ent = Counter(t for t, (p, c) in zip(idx["triples"], self.memo.pkl) if 2 * (qi & p).bit_count() > c)
+            self.memo.recall[(s, r)] = ent
+        found = []
+        if ent:
+            dec = self._decode()
+            for t in ent:
+                got = dec.get(pack(self.memo.packet_of(t) ^ qi).bits)
+                if got and got not in found:
+                    found.append(got)
         found = sorted(found)
         if not found:
             return {"status": "unknown", "value": None}
@@ -1049,7 +1196,16 @@ class Engine:
         idx = self._idx()
         if rel not in idx["rows"]:
             n = len(idx["names"])
-            idx["rows"][rel] = _geom().rows_from([(idx["pos"][s], r, idx["pos"][o]) for s, r, o in idx["triples"] if r == rel], n, rel)
+            if self.indexed:  # G57: the same triples in the same order, grouped by relation once per index
+                if "by_rel" not in idx:
+                    by = {}
+                    for t in idx["triples"]:
+                        by.setdefault(t[1], []).append(t)
+                    idx["by_rel"] = by
+                sel = idx["by_rel"].get(rel, [])
+            else:
+                sel = [t for t in idx["triples"] if t[1] == rel]
+            idx["rows"][rel] = _geom().rows_from([(idx["pos"][s], r, idx["pos"][o]) for s, r, o in sel], n, rel)
         return idx["rows"][rel]
 
     def _image(self, front, prim):
@@ -1694,6 +1850,59 @@ class Engine:
         got = self.ask(s, target)
         if got["status"] != "unknown":
             return {**got, "relation": target, "via": "memory"}
+        if self._gated():
+            fp = self._answer_fp(s, target)
+            hit = self.memo.answers.get((s, word))
+            if hit and hit[0] == fp:
+                self.stats["gated"] = self.stats.get("gated", 0) + 1
+                return copy.deepcopy(hit[1])
+            out = self._answer_exec(s, target)
+            self.memo.answers[(s, word)] = (fp, copy.deepcopy(out))
+            return out
+        return self._answer_exec(s, target)
+
+    def _gated(self) -> bool:
+        """G57 (a): re-asks are answered from the memo only inside a read-only call (every line a
+        question, so nothing in the state changes during it) and only in the configuration whose
+        dependencies `_answer_fp` covers: base relations and capabilities, geometric execution,
+        static retention, no programs or operators."""
+        return self.readonly_call and self.memo is not None and self.geometry and not self.programs \
+            and not self.operators and self.retention == "static"
+
+    def _cap_hash(self, name):
+        if name not in self._cap_fp:  # once per read-only call: nothing changes during it
+            self._cap_fp[name] = hashlib.sha256(json.dumps(self.state["capabilities"].get(name),
+                                                           sort_keys=True).encode()).hexdigest()
+        return self._cap_fp[name]
+
+    def _answer_fp(self, s, target):
+        """Everything the capability path of `answer` (and `say` after it) reads, besides recall,
+        which is unknown here and decided exactly by the memo:
+        - the records of `target` and of every capability its versions reach through `cap:` steps
+          (status, seq, pinned versions, domain, express);
+        - the expanded base relations and the change stamp of each (`execute` reads only the
+          triples of those relations, through the index);
+        - whether s is a known entity (`execute` returns the empty set otherwise);
+        - the construction library (`say`)."""
+        caps, todo = set(), [target]
+        while todo:
+            n = todo.pop()
+            if n in caps:
+                continue
+            caps.add(n)
+            for ver in (self.state["capabilities"].get(n) or {}).get("versions", []):
+                for d in _deps_of(ver["seq"]):
+                    todo.append(_split_cap(d)[0])
+        ver = self.version(target)
+        base = self.expand(ver["seq"]) if ver and ver["status"] in EXEC_OK else None
+        rels = tuple(base) if base is not None else None
+        stamps = tuple(self.memo.stamp.get(r, 0) for r in base) if base is not None else None
+        if "lib" not in self._cap_fp:
+            self._cap_fp["lib"] = hashlib.sha256(json.dumps(self.state["library"], sort_keys=True).encode()).hexdigest()
+        return (target, tuple(sorted((n, self._cap_hash(n)) for n in caps)), rels, stamps,
+                s in self._idx()["pos"], self._cap_fp["lib"])
+
+    def _answer_exec(self, s, target) -> dict:
         ver = self.version(target)
         if ver and ver["status"] in EXEC_OK:
             out = self.execute(ver["seq"], s)
@@ -1803,8 +2012,13 @@ class Engine:
             obs = self.state["observations"].get(n, [])
             if not ver or ver["status"] != "qualified" or not obs:
                 continue
-            region = self._component(set(ver.get("domain", [])) | {s_ for s_, _ in obs})
-            if grown & region:
+            seeds = set(ver.get("domain", [])) | {s_ for s_, _ in obs}
+            if self.memo is not None:  # G57 (b): component classes kept across calls
+                self._idx()
+                hit = self.memo.region_hits(seeds, grown)
+            else:
+                hit = bool(grown & self._component(seeds))
+            if hit:
                 self.stats["grown_requalified"] = self.stats.get("grown_requalified", 0) + 1
                 self.acquire(n)
 
@@ -2030,7 +2244,7 @@ def parse_cli(argv):
              "--no-activation": ("activation", False), "--operators": ("operators", True),
              "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True), "--answers": ("answers", True),
              "--qualified-library": ("qualified_library", True),
-             "--bounded": ("bounded", True), "--lean": ("lean", True)}
+             "--bounded": ("bounded", True), "--lean": ("lean", True), "--indexed": ("indexed", True)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):
@@ -2047,6 +2261,12 @@ def main(argv) -> int:
         return 2
     t0 = time.process_time()
     kw, argv = parse_cli(argv)
+    # verification Low 2 of d6cbcf3: a long-lived server's journal with records holds calls the
+    # snapshot does not; this per-process engine would read the older snapshot. Refuse instead.
+    jp = Path(argv[0] + ".journal")
+    if jp.exists() and len(jp.read_bytes().splitlines()) > 1:
+        print(json.dumps({"error": "unclosed packetlm.serve journal: open this path with packetlm.serve to recover it"}))
+        return 3
     eng = Engine.open(argv[0], **kw)
     replies = [eng.turn(line) for line in argv[1:]]
     eng.save()

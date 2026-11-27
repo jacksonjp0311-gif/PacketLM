@@ -74,3 +74,11 @@ for s in list(range(151, 158)) + list(range(171, 178)) + list(range(191, 198)) +
     toks |= g46.sealed_tokens(g46u.world_unrelated(s))
 (ROOT / "benchmarks/sealed_tokens_g54_g56.json").write_text(json.dumps(sorted(toks)) + "\n")
 print("g54-g56", len(toks))
+# G57 (G46 201-207, G46-U 211-217; dev runs used the G56 dev seeds 961-964, already sealed above)
+toks = set()
+for s in range(201, 208):
+    toks |= g46.sealed_tokens(g46.world(s))
+for s in range(211, 218):
+    toks |= g46.sealed_tokens(g46u.world_unrelated(s))
+(ROOT / "benchmarks/sealed_tokens_g57.json").write_text(json.dumps(sorted(toks)) + "\n")
+print("g57", len(toks))
