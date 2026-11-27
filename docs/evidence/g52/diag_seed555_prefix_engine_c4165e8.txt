@@ -1,0 +1,284 @@
+{
+ "thresholds": {
+  "G49_exact_scans_complete": true,
+  "FC1_F_wrong_qualified_0": true,
+  "FC2_F_qualifies_ge_25pct_and_more_than_R": true,
+  "FC3_N_untouched_tasks_equal_R": true,
+  "FC4_L_false_statements_retracted": true,
+  "FC5_L_wrong_qualified_after_reveal_0": true,
+  "D1_R_T1_depth_ge4_ge_0.95": false,
+  "D2_F_T1_depth_ge4_ge_0.95": true,
+  "no_observed_subject_is_evaluated": true,
+  "source_unchanged": true
+ },
+ "lying": {
+  "false_statements": 25,
+  "retracted": 25
+ },
+ "scope_control": {
+  "untouched": 2,
+  "untouched_same": 2,
+  "tasks": 8,
+  "statuses_equal_all": true
+ },
+ "summary": {
+  "P": {
+   "by_class": {
+    "T1": {
+     "accuracy": 1.0,
+     "n": 44
+    },
+    "T2": {
+     "accuracy": 1.0,
+     "n": 24
+    },
+    "T3": {
+     "accuracy": 1.0,
+     "n": 18
+    },
+    "T4": {
+     "accuracy": 1.0,
+     "n": 44
+    }
+   },
+   "T1_depth_ge4": {
+    "accuracy": 1.0,
+    "n": 32
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "qualified_by_class": {
+    "T1": 0,
+    "T2": 0,
+    "T3": 0,
+    "T4": 0
+   },
+   "spurious": {
+    "n": 166,
+    "spurious": 12
+   },
+   "spurious_excl_T1": {
+    "n": 140,
+    "spurious": 6
+   },
+   "cpu_total_s": 17.195
+  },
+  "R": {
+   "by_class": {
+    "T1": {
+     "accuracy": 0.5,
+     "n": 44
+    },
+    "T2": {
+     "accuracy": 1.0,
+     "n": 24
+    },
+    "T3": {
+     "accuracy": 1.0,
+     "n": 18
+    },
+    "T4": {
+     "accuracy": 1.0,
+     "n": 44
+    }
+   },
+   "T1_depth_ge4": {
+    "accuracy": 0.5,
+    "n": 32
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "qualified_by_class": {
+    "T1": 0,
+    "T2": 0,
+    "T3": 0,
+    "T4": 0
+   },
+   "spurious": {
+    "n": 191,
+    "spurious": 3
+   },
+   "spurious_excl_T1": {
+    "n": 167,
+    "spurious": 3
+   },
+   "cpu_total_s": 23.99
+  },
+  "F": {
+   "by_class": {
+    "T1": {
+     "accuracy": 1.0,
+     "n": 44
+    },
+    "T2": {
+     "accuracy": 1.0,
+     "n": 24
+    },
+    "T3": {
+     "accuracy": 1.0,
+     "n": 18
+    },
+    "T4": {
+     "accuracy": 1.0,
+     "n": 44
+    }
+   },
+   "T1_depth_ge4": {
+    "accuracy": 1.0,
+    "n": 32
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 6,
+   "qualified_by_class": {
+    "T1": 2,
+    "T2": 2,
+    "T3": 2,
+    "T4": 0
+   },
+   "spurious": {
+    "n": 191,
+    "spurious": 0
+   },
+   "spurious_excl_T1": {
+    "n": 167,
+    "spurious": 0
+   },
+   "cpu_total_s": 48.913
+  },
+  "N": {
+   "by_class": {
+    "T1": {
+     "accuracy": 0.5,
+     "n": 44
+    },
+    "T2": {
+     "accuracy": 1.0,
+     "n": 24
+    },
+    "T3": {
+     "accuracy": 1.0,
+     "n": 18
+    },
+    "T4": {
+     "accuracy": 1.0,
+     "n": 44
+    }
+   },
+   "T1_depth_ge4": {
+    "accuracy": 0.5,
+    "n": 32
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "qualified_by_class": {
+    "T1": 0,
+    "T2": 0,
+    "T3": 0,
+    "T4": 0
+   },
+   "spurious": {
+    "n": 190,
+    "spurious": 3
+   },
+   "spurious_excl_T1": {
+    "n": 166,
+    "spurious": 3
+   },
+   "cpu_total_s": 26.332
+  },
+  "L": {
+   "by_class": {
+    "T1": {
+     "accuracy": 1.0,
+     "n": 44
+    },
+    "T2": {
+     "accuracy": 1.0,
+     "n": 24
+    },
+    "T3": {
+     "accuracy": 1.0,
+     "n": 18
+    },
+    "T4": {
+     "accuracy": 1.0,
+     "n": 44
+    }
+   },
+   "T1_depth_ge4": {
+    "accuracy": 1.0,
+    "n": 32
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "qualified_by_class": {
+    "T1": 0,
+    "T2": 0,
+    "T3": 0,
+    "T4": 0
+   },
+   "spurious": {
+    "n": 197,
+    "spurious": 0
+   },
+   "spurious_excl_T1": {
+    "n": 173,
+    "spurious": 0
+   },
+   "cpu_total_s": 56.005,
+   "window": {
+    "accuracy": 0.6957,
+    "n": 46,
+    "wrong_qualified": 0,
+    "qualified_answers": 26
+   }
+  },
+  "L0": {
+   "by_class": {
+    "T1": {
+     "accuracy": 0.5,
+     "n": 44
+    },
+    "T2": {
+     "accuracy": 0.5,
+     "n": 24
+    },
+    "T3": {
+     "accuracy": 0.5,
+     "n": 18
+    },
+    "T4": {
+     "accuracy": 1.0,
+     "n": 44
+    }
+   },
+   "T1_depth_ge4": {
+    "accuracy": 0.5,
+    "n": 32
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "qualified_by_class": {
+    "T1": 0,
+    "T2": 0,
+    "T3": 0,
+    "T4": 0
+   },
+   "spurious": {
+    "n": 200,
+    "spurious": 3
+   },
+   "spurious_excl_T1": {
+    "n": 176,
+    "spurious": 3
+   },
+   "cpu_total_s": 22.645,
+   "window": {
+    "accuracy": 0.5,
+    "n": 46,
+    "wrong_qualified": 0,
+    "qualified_answers": 0
+   }
+  }
+ }
+}

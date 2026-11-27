@@ -716,3 +716,15 @@ components carry more than 8 pairs.
 
 **Pre-registered:** G52, a replication of G50-A on seeds 551–557. The prediction is that FC2
 fails and everything else holds.
+
+## 2026-11-27 01:15: G52 registered results (docs/G52.md): 9/11, FC2 and D1 fail
+
+- **FC2 failed, as predicted.** Under the sound rule, F qualifies 0/56. The G48 components exceed
+  MAX_GUARDS pairs. G50's 37/56 relied on the unsound, data-dependent guard space.
+- **D1 failed, not predicted:** R T1 at depth ≥ 4 is 0.9286.
+  - Seed 555: the smallest-closure tie-break asked 4 sealed depth-4/5 nodes, because deeper
+    chain nodes have smaller closures.
+  - The pre-fix engine gives the same failure, so it is not caused by the fixes.
+  - This is the second question-budget failure, with a different cause from G49's. Next is a
+    pre-registered tie-break by distance from the observed subjects. Not rerun.
+- **Everything else passed:** 0 wrong-qualified anywhere, 164/164 retracted, FC3 16/16, D2 1.000.
