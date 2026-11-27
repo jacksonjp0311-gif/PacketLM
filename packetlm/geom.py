@@ -1,7 +1,8 @@
-"""Transfer, after the empty path is resolved.
+"""Gate.
 
-near then near now predicts a wrong node.
-The sequence is stored and compiled on a new graph.
+Unique and fully judged, or withhold.
+The gate does not name the target sequence.
+Transfer stays.
 Not a proven advantage. Not a general mind.
 """
 
@@ -47,40 +48,51 @@ def walk(facts, start, seq):
         cur = {o for s, r, o in facts if r == rel and s in cur}
     return cur
 
+def classify(facts, n, answer):
+    rels = sorted({r for _, r, _ in facts})
+    base = {rel: rows_from(facts, n, rel) for rel in rels}
+    supported, undetermined = [], []
+    for length in (1, 2):
+        for seq in product(rels, repeat=length):
+            pred = bits(compile_seq(base, seq)[0])
+            if not pred:
+                undetermined.append(seq)
+            elif set(pred) == answer:
+                supported.append(seq)
+    return supported, undetermined
+
 def run() -> dict:
-    facts = [
+    incomplete = [
+        (0, "in", 1), (1, "in", 2),
+        (0, "near", 3),
+    ]
+    inc_sup, inc_und = classify(incomplete, 4, {2})
+    withheld = not (len(inc_sup) == 1 and not inc_und)
+    complete = [
         (0, "in", 1), (1, "in", 2),
         (0, "near", 3), (3, "near", 6),
         (1, "near", 3), (3, "in", 4),
     ]
-    rels = sorted({r for _, r, _ in facts})
-    base = {rel: rows_from(facts, 7, rel) for rel in rels}
-    programs = []
-    for length in (1, 2):
-        for seq in product(rels, repeat=length):
-            programs.append((seq, compile_seq(base, seq)))
-    supported = [seq for seq, rows in programs if set(bits(rows[0])) == {2}]
-    undetermined = [seq for seq, rows in programs if not bits(rows[0])]
-    qualified = supported == [("in", "in")] and not undetermined
+    supported, undetermined = classify(complete, 7, {2})
+    qualified = len(supported) == 1 and not undetermined
     save(STATE, {"seq": list(supported[0])} if qualified else {})
     loaded = load(STATE)
-    new_facts = [(10, "in", 11), (11, "in", 12), (10, "near", 13)]
-    new_base = {rel: rows_from(new_facts, 14, rel) for rel in ("in", "near")}
+    new_facts = [(10, "in", 11), (11, "in", 12)]
     seq = tuple(loaded.get("seq", []))
+    new_base = {"in": rows_from(new_facts, 13, "in"), "near": rows_from(new_facts, 13, "near")}
     compiled = compile_seq(new_base, seq) if len(seq) == 2 else None
     checks = {
+        "incomplete_withheld": withheld,
         "qualified": qualified,
-        "stored_seq": loaded.get("seq") == ["in", "in"],
-        "no_rows_stored": "rows" not in (loaded or {}),
-        "transferred": compiled is not None and bits(compiled[10]) == sorted(walk(new_facts, 10, seq)) == [12],
+        "gate_unnamed": qualified and len(supported) == 1,
+        "transferred": compiled is not None and bits(compiled[10]) == sorted(walk(new_facts, 10, seq)),
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "undetermined": [list(s) for s in undetermined],
-        "supported": [list(s) for s in supported],
+        "seq": loaded.get("seq"),
         "failed": failed,
-        "claim": "empty path resolved; sequence compiled on a new graph"
+        "claim": "incomplete withholds; complete qualifies; sequence transfers"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
