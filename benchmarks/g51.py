@@ -66,6 +66,10 @@ def instrument(csv, cont, base, n):
 def main(argv):
     started = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    # verification L1 of b2bb9b8: record a dirty tree and the harness hash in the receipt
+    dirty_tree = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    import hashlib
+    harness = hashlib.sha256(b"".join((ROOT / f).read_bytes() for f in ["benchmarks/g51.py", "benchmarks/g46.py", "benchmarks/g46u.py", "benchmarks/la_export.py", "benchmarks/px.py"])).hexdigest()
     pin = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=INSTRUMENT, capture_output=True, text=True).stdout.strip()
     dirty = subprocess.run(["git", "status", "--porcelain"], cwd=INSTRUMENT, capture_output=True, text=True).stdout.strip()
     get = lambda f, d: [int(x) for x in argv[argv.index(f) + 1].split(",")] if f in argv else d  # noqa: E731
@@ -78,7 +82,7 @@ def main(argv):
     with Pool(8) as pool:
         res = pool.map(job, jobs)
     runs = {(r["curriculum"], r["seed"], r["arm"]): r for r in res}
-    rep = {"started": started, "head": head, "instrument": {"path": str(INSTRUMENT), "head": pin, "pinned": pin == PIN,
+    rep = {"started": started, "head": head, "git_status_porcelain": dirty_tree, "harness_sha256": harness, "instrument": {"path": str(INSTRUMENT), "head": pin, "pinned": pin == PIN,
                                                              "unmodified": dirty == ""},
            "seeds": seeds, "source_sha256": sha0, "engine_sha256": g48.engine_hash(), "curricula": {}}
     for c, (_, arms) in CURRICULA.items():
