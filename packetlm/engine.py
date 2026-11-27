@@ -501,6 +501,12 @@ class Memo:
         self.scope = None
         self.ix_checks = 0
         self.counts = Counter()  # G57b: how often each path ran (tests show every path is exercised)
+        # G58 (`--routed`): `rv[name]` = the fingerprint of everything `evaluate` read the last time
+        # `review` found the capability's current version not contradicted; `clo[(n, v, seq)]` the
+        # dependency closure of a version (a version's seq never changes, and it is part of the key)
+        self.rv = {}
+        self.clo = {}
+        self.pb = {}  # G58: (name, v, seq) -> the version's expanded base, valid while every status is PINNED_OK
 
     def packet_of(self, t):
         p = self.pk.get(t)
@@ -697,7 +703,8 @@ class Memo:
 class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
                  operators=False, retention="static", programs=False, answers=False, qualified_library=False,
-                 bounded=False, lean=False, closed_guards=None, indexed=False, memo=None, incremental=False):
+                 bounded=False, lean=False, closed_guards=None, indexed=False, memo=None, incremental=False,
+                 routed=False):
         self.path = Path(path)
         self.qualified_library = qualified_library  # G51: library offers only qualified capabilities
         # G55 (option 3): guard budget under `complete`, independent of the observations; None = MAX_GUARDS
@@ -709,6 +716,11 @@ class Engine:
         # G57b: the persistent fact index (needs the memo); static retention only
         self.incremental = bool(incremental and indexed and retention == "static")
         self._ents_tracked = False
+        # G58 (`--routed`, docs/G58.md): exact capability routing -- review re-evaluates only the
+        # capabilities whose evaluation inputs changed, cached version closures, and activation
+        # visits only the primitives that leave the frontier. Needs the memo; base engine only.
+        self.routed = bool(routed and indexed and geometry and not programs and not operators
+                           and retention == "static")
         self.readonly_call = False  # set by serve.py for a call whose lines are all questions
         self._cap_fp = {}
         self.bounded = bounded  # G53: exact cost bounds (memoized scan images; no re-scan of settled versions)
@@ -1334,21 +1346,95 @@ class Engine:
     def review(self) -> list[str]:
         """Re-check every executable capability against its own observations."""
         events = []
+        rv = self.memo.rv if self.routed else None
         for name, cap in self.state["capabilities"].items():
             ver = self.version(name)
             if not ver or ver["status"] not in EXEC_OK:
                 continue
-            h = self.evaluate(ver["seq"], self.state["observations"].get(name, []))
+            obs = self.state["observations"].get(name, [])
+            if rv is not None:
+                fp = self._review_fp(name, ver, obs)
+                if fp is not None and rv.get(name) == fp:
+                    self.memo.counts["g58_review_skipped"] += 1
+                    continue  # G58: the same inputs as a review that found it not contradicted
+            h = self.evaluate(ver["seq"], obs)
             if h["status"] == "contradicted":
+                if rv is not None:
+                    rv.pop(name, None)
                 events += self._set_status(name, ver["v"], "suspended", "contradicted by its observations")
+            elif rv is not None and fp is not None:
+                rv[name] = fp
         return events
+
+    def _review_fp(self, name, ver, obs):
+        """G58: everything `evaluate(ver.seq, obs)` reads (docs/G58.md §2a), or None when not covered:
+        - the version (number, status, seq) and, for every capability version it reaches through
+          `cap:` steps, its status (`expand` returns None unless each is PINNED_OK; seqs are fixed);
+        - the expanded base relations and the change stamp of each (`execute` reads only the triples
+          of those relations, through the index, synced here);
+        - each observation (subject, value), whether the subject is a known entity (`execute` returns
+          the empty set otherwise) and whether it is closed (`complete`: closed-world judgment)."""
+        seq = ver["seq"]
+        if any(x.startswith(("prog:", "op:")) for x in seq):
+            return None
+        idx = self._idx()  # syncs the memo stamps with the current facts
+        clo = self._closure_cached(name, ver)
+        deps = tuple(sorted((dn, dv, (self.version(dn, dv) or {}).get("status")) for dn, dv in clo))
+        base = self._expand_fast(seq)
+        stamp = self.memo.stamp
+        pos, closed = idx["pos"], self.state.get("complete", {})
+        return (ver["v"], ver["status"], tuple(seq), deps, tuple(base) if base is not None else None,
+                tuple(stamp.get(r, 0) for r in base) if base is not None else None,
+                tuple((s_, v_, s_ in pos, s_ in closed) for s_, v_ in obs))
+
+    def _expand_fast(self, seq):
+        """G58: `expand(seq)` for rel:/op:/cap: steps, with each capability version's base cached
+        (its seq never changes; the cache key holds it). A cached base is used only when the version
+        and every version in its closure are PINNED_OK, the condition under which `expand` returns
+        it; otherwise `expand` itself runs. prog: steps always go to `expand`."""
+        out = []
+        for step in seq:
+            if step.startswith("rel:"):
+                out.append(step[4:])
+            elif step.startswith("op:"):
+                out.append(step[3:])
+            elif step.startswith("prog:"):
+                return self.expand(seq)
+            else:
+                name, v = _split_cap(step)
+                ver = self.version(name, v)
+                if not ver or ver["status"] not in PINNED_OK:
+                    return None
+                key = (name, ver["v"], tuple(ver["seq"]))
+                b = self.memo.pb.get(key)
+                if b is not None and all((self.version(dn, dv) or {}).get("status") in PINNED_OK
+                                         for dn, dv in self._closure_cached(name, ver)):
+                    out += b
+                    self.memo.counts["g58_base_cached"] += 1
+                    continue
+                sub = self.expand([step])
+                if sub is None:
+                    return None
+                self.memo.pb[key] = tuple(sub)
+                out += sub
+        return out
+
+    def _closure_cached(self, name, ver):
+        key = (name, ver["v"], tuple(ver["seq"]))
+        c = self.memo.clo.get(key)
+        if c is None:
+            c = self.memo.clo[key] = frozenset(self._closure(name, ver["v"]))
+        return c
 
     # ---------- execution ----------
 
     def execute(self, seq, subject):
         """Run a program. Geometric: bit-row composition (geom.compose). Disabled: symbolic sets."""
         self.stats["executions"] += 1
-        base = self.expand(seq) if any(s.startswith(("rel:", "cap:", "op:", "prog:")) for s in seq) else list(seq)
+        if not any(s.startswith(("rel:", "cap:", "op:", "prog:")) for s in seq):
+            base = list(seq)
+        else:
+            base = self._expand_fast(seq) if self.routed else self.expand(seq)
         if base is None:
             return None
         idx = self._idx()
@@ -1515,7 +1601,7 @@ class Engine:
         return front
 
     def _first_rel(self, prim):
-        base = self.expand([prim])
+        base = self._expand_fast([prim]) if self.routed else self.expand([prim])
         if not base:
             return None
         return base[0].split(":")[1] if base[0].startswith("until:") else base[0]
@@ -1526,6 +1612,13 @@ class Engine:
 
         first = {p: self._first_rel(p) for p in prims}
         idx = self._idx()
+        by_first = {}
+        if self.routed:
+            # G58: primitives indexed by their first base relation; a node visits only those that
+            # leave its frontier, in the original order. Each skipped one adds P^(n-len-1) to
+            # `pruned`, exactly as the loop below would (same count, same programs, same order).
+            for i, p in enumerate(prims):
+                by_first.setdefault(first[p], []).append(i)
 
         def walk(prefix, front):
             nonlocal pruned
@@ -1534,7 +1627,12 @@ class Engine:
                 return
             ents = [idx["names"][i] for i in _geom().bits(front)] if self.geometry else front
             here = set().union(*(idx["out"].get(x, set()) for x in ents)) if ents else set()
-            for p in prims:
+            visit = prims
+            if self.routed:
+                ii = sorted(i for r in here for i in by_first.get(r, ()))
+                pruned += (P - len(ii)) * P ** (n - len(prefix) - 1)
+                visit = [prims[i] for i in ii]
+            for p in visit:
                 if first[p] not in here:  # relevance index: no edge leaves the frontier (exact)
                     pruned += P ** (n - len(prefix) - 1)
                     continue
@@ -1616,7 +1714,8 @@ class Engine:
                     continue
                 if self.qualified_library and ver["status"] != "qualified":
                     continue  # G51 arm Q: only qualified capabilities feed later acquisition
-                if any(dn == name for dn, _ in self._closure(n, ver["v"])):
+                clo = self._closure_cached(n, ver) if self.routed else self._closure(n, ver["v"])
+                if any(dn == name for dn, _ in clo):
                     continue  # would create a cycle
                 prims.append(f"cap:{n}@{ver['v']}")
         if self.operators:
@@ -1897,7 +1996,7 @@ class Engine:
         obs_at = [(pos[s_], v) for s_, v in obs if s_ in pos]
         closed_at = {pos[x] for x in self._closed() if x in pos}  # G49: closed-world at `complete` subjects
         jf = lambda i, o, v: judge_closed(o, v) if i in closed_at else judge_set(o, v)  # noqa: E731
-        prims = [(p, self.expand([p])) for p in self.primitives(name)]
+        prims = [(p, self._expand_fast([p]) if self.routed else self.expand([p])) for p in self.primitives(name)]
         prims = [(p, tuple(b) if self.bounded else b) for p, b in prims if b is not None]
         P = len(prims)
         out = {"horizon": horizon, "domain": len(D), "domain_set": sorted(D), "scanned": 0, "evaluated": 0, "contradicted": 0,
@@ -2368,6 +2467,22 @@ class Engine:
     def _reach(self, x) -> list:
         """Entities reachable from x along told facts (outgoing), x included: every fact a program
         run from x can read has its subject here."""
+        if self.routed and self._ix_live():
+            # G58: the same told, non-cap out-edges, read per visited node from the persistent index
+            ix = self.memo.ix
+            self.memo.counts["g58_reach_indexed"] += 1
+            seen, todo = {x}, [x]
+            while todo:
+                y = todo.pop()
+                for r in ix["out"].get(y, ()):
+                    if r.startswith("cap:"):
+                        continue
+                    for f in ix["by_sr"].get((y, r), ()):
+                        z = f["o"]
+                        if z not in seen and any(sp["kind"] == "told" for sp in f["supports"]):
+                            seen.add(z)
+                            todo.append(z)
+            return sorted(seen)
         adj = {}
         for f in self.state["facts"]:
             if not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]):
@@ -2550,7 +2665,8 @@ def parse_cli(argv):
              "--no-activation": ("activation", False), "--operators": ("operators", True),
              "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True), "--answers": ("answers", True),
              "--qualified-library": ("qualified_library", True),
-             "--bounded": ("bounded", True), "--lean": ("lean", True), "--indexed": ("indexed", True), "--incremental": ("incremental", True)}
+             "--bounded": ("bounded", True), "--lean": ("lean", True), "--indexed": ("indexed", True), "--incremental": ("incremental", True),
+             "--routed": ("routed", True)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):
