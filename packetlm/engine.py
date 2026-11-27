@@ -143,14 +143,16 @@ def _split_cap(step):
     return name, int(v)
 
 
-def validate(doc) -> dict:
+def validate(doc, checksum_ok=False) -> dict:
     """Full nested validation. Schema 3 facts carry no packet (bind is derived on demand);
-    a schema-2 document is accepted only for migration and its stored packets must bind."""
+    a schema-2 document is accepted only for migration and its stored packets must bind.
+    `checksum_ok`: the caller has already verified the checksum against the exact bytes the state
+    was parsed from (G54 `--lean`, see `_lean_checksum_ok`); every other check still runs."""
     _need(isinstance(doc, dict) and doc.get("schema") in (SCHEMA, SCHEMA_V2), "schema mismatch")
     v2 = doc["schema"] == SCHEMA_V2
     state = doc.get("state")
     _need(isinstance(state, dict), "state missing")
-    _need(doc.get("checksum") == _checksum(state), "checksum mismatch")
+    _need(checksum_ok or doc.get("checksum") == _checksum(state), "checksum mismatch")
     types = {"turn": int, "facts": list, "log": list, "library": list, "lexicon": dict,
              "capabilities": dict, "observations": dict, "retired": dict, "hypotheses": dict}
     for key, typ in types.items():
@@ -217,6 +219,117 @@ def validate(doc) -> dict:
     return state
 
 
+def _valid_fast(doc, checksum_ok=False) -> bool:
+    """G54 `--lean`: True exactly when `validate(doc, checksum_ok)` accepts a schema-3 document
+    (the same checks, without a function call per check). On False the caller runs `validate`,
+    which raises with its usual message. Equivalence is tested by fuzzing in g44 (g54 checks)."""
+    if not (isinstance(doc, dict) and doc.get("schema") == SCHEMA):
+        return False
+    state = doc.get("state")
+    if not isinstance(state, dict):
+        return False
+    if not (checksum_ok or doc.get("checksum") == _checksum(state)):
+        return False
+    for key, typ in (("turn", int), ("facts", list), ("log", list), ("library", list), ("lexicon", dict),
+                     ("capabilities", dict), ("observations", dict), ("retired", dict), ("hypotheses", dict)):
+        if not isinstance(state.get(key), typ):
+            return False
+    if "retention" in state:
+        ret = state["retention"]
+        if not (isinstance(ret, dict) and isinstance(ret.get("call"), int) and isinstance(ret.get("touch"), dict)
+                and isinstance(ret.get("archived"), dict)):
+            return False
+        for sha, e in ret["archived"].items():
+            if not (isinstance(e.get("tokens"), list) and len(sha) == 64):
+                return False
+    ids = set()
+    for f in state["facts"]:
+        g = f.get
+        fid, fs, fr, fo, sup = g("id"), g("s"), g("r"), g("o"), g("supports")
+        if not isinstance(fid, str) or not isinstance(fs, str) or not isinstance(fr, str) \
+                or not isinstance(fo, str) or not isinstance(sup, list):
+            return False
+        if "bits" in f or "count" in f or fid != f"{fs} {fr} {fo}" or fid in ids or not sup:
+            return False
+        ids.add(fid)
+        for sp in sup:
+            if not (sp.get("kind") in ("told", "derived") and isinstance(sp.get("premises"), list)
+                    and isinstance(sp.get("turn"), int)):
+                return False
+    for f in state["facts"]:
+        for sp in f["supports"]:
+            for q in sp["premises"]:
+                if q not in ids:
+                    return False
+    for c in state["library"]:
+        kind = c.get("kind", "svo")
+        if kind == "svo":
+            if not {"order", "rel_at", "word", "meaning"} <= set(c):
+                return False
+        elif not (kind == "question" and isinstance(c.get("template"), list) and "meaning" in c):
+            return False
+    for word, target in state["lexicon"].items():
+        if not (isinstance(word, str) and isinstance(target, str)):
+            return False
+    for name, rs in state["retired"].items():
+        if not all(isinstance(x, dict) and {"s", "o", "reason"} <= set(x) for x in rs):
+            return False
+    for name, obs in state["observations"].items():
+        if not all(isinstance(o, list) and len(o) == 2 for o in obs):
+            return False
+    caps = state["capabilities"]
+    for name, cap in caps.items():
+        if not isinstance(cap.get("versions"), list):
+            return False
+        cur = cap.get("current")
+        if not (cur is None or 1 <= cur <= len(cap["versions"])):
+            return False
+        for i, ver in enumerate(cap["versions"], 1):
+            if not (ver.get("v") == i and ver.get("status") in VER_STATUS and ver.get("seq")):
+                return False
+            for d in _deps_of(ver["seq"]):
+                dn, dv = _split_cap(d)
+                if not (dn in caps and 1 <= dv <= len(caps[dn]["versions"])):
+                    return False
+    try:
+        def visit(node, stack):
+            if node in stack:
+                raise StateError("cycle")
+            name, v = _split_cap(node)
+            for d in _deps_of(caps[name]["versions"][v - 1]["seq"]):
+                visit(d, stack | {node})
+        for name, cap in caps.items():
+            for ver in cap["versions"]:
+                visit(f"cap:{name}@{ver['v']}", set())
+    except StateError:
+        return False
+    return True
+
+
+def validate_lean(doc, checksum_ok=False) -> dict:
+    if _valid_fast(doc, checksum_ok):
+        return doc["state"]
+    return validate(doc, checksum_ok)
+
+
+def _lean_prefix(schema, checksum) -> bytes:
+    return ('{"schema": ' + json.dumps(schema) + ', "checksum": ' + json.dumps(checksum) + ', "state": ').encode()
+
+
+def _lean_checksum_ok(raw: bytes, doc) -> bool:
+    """G54 `--lean`: a lean save writes the state as its canonical text (sort_keys) after a fixed
+    prefix, and the checksum is sha256 of exactly those bytes. If the bytes the state was parsed
+    from hash to the stored checksum, the old check (sha256 of the canonical re-serialization of
+    the parsed state) holds too: canonical text round-trips, and a non-canonical text with the
+    same hash would be a SHA-256 collision. Any other file falls back to the old check."""
+    if not (isinstance(doc, dict) and isinstance(doc.get("checksum"), str) and "schema" in doc):
+        return False
+    pre = _lean_prefix(doc["schema"], doc["checksum"])
+    if not (raw.startswith(pre) and raw.endswith(b"}")):
+        return False
+    return hashlib.sha256(raw[len(pre):-1]).hexdigest() == doc["checksum"]
+
+
 def _write_atomic(path: Path, data: bytes) -> None:
     tmp = path.with_name(path.name + ".tmp")
     with open(tmp, "wb") as fh:
@@ -229,9 +342,10 @@ def _write_atomic(path: Path, data: bytes) -> None:
 class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
                  operators=False, retention="static", programs=False, answers=False, qualified_library=False,
-                 bounded=False):
+                 bounded=False, lean=False):
         self.path = Path(path)
         self.qualified_library = qualified_library  # G51: library offers only qualified capabilities
+        self.lean = lean  # G54: exact per-call cost bounds (persistence, geometric recall)
         self.bounded = bounded  # G53: exact cost bounds (memoized scan images; no re-scan of settled versions)
         self.state = state if state is not None else empty_state()
         self.report = report or {"loaded": "new"}
@@ -286,7 +400,7 @@ class Engine:
             try:
                 raw = p.read_bytes()
                 doc = json.loads(raw)
-                state = validate(doc)
+                state = validate_lean(doc, _lean_checksum_ok(raw, doc)) if kw.get("lean") else validate(doc)
             except (ValueError, StateError) as exc:
                 errors[label] = str(exc)
                 continue
@@ -313,6 +427,8 @@ class Engine:
                 self.stats["archived"] = self.stats.get("archived", 0) + 1
                 self._dirty()
                 self._archived_tok = None
+        if self.lean:
+            return self._save_lean()
         validate({"schema": SCHEMA, "checksum": _checksum(self.state), "state": self.state})
         self.path.parent.mkdir(parents=True, exist_ok=True)
         if self.path.exists():
@@ -334,17 +450,55 @@ class Engine:
         except OSError:
             pass
 
+    def _save_lean(self) -> None:
+        """G54: the same guarantees as `save` -- full validation before writing, the previous good
+        primary kept as the backup, atomic replace, fsync -- with the state serialized once. The
+        checksum is sha256 of the canonical state text, which is exactly what `_checksum` computes,
+        so a non-lean engine opens the file unchanged. The backup is a hard link to the previous
+        primary's inode (the primary is then replaced by a new inode), not a byte copy."""
+        text = json.dumps(self.state, sort_keys=True).encode()
+        chk = hashlib.sha256(text).hexdigest()
+        validate_lean({"schema": SCHEMA, "checksum": chk, "state": self.state}, checksum_ok=True)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        bak = self.path.with_name(self.path.name + ".bak")
+        if self.path.exists():
+            try:
+                cur = self.path.read_bytes()
+                if hashlib.sha256(cur).hexdigest() != self._known_bytes:  # bytes this process did not validate
+                    doc0 = json.loads(cur)
+                    validate_lean(doc0, _lean_checksum_ok(cur, doc0))
+                tmpb = self.path.with_name(self.path.name + ".bak.tmp")
+                if tmpb.exists():
+                    tmpb.unlink()
+                try:
+                    os.link(self.path, tmpb)
+                    os.replace(tmpb, bak)
+                except OSError:
+                    _write_atomic(bak, cur)
+            except (ValueError, StateError):
+                pass  # never back up a corrupt primary over a good backup
+        data = _lean_prefix(SCHEMA, chk) + text + b"}"
+        _write_atomic(self.path, data)
+        self._known_bytes = hashlib.sha256(data).hexdigest()
+        try:
+            dfd = os.open(self.path.parent, os.O_RDONLY)
+            os.fsync(dfd)
+            os.close(dfd)
+        except OSError:
+            pass
+
     # ---------- indexes ----------
 
     def _idx(self):
         if self._cache is None:
-            names, pos, decode, triples = [], {}, {}, []
+            names, pos, decode, triples = [], {}, ({} if not self.lean else None), []
             for f in self.state["facts"]:
                 for t in (f["s"], f["o"]):
                     if t not in pos:
                         pos[t] = len(names)
                         names.append(t)
-                        decode[pack(bits_for(t, 2)).bits] = t
+                        if decode is not None:
+                            decode[pack(bits_for(t, 2)).bits] = t
                 triples.append((f["s"], f["r"], f["o"]))
             out = {}
             for s_, r_, _ in triples:
@@ -534,6 +688,8 @@ class Engine:
             if "packets" not in idx:  # derived on demand, never stored (schema 3)
                 idx["packets"] = [bits_for(f["s"], 0) ^ bits_for(f["r"], 1) ^ bits_for(f["o"], 2)  # == bind(...) as int
                                   for f in self.state["facts"]]
+            if self.lean:
+                return self._ask_lean(idx, qi)
             for p in idx["packets"]:
                 if 2 * (qi & p).bit_count() - p.bit_count() <= 0:  # Packet.score
                     continue
@@ -546,6 +702,35 @@ class Engine:
         if len(found) > 1:
             return {"status": "ambiguous", "value": None, "candidates": found}
         return {"status": "known", "value": found[0]}
+
+    def _ask_lean(self, idx, qi) -> dict:
+        """G54: the same geometric recall, computed exactly with less work. Packet.score is
+        2|q&p| - |p|. If q&p is empty the score is -|p| <= 0, so the packet is skipped exactly as
+        before without counting; |p| is counted once per packet per process. The decode table is
+        built only when some packet scores above 0. The candidate order, the de-duplication and the
+        final sort are unchanged."""
+        if "pcount" not in idx:
+            idx["pcount"] = [p.bit_count() for p in idx["packets"]]
+        found = []
+        for p, pc in zip(idx["packets"], idx["pcount"]):
+            x = qi & p
+            if not x or 2 * x.bit_count() - pc <= 0:
+                continue
+            got = self._decode().get(pack(p ^ qi).bits)
+            if got and got not in found:
+                found.append(got)
+        found = sorted(found)
+        if not found:
+            return {"status": "unknown", "value": None}
+        if len(found) > 1:
+            return {"status": "ambiguous", "value": None, "candidates": found}
+        return {"status": "known", "value": found[0]}
+
+    def _decode(self):
+        idx = self._idx()
+        if idx["decode"] is None:
+            idx["decode"] = {pack(bits_for(t, 2)).bits: t for t in idx["names"]}
+        return idx["decode"]
 
     # ---------- language ----------
 
@@ -1819,7 +2004,7 @@ def main(argv) -> int:
              "--no-activation": ("activation", False), "--operators": ("operators", True),
              "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True), "--answers": ("answers", True),
              "--qualified-library": ("qualified_library", True),
-             "--bounded": ("bounded", True)}
+             "--bounded": ("bounded", True), "--lean": ("lean", True)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):

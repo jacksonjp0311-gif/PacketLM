@@ -13,7 +13,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 FUNCS = ["open", "save", "_idx", "tell", "acquire", "hypotheses", "_scan", "primitives", "expand", "execute",
          "_predictions", "investigate", "answer", "ask", "review", "_requalify", "_fc_requalify", "correct",
-         "_drop", "_retire", "_adopt", "_component", "evaluate"]
+         "_drop", "_retire", "_adopt", "_component", "evaluate", "validate", "_save_lean", "_ask_lean", "_decode",
+         "_flush_growth", "_checksum"]
 
 t_start = sum(resource.getrusage(resource.RUSAGE_SELF)[:2])
 pr = cProfile.Profile()

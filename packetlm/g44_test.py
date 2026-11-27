@@ -1131,6 +1131,122 @@ def g49_checks(tmp) -> dict:
         sk[bd] = (st0, n1, n2, n3, e_.version("good")["status"], len(e_.state.get("complete_log", [])))
     out["g53_fc_skip_only_settled"] = sk[True][0] == "qualified" and sk[True][1:4] == (1, 1, 1) \
         and sk[False][1:4] == (0, 0, 0) and sk[True][4] == sk[False][4] and sk[True][5] == sk[False][5] == 1
+    # G54 (docs/G54.md): --lean is exact (replies, recall) and keeps the persistence guarantees
+    import random as _r
+    rg = _r.Random(54)
+    ents = [f"n{i}" for i in range(40)]
+    rels = ["ra", "rb", "rc"]
+    wl = sorted({(rg.choice(ents), rg.choice(rels), rg.choice(ents)) for _ in range(120)})
+    lines54 = [f"fact {a} {b} {c}" for a, b, c in wl] + ["example kx: n1 -> n2", "example kx: n3 -> n4"]
+    qs54 = [f"what is {e} {r}" for e in ents for r in rels + ["kx"]]
+    rep54, rec54 = {}, {}
+    for ln in (False, True):
+        e_ = Engine(tmp / f"lean{ln}.json", answers=True, lean=ln, deepen=3)
+        rep54[ln] = [e_.turn(l) for l in lines54 + qs54]
+        rec54[ln] = [e_.ask(e, r) for e in ents for r in rels]
+        e_.save()
+    known = sum(x["status"] == "known" for x in rec54[True])
+    amb = sum(x["status"] == "ambiguous" for x in rec54[True])
+    out["g54_lean_replies_and_recall_equal"] = rep54[False] == rep54[True] and rec54[False] == rec54[True] \
+        and known > 0 and amb > 0
+    # persistence: lean files open in either engine; a tampered primary is refused and the backup
+    # (the previous primary, byte for byte) is used; an invalid state is never written
+    pl = tmp / "leanp.json"
+    e1 = Engine.open(pl, lean=True)
+    e1.turn("fact a r b")
+    e1.save()
+    first = pl.read_bytes()
+    e2 = Engine.open(pl, lean=True)
+    e2.turn("fact b r c")
+    e2.save()
+    second = pl.read_bytes()
+    bak_ok = (tmp / "leanp.json.bak").exists() and (tmp / "leanp.json.bak").read_bytes() == first
+    plain_reads = Engine.open(pl).report == {"loaded": "primary"} and Engine.open(pl, lean=True).report == {"loaded": "primary"}
+    import re as _re
+    tampered = _re.sub(rb'"turn": \d+}$', b'"turn": 999}', second[:-1]) + b"}"  # structurally valid edit
+    pl.write_bytes(tampered)
+    try:
+        tam = Engine.open(pl, lean=True).report
+    except StateError:
+        tam = {"loaded": "none"}
+    pl.write_bytes(second)
+    e3 = Engine.open(pl, lean=True)
+    e3.state["facts"].append(dict(e3.state["facts"][0]))  # duplicate fact: invalid
+    try:
+        e3.save()
+        refused = False
+    except StateError:
+        refused = True
+    # a primary corrupted by someone else after this process loaded it is never backed up over a good backup
+    e4 = Engine.open(pl, lean=True)
+    good_bak = (tmp / "leanp.json.bak").read_bytes()
+    pl.write_bytes(b"{corrupt")
+    e4.save()
+    kept = (tmp / "leanp.json.bak").read_bytes() == good_bak
+    pl.write_bytes(second)
+    out["g54_lean_persistence_guarantees"] = kept and bak_ok and plain_reads and tampered != second and tam.get("loaded") == "backup" \
+        and tam.get("recovered") is True and refused and pl.read_bytes() == second
+    # fast validation accepts exactly what `validate` accepts (fuzzed corruptions of real states)
+    from .engine import _valid_fast, validate as _validate
+    base_docs = []
+    for ln in (False, True):
+        st_ = json.loads(json.dumps(Engine.open(tmp / f"lean{ln}.json").state))
+        base_docs.append(st_)
+    ev = Engine(tmp / "fz.json", answers=True, deepen=3)
+    for l in ["fact a p b", "fact b q c", "fact d p e", "fact e q f", "example g1: a -> b", "example g1: d -> e",
+              "example g2: a -> c", "example g2: d -> f"]:
+        ev.turn(l)
+    base_docs.append(json.loads(json.dumps(ev.state)))
+    fz = _r.Random(541)
+
+    def corrupt(st_):
+        st_ = copy.deepcopy(st_)
+        k = fz.randrange(12)
+        facts = st_["facts"]
+        if k == 0 and facts:
+            facts.append(copy.deepcopy(fz.choice(facts)))
+        elif k == 1 and facts:
+            fz.choice(facts)["id"] += "x"
+        elif k == 2 and facts:
+            fz.choice(facts)["supports"][0]["premises"].append("nope nope nope")
+        elif k == 3 and facts:
+            fz.choice(facts)["supports"] = []
+        elif k == 4:
+            st_[fz.choice(["turn", "facts", "log", "capabilities", "observations"])] = "bad"
+        elif k == 5 and st_["capabilities"]:
+            c = st_["capabilities"][fz.choice(sorted(st_["capabilities"]))]
+            c["current"] = len(c["versions"]) + 1
+        elif k == 6 and st_["capabilities"]:
+            n = fz.choice(sorted(st_["capabilities"]))
+            st_["capabilities"][n]["versions"][0]["seq"] = [f"cap:{n}@1"]  # self-cycle
+        elif k == 7 and st_["capabilities"]:
+            n = fz.choice(sorted(st_["capabilities"]))
+            st_["capabilities"][n]["versions"][0]["status"] = "weird"
+        elif k == 8 and st_["observations"]:
+            st_["observations"][fz.choice(sorted(st_["observations"]))].append(["only"])
+        elif k == 9 and facts:
+            fz.choice(facts)["bits"] = "00"
+        elif k == 10 and facts:
+            fz.choice(facts)["supports"][0]["kind"] = "guessed"
+        elif k == 11:
+            st_["lexicon"]["w"] = 3
+        return st_
+
+    agree, rejected, total = 0, 0, 0
+    for i in range(300):
+        st_ = corrupt(fz.choice(base_docs)) if i % 5 else copy.deepcopy(fz.choice(base_docs))
+        doc = {"schema": SCHEMA, "checksum": _checksum(st_) if isinstance(st_, dict) else "", "state": st_}
+        try:
+            _validate(doc)
+            ok = True
+        except StateError:
+            ok = False
+        except Exception:
+            continue
+        total += 1
+        rejected += not ok
+        agree += _valid_fast(doc) == ok
+    out["g54_fast_validation_equivalent"] = agree == total and total >= 250 and 100 <= rejected < total
     ea = Engine(tmp / "fcret.json", deepen=2, retention="adaptive")
     out["fc_refused_with_adaptive_retention"] = ea.turn("complete b").startswith("complete is not supported")
     return out

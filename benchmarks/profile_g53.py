@@ -15,6 +15,7 @@ sys.path.insert(0, str(ROOT / "benchmarks"))
 sys.path.insert(0, str(ROOT))
 import g51  # noqa: E402
 import g53  # noqa: E402
+import g54  # noqa: E402
 import packetlm.g45_test as g45t  # noqa: E402
 
 SHIM = str(ROOT / "benchmarks" / "prof_engine.py")
@@ -41,7 +42,8 @@ def job(args):
     g45t.subprocess = _Sub()
     import g46
     g46.subprocess = _Sub()
-    r = (g53.job if arm in g53.FLAGS and arm not in g51.FLAGS else g51.job)((cur, seed, arm, out))
+    r = (g54.job if arm in g54.FLAGS and arm not in g53.FLAGS else g53.job if arm in g53.FLAGS and arm not in g51.FLAGS
+         else g51.job)((cur, seed, arm, out))
     return {"cur": cur, "seed": seed, "arm": arm, "cpu_total_all_s": r.get("cpu_total_all_s"), "prof": str(prof)}
 
 

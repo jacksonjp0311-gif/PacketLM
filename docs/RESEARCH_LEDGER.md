@@ -837,3 +837,26 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - **Next priority:** the state-proportional per-call cost and maintenance re-asks (F3), which now
   dominate both curricula's remaining gap; pre-register before any change. Option 3 (guard budget
   independent of observations) was not started in this chunk.
+
+## 2026-11-27 02:50: G54 diagnosis and pre-registration (docs/G54.md)
+
+- **Steering 02:17:** cut per-call state cost and maintenance re-asks with exactness where
+  claimed; same instrument and controls; report whether the remaining gap is structural. The G45
+  t5 restatement is under review on verify-050bebd and is left unchanged.
+- **Diagnosis:** on a 3024-fact state, one 100-question call spends about 75% in geometric
+  recall (two bit counts per packet per question), then double validation and triple
+  serialization. Every process pays a fixed floor of about 27 ms (interpreter, imports, empty
+  load and save), B included. Maintenance re-asks are teacher-issued protocol calls; they are
+  not changed (same controls).
+- **Mechanism `--lean` (exact):** recall skips empty overlaps without counting and counts |p|
+  once; decode table on demand; one serialization per save with the checksum over the written
+  bytes (same checksum value as before); backup by hard link; checksum on load over the parsed
+  bytes; fast validation with the same checks (fuzz-tested against `validate`).
+  - Checks: 3. Mutations: 8 (6 on new code, 2 lean twins of existing mutations whose sites the
+    new code duplicated). One equivalent mutant (dropping the score test) was removed and is
+    documented.
+- **Dev (961–964, not evidence):** exact on all seeds. Comp A(Cl+maint ‖ Cb+maint) = +0.144,
+  A(Cl+maint ‖ Bl) = −0.810; unrel +0.331 and −3.386. Structure: unrel A_struct = −1.12 (the
+  process floor binds), comp −0.09.
+- **Registered design:** comp 141–147, unrel 151–157; rules M, L1, L2, L3 and the descriptive
+  structural rule S.
