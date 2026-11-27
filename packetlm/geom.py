@@ -1,8 +1,7 @@
-"""Transfer.
+"""Transfer, after the empty path is resolved.
 
-The sequence is stored, not the rows.
-A new graph has different nodes.
-The sequence is compiled there and checked against a walk.
+near then near now predicts a wrong node.
+The sequence is stored and compiled on a new graph.
 Not a proven advantage. Not a general mind.
 """
 
@@ -51,10 +50,11 @@ def walk(facts, start, seq):
 def run() -> dict:
     facts = [
         (0, "in", 1), (1, "in", 2),
-        (0, "near", 3), (1, "near", 3), (3, "in", 4),
+        (0, "near", 3), (3, "near", 6),
+        (1, "near", 3), (3, "in", 4),
     ]
     rels = sorted({r for _, r, _ in facts})
-    base = {rel: rows_from(facts, 5, rel) for rel in rels}
+    base = {rel: rows_from(facts, 7, rel) for rel in rels}
     programs = []
     for length in (1, 2):
         for seq in product(rels, repeat=length):
@@ -64,23 +64,23 @@ def run() -> dict:
     qualified = supported == [("in", "in")] and not undetermined
     save(STATE, {"seq": list(supported[0])} if qualified else {})
     loaded = load(STATE)
-    # new graph, different nodes
     new_facts = [(10, "in", 11), (11, "in", 12), (10, "near", 13)]
-    new_base = {rel: rows_from(new_facts, 14, rel) for rel in rels}
+    new_base = {rel: rows_from(new_facts, 14, rel) for rel in ("in", "near")}
     seq = tuple(loaded.get("seq", []))
-    compiled = compile_seq(new_base, seq) if seq else None
+    compiled = compile_seq(new_base, seq) if len(seq) == 2 else None
     checks = {
         "qualified": qualified,
         "stored_seq": loaded.get("seq") == ["in", "in"],
-        "no_rows_stored": "rows" not in loaded,
+        "no_rows_stored": "rows" not in (loaded or {}),
         "transferred": compiled is not None and bits(compiled[10]) == sorted(walk(new_facts, 10, seq)) == [12],
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {
         **checks,
-        "seq": loaded.get("seq"),
+        "undetermined": [list(s) for s in undetermined],
+        "supported": [list(s) for s in supported],
         "failed": failed,
-        "claim": "sequence compiled on a new graph; rows were not cached"
+        "claim": "empty path resolved; sequence compiled on a new graph"
     }
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
