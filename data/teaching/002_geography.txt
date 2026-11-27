@@ -1,0 +1,23 @@
+# 002 geography. "X in Y": X lies in Y.
+construct in: lyon in rhone = lyon rhone; osaka in kansai = osaka kansai
+question country: which country is lyon in = lyon; which country is osaka in = osaka
+lyon in rhone
+rhone in france
+france in europe
+osaka in kansai
+kansai in japan
+japan in asia
+austin in texas
+texas in usa
+usa in america
+porto in norte
+norte in portugal
+portugal in europe
+example country: lyon -> france
+example country: osaka -> japan
+example continent: lyon -> europe
+example continent: osaka -> asia
+expect which country is austin in => austin country usa [no construction for country]
+expect which country is porto in => porto country portugal [no construction for country]
+expect what is porto continent => porto continent europe [no construction for continent]
+expect what is texas country => texas in usa

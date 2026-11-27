@@ -774,8 +774,10 @@ class Engine:
         cap = self.state["capabilities"].get(name)
         if not cap:
             return "unknown capability"
+        retired = len(self.state["retired"].get(name, []))
+        active = len(self.state["observations"].get(name, []))
         return "; ".join(f"v{v['v']} {'+'.join(v['seq'])} {v['status']}" for v in cap["versions"]) + \
-            (f"; current v{cap['current']}" if cap["current"] else "")
+            (f"; current v{cap['current']}" if cap["current"] else "") + f"; examples {active} active, {retired} retired"
 
     # ---------- turns: one controlled-language interface for people and tests ----------
 
@@ -857,7 +859,9 @@ class Engine:
                 (f"; {'; '.join(got['review'])}" if got["review"] else "")
         if head == "retract" and len(rest) in (2, 3):
             got = self.retract(*rest)
-            return f"retracted {len(got['removed'])}" if got["removed"] else "nothing to retract"
+            if not got["removed"]:
+                return "nothing to retract"
+            return f"retracted {len(got['removed'])}" + (f"; {'; '.join(got['review'])}" if got["review"] else "")
         if head == "revoke" and len(rest) == 1:
             ev = self.revoke(rest[0])
             return "; ".join(ev) if ev else "nothing to revoke"

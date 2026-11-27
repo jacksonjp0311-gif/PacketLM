@@ -1,0 +1,74 @@
+[
+ {
+  "line": "construct in: lyon in rhone = lyon rhone; osaka in kansai = osaka kansai",
+  "reply": "construction in sro"
+ },
+ {
+  "line": "question country: which country is lyon in = lyon; which country is osaka in = osaka",
+  "reply": "question country which country is <s> in"
+ },
+ {
+  "line": "lyon in rhone",
+  "reply": "recorded lyon in rhone"
+ },
+ {
+  "line": "rhone in france",
+  "reply": "recorded rhone in france"
+ },
+ {
+  "line": "france in europe",
+  "reply": "recorded france in europe"
+ },
+ {
+  "line": "osaka in kansai",
+  "reply": "recorded osaka in kansai"
+ },
+ {
+  "line": "kansai in japan",
+  "reply": "recorded kansai in japan"
+ },
+ {
+  "line": "japan in asia",
+  "reply": "recorded japan in asia"
+ },
+ {
+  "line": "austin in texas",
+  "reply": "recorded austin in texas"
+ },
+ {
+  "line": "texas in usa",
+  "reply": "recorded texas in usa"
+ },
+ {
+  "line": "usa in america",
+  "reply": "recorded usa in america"
+ },
+ {
+  "line": "porto in norte",
+  "reply": "recorded porto in norte"
+ },
+ {
+  "line": "norte in portugal",
+  "reply": "recorded norte in portugal"
+ },
+ {
+  "line": "portugal in europe",
+  "reply": "recorded portugal in europe"
+ },
+ {
+  "line": "example country: lyon -> france",
+  "reply": "qualified country rel:in+rel:in"
+ },
+ {
+  "line": "example country: osaka -> japan",
+  "reply": "qualified country rel:in+rel:in"
+ },
+ {
+  "line": "example continent: lyon -> europe",
+  "reply": "qualified continent rel:in+cap:country@1"
+ },
+ {
+  "line": "example continent: osaka -> asia",
+  "reply": "qualified continent rel:in+cap:country@1"
+ }
+]

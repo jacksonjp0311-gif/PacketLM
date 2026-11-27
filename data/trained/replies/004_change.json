@@ -1,0 +1,30 @@
+[
+ {
+  "line": "define mom as parent",
+  "reply": "defined mom as parent"
+ },
+ {
+  "line": "correct noah parent rita",
+  "reply": "corrected noah parent rita; removed 1; retired example grandparent: liam -> olga; retired example greatgrandparent: liam -> pia"
+ },
+ {
+  "line": "rita parent pia",
+  "reply": "recorded rita parent pia"
+ },
+ {
+  "line": "retract finn sibling tess",
+  "reply": "retracted 1"
+ },
+ {
+  "line": "correct gear3 turns wheel9",
+  "reply": "corrected gear3 turns wheel9; removed 1"
+ },
+ {
+  "line": "show grandparent",
+  "reply": "v1 rel:parent+rel:parent qualified; current v1"
+ },
+ {
+  "line": "show aunt",
+  "reply": "v1 rel:parent+rel:sibling qualified; current v1"
+ }
+]

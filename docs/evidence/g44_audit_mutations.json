@@ -26,10 +26,9 @@
     "review_noop": {
       "exit": 1,
       "failed": [
-        "fresh_process.p4_correction_drops_derived",
-        "fresh_process.p5_sees_corrections",
         "audit.contradiction_suspends",
-        "audit.reacquired_as_v2"
+        "audit.reacquired_as_v2",
+        "audit.example_correction_invalidates"
       ],
       "verdict": "KILLED",
       "crash": null

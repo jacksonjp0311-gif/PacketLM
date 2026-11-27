@@ -1,0 +1,58 @@
+[
+ {
+  "line": "construct turns: gear turns axle = gear axle; cog turns rod = cog rod",
+  "reply": "construction turns sro"
+ },
+ {
+  "line": "fact motor1 powers shaft1",
+  "reply": "recorded motor1 powers shaft1"
+ },
+ {
+  "line": "shaft1 turns gear1",
+  "reply": "recorded shaft1 turns gear1"
+ },
+ {
+  "line": "gear1 turns wheel1",
+  "reply": "recorded gear1 turns wheel1"
+ },
+ {
+  "line": "fact motor2 powers shaft2",
+  "reply": "recorded motor2 powers shaft2"
+ },
+ {
+  "line": "shaft2 turns gear2",
+  "reply": "recorded shaft2 turns gear2"
+ },
+ {
+  "line": "gear2 turns wheel2",
+  "reply": "recorded gear2 turns wheel2"
+ },
+ {
+  "line": "fact motor3 powers shaft3",
+  "reply": "recorded motor3 powers shaft3"
+ },
+ {
+  "line": "shaft3 turns gear3",
+  "reply": "recorded shaft3 turns gear3"
+ },
+ {
+  "line": "gear3 turns wheel3",
+  "reply": "recorded gear3 turns wheel3"
+ },
+ {
+  "line": "example spins: shaft1 -> wheel1",
+  "reply": "qualified spins rel:turns+rel:turns"
+ },
+ {
+  "line": "example spins: shaft2 -> wheel2",
+  "reply": "qualified spins rel:turns+rel:turns"
+ },
+ {
+  "line": "example drives: motor1 -> wheel1",
+  "reply": "qualified drives rel:powers+cap:spins@1"
+ },
+ {
+  "line": "example drives: motor2 -> wheel2",
+  "reply": "qualified drives rel:powers+cap:spins@1"
+ }
+]

@@ -1,0 +1,18 @@
+# 003 power flow. "X powers Y", "X turns Y".
+construct turns: gear turns axle = gear axle; cog turns rod = cog rod
+fact motor1 powers shaft1
+shaft1 turns gear1
+gear1 turns wheel1
+fact motor2 powers shaft2
+shaft2 turns gear2
+gear2 turns wheel2
+fact motor3 powers shaft3
+shaft3 turns gear3
+gear3 turns wheel3
+example spins: shaft1 -> wheel1
+example spins: shaft2 -> wheel2
+example drives: motor1 -> wheel1
+example drives: motor2 -> wheel2
+expect what is shaft3 spins => shaft3 spins wheel3 [no construction for spins]
+expect what is motor3 drives => motor3 drives wheel3 [no construction for drives]
+expect what is gear3 drives => unknown

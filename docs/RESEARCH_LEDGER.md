@@ -68,3 +68,47 @@ verified capabilities can make later acquisition cheaper.
 - Developer changes vs acquired improvement: the engine source sha256 is
   recorded and frozen for every A_n run. Any change between runs is a developer
   improvement, not a learned one.
+
+- teaching `001_kinship.txt` 2026-11-26T20:45:28-05:00: facts 0→13, capabilities 0→3 {'qualified': 3}, constructions 0→5; retention 0/0, new probes 7/7; cpu 0.005s; engine abc472f0c03b
+
+- teaching `002_geography.txt` 2026-11-26T20:45:28-05:00: facts 13→25, capabilities 3→5 {'qualified': 5}, constructions 5→7; retention 7/7, new probes 3/4; cpu 0.009s; engine abc472f0c03b
+
+- teaching `003_mechanism.txt` 2026-11-26T20:45:28-05:00: facts 25→34, capabilities 5→7 {'qualified': 7}, constructions 7→8; retention 10/11, new probes 3/3; cpu 0.014s; engine abc472f0c03b
+
+- teaching `004_change.txt` 2026-11-26T20:45:28-05:00: facts 34→34, capabilities 7→7 {'qualified': 7}, constructions 8→8; retention 9/11, new probes 5/5; cpu 0.011s; engine abc472f0c03b
+
+- teaching `005_probe_fixes.txt` 2026-11-26T20:45:46-05:00: facts 34→34, capabilities 7→7 {'qualified': 7}, constructions 8→8; retention 14/14, new probes 2/2; cpu 0.01s; engine 082297186215
+
+## 2026-11-26 20:55 — G45 interactive learning (pre-registered in docs/G45.md, commit 04463b9)
+
+- chat.py now runs on Engine.turn. Its old discover/acquire/turn are removed, with the
+  pre-migration copy at docs/evidence/chat_pre_g45.py.txt. The 5 historical chat checks pass.
+- Policy change, recorded: a correction to a premise on an example's proof path
+  **retires** that example (dependent evidence) instead of suspending the procedure.
+  A new contradicting or corrected **example** still suspends it. G44 fresh-process
+  expectations p4/p5 were updated to match. See G44 test `audit.example_correction_invalidates`.
+- G45 result: 18/18 thresholds. 6/6 domains in every seed. Shuffled 0/6. No-library 0/3.
+  Full table in docs/G45.md.
+- Negative observation: search cost grows with accumulated primitives (20 → 696 evaluations).
+- Suite: 11/11 modules, 144 checks, 0 failed. Mutations: 15/15 killed.
+
+### Trained state (data/trained/, separate from all test fixtures)
+
+The trained state is taught only through `python -m packetlm.teach <session>`, which runs
+Engine.turn. Sessions 001–005 (kinship, geography, mechanism, change, probe fixes).
+After 005 it holds 7 qualified capabilities, 3 retired examples, and 16 live probes,
+of which 16 pass. Two probes were mis-specified by the teacher, not failed by the
+engine: `texas country` and `shaft3 spins` after a correction. Their failures
+stay in data/trained/sessions.jsonl and are superseded in 005.
+
+### Reproduce
+
+```bash
+python -m packetlm.suite          # every module in fresh processes, counts
+python -m packetlm.g44_test       # 57 checks
+python -m packetlm.mutations      # 15 mutations, each must be killed
+python -m packetlm.g45_test       # 18 pre-registered checks (~15 s)
+python -m packetlm.chat --interactive   # talk to the same engine
+# replay the trained state from scratch into a scratch copy:
+#   rm data/trained/*; for f in data/teaching/*.txt; do python -m packetlm.teach $f; done
+```

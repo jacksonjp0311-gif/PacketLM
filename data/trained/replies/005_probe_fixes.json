@@ -1,0 +1,10 @@
+[
+ {
+  "line": "show grandparent",
+  "reply": "v1 rel:parent+rel:parent qualified; current v1; examples 1 active, 1 retired"
+ },
+ {
+  "line": "show aunt",
+  "reply": "v1 rel:parent+rel:sibling qualified; current v1; examples 1 active, 1 retired"
+ }
+]

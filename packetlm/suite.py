@@ -10,14 +10,14 @@ import subprocess
 import sys
 from pathlib import Path
 
-SUITE = ["g37_test", "system", "bridge", "roles", "runtime", "chat", "qualify", "geom", "g44_test", "legacy_checks"]
+SUITE = ["g37_test", "system", "bridge", "roles", "runtime", "chat", "qualify", "geom", "g44_test", "legacy_checks", "g45_test"]
 SMOKE = ["crossdomain", "demo", "feedoffer", "gap", "gaptest", "learn", "memory", "nexttoken", "train", "vocab"]
-RECEIPT = {"g37_test": "g37_receipt.json", "g44_test": "g44_receipt.json", "legacy_checks": "legacy_receipt.json"}
+RECEIPT = {"g37_test": "g37_receipt.json", "g44_test": "g44_receipt.json", "legacy_checks": "legacy_receipt.json", "g45_test": "g45_receipt.json"}
 
 
 def count(name) -> tuple[int, int]:
     data = json.loads(Path("artifacts", RECEIPT.get(name, f"{name}_receipt.json")).read_text())
-    if name == "g44_test":
+    if name in ("g44_test", "g45_test"):
         return data["count"], len(data["failed"])
     if name == "g37_test":
         return len(data["tests"]), len(data["failed"])

@@ -268,9 +268,8 @@ def fresh_process_checks(tmp) -> dict:
         "p2_reads_p1": p2.get("load") == {"loaded": "primary"} and p2["replies"][0] == "rex owns map"
             and p2["replies"][2] == "qualified grand rel:parent+rel:parent",
         "p3_uses_capability": p3.get("replies") == ["ann grand cy [no construction for grand]", "derived ann cap:grand cy (1 proofs)"],
-        "p4_correction_drops_derived": r4[0].startswith("corrected bea parent eve; removed 2")
-            and "grand@1 suspended: contradicted by its observations" in r4[0],
-        "p5_sees_corrections": p5.get("replies") == ["rex owns key", "unknown (grand@1 suspended)", "bea parent eve"],
+        "p4_correction_drops_derived": r4[0] == "corrected bea parent eve; removed 2; retired example grand: ann -> cy; retired example grand: bea -> dee",
+        "p5_sees_corrections": p5.get("replies") == ["rex owns key", "ann grand eve [no construction for grand]", "bea parent eve"],
         "p6_recovery_reported": p6.get("load", {}).get("recovered") is True and p6["replies"] == ["rex owns key"],
         "_replies": {"p1": p1, "p2": p2, "p3": p3, "p4": p4, "p5": p5, "p6": p6},
     }
@@ -424,6 +423,16 @@ def audit_checks(tmp) -> dict:
         eng.turn("what is c parent") == "ambiguous: d1 or d2?"
     eng.observe("pick", "d1", "e1")
     eng.observe("pick", "d1", "e2")
+    # a correction of an example (not of a premise) invalidates the procedure
+    eng2 = grand_engine(tmp / "a14b.json")
+    ce = eng2.turn("correct example grand: p1 -> p9")
+    while_suspended = eng2.answer("p0", "grand")["status"]
+    fixed = eng2.turn("correct example grand: p1 -> p3")
+    out["example_correction_invalidates"] = ce.startswith("corrected example grand: p1 -> p9; none grand") \
+        and "grand@1 suspended: contradicted by its observations" in ce and while_suspended == "unknown" \
+        and fixed.startswith("corrected example grand: p1 -> p3; qualified grand rel:parent+rel:parent") \
+        and eng2.version("grand")["v"] == 1 and eng2.answer("p0", "grand")["value"] == "p2" \
+        and len(eng2.state["retired"]["grand"]) == 2
     out["conflicting_observations_adopt_nothing"] = eng.acquire("pick")["result"] == "none" and "pick" not in eng.state["capabilities"]
     return out
 
