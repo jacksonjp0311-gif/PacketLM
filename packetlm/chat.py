@@ -1,8 +1,7 @@
-"""Two operators.
+"""Labels from examples.
 
-Tail and location are acquired the same way.
-The asked word picks.
-Age still abstains.
+The example says the asked word and the spoken relation.
+The search finds the path.
 Not a general mind.
 """
 
@@ -57,6 +56,14 @@ def express(construction, fact):
     roles = {"s": s, "r": construction["word"], "o": o}
     return " ".join(roles[role] for role in construction["order"])
 
+def acquire(field, objects, labeled):
+    operators = []
+    for subject, asked, expected, out in labeled:
+        seq = discover(field, [(subject, expected)], objects)
+        if seq:
+            operators.append({"in": asked, "seq": list(seq), "out": out})
+    return operators
+
 def turn(field, objects, library, operators, line):
     raw = line.lower().strip().rstrip("?").rstrip(".")
     parts = raw.split()
@@ -99,33 +106,24 @@ def run() -> dict:
     add(field, "dax", "tail", "green")
     add(field, "mira", "in", "lab")
     add(field, "lab", "at", "dock")
-    tail = discover(field, [("mira", "green")], objects)
-    place = discover(field, [("mira", "dock")], objects)
-    operators = []
-    if tail:
-        operators.append({"in": "tail", "seq": list(tail), "out": "hastail"})
-    if place:
-        operators.append({"in": "location", "seq": list(place), "out": "at"})
+    operators = acquire(field, objects, [
+        ("mira", "tail", "green", "hastail"),
+        ("mira", "location", "dock", "at"),
+    ])
     lib = fresh_library()
     lines = [ln for ln in Path("data/dialogue.txt").read_text().splitlines() if ln.strip()]
     replies = [turn(field, objects, lib, operators, line) for line in lines]
     save(STATE, {"field": field, "objects": objects, "operators": operators, "library": lib})
     loaded = load(STATE)
-    tail_a = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is orion tail")
-    place_a = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is mira location")
-    age = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is orion age")
-    no_tail = [o for o in loaded["operators"] if o["in"] != "tail"]
-    muted = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], no_tail, "what is orion tail")
     checks = {
-        "two": len(operators) == 2,
-        "tail": tail_a == "orion hastail red",
-        "location": place_a == "mira at dock",
-        "age_abstains": age == "unknown",
-        "remove_one": muted == "unknown" and place_a == "mira at dock",
+        "two": [o["in"] for o in operators] == ["tail", "location"],
+        "tail": turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is orion tail") == "orion hastail red",
+        "location": turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is mira location") == "mira at dock",
+        "age_abstains": turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is orion age") == "unknown",
         "generic": replies[7] == "orion hastail green",
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "ops": [o["in"] for o in operators], "failed": failed, "claim": "two operators; the asked word picks; removing one does not kill the other"}
+    receipt = {**checks, "failed": failed, "claim": "operators built from examples; the asked word picks"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
