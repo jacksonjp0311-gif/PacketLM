@@ -11,7 +11,7 @@ the lock was never present during my jobs. Times are EST (UTC−5). My work bega
 No High findings. One **Medium (report-only)**: the stop rule's "material" verdict on the L = 64 form depends on leaving
 validation overhead out, and G58.md's own report-only snapshot paragraph leaves out half of it (M1). The registered
 decision itself (task-CPU form, registered before the run) reproduces exactly. `--routed` exactness held everywhere:
-34.0k-call four-arm differential with crashes, torn journals, entity-set changes and capability churn; 13.9k calls
+56.8k-call four-arm differential with crashes, torn journals, entity-set changes and capability churn; 13.9k calls
 compared hash-by-hash against the 8994490 tree; kill −9 and fault-point runs; 0 differences, 0 audit violations. Every
 count reproduced, the four removed "equivalent" mutants are equivalent, and dropping the hanging mutant is legitimate (it
 is detected by non-termination). The Low 1 fix works: injected divergence in **any** G57b index structure is now detected
@@ -45,9 +45,9 @@ capability's first relation plus a new composition on it; corrected examples; ca
 | r102 | 150 | 13,746 | 64/64 | mix | off | 0 |
 | r103 | 40 | 5,310 | 64/200 | 64 | off | 0 |
 | r401 (append-only, 400 calls each; the K-period fired 324 times) | 40 | 16,680 | 64/1000 | 16 | off | 0 |
-| R402_LINE |
+| r402 (fact padding 0 or 1k) | 100 | 8,441 | 64/64 | mix | off | 0 |
 
-TOTALS_LINE
+Totals: 480 sessions, 56,831 calls (16,044 read-only), 170k deep index checks, 308 crashes, 303 torn tails and 456 drops. There were 0 errors and 0 reply, state, deep-index, snapshot-byte, journal or audit differences (`totals.py`).
 
 **Against the 8994490 tree** (same generator, `--dump`): this tree's XR64 vs the 8994490 checkout's `--indexed --incremental`,
 per-call hashes of replies and state, final snapshot hash and normalized journal hash.
