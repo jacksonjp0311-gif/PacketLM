@@ -121,6 +121,21 @@
       "verdict": "KILLED",
       "crash": null
     },
+    "activation_overprunes": {
+      "exit": 1,
+      "failed": [
+        "acquisition.one_observation_stays_pending",
+        "discovery.start_has_nine_live",
+        "audit.zero_support_kept",
+        "audit.activation_same_decision",
+        "audit.contradiction_suspends",
+        "audit.reacquired_as_v2",
+        "audit.teacher_revokes",
+        "audit.versions_pin_dependents"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
     "compose_keeps_source": {
       "exit": 1,
       "failed": [],
@@ -128,6 +143,6 @@
       "crash": "KeyError: 'great'"
     }
   },
-  "killed": 15,
-  "total": 15
+  "killed": 16,
+  "total": 16
 }

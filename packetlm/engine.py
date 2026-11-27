@@ -160,13 +160,17 @@ def _write_atomic(path: Path, data: bytes) -> None:
 
 
 class Engine:
-    def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None):
+    def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True):
         self.path = Path(path)
         self.state = state if state is not None else empty_state()
         self.report = report or {"loaded": "new"}
         self.geometry = geometry
         self.use_library = use_library
         self.deepen = deepen  # None: fixed depth 2. int: iterative deepening up to this length
+        # activation: candidate programs whose image of the observed subjects becomes empty
+        # predict nothing on any observation (undetermined, zero support). They are not
+        # evaluated one by one; they are kept as a counted complement ("pruned"). Exact.
+        self.activation = activation
         self.stats = {"evaluations": 0, "executions": 0, "row_ops": 0, "asks": 0}
         self._cache = None
 
@@ -520,16 +524,55 @@ class Engine:
         if not self.geometry:
             return reference.run(idx["ref"], base, subject)
         g = _geom()
-        n = len(idx["names"])
         row = 1 << idx["pos"][subject]
         for rel in base:
-            if rel not in idx["rows"]:
-                idx["rows"][rel] = g.rows_from([(idx["pos"][s], r, idx["pos"][o]) for s, r, o in idx["triples"] if r == rel], n, rel)
-            row = g.compose([row], idx["rows"][rel])[0]
+            row = g.compose([row], self._rows(rel))[0]
             self.stats["row_ops"] += 1
             if not row:
                 return set()
         return {idx["names"][i] for i in g.bits(row)}
+
+    def _rows(self, rel):
+        idx = self._idx()
+        if rel not in idx["rows"]:
+            n = len(idx["names"])
+            idx["rows"][rel] = _geom().rows_from([(idx["pos"][s], r, idx["pos"][o]) for s, r, o in idx["triples"] if r == rel], n, rel)
+        return idx["rows"][rel]
+
+    def _image(self, front, prim):
+        """Activation: where a set of subjects goes under one program step.
+        Geometric: one bit-row composition per base relation. Disabled: python sets."""
+        base = self.expand([prim])
+        if base is None:
+            return None
+        for rel in base:
+            if self.geometry:
+                front = _geom().compose([front], self._rows(rel))[0]
+            else:
+                ref = self._idx()["ref"].get(rel, {})
+                front = set().union(*[ref.get(x, set()) for x in front]) if front else set()
+            self.stats["row_ops"] += 1
+            if not front:
+                return front
+        return front
+
+    def _activated(self, prims, n, start):
+        """Programs of length n whose image of the start set never empties; returns (seqs, pruned)."""
+        out, pruned, P = [], 0, len(prims)
+
+        def walk(prefix, front):
+            nonlocal pruned
+            if len(prefix) == n:
+                out.append(tuple(prefix))
+                return
+            for p in prims:
+                nxt = self._image(front, p)
+                if not nxt:
+                    pruned += P ** (n - len(prefix) - 1)
+                    continue
+                walk(prefix + [p], nxt)
+        walk([], start)
+        return out, pruned
 
     def proofs(self, base, subject):
         """All fact paths for a base program (symbolic enumeration, used for provenance)."""
@@ -580,9 +623,24 @@ class Engine:
     def hypotheses(self, name, max_len=2, min_len=1, seen=None):
         obs = self.state["observations"].get(name, [])
         out, evaluated, contradicted = [], 0, 0
+        self._pruned = 0
         seen = set() if seen is None else seen
+        prims = self.primitives(name)
+        pos = self._idx()["pos"]
+        subjects = [s for s, _ in obs if s in pos]
+        if self.geometry:
+            start = 0
+            for s in subjects:
+                start |= 1 << pos[s]
+        else:
+            start = set(subjects)
         for n in range(min_len, max_len + 1):
-            for seq in product(self.primitives(name), repeat=n):
+            if self.activation:
+                seqs, pr = self._activated(prims, n, start)
+                self._pruned += pr
+            else:
+                seqs = product(prims, repeat=n)
+            for seq in seqs:
                 base = self.expand(seq)
                 if base is None or tuple(base) in seen:
                     continue
@@ -605,25 +663,29 @@ class Engine:
     def acquire(self, name, max_len=None) -> dict:
         if max_len is None and self.deepen:
             live, evaluated, contradicted, seen = [], 0, 0, set()
+            pruned = 0
             for n in range(1, self.deepen + 1):
                 lv, ev, co = self.hypotheses(name, n, n, seen)
                 live += lv
                 evaluated += ev
                 contradicted += co
+                pruned += self._pruned
                 if sum(h["status"] == "supported" for h in live) == 1:
                     break
             searched = n
         else:
             searched = max_len or 2
             live, evaluated, contradicted = self.hypotheses(name, searched)
+            pruned = self._pruned
         supported = [h for h in live if h["status"] == "supported"]
         record = {"turn": self.state["turn"], "evaluated": evaluated, "contradicted": contradicted, "searched_len": searched,
+                  "pruned": pruned,
                   "live": live, "observations": len(self.state["observations"].get(name, []))}
         prior = self.state["hypotheses"].get(name, {})
         if prior.get("unanswered"):
             record["unanswered"] = prior["unanswered"]  # questions the oracle could not answer stay recorded
         self.state["hypotheses"][name] = record
-        result = {"name": name, "evaluated": evaluated, "live": len(live),
+        result = {"name": name, "evaluated": evaluated, "pruned": pruned, "live": len(live),
                   "zero_support": sum(1 for h in live if h["support"] == 0)}
         if len(supported) != 1:
             result["result"] = "ambiguous" if supported else "none"
@@ -889,7 +951,8 @@ def main(argv) -> int:
         print("usage: python -m packetlm.engine STATE 'line' ['line' ...]")
         return 2
     t0 = time.process_time()
-    flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False)}
+    flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False),
+             "--no-activation": ("activation", False)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):

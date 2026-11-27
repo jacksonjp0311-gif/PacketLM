@@ -112,3 +112,23 @@ python -m packetlm.chat --interactive   # talk to the same engine
 # replay the trained state from scratch into a scratch copy:
 #   rm data/trained/*; for f in data/teaching/*.txt; do python -m packetlm.teach $f; done
 ```
+
+## 2026-11-26 21:05 — developer improvement: bitset activation in hypothesis search (not learned)
+
+- Cause: in G45, candidate evaluations grew 20 → 696 as accumulated relations
+  entered the primitive set.
+- Change: a candidate is enumerated only while its image of the observed
+  subjects stays non-empty. The image is one bit-row composition per step
+  (`Engine._image`). Pruned candidates predict nothing on any observation
+  (undetermined, zero support). They are kept as a counted complement
+  (`hypotheses[name].pruned`), not stored one by one. This is exact: the
+  `audit.activation_same_decision` check compares against `activation=False`.
+  Standard bitset reachability pruning; no novelty is claimed.
+- Measured (G45 rerun, same seeds, `docs/evidence/g45_receipt_activation.json`):
+  evaluations per domain are 20, 20, 20, 20, 29, 20, against 20…696 before. Engine CPU
+  per seed is 1.16–1.26 s, against 1.30–1.56 s. State is 0.93 MB, against 1.06 MB; it is
+  now dominated by stored 4096-bit fact packets, not hypotheses. G45 is still 18/18.
+- Audit-item-1 check rewritten. Stored + pruned = reference live (81). Zero-support
+  stored + pruned = reference (72). With activation off, all 81 are stored.
+- Suite 11/11, 145 checks. Mutations 16/16 killed, including the new `activation_overprunes`.
+- Ablation flag: `--no-activation`.

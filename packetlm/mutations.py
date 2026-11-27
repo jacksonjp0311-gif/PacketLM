@@ -32,7 +32,8 @@ MUTATIONS = {
     "library_off": ('        if self.use_library:\n            for n in sorted', '        if False:\n            for n in sorted'),
     "zero_support_dropped": ('                else:\n                    out.append(h)', '                elif h["support"]:\n                    out.append(h)'),
     "unanswered_lost": ('        if prior.get("unanswered"):', '        if False:'),
-    "compose_keeps_source": ('            row = g.compose([row], idx["rows"][rel])[0]', '            row = row | g.compose([row], idx["rows"][rel])[0]'),
+    "activation_overprunes": ('                if not nxt:\n                    pruned +=', '                if not nxt or p == prims[0]:\n                    pruned +='),
+    "compose_keeps_source": ('            row = g.compose([row], self._rows(rel))[0]', '            row = row | g.compose([row], self._rows(rel))[0]'),
 }
 
 

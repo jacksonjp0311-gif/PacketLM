@@ -1,0 +1,449 @@
+{
+  "checks": {
+    "seed101.t1_matches_ge_5": true,
+    "seed101.t2_zero_wrong_qualified": true,
+    "seed101.t3_coverage_ge_0_9": true,
+    "seed101.t4_transfer": true,
+    "seed101.t5_retention": true,
+    "seed202.t1_matches_ge_5": true,
+    "seed202.t2_zero_wrong_qualified": true,
+    "seed202.t3_coverage_ge_0_9": true,
+    "seed202.t4_transfer": true,
+    "seed202.t5_retention": true,
+    "seed303.t1_matches_ge_5": true,
+    "seed303.t2_zero_wrong_qualified": true,
+    "seed303.t3_coverage_ge_0_9": true,
+    "seed303.t4_transfer": true,
+    "seed303.t5_retention": true,
+    "t6_source_unchanged": true,
+    "t7a_shuffled_at_most_1": true,
+    "t7b_no_library_fails_d5": true
+  },
+  "failed": [],
+  "count": 18,
+  "source_sha256": "8633a8fd7578b38c4724157c59f1dee35c1450512e74b7bb7907213b2425f094",
+  "summary": [
+    {
+      "seed": 101,
+      "domains": [
+        {
+          "domain": 1,
+          "shape": "a+b",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 2,
+          "shape": "a+a",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 3,
+          "shape": "b+a",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 4,
+          "shape": "a+b (confounder d)",
+          "status": "qualified",
+          "match": true,
+          "examples": 3,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 5,
+          "shape": "cap(D1)+e",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 29,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 6,
+          "shape": "b+c (sparse b)",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 7,
+            "answered": 7,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        }
+      ],
+      "transfer": {
+        "defined": 12,
+        "answered": 12,
+        "wrong": 0,
+        "wrong_qualified": 0,
+        "provisional": 0,
+        "coverage": 1.0,
+        "spurious_on_undefined": 0
+      },
+      "retention_items": 72,
+      "processes": 17,
+      "engine_cpu_s": 1.156,
+      "state_bytes": 925239
+    },
+    {
+      "seed": 202,
+      "domains": [
+        {
+          "domain": 1,
+          "shape": "a+b",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 2,
+          "shape": "a+a",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 3,
+          "shape": "b+a",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 4,
+          "shape": "a+b (confounder d)",
+          "status": "qualified",
+          "match": true,
+          "examples": 3,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 5,
+          "shape": "cap(D1)+e",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 29,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 6,
+          "shape": "b+c (sparse b)",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 7,
+            "answered": 7,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        }
+      ],
+      "transfer": {
+        "defined": 12,
+        "answered": 12,
+        "wrong": 0,
+        "wrong_qualified": 0,
+        "provisional": 0,
+        "coverage": 1.0,
+        "spurious_on_undefined": 0
+      },
+      "retention_items": 72,
+      "processes": 17,
+      "engine_cpu_s": 1.158,
+      "state_bytes": 925239
+    },
+    {
+      "seed": 303,
+      "domains": [
+        {
+          "domain": 1,
+          "shape": "a+b",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 2,
+          "shape": "a+a",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 3,
+          "shape": "b+a",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 4,
+          "shape": "a+b (confounder d)",
+          "status": "qualified",
+          "match": true,
+          "examples": 3,
+          "evaluations": 20,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 5,
+          "shape": "cap(D1)+e",
+          "status": "qualified",
+          "match": true,
+          "examples": 2,
+          "evaluations": 29,
+          "eval": {
+            "defined": 10,
+            "answered": 10,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        },
+        {
+          "domain": 6,
+          "shape": "b+c (sparse b)",
+          "status": "qualified",
+          "match": true,
+          "examples": 3,
+          "evaluations": 20,
+          "eval": {
+            "defined": 7,
+            "answered": 7,
+            "wrong": 0,
+            "wrong_qualified": 0,
+            "provisional": 0,
+            "coverage": 1.0,
+            "spurious_on_undefined": 0
+          }
+        }
+      ],
+      "transfer": {
+        "defined": 12,
+        "answered": 12,
+        "wrong": 0,
+        "wrong_qualified": 0,
+        "provisional": 0,
+        "coverage": 1.0,
+        "spurious_on_undefined": 0
+      },
+      "retention_items": 72,
+      "processes": 19,
+      "engine_cpu_s": 1.264,
+      "state_bytes": 925261
+    }
+  ],
+  "shuffled": [
+    {
+      "seed": 101,
+      "matches": 0,
+      "statuses": [
+        "suspended",
+        "suspended",
+        "suspended",
+        "suspended",
+        "none",
+        "qualified"
+      ],
+      "wrong_qualified": 5
+    },
+    {
+      "seed": 202,
+      "matches": 0,
+      "statuses": [
+        "none",
+        "none",
+        "none",
+        "suspended",
+        "none",
+        "none"
+      ],
+      "wrong_qualified": 0
+    },
+    {
+      "seed": 303,
+      "matches": 0,
+      "statuses": [
+        "none",
+        "none",
+        "suspended",
+        "none",
+        "none",
+        "suspended"
+      ],
+      "wrong_qualified": 0
+    }
+  ],
+  "no_library": [
+    {
+      "seed": 101,
+      "status": "none",
+      "acquired": false,
+      "evaluated": 20
+    },
+    {
+      "seed": 202,
+      "status": "none",
+      "acquired": false,
+      "evaluated": 20
+    },
+    {
+      "seed": 303,
+      "status": "none",
+      "acquired": false,
+      "evaluated": 20
+    }
+  ],
+  "claim": "procedures acquired through the controlled-language interface; not open language; not a mind"
+}

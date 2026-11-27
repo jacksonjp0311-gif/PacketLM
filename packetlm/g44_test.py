@@ -307,9 +307,21 @@ def audit_checks(tmp) -> dict:
     rec = eng.state["hypotheses"]["out"]
     zero = sum(1 for h in rec["live"] if h["support"] == 0)
     agree = all(h["status"] == reference.status(ref, [s[4:] for s in h["seq"]], [("x", "z")]) for h in rec["live"])
-    out["zero_support_kept"] = zero > 0 and len(rec["live"]) == ref_live and agree
-    out["_hypotheses"] = {"live": len(rec["live"]), "zero_support": zero, "reference_live": ref_live,
-                          "evaluated": rec["evaluated"], "contradicted": rec["contradicted"]}
+    ref_zero = sum(1 for n in (1, 2) for seq in product(rels, repeat=n)
+                   if reference.status(ref, seq, [("x", "z")]) == "undetermined"
+                   and len(reference.run(ref, seq, "x")) != 1)
+    full = Engine(tmp / "a1_full.json", copy.deepcopy(eng.state), activation=False)
+    full.acquire("out")
+    frec = full.state["hypotheses"]["out"]
+    fzero = sum(1 for h in frec["live"] if h["support"] == 0)
+    # activation keeps zero-support hypotheses as a counted complement; without it they are stored one by one
+    out["zero_support_kept"] = len(rec["live"]) + rec["pruned"] == ref_live and agree and zero + rec["pruned"] == ref_zero \
+        and len(frec["live"]) == ref_live and fzero == ref_zero and frec["pruned"] == 0 and ref_zero > 0
+    out["activation_same_decision"] = rec.get("candidate") == frec.get("candidate") and \
+        sorted(map(tuple, (h["seq"] for h in rec["live"] if h["support"]))) == sorted(map(tuple, (h["seq"] for h in frec["live"] if h["support"])))
+    out["_hypotheses"] = {"live_stored": len(rec["live"]), "zero_support_stored": zero, "pruned": rec["pruned"],
+                          "reference_live": ref_live, "reference_zero_support": ref_zero,
+                          "evaluated_with_activation": rec["evaluated"], "evaluated_without": frec["evaluated"]}
 
     # 3: contradiction suspends; re-acquisition makes v2; teacher revokes
     eng = Engine(tmp / "a3.json")
