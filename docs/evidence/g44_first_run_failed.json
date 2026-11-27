@@ -1,0 +1,182 @@
+construction owns sro
+{
+  "checks": {
+    "memory.provenance_told": true,
+    "memory.derived_provenance": true,
+    "memory.correction_drops_derived": true,
+    "memory.correction_logged": true,
+    "memory.ambiguity_abstains": true,
+    "memory.ambiguity_resolved_by_correction": true,
+    "memory.retraction": true,
+    "constructions.induced_orders": true,
+    "constructions.osv_read": true,
+    "constructions.speak_roundtrip": true,
+    "constructions.unknown_word_abstains": true,
+    "constructions.word_clash_rejected": true,
+    "acquisition.one_observation_stays_pending": true,
+    "acquisition.accumulated_acquires": true,
+    "acquisition.library_control_finds_nothing": true,
+    "acquisition.library_reuse": true,
+    "acquisition.library_matches_deep_search": true,
+    "acquisition.binary_equals_walk": true,
+    "discovery.missing_is_undetermined": true,
+    "discovery.all_seeds_discovered": true,
+    "discovery.gap_survives_as_undetermined": true,
+    "discovery.targets_vary": true,
+    "discovery.asks_within_log2": true,
+    "discovery.start_has_nine_live": true,
+    "discovery.silent_oracle_adopts_nothing": true,
+    "persistence.roundtrip": true,
+    "persistence.backup_is_prior_generation": true,
+    "persistence.no_temp_left": true,
+    "persistence.checksum_tamper_recovers_loudly": true,
+    "persistence.binding_tamper_recovers_loudly": true,
+    "persistence.truncated_recovers": true,
+    "persistence.both_corrupt_raises": true,
+    "fresh_process.p1_new_state": true,
+    "fresh_process.p2_reads_p1": true,
+    "fresh_process.p3_uses_capability": true,
+    "fresh_process.p4_correction_drops_derived": true,
+    "fresh_process.p5_sees_corrections": false,
+    "fresh_process.p6_recovery_reported": true
+  },
+  "measures": {
+    "acquisition.binary_measure": {
+      "compared": 18,
+      "nonempty": 9,
+      "agree": 18
+    },
+    "discovery.discovery": [
+      {
+        "seed": 1,
+        "target": 2,
+        "live_at_start": 9,
+        "asks": 3,
+        "seq": [
+          "r2",
+          "r2"
+        ],
+        "ok": true,
+        "hidden_not_in_state_before": false
+      },
+      {
+        "seed": 7,
+        "target": 5,
+        "live_at_start": 9,
+        "asks": 3,
+        "seq": [
+          "r5",
+          "r5"
+        ],
+        "ok": true,
+        "hidden_not_in_state_before": false
+      },
+      {
+        "seed": 13,
+        "target": 4,
+        "live_at_start": 9,
+        "asks": 3,
+        "seq": [
+          "r4",
+          "r4"
+        ],
+        "ok": true,
+        "hidden_not_in_state_before": false
+      },
+      {
+        "seed": 21,
+        "target": 2,
+        "live_at_start": 9,
+        "asks": 3,
+        "seq": [
+          "r2",
+          "r2"
+        ],
+        "ok": true,
+        "hidden_not_in_state_before": false
+      },
+      {
+        "seed": 42,
+        "target": 1,
+        "live_at_start": 9,
+        "asks": 3,
+        "seq": [
+          "r1",
+          "r1"
+        ],
+        "ok": true,
+        "hidden_not_in_state_before": false
+      }
+    ],
+    "fresh_process.replies": {
+      "p1": {
+        "load": {
+          "loaded": "new"
+        },
+        "replies": [
+          "construction owns sro",
+          "construction parent sro",
+          "recorded rex owns map",
+          "recorded ann parent bea",
+          "recorded bea parent cy",
+          "recorded cy parent dee",
+          "observed grand ann cy"
+        ]
+      },
+      "p2": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "rex owns map",
+          "observed grand bea dee",
+          "acquired grand parent+parent"
+        ]
+      },
+      "p3": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "ann grand cy",
+          "derived ann:grand:cy"
+        ]
+      },
+      "p4": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "corrected bea parent eve; removed 2",
+          "corrected rex owns key; removed 1"
+        ]
+      },
+      "p5": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "rex owns key",
+          "ann grand eve",
+          "bea parent eve"
+        ]
+      },
+      "p6": {
+        "load": {
+          "loaded": "backup",
+          "recovered": true,
+          "primary_error": "Expecting value: line 1 column 5429 (char 5428)"
+        },
+        "replies": [
+          "rex owns key"
+        ]
+      },
+      "bak_len": 5468
+    }
+  },
+  "count": 38,
+  "failed": [
+    "fresh_process.p5_sees_corrections"
+  ],
+  "claim": "one engine; symbolic and bitwise; not a mind"
+}
