@@ -1,0 +1,25 @@
+proportional_snapshots": [
+      30,
+      5
+    ],
+    "g59.tight_witness": {
+      "p": 42,
+      "k": 7,
+      "overlaps": [
+        16,
+        7,
+        6
+      ],
+      "ask": "{'status': 'known', 'value': 'X'}"
+    },
+    "g59.serve_checks_fire": [
+      true,
+      true,
+      true
+    ]
+  },
+  "count": 191,
+  "failed": [],
+  "claim": "one engine; symbolic and bitwise; not a mind"
+}
+rc=0

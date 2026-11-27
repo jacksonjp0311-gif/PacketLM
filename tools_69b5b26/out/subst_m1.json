@@ -1,0 +1,37 @@
+{
+ "comp": {
+  "flagged_tasks": 49,
+  "tasks": 252,
+  "Ch+maint||Bh": "A_36 = +0.0888  [+0.0395, +0.1683] (95% paired bootstrap, S=7); delta-SE=0.0372; sign-flip p=0.01562; geometric-mean form=+0.0976",
+  "Ch+maint||Ph+maint": "A_36 = +0.0275  [-0.0375, +0.1105] (95% paired bootstrap, S=7); delta-SE=0.0404; sign-flip p=0.6875; geometric-mean form=+0.0335",
+  "Ch||Bh": "A_36 = +0.1393  [+0.0889, +0.2220] (95% paired bootstrap, S=7); delta-SE=0.0386; sign-flip p=0.01562; geometric-mean form=+0.1494"
+ },
+ "comprep": {
+  "flagged_tasks": 55,
+  "tasks": 252,
+  "Ch+maint||Bh": "A_36 = +0.0591  [+0.0288, +0.0816] (95% paired bootstrap, S=7); delta-SE=0.0148; sign-flip p=0.03125; geometric-mean form=+0.0587",
+  "Ch+maint||Ph+maint": "A_36 = +0.0072  [-0.0498, +0.0757] (95% paired bootstrap, S=7); delta-SE=0.0365; sign-flip p=0.9531; geometric-mean form=+0.0032",
+  "Ch||Bh": "A_36 = +0.1092  [+0.0821, +0.1308] (95% paired bootstrap, S=7); delta-SE=0.0137; sign-flip p=0.01562; geometric-mean form=+0.1095"
+ },
+ "mixed": {
+  "flagged_tasks": 43,
+  "tasks": 336,
+  "Ch+maint||Bh": "A_48 = +0.0624  [+0.0123, +0.1100] (95% paired bootstrap, S=7); delta-SE=0.0280; sign-flip p=0.09375; geometric-mean form=+0.0638",
+  "Ch+maint||Ph+maint": "A_48 = +0.0987  [+0.0032, +0.1737] (95% paired bootstrap, S=7); delta-SE=0.0477; sign-flip p=0.09375; geometric-mean form=+0.0996",
+  "Ch||Bh": "A_48 = +0.2010  [+0.1525, +0.2446] (95% paired bootstrap, S=7); delta-SE=0.0263; sign-flip p=0.01562; geometric-mean form=+0.2041"
+ },
+ "long": {
+  "flagged_tasks": 220,
+  "tasks": 1008,
+  "Ch+maint||Bh": "A_144 = +0.0251  [-0.0005, +0.0533] (95% paired bootstrap, S=7); delta-SE=0.0154; sign-flip p=0.125; geometric-mean form=+0.0259",
+  "Ch+maint||Ph+maint": "A_144 = +0.0503  [+0.0223, +0.0813] (95% paired bootstrap, S=7); delta-SE=0.0170; sign-flip p=0.04688; geometric-mean form=+0.0513",
+  "Ch||Bh": "A_144 = +0.1440  [+0.1168, +0.1723] (95% paired bootstrap, S=7); delta-SE=0.0157; sign-flip p=0.01562; geometric-mean form=+0.1453"
+ },
+ "unrel": {
+  "flagged_tasks": 0,
+  "tasks": 168,
+  "Ch+maint||Bh": "A_24 = -0.5168  [-0.5855, -0.4403] (95% paired bootstrap, S=7); delta-SE=0.0408; sign-flip p=0.01562; geometric-mean form=-0.5174",
+  "Ch+maint||Ph+maint": "A_24 = -0.0104  [-0.0475, +0.0193] (95% paired bootstrap, S=7); delta-SE=0.0192; sign-flip p=0.75; geometric-mean form=-0.0093",
+  "Ch||Bh": "A_24 = +0.2548  [+0.2221, +0.2870] (95% paired bootstrap, S=7); delta-SE=0.0183; sign-flip p=0.01562; geometric-mean form=+0.2557"
+ }
+}

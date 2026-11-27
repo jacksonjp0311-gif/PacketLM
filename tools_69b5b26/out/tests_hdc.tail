@@ -1,0 +1,13 @@
+ers
+ok   statements_none_several
+ok   correction_propagates
+ok   outside_domain_is_provisional
+ok   validation_catches_corruption
+ok   capability_decode_error_falls_back_and_is_counted
+ok   serve_journal_replay_and_reopen
+ok   blocking_alternative_makes_provisional
+ok   demoted_capability_leaves_index
+ok   dead_tuples_are_pruned
+ok   no_engine_import_from_existing
+{"checks": 13, "failed": 0}
+rc=0

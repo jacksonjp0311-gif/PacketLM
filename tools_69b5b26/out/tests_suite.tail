@@ -1,0 +1,25 @@
+"false_self_reports": [
+        "path_changed"
+      ]
+    },
+    {
+      "module": "nexttoken",
+      "exit": 0,
+      "false_self_reports": [
+        "segment_improved",
+        "first_token_improved"
+      ]
+    },
+    {
+      "module": "train",
+      "exit": 0,
+      "false_self_reports": []
+    },
+    {
+      "module": "vocab",
+      "exit": 0,
+      "false_self_reports": []
+    }
+  ]
+}
+rc=0

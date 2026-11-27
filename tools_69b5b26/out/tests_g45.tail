@@ -1,0 +1,32 @@
+one",
+    "none",
+    "suspended",
+    "none",
+    "none",
+    "suspended"
+   ],
+   "wrong_qualified": 0
+  }
+ ],
+ "no_library": [
+  {
+   "seed": 101,
+   "status": "none",
+   "acquired": false,
+   "evaluated": 20
+  },
+  {
+   "seed": 202,
+   "status": "none",
+   "acquired": false,
+   "evaluated": 20
+  },
+  {
+   "seed": 303,
+   "status": "none",
+   "acquired": false,
+   "evaluated": 20
+  }
+ ]
+}
+rc=0
