@@ -1,13 +1,15 @@
 """Canonical geometric field.
 
 One bind. One ask. One persist.
-16-bit role-conditioned identities.
-Other modules should use this, not a copy.
+A packet that does not decode is skipped.
+Save replaces the file, it does not truncate it first.
+Not a general mind.
 """
 
 from __future__ import annotations
 import json
 import hashlib
+import os
 from pathlib import Path
 from .packets import Packet, BITS
 
@@ -35,24 +37,28 @@ def decode(left: Packet, objects: list[str]) -> str | None:
 
 def ask(field: list[dict], s: str, r: str, objects: list[str]) -> str | None:
     q = partial(s, r)
-    best, best_s = None, 0
+    scored = []
     for item in field:
         pkt = Packet(bits=bytes.fromhex(item["bits"]), count=item["count"])
-        sc = pkt.score(q)
-        if sc > best_s:
-            best, best_s = pkt, sc
-    if not best:
-        return None
-    left = pack(int.from_bytes(best.bits, "big") ^ int.from_bytes(q.bits, "big"))
-    return decode(left, objects)
+        scored.append((pkt.score(q), pkt))
+    for _, pkt in sorted(scored, key=lambda pair: pair[0], reverse=True):
+        if _ <= 0:
+            break
+        left = pack(int.from_bytes(pkt.bits, "big") ^ int.from_bytes(q.bits, "big"))
+        found = decode(left, objects)
+        if found:
+            return found
+    return None
 
 def add(field: list[dict], s: str, r: str, o: str) -> None:
     pkt = bind(s, r, o)
     field.append({"s": s, "r": r, "o": o, "bits": pkt.bits.hex(), "count": pkt.count})
 
-def save(path: Path, field: list[dict]) -> None:
+def save(path: Path, field) -> None:
     path.parent.mkdir(exist_ok=True)
-    path.write_text(json.dumps(field))
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(field))
+    os.replace(tmp, path)
 
-def load(path: Path) -> list[dict]:
+def load(path: Path):
     return json.loads(path.read_text())
