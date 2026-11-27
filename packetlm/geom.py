@@ -1,8 +1,7 @@
-"""Speak what transferred.
+"""Causal speech.
 
-Incomplete still withholds.
-The sequence still compiles on a new graph.
-The conclusion is spoken through an acquired construction.
+The reached node becomes the object.
+A different graph must speak a different sentence.
 Not a general mind.
 """
 
@@ -14,6 +13,7 @@ from .field import save, load
 from .roles import induce, select
 
 STATE = Path("data/geom_state.json")
+NAMES = {10: "alpha", 12: "gamma", 20: "delta", 22: "omega"}
 
 def bits(m):
     return [i for i in range(m.bit_length()) if m & (1 << i)]
@@ -63,6 +63,12 @@ def express(construction, fact):
     roles = {"s": s, "r": construction["word"], "o": o}
     return " ".join(roles[role] for role in construction["order"])
 
+def speak(construction, start, reached):
+    if len(reached) != 1:
+        return None
+    fact = (NAMES[start], "part", NAMES[reached[0]])
+    return express(construction, fact), fact
+
 def run() -> dict:
     incomplete = [(0, "in", 1), (1, "in", 2), (0, "near", 3)]
     inc_sup, inc_und = classify(incomplete, 4, {2})
@@ -74,25 +80,29 @@ def run() -> dict:
     ]
     supported, undetermined = classify(complete, 7, {2})
     qualified = len(supported) == 1 and not undetermined
-    save(STATE, {"seq": list(supported[0])} if qualified else {})
+    save(STATE, {"seq": list(supported[0]), "out": "part"} if qualified else {})
     loaded = load(STATE)
-    new_facts = [(10, "in", 11), (11, "in", 12)]
-    seq = tuple(loaded.get("seq", []))
-    new_base = {"in": rows_from(new_facts, 13, "in"), "near": rows_from(new_facts, 13, "near")}
-    compiled = compile_seq(new_base, seq) if len(seq) == 2 else None
-    reached = bits(compiled[10]) if compiled else []
     part = induce([("ada part box", ("ada", "part", "box")), ("ned part key", ("ned", "part", "key"))])
-    spoken = express(part, ("n10", "part", "n12")) if reached == [12] else None
-    back = select([part], spoken) if spoken else None
+    seq = tuple(loaded.get("seq", []))
+    graphs = {
+        10: [(10, "in", 11), (11, "in", 12)],
+        20: [(20, "in", 21), (21, "in", 22)],
+    }
+    spoken = {}
+    for start, facts in graphs.items():
+        base = {"in": rows_from(facts, 23, "in"), "near": rows_from(facts, 23, "near")}
+        reached = bits(compile_seq(base, seq)[start]) if len(seq) == 2 else []
+        said, fact = speak(part, start, reached) or (None, None)
+        spoken[start] = {"said": said, "fact": fact, "reached": reached}
     checks = {
         "incomplete_withheld": withheld,
         "qualified": qualified,
-        "transferred": reached == [12],
-        "spoken": spoken == "n10 part n12",
-        "roundtrip": back == ("n10", "part", "n12"),
+        "from_result": spoken[10]["said"] == "alpha part gamma",
+        "changes": spoken[20]["said"] == "delta part omega",
+        "roundtrip": select([part], spoken[10]["said"]) == spoken[10]["fact"],
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "spoken": spoken, "failed": failed, "claim": "transferred conclusion spoken through an acquired construction"}
+    receipt = {**checks, "spoken": spoken, "failed": failed, "claim": "sentence comes from the reached node; a different graph speaks differently"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
