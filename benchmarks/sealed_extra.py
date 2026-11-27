@@ -45,3 +45,16 @@ for raw in sorted((ROOT / "docs/evidence").glob("g49*/g49*_raw.json")):
             toks |= set(t.get("abstain", {}).get("items", []))
 (ROOT / "benchmarks/sealed_tokens_g49.json").write_text(json.dumps(sorted(toks)) + "\n")
 print("g49", len(toks))
+# G50 (A: G49 harness; B: G46 worlds 61-67), G51 (G46 71-77, G46-U 81-87), G52 (G49 harness)
+toks = set()
+for s in list(range(61, 68)) + list(range(71, 78)):
+    toks |= g46.sealed_tokens(g46.world(s))
+for s in range(81, 88):
+    toks |= g46.sealed_tokens(g46u.world_unrelated(s))
+for raw in [ROOT / "docs/evidence/g50/g50a_raw.json", ROOT / "docs/evidence/g52/g52_raw.json"]:
+    for v in json.loads(raw.read_text()).values():
+        for t in v["tasks"]:
+            toks |= {r["s"] for r in t["rows"]} | {r["s"] for r in (t.get("window_rows") or [])}
+            toks |= set(t.get("abstain", {}).get("items", []))
+(ROOT / "benchmarks/sealed_tokens_g50_g52.json").write_text(json.dumps(sorted(toks)) + "\n")
+print("g50-g52", len(toks))
