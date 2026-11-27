@@ -489,3 +489,42 @@ Fixes:
   every mutation is reported invalid.
 - **Result:** baseline 0 failed; 41/41 killed. The order and component mutations are both
   caught by named checks.
+
+## 2026-11-26 23:20 — Verification of 82dd0a2 (verify-82dd0a2, c71d412): response; G48R2 pre-registered
+
+All counts, G48 (all 28 reply hashes) and G47-AR (seeds 44/55) reproduced. Nothing high-severity
+was found. Every finding is accepted. I did not modify the verifier's branch.
+
+**Medium findings**
+- **N1, H6 fix insufficient: agreed.** The verifier found the same second cause that G48R had
+  just shown: investigate's candidate *set* depended on hot state.
+  - Fixed: investigate is restricted to the observations' component.
+  - The new check tests set equality under retention, with every component archived and then
+    restored on reference.
+  - G48.md is corrected.
+- **N2, short horizon: agreed.**
+  - The programs scan now uses MAX_SIZE. The check and the mutation `prog_scan_short_horizon`
+    were added.
+  - G48's H3 is restated: under the full rule all 14 T3 tasks would be provisional, so H3 had
+    nothing to test.
+  - Dev: 0 qualified. The G48R2 pre-registration says in advance that H3 will likely be vacuous.
+- **N3, example leakage: agreed.** The T4 draw now excludes sealed items, and a new harness
+  threshold `no_example_is_evaluated` checks it.
+
+**Low findings**
+- **L1:** depth wording changed to "up to depth 9".
+- **L2:** the sealed-token registry is widened. `sealed_tokens_g47ar.json` has 486 tokens.
+  `sealed_tokens_g48.json` has 1456, every evaluated G48/G48R item, refreshed after each run.
+  Across 4687 tokens, 0 occur in `data/`.
+- **L3:** `<section>.completed` is now a check only when the section fails. g44 has **95 real
+  checks** (previously 102 / 103 including the pseudo-checks); suite 182/182.
+- **L4:** `reconstruct_hash.py` rebuilds dev-3 `f7932ad5…` exactly. The only engine change was a
+  behaviour-neutral rename; the rest was tests and mutations. Receipts now carry an
+  engine-only hash.
+- **L5:** the PR's "6–10×" now states its cost boundary.
+- **L6:** the clause wording is corrected.
+
+**Mutations:** 42/42, baseline clean, 0 crash kills.
+
+**Plan.** G48R2 on new seeds 511–517, as the verification steering asked, then the protocol
+extension (PX).

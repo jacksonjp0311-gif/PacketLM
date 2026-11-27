@@ -15,6 +15,16 @@ sys.path.insert(0, str(ROOT))
 from packetlm import programs as P  # noqa: E402
 from packetlm.g45_test import Names, Teacher, source_hash  # noqa: E402
 
+
+def engine_hash():
+    """sha256 of the engine modules only (no tests, mutations or suite), verification L4."""
+    import hashlib
+    h = hashlib.sha256()
+    for p in sorted((ROOT / "packetlm").glob("*.py")):
+        if not p.name.endswith(("_test.py",)) and p.name not in ("mutations.py", "suite.py"):
+            h.update(p.name.encode() + p.read_bytes())
+    return h.hexdigest()
+
 OUT = ROOT / "artifacts/g48"
 ARMS = {"P": ["--programs"], "X": ["--deepen=3"], "S": ["--programs"],
         "A": ["--programs", "--adaptive-retention"]}
@@ -227,7 +237,8 @@ def run_arm(job):
         st, ver1 = current(state, n1)
         lib = {"cap:T1": W["hidden"]}
         hidden4 = f"prog:cap:T1>rel:{W['compose_rel']}"
-        ex4 = [rng.choice([n for n, x in info.items() if x["depth"] == d]) for d in (1, 2)]
+        # never a sealed item: the transfer chains are already in `info` and in sealed1 (verification N3)
+        ex4 = [rng.choice([n for n, x in info.items() if x["depth"] == d and n not in sealed1]) for d in (1, 2)]
         caps = sorted({truth(tri, hidden4, s, lib) for s in info} - {None})
         exs, asked = teach_task(T, state, arm, arng, n4, tri, hidden4, lib, ex4, sealed1, caps)
         rows = evaluate(T, n4, tri, hidden4, lib, sorted(sealed1))
@@ -328,7 +339,11 @@ def main(argv):
           "H5_S_all_le_0.10": (m["S"]["all"]["accuracy"] or 0) <= 0.10,
           "H6_A_replies_identical_to_P": all(runs[(s, "A")]["replies_sha"] == runs[(s, "P")]["replies_sha"] for s in seeds),
           "source_unchanged": sha0 == source_hash()}
-    rep = {"metrics": m, "thresholds": th, "all_pass": all(th.values()), "source_sha256": sha0, "seeds": seeds}
+    leaks = sorted({(t["class"], e[0]) for v in runs.values() for t in v["tasks"] for e in t["examples"]
+                    if e[0] in {r["s"] for r in t["rows"]}})
+    th["no_example_is_evaluated"] = not leaks
+    rep = {"metrics": m, "thresholds": th, "all_pass": all(th.values()), "source_sha256": sha0,
+           "engine_sha256": engine_hash(), "seeds": seeds, "example_leaks": leaks}
     name = "g48_dev" if "--dev" in argv else ("g48" if "--out" not in argv else argv[argv.index("--out") + 1])
     (OUT / f"{name}_receipt.json").write_text(json.dumps(rep, indent=1))
     (OUT / f"{name}_raw.json").write_text(json.dumps({f"{k[0]}:{k[1]}": v for k, v in runs.items()}))

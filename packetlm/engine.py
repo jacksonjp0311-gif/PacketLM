@@ -1061,11 +1061,14 @@ class Engine:
             return result
         cand = reps[0]
         cand_pred = {e: progs.run(ctx, cand, e) for e in ind.domain}
-        blockers, complete, examined = ind.scan(cand, cand_pred, horizon=progs.size(cand))
+        # full horizon (MAX_SIZE), as the base engine's deepening budget (audit 283f526 P0;
+        # verification N2 of 82dd0a2: the candidate-size horizon was the removed short horizon)
+        horizon = progs.MAX_SIZE
+        blockers, complete, examined = ind.scan(cand, cand_pred, horizon=horizon)
         status = "qualified" if complete and not blockers else "provisional"
-        scan = {"horizon": progs.size(cand), "domain": len(dom), "scanned": examined, "complete": complete,
+        scan = {"horizon": horizon, "domain": len(dom), "scanned": examined, "complete": complete,
                 "budget": progs.SCAN_BUDGET, "blocking_n": len(blockers), "compatible": 0, "pruned_compatible": 0,
-                "assumption": "G48 open world: every non-contradicted program up to the candidate's size is an "
+                "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an "
                               "alternative; qualified only if that enumeration completes within the budget "
                               "with no blocker."}
         blocking = [[b] for b in blockers]

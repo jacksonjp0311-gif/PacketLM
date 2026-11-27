@@ -16,4 +16,19 @@ toks = set()
 for s in (11, 22, 33):
     toks |= g46.sealed_tokens(g46u.world_unrelated(s))
 (ROOT / "benchmarks/sealed_tokens_g46u.json").write_text(json.dumps(sorted(toks)) + "\n")
-print(len(toks))
+print("g46u", len(toks))
+# G47-AR new seeds (verification L2 of 82dd0a2)
+toks = set()
+for s in (44, 55):
+    toks |= g46.sealed_tokens(g46.world(s))
+(ROOT / "benchmarks/sealed_tokens_g47ar.json").write_text(json.dumps(sorted(toks)) + "\n")
+print("g47ar", len(toks))
+# G48-family items: every evaluated item of every committed registered run (generated at run time,
+# so this is refreshed after each run; teaching sessions are refused these tokens from then on)
+toks = set()
+for raw in sorted((ROOT / "docs/evidence").glob("g48*/g48*_raw.json")):
+    for v in json.loads(raw.read_text()).values():
+        for t in v["tasks"]:
+            toks |= {r["s"] for r in t["rows"]}
+(ROOT / "benchmarks/sealed_tokens_g48.json").write_text(json.dumps(sorted(toks)) + "\n")
+print("g48", len(toks))

@@ -781,8 +781,12 @@ def program_checks(tmp) -> dict:
     for i in range(3):
         e3.observe("filt", f"q{i}", f"t{i}")
     rf = e3.acquire("filt")
-    out["prog_filter_qualified"] = rf["result"] == "qualified" and rf["seq"] == ["prog:rel:has>is:kind:T"] and \
-        rf["scan"]["complete"] and all(val(e3, "filt", f"q{i}") == f"t{i}" for i in range(3, 6))
+    # full horizon: a longer alternative that is undefined where the candidate is defined and defined
+    # on the T-typed objects (`is:kind:T|...`) blocks, so the filter stays provisional (N2)
+    out["prog_filter_acquired"] = rf["seq"] == ["prog:rel:has>is:kind:T"] and \
+        all(val(e3, "filt", f"q{i}") == f"t{i}" for i in range(3, 6))
+    out["prog_filter_full_horizon_blocks"] = rf["result"] == "provisional" and rf["scan"]["horizon"] == progs.MAX_SIZE \
+        and any("|" in b[0] and len(progs.parse(b[0])[0]) + len(progs.parse(b[0])[-1]) > 2 for b in rf["blocking"])
     # 7. investigate asks where one hypothesis predicts nothing (one-sided split)
     e4 = Engine(tmp / "prog4.json", programs=True)
     for t in [("a", "in", "r"), ("a", "in", "w"), ("b", "in", "r"), ("b", "in", "w"), ("w", "kind", "Q"),
@@ -818,6 +822,27 @@ def program_checks(tmp) -> dict:
     pool = e6._question_pool("up")
     out["prog_question_inside_component"] = "aa1" not in pool and "aa2" not in pool and {"x", "y"} <= set(pool) \
         and pool == sorted(pool) and e6.investigate("up").get("subject") == q6.get("subject")
+    # set, not just order: with adaptive retention (other world archived, the task's own world archived
+    # and restored on reference) the question pool and the question equal the static engine's
+    from . import retention as ret_mod
+    # the unrelated world shares no token, relations included, so retention sees two components
+    worlds = facts + [("aa1", "on", "aa2"), ("aa1", "on", "aa3"), ("aa2", "sort", "AR"), ("aa3", "sort", "AQ")]
+    es = Engine(tmp / "prog8.json", programs=True)
+    ea = Engine(tmp / "prog9.json", programs=True, retention="adaptive")
+    for e_ in (es, ea):
+        for t in worlds:
+            e_.tell(*t)
+        e_.observe("up", "a", "r")
+        e_.observe("up", "b", "r")
+        e_.acquire("up")
+    comps, _ = ret_mod.components(ea.state)
+    for comp in list(comps.values()):
+        ret_mod.archive(ea.state, ea.state["retention"], ea._archive_dir, comp, {"why": "test"})
+    ea._dirty()
+    archived_all = not ea.state["facts"] and len(comps) == 2
+    rs, ra = es.turn("investigate up"), ea.turn("investigate up")
+    out["prog_question_pool_same_set_under_retention"] = archived_all and rs == ra and \
+        es._question_pool("up") == ea._question_pool("up") and "aa1" not in ea.entities() and "aa1" in es.entities()
     # programs off: no program tokens are ever hypothesised
     e5 = Engine(tmp / "prog5.json", deepen=3)
     for t in tri:
@@ -840,7 +865,7 @@ def run() -> dict:
                         ("programs", program_checks)]:
             # a section that raises is a failed check (named), not a crash that hides the other sections
             try:
-                sections[sec] = {"completed": True, **fn(tmp)}
+                sections[sec] = fn(tmp)  # no pseudo-check when it completes (verification L3 of 82dd0a2)
             except Exception as exc:  # noqa: BLE001
                 sections[sec] = {"completed": False, "_error": f"{type(exc).__name__}: {exc}"[:300]}
     checks = {f"{sec}.{k}": bool(v) for sec, c in sections.items() for k, v in c.items() if not k.startswith("_")}

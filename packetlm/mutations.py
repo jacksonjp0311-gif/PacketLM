@@ -53,6 +53,7 @@ MUTATIONS = {
     "prog_scan_ignored": ('        status = "qualified" if complete and not blockers else "provisional"', '        status = "qualified"'),
     "prog_order_dependent_ties": ('        return sorted(e for e in self.entities() if e in comp)', '        return [e for e in self.entities() if e in comp]'),
     "prog_investigate_outside_component": ('        return sorted(e for e in self.entities() if e in comp)', '        return sorted(self.entities())'),
+    "prog_scan_short_horizon": ('        horizon = progs.MAX_SIZE\n', '        horizon = progs.size(cand)\n'),
     "static_ignores_archive": ('        if ret and retention == "static" and ret["archived"]:', '        if False:'),
     "no_requalify": ('        out["review"] = retired + self.review() + self._requalify_retired()\n        return out\n\n    def correct_example', '        out["review"] = retired + self.review()\n        return out\n\n    def correct_example'),
     "scan_short_horizon": ('        horizon = self.deepen if (max_len is None and self.deepen) else searched', '        horizon = searched'),

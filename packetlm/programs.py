@@ -15,8 +15,8 @@ DESIGNED (stated precisely; nothing else about control is supplied):
           where T is class-like (at least 2 entities have Q T); at most MAX_GUARDS pairs.
   choice: smallest size with a supported program (all observations supported). Several
           supported programs with different predictions on the domain -> ambiguous.
-  status: open-world rule of the engine. Every program of size <= the candidate's size (the
-          horizon, as in the engine's deepening) not contradicted
+  status: open-world rule of the engine. Every program of size <= MAX_SIZE (the full budget,
+          as the engine's deepening horizon) not contradicted
           by the observations is an alternative. It blocks if it conflicts with the candidate
           (both defined and different somewhere in the domain) or has support >= 1 and differs
           anywhere. qualified only if the enumeration COMPLETES within SCAN_BUDGET programs with
