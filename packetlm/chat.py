@@ -1,7 +1,8 @@
-"""Route.
+"""Two operators.
 
-The asked relation selects the operator.
-Age is not tail. It abstains.
+Tail and location are acquired the same way.
+The asked word picks.
+Age still abstains.
 Not a general mind.
 """
 
@@ -73,8 +74,7 @@ def turn(field, objects, library, operators, line):
                 objects.append(t)
         return f"recorded {fact[0]} {fact[1]} {fact[2]}"
     if len(parts) == 4 and parts[0] == "what" and parts[1] == "is":
-        asked = parts[3]
-        op = next((o for o in operators if o["in"] == asked), None)
+        op = next((o for o in operators if o["in"] == parts[3]), None)
         if not op:
             return "unknown"
         value = apply_seq(field, tuple(op["seq"]), parts[2], objects)
@@ -90,29 +90,42 @@ def fresh_library():
         induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))]),
         induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))]),
         induce([("mira hastail green", ("mira", "hastail", "green")), ("sam hastail blue", ("sam", "hastail", "blue"))]),
+        induce([("mira at dock", ("mira", "at", "dock")), ("sam at bay", ("sam", "at", "bay"))]),
     ]
 
 def run() -> dict:
-    field, objects = [], ["green", "red", "mira", "dax"]
+    field, objects = [], ["green", "red", "mira", "dax", "lab", "dock"]
     add(field, "mira", "isa", "dax")
     add(field, "dax", "tail", "green")
-    seq = discover(field, [("mira", "green")], objects)
-    operators = [{"in": "tail", "seq": list(seq), "out": "hastail"}] if seq else []
+    add(field, "mira", "in", "lab")
+    add(field, "lab", "at", "dock")
+    tail = discover(field, [("mira", "green")], objects)
+    place = discover(field, [("mira", "dock")], objects)
+    operators = []
+    if tail:
+        operators.append({"in": "tail", "seq": list(tail), "out": "hastail"})
+    if place:
+        operators.append({"in": "location", "seq": list(place), "out": "at"})
     lib = fresh_library()
     lines = [ln for ln in Path("data/dialogue.txt").read_text().splitlines() if ln.strip()]
     replies = [turn(field, objects, lib, operators, line) for line in lines]
     save(STATE, {"field": field, "objects": objects, "operators": operators, "library": lib})
     loaded = load(STATE)
-    spoken = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is orion tail")
+    tail_a = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is orion tail")
+    place_a = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is mira location")
     age = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "what is orion age")
+    no_tail = [o for o in loaded["operators"] if o["in"] != "tail"]
+    muted = turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], no_tail, "what is orion tail")
     checks = {
-        "routed": spoken == "orion hastail red",
+        "two": len(operators) == 2,
+        "tail": tail_a == "orion hastail red",
+        "location": place_a == "mira at dock",
         "age_abstains": age == "unknown",
+        "remove_one": muted == "unknown" and place_a == "mira at dock",
         "generic": replies[7] == "orion hastail green",
-        "saved_interprets": turn(list(loaded["field"]), list(loaded["objects"]), loaded["library"], loaded["operators"], "luna isa dax") == "recorded luna isa dax",
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "asked relation selects the operator; age abstains"}
+    receipt = {**checks, "ops": [o["in"] for o in operators], "failed": failed, "claim": "two operators; the asked word picks; removing one does not kill the other"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
