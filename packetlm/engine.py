@@ -796,16 +796,32 @@ class Engine:
                     out.append(h)
         return out, evaluated, contradicted
 
+    def _domain(self, seq):
+        """Entities a program can be defined on: subjects of its first base step (exact)."""
+        base = self.expand(seq) if any(x.startswith(("rel:", "cap:", "op:")) for x in seq) else list(seq)
+        if not base:
+            return set()
+        first = base[0].split(":")[1] if base[0].startswith("until:") else base[0]
+        return set(self._idx()["ref"].get(first, {}))
+
     def _predictions(self, seq):
+        dom = self._domain(seq)
         out = {}
         for e in self.entities():
+            if e not in dom:
+                out[e] = None
+                continue
             r = self.execute(seq, e)
             out[e] = next(iter(r)) if r and len(r) == 1 else None
         return out
 
     def _differs(self, seq, preds) -> bool:
-        """Extensional difference from a prediction table; stops at the first entity that differs."""
+        """Extensional difference from a prediction table; stops at the first entity that differs.
+        Only entities where either side can be defined are checked (exact)."""
+        dom = self._domain(seq)
         for e, v in preds.items():
+            if v is None and e not in dom:
+                continue
             r = self.execute(seq, e)
             if (next(iter(r)) if r and len(r) == 1 else None) != v:
                 return True
@@ -868,6 +884,8 @@ class Engine:
                   "as compatible on current knowledge, not eliminated. New facts can create conflicts: "
                   "`requalify NAME` re-runs the check.")
 
+    BLOCK_KEEP = 64
+
     def _scan(self, name, cand_seq, horizon) -> dict:
         """Check every program up to the horizon against the candidate (prefix-shared walk).
         Pruning here is computational: a pruned subtree is shown compatible on current knowledge
@@ -885,7 +903,7 @@ class Engine:
         P = len(prims)
         out = {"horizon": horizon, "domain": len(D), "scanned": 0, "evaluated": 0, "contradicted": 0,
                "compatible": 0, "pruned_compatible": 0, "blocking_n": 0, "conflicts": 0, "assumption": self.ASSUMPTION}
-        blocking, seen = [], set()
+        blocking = []
 
         def step(front, base):
             new = []
@@ -897,35 +915,48 @@ class Engine:
                 new.append(cur)
             return new
 
-        def walk(prefix, front, bseq):
-            for p, pb in prims:
-                nf = step(front, pb)
-                depth = len(prefix) + 1
-                if not any(nf):
-                    out["pruned_compatible"] += sum(P ** k for k in range(horizon - depth + 1))
-                    continue
-                seq, nb = prefix + [p], bseq + pb
-                out["scanned"] += 1
-                key = tuple(nb)
-                if key != cand_base and key not in seen:
+        # breadth-first over distinct base sequences: programs with the same base have the
+        # same extension, and the first visit is at the smallest primitive depth, so a later
+        # duplicate's subtree is contained in the first one's (exact). The walk stops once
+        # BLOCK_KEEP blockers are found: the status (any blocker -> provisional) is decided,
+        # and the counts are then lower bounds (`truncated`).
+        out.update({"duplicates": 0, "truncated": False})
+        level, seen = [([], [{e} for e in D], ())], {()}
+        for depth in range(1, horizon + 1):
+            nxt_level = []
+            for prefix, front, bseq in level:
+                for p, pb in prims:
+                    key = bseq + tuple(pb)
+                    if key in seen:
+                        out["duplicates"] += 1
+                        continue
                     seen.add(key)
-                    vals = [next(iter(f)) if len(f) == 1 else None for f in nf]
-                    out["evaluated"] += len(obs_at)
-                    if any(vals[i] is not None and vals[i] != v for i, v in obs_at):
-                        out["contradicted"] += 1
-                    else:
-                        support = sum(vals[i] == v for i, v in obs_at)
-                        conflict = any(x is not None and x != w for x, w in zip(vals, want))
-                        if conflict or (support >= 1 and self._differs(seq, mine)):
-                            out["blocking_n"] += 1
-                            out["conflicts"] += conflict
-                            if len(blocking) < 64:
-                                blocking.append(seq)
+                    nf = step(front, pb)
+                    if not any(nf):
+                        out["pruned_compatible"] += 1  # a distinct-base node, standing for its whole subtree
+                        continue
+                    seq = prefix + [p]
+                    out["scanned"] += 1
+                    if key != cand_base:
+                        vals = [next(iter(f)) if len(f) == 1 else None for f in nf]
+                        out["evaluated"] += len(obs_at)
+                        if any(vals[i] is not None and vals[i] != v for i, v in obs_at):
+                            out["contradicted"] += 1
                         else:
-                            out["compatible"] += 1
-                if depth < horizon:
-                    walk(seq, nf, nb)
-        walk([], [{e} for e in D], [])
+                            support = sum(vals[i] == v for i, v in obs_at)
+                            conflict = any(x is not None and x != w for x, w in zip(vals, want))
+                            if conflict or (support >= 1 and self._differs(seq, mine)):
+                                out["blocking_n"] += 1
+                                out["conflicts"] += conflict
+                                blocking.append(seq)
+                                if len(blocking) >= self.BLOCK_KEEP:
+                                    out["truncated"] = True
+                                    return {**out, "blocking": blocking}
+                            else:
+                                out["compatible"] += 1
+                    if depth < horizon:
+                        nxt_level.append((seq, nf, key))
+            level = nxt_level
         return {**out, "blocking": blocking}
 
     def _adopt(self, name, h, status, blocking, scan=None):

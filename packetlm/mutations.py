@@ -34,11 +34,13 @@ MUTATIONS = {
     "unanswered_lost": ('        if prior.get("unanswered"):', '        if False:'),
     "activation_overprunes": ('                if not nxt:\n                    pruned +=', '                if not nxt or p == prims[0]:\n                    pruned +='),
     "open_world_off": ('                        if conflict or (support >= 1', '                        if (support >= 1'),
-    "prune_on_evidence_only": ('        walk([], [{e} for e in D], [])', '        walk([], [{e} if e in dict(obs) else set() for e in D], [])'),
+    "prune_on_evidence_only": ('        level, seen = [([], [{e} for e in D], ())], {()}', '        level, seen = [([], [{e} if e in dict(obs) else set() for e in D], ())], {()}'),
+    "domain_too_narrow": ('            if v is None and e not in dom:\n                continue', '            if e not in dom:\n                continue'),
+    "dedupe_by_last_step": ('                    key = bseq + tuple(pb)', '                    key = tuple(pb)'),
     "no_requalify": ('        out["review"] = retired + self.review() + self._requalify_retired()\n        return out\n\n    def correct_example', '        out["review"] = retired + self.review()\n        return out\n\n    def correct_example'),
     "scan_short_horizon": ('        horizon = self.deepen if (max_len is None and self.deepen) else searched', '        horizon = searched'),
     "deepen_past_ambiguity": ('                if any(h["status"] == "supported" for h in live):', '                if sum(h["status"] == "supported" for h in live) == 1:'),
-    "compose_keeps_source": ('            row = g.compose([row], self._rows(rel))[0]', '            row = row | g.compose([row], self._rows(rel))[0]'),
+    "compose_keeps_source": ('            return g.compose([row], self._rows(token))[0]', '            return row | g.compose([row], self._rows(token))[0]'),
 }
 
 

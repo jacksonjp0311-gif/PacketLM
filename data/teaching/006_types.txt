@@ -1,0 +1,22 @@
+# 006 Audit 283f526 item 5: the taught country = in+in answers texas -> america.
+# Teach what a country is by type, and give an example at a different depth.
+# The until operator (OPS-1) lets the engine propose "climb in until a country";
+# nothing here names that program.
+options operators deepen=3
+fact france isa country
+fact japan isa country
+fact usa isa country
+fact portugal isa country
+fact europe isa continent
+fact asia isa continent
+fact america isa continent
+nice in france
+dallas in collin
+collin in texas
+example country: texas -> usa
+show country
+why austin country
+expect what is texas country => texas country usa [no construction for country] [provisional]
+expect which country is dallas in => dallas country usa [no construction for country] [provisional]
+expect which country is nice in => nice country france [no construction for country] [provisional]
+expect which country is porto in => porto country portugal [no construction for country] [provisional]
