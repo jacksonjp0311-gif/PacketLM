@@ -680,17 +680,16 @@ def audit_checks(tmp) -> dict:
 def run() -> dict:
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
-        sections = {
-            "memory": memory_checks(tmp),
-            "constructions": construction_checks(tmp),
-            "acquisition": acquisition_checks(tmp),
-            "discovery": discovery_checks(tmp),
-            "persistence": persistence_checks(tmp),
-            "fresh_process": fresh_process_checks(tmp),
-            "migration": migration_checks(tmp),
-            "retention": retention_checks(tmp),
-            "audit": audit_checks(tmp),
-        }
+        sections = {}
+        for sec, fn in [("memory", memory_checks), ("constructions", construction_checks),
+                        ("acquisition", acquisition_checks), ("discovery", discovery_checks),
+                        ("persistence", persistence_checks), ("fresh_process", fresh_process_checks),
+                        ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks)]:
+            # a section that raises is a failed check (named), not a crash that hides the other sections
+            try:
+                sections[sec] = {"completed": True, **fn(tmp)}
+            except Exception as exc:  # noqa: BLE001
+                sections[sec] = {"completed": False, "_error": f"{type(exc).__name__}: {exc}"[:300]}
     checks = {f"{sec}.{k}": bool(v) for sec, c in sections.items() for k, v in c.items() if not k.startswith("_")}
     measures = {f"{sec}.{k[1:]}": v for sec, c in sections.items() for k, v in c.items() if k.startswith("_")}
     failed = [k for k, v in checks.items() if not v]
