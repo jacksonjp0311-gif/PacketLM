@@ -42,3 +42,13 @@ the result. Its task records hold only the task total, so G46 is exported with a
 under `acquisition` and `execution` as an explicit 0. The total and `A_n` are unaffected;
 only the component split is missing. From G47 onward, the harness records `eval_cpu_s`
 (the task's sealed-evaluation call), and the exporter splits it out as `execution`.
+
+**Cost boundary from G48 on (verification M4/M1, 2026-11-26).** The primary cost of every new
+run is whole-process CPU:
+- the CLI's `cpu_total_s` is `getrusage(RUSAGE_SELF)` user+sys, including interpreter startup
+  and imports;
+- it is exported with `python3 benchmarks/la_export.py RAW OUT.csv [BYTES.csv] --total`;
+- the primary contrast charges maintenance: the `<arm>+maint` variant against B.
+
+The in-call `cpu_s` reports and the maintenance-free contrasts are kept as secondary figures.
+The ARET/v4 runs, made before this rule, used the in-call boundary and are labelled that way.

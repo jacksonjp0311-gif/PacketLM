@@ -23,6 +23,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import resource
 import sys
 import time
 from itertools import product
@@ -1324,7 +1325,9 @@ def main(argv) -> int:
     replies = [eng.turn(line) for line in argv[1:]]
     eng.save()
     print(json.dumps({"load": eng.report, "replies": replies, "stats": eng.stats,
-                      "cpu_s": round(time.process_time() - t0, 4)}))
+                      "cpu_s": round(time.process_time() - t0, 4),
+                      # whole-process CPU incl. interpreter startup and imports (verification M4)
+                      "cpu_total_s": round(sum(resource.getrusage(resource.RUSAGE_SELF)[:2]), 4)}))
     return 0
 
 

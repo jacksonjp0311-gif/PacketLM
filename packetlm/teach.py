@@ -52,7 +52,9 @@ def inventory(eng) -> dict:
 def run(path) -> dict:
     path = Path(path)
     text = path.read_text()
-    sealed = set(json.loads(SEALED.read_text())) if SEALED.exists() else set()
+    sealed = set()
+    for f in sorted(SEALED.parent.glob("sealed_tokens*.json")):  # every registered curriculum (verification L3)
+        sealed |= set(json.loads(f.read_text()))
     lines = [ln.strip() for ln in text.splitlines() if ln.strip() and not ln.strip().startswith("#")]
     leaked = sorted({t for ln in lines for t in ln.lower().replace(":", " ").split() if t in sealed})
     if leaked:

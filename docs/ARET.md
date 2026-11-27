@@ -47,7 +47,7 @@ validation and save scale with bytes):
 - Differential against static: replies are identical over 111 calls that include
   archive/restore of unrelated families, a correction in an archived family, a relation shared
   across entity-disjoint families, a construction sentence and a full listing.
-- Archives and restores actually happen (17 and 13), so the check is not vacuous.
+- Archives and restores actually happen (17 and 13 when written with GUARD = 2; 18 and 14 in the receipt at 0b0f6a8 with GUARD = 1; verification L4), so the check is not vacuous.
 - No archive file is ever deleted, and re-archiving reuses the same file.
 - Recently touched components are never archived.
 - A static open restores everything.
@@ -150,10 +150,17 @@ here, but not the whole cost.
 
 ### Reading
 
-- On the compositional curriculum, with adaptive retention the continual learner is the first
-  arm in this program to cost less than learning each task from an empty state at matched
-  accuracy: `A_36(A‖B)` = +0.25, a lower bound. It also solves 36/36/35 tasks against B's
-  32/32/31.
+- On the compositional curriculum, `A_36(A‖B)` = +0.25 on task CPU **with censoring, not at
+  matched accuracy**. (Corrected after verification M2; the original sentence said "at matched
+  accuracy".) The caveats belong in the same sentence:
+  - it falls to +0.031 [−0.005, +0.071] when maintenance is charged (M1);
+  - it comes from the 11/108 task instances where B misses the accuracy target; on tasks both
+    arms solved it is about −0.04 (M2);
+  - the interval is a 3-seed bootstrap, so p is at least 0.25 (M3);
+  - process startup is excluded; including it gives +0.112, or −0.056 with maintenance (M4).
+
+  A does solve 36/36/35 tasks against B's 32/32/31. Read this as roughly break-even with an
+  empty-state learner, not as a demonstrated saving.
 - On the unrelated curriculum, retention halves the gap but does not close it.
   - With nothing to reuse, any retained state is overhead.
   - Every family-end retention probe touches all history, which forces a restore each time.
@@ -161,3 +168,27 @@ here, but not the whole cost.
   answer. It is not solved:
   - G46-U `A(A‖B)` is still −5.7;
   - the gate's constants were chosen once, on dev seed 999, and were not tuned on these seeds.
+
+## Verification of 0b0f6a8 (branch verify-0b0f6a8, d931dc2): response
+
+The verifier reproduced every count, the no-harm result bit for bit, and the instrument output
+from the committed CSVs. It found no leakage and no moved threshold. My responses, all
+accepted:
+
+- **M1.** `A(A+maint‖B)` is now reported, above.
+- **M2.** "At matched accuracy" is removed. The jointly-solved figure is reported.
+- **M3.** Every interval in this document is a **seed bootstrap with S = 3** (sign-flip p is at
+  least 0.25), not a confidence interval that covers timing noise.
+  - H-R2 and H-R3 should be read as "all 3 seeds exceed the bar".
+  - The verifier's rerun moved point estimates by up to 0.04 on G46 and 0.5 on G46-U.
+- **M4.** The cost boundary excludes interpreter startup and imports, about 0.033 s per process.
+  - A(A‖C) remains strongly positive under every boundary: +0.26 with startup included.
+  - The empty-state comparisons depend on the boundary.
+  - From G48 on, the CLI also reports `cpu_total_s` (whole-process CPU), and
+    `la_export.py --total` exports it. The primary cost for new runs is whole-process CPU with
+    maintenance charged.
+- **L1.** The dev-seed history (GUARD 2 → 1 on seed 999) was not pushed before registration. The
+  claim that registered seeds were not used for tuning cannot be checked from the repo. From
+  now on, dev runs are committed before the pre-registration.
+- **No rerun of ARET to improve the number.** Any new retention measurement will be
+  pre-registered with more seeds.

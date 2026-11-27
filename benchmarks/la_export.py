@@ -14,17 +14,18 @@ def classify(lines):
     return "acquisition"
 
 
-def export(raw, out_csv, bytes_csv=None):
+def export(raw, out_csv, bytes_csv=None, res="cpu_s"):
+    """res: "cpu_s" (engine work after startup) or "cpu_total_s" (whole process, from G48 on)."""
     rows, brows = [], []
-    for key, run in raw.items():
-        seed, arm = key.split(":")
+    for name, run in raw.items():
+        seed, arm = name.split(":")
         if arm == "R" or "tasks" not in run:
             continue
         fams = {f["family"]: f for f in run.get("families", [])}
         variants = [arm] + ([f"{arm}+maint"] if fams and any("cost" in f for f in fams.values()) else [])
         for var in variants:
             for comp in ("acquisition", "verification", "storage", "retrieval", "maintenance", "execution"):
-                rows.append([var, seed, 0, comp, "cpu_s", 0.0, 0])
+                rows.append([var, seed, 0, comp, res, 0.0, 0])
             last_of_family = {}
             for i, t in enumerate(run["tasks"], 1):
                 last_of_family[t["family"]] = i
@@ -34,15 +35,16 @@ def export(raw, out_csv, bytes_csv=None):
                 # the frozen engine reports CPU per call; component split by call type
                 acq, exe = t.get("cpu_acquisition"), t.get("cpu_execution")
                 if acq is None:
-                    acq, exe = c["cpu_s"] - t.get("eval_cpu_s", 0.0), t.get("eval_cpu_s", 0.0)
-                rows.append([var, seed, i, "acquisition", "cpu_s", round(acq, 6), cens])
-                rows.append([var, seed, i, "execution", "cpu_s", round(exe, 6), cens])
+                    ev = t.get("eval_cpu_s", 0.0) if res == "cpu_s" else t.get("eval_cpu_total_s", 0.0)
+                    acq, exe = c[res] - ev, ev
+                rows.append([var, seed, i, "acquisition", res, round(acq, 6), cens])
+                rows.append([var, seed, i, "execution", res, round(exe, 6), cens])
                 for comp in ("verification", "retrieval", "storage"):
-                    rows.append([var, seed, i, comp, "cpu_s", 0.0, cens])
+                    rows.append([var, seed, i, comp, res, 0.0, cens])
                 m = 0.0
                 if var.endswith("+maint") and last_of_family.get(t["family"]) == i:
-                    m = fams.get(t["family"], {}).get("cost", {}).get("cpu_s", 0.0)
-                rows.append([var, seed, i, "maintenance", "cpu_s", round(m, 6), cens])
+                    m = fams.get(t["family"], {}).get("cost", {}).get(res, 0.0)
+                rows.append([var, seed, i, "maintenance", res, round(m, 6), cens])
                 if bytes_csv and var == arm:
                     brows.append([arm, seed, i, "storage", "bytes", float(t.get("state_bytes") or 0), cens])
     with open(out_csv, "w", newline="") as fh:
@@ -58,5 +60,6 @@ def export(raw, out_csv, bytes_csv=None):
 
 
 if __name__ == "__main__":
-    raw = json.loads(open(sys.argv[1]).read())
-    print(export(raw, sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None))
+    args = [a for a in sys.argv[1:] if a != "--total"]
+    raw = json.loads(open(args[0]).read())
+    print(export(raw, args[1], args[2] if len(args) > 2 else None, "cpu_total_s" if "--total" in sys.argv else "cpu_s"))

@@ -95,7 +95,8 @@ class Teacher:
         out = json.loads(p.stdout)
         self.cpu += out["cpu_s"]
         self.log.append({"lines": list(lines), "replies": out["replies"], "load": out["load"],
-                         "stats": out["stats"], "cpu_s": out["cpu_s"], "wall_s": round(time.perf_counter() - t, 3)})
+                         "stats": out["stats"], "cpu_s": out["cpu_s"], "cpu_total_s": out.get("cpu_total_s"),
+                         "wall_s": round(time.perf_counter() - t, 3)})
         return out["replies"]
 
 
@@ -245,7 +246,8 @@ def run() -> dict:
     checks = {f"seed{s}.{k}": v for s, c in per_seed.items() for k, v in c.items()}
     checks["t6_source_unchanged"] = h0 == h1
     checks["t7a_shuffled_at_most_1"] = all(sum(d["match"] for d in r["domains"]) <= 1 for r in shuf)
-    checks["t7b_no_library_fails_d5"] = all(not c["acquired"] or c["status"] != "qualified" for c in nolib)
+    # strict reading of the registered wording "fails to acquire D5" (verification L2): no acquisition at any status
+    checks["t7b_no_library_fails_d5"] = all(not c["acquired"] for c in nolib)
     failed = [k for k, v in checks.items() if not v]
     summary = [{"seed": r["seed"], "domains": [{k: d[k] for k in ("domain", "shape", "status", "match", "examples", "evaluations")}
                                               | {"eval": d["eval"]} for d in r["domains"]],

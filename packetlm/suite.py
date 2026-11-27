@@ -36,10 +36,25 @@ def main() -> int:
     smoke = []
     for name in SMOKE:
         rc = subprocess.run([sys.executable, "-m", f"packetlm.{name}"], capture_output=True, timeout=600).returncode
-        smoke.append({"module": name, "exit": rc})
+        rec = Path("artifacts") / f"{name}_receipt.json"
+        false = []
+        if rec.exists():  # legacy demos: surface their own negative self-reports (verification L5)
+            def walk(x, path):
+                if x is False:
+                    false.append(path)
+                elif isinstance(x, dict):
+                    for k, v in x.items():
+                        walk(v, f"{path}.{k}" if path else k)
+            try:
+                walk(json.loads(rec.read_text()), "")
+            except ValueError:
+                false.append("receipt unreadable")
+        smoke.append({"module": name, "exit": rc, "false_self_reports": false})
     out = {"suite": rows, "checks": total, "failed": failed,
            "modules_passed": sum(r["exit"] == 0 for r in rows), "modules": len(rows),
-           "smoke_ran": sum(s["exit"] == 0 for s in smoke), "smoke": len(smoke), "smoke_detail": smoke}
+           "smoke_ran": sum(s["exit"] == 0 for s in smoke), "smoke": len(smoke),
+           "smoke_note": "smoke = legacy demos that must run (exit 0); not claimed as working; their own false self-reports are listed",
+           "smoke_false_self_reports": sum(len(s["false_self_reports"]) for s in smoke), "smoke_detail": smoke}
     print(json.dumps(out, indent=2))
     return 0 if failed == 0 and all(r["exit"] == 0 for r in rows) and all(s["exit"] == 0 for s in smoke) else 1
 

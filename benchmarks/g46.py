@@ -44,7 +44,8 @@ class BudgetTeacher(Teacher):
         out = json.loads(p.stdout)
         self.cpu += out["cpu_s"]
         self.log.append({"lines": list(lines), "replies": out["replies"], "load": out["load"],
-                         "stats": out["stats"], "cpu_s": out["cpu_s"], "wall_s": round(time.perf_counter() - t, 3)})
+                         "stats": out["stats"], "cpu_s": out["cpu_s"], "cpu_total_s": out.get("cpu_total_s"),
+                         "wall_s": round(time.perf_counter() - t, 3)})
         return out["replies"]
 
 
@@ -166,6 +167,8 @@ def stat_sum(log, a, b):
         for k in out:
             out[k] += e["stats"].get(k, 0)
     out["cpu_s"] = round(sum(e["cpu_s"] for e in log[a:b]), 4)
+    if all(e.get("cpu_total_s") is not None for e in log[a:b]):  # logged from G48 onward (verification M4)
+        out["cpu_total_s"] = round(sum(e["cpu_total_s"] for e in log[a:b]), 4)
     out["wall_s"] = round(sum(e["wall_s"] for e in log[a:b]), 3)
     out["processes"] = b - a
     out["lines"] = sum(len(e["lines"]) for e in log[a:b])
@@ -281,6 +284,7 @@ def _arm_body(seed, arm, fams, sealed_all, d, persistent, flags, rng, log, tasks
                           "searched_len": hyp.get("searched_len"), "pruned": hyp.get("pruned"),
                           "correct": sum(r["ok"] for r in rows), "n_sealed": len(rows), "rows": rows,
                           "cost": stat_sum(log, a0, a1), "eval_cpu_s": log[a1 - 1]["cpu_s"] if a1 > a0 else 0.0,
+                          "eval_cpu_total_s": log[a1 - 1].get("cpu_total_s") if a1 > a0 else 0.0,
                           "state_bytes": size})
         fam_rec = {"family": fi, "phase": fam["phase"]}
         if arm != "B":
