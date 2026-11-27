@@ -1,0 +1,9 @@
+applied
+== g44 (timeout 400 s)
+g44 rc=0
+failed []
+== g58_diff 60 sessions seed 7001 + contract_fuzz 60 seed 7002
+{"ok": true, "sessions": 72, "calls": 1487, "audit_violations": 0, "mismatch": null}
+{"ok": true, "sessions": 84, "reviews": 1524, "transitions": 594, "audit_violations": 0, "audit_first": []}
+rc=0
+== routed_diff 60 sessions audit churn lib mix K3

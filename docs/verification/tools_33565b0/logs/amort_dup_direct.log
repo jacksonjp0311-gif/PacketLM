@@ -1,0 +1,4 @@
+dup full validation ms (mean over seeds): {'j0': {64: 0.98, 1024: 16.47}, 'r': {64: 18.64, 1024: 284.59}}
+snapshot only (harness amortized form) {'j0': [14.645, [12.926, 15.772]], 'r': [5.484, [4.464, 6.191]]} material_vs_L64: True threshold 7.322
+with duplicate period validation {'j0': [14.653, [12.957, 15.769]], 'r': [7.48, [6.123, 8.386]]} material_vs_L64: False threshold 7.327
+R0_1024 with duplicate (L=0 dup taken as 0): {'j0': [46.042, [45.383, 46.759]], 'r': [16.439, [15.474, 17.391]]} material_vs_L0: True

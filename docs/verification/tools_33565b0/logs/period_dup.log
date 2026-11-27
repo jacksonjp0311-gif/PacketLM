@@ -1,0 +1,27 @@
+{
+"L": 256,
+"facts": 1736,
+"calls_with_ix_check": [
+{
+"call": 62,
+"ix_checks": 2,
+"full_validation": 1,
+"snapshot": true,
+"since_full": 0
+},
+{
+"call": 126,
+"ix_checks": 2,
+"full_validation": 1,
+"snapshot": true,
+"since_full": 0
+},
+{
+"call": 190,
+"ix_checks": 2,
+"full_validation": 1,
+"snapshot": true,
+"since_full": 0
+}
+]
+}
