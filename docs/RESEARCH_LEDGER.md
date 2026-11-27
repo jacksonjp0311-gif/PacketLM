@@ -1198,3 +1198,19 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   reuse distribution, library self-organization, unexpected transfer, cost-curve phase shifts, novel
   compositions. Format to come; G58 records its observations in docs/G58.md §11. Also in
   docs/STANDING_DIRECTIVE.md.
+
+## 2026-11-27 09:30: invariants analysis (branch invariants-analysis @ 29557fd) — noted for G59
+
+- Weighed, not acted on in G58 (G58's scope is its pre-registration). **Main G59 blocker:** cost
+  against unrelated *fact* padding still grows ~N^1.08–1.10 (4k → 16k) in the s/i/j engines; G57b only
+  shrank the constant (≈0.39 µs/fact). Cause: the exact recall filter scans posting lists
+  (~codes/256) plus chance code overlaps (~1.7e-3 per code). Under Prop 10 linear growth rules out
+  positive long-run A; bounded growth needs recall that never touches unrelated codes (relevance
+  partitioning). G58 routes *capabilities*, not fact recall, so this is untouched by G58.
+- Also from the analysis: exact modes never reduce logical work (evaluation ratio ≈0.26 vs
+  primitives, constant); every speedup is per-operation.
+- **G59 pre-registration suggestions (to weigh there):** fit the padding growth exponent with a
+  bootstrap CI at 16k/32k/64k and register "bounded" as exponent < 0.2; report A per search-depth
+  stratum and predict the deepest crosses first; decompose 1 − A_cpu = (1 − A_work) × op-cost ratio;
+  secondary resources (evaluations, teaching lines); censoring interval plus the matched 247-task
+  subset; the emergence log format of docs/invariants/INVARIANTS.md §2 (one JSON line per milestone).
