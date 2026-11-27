@@ -2105,6 +2105,43 @@ def g58_checks(tmp: Path) -> dict:
             return srv.cur is None
     guarded("g58_call_validates_capabilities_it_writes", call_rejects_touched_cap)
 
+    def secondary_index_corruption():
+        # Low 1 of verify-8994490: a dropped by_rel / by_sr / small entry, a wrong decode entry or a
+        # stale prediction row is caught by the index check, and a removal checks the index before it
+        # discards it (no healing rebuild): the call fails and the open state is dropped
+        fl = g58_diff.BASE
+        results = []
+        def corrupt(kind, ix):
+            if kind == "by_rel":
+                ix["by_rel"]["p"].pop()
+            elif kind == "by_sr":
+                ix["by_sr"][("a", "p")].clear()
+            elif kind == "small":
+                ix["small"].append(("zz", "zz", "zz"))
+            elif kind == "decode":
+                ix["decode"][next(iter(ix["decode"]))] = "zz"
+            elif kind == "prow":
+                ix["prow"]["p"] = type(ix["prow"].get("p", {}))() if ix["prow"].get("p") is not None else {0: 1}
+        for kind in ("by_rel", "by_sr", "small", "decode", "prow"):
+            for how in ("period", "removal"):
+                p = tmp / f"g58_ix_{kind}_{how}.json"
+                srv = serve.Server(snapshot_every=1000, full_every=3 if how == "period" else 10 ** 6)
+                srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": ["fact a p b", "fact b p c", "fact c p d",
+                                                                                   "what is a p", "example zz: a -> b"]})
+                corrupt(kind, srv.cur.memo.ix)
+                try:
+                    if how == "period":
+                        for k in range(5):
+                            srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": [f"fact g{k} q h{k}"]})
+                    else:
+                        srv.handle({"op": "call", "state": str(p), "flags": fl, "lines": ["retract c p d"]})
+                    results.append(False)
+                except StateError as exc:
+                    results.append("diverged" in str(exc) and srv.cur is None)
+        out["_secondary_index"] = results
+        return all(results)
+    guarded("g58_index_check_covers_g57b_structures", secondary_index_corruption)
+
     def reach_equal():
         # indexed reach (told, non-cap out-edges) equals the fact-list reach on the open state, with
         # derived facts (a program's conclusions: not edges) on capability and plain relations

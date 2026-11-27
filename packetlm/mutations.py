@@ -187,6 +187,8 @@ MUTATIONS = {
     "g58_sx_adopt_not_dirty": ('            self.memo.sx_dirty.add(name)  # G58: its domain or current version may change here', '            pass'),
     "g58_flush_members_ignored": ('                    for x in m.members.get(r) or [r]:', '                    for x in [r]:'),
     "g58_members_not_merged": ('                y.extend(x)\n                m[new] = y', '                m[new] = y'),
+    "g58_ix_check_skips_g57b_structures": ('        _need(ok, "incremental fact index diverged from the facts (G57b structures)")', '        pass'),
+    "g58_no_ix_check_before_removal": ('            self.memo.counts["ix_checks_before_removal"] += 1\n            self.memo.ix_check(self.state, _fresh_index(self.state["facts"]))', '            pass'),
     "g58_scoped_validation_skips_caps": ('*((sc.get("caps", set()),', '*((set(),', "serve.py"),
 }
 

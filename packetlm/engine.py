@@ -675,7 +675,10 @@ class Memo:
         return cand
 
     def ix_check(self, state, fresh) -> None:
-        """Guard: the persistent index equals a fresh build of the reference structures."""
+        """Guard: the persistent index equals a fresh build -- the reference structures (names, pos,
+        out, triples, ref, byid) and, since G58 (Low 1 of verify-8994490), every G57b structure:
+        by_rel, by_s, by_o, by_sr (fact identity), told_rel, the candidate filter's codes, codebits and
+        small packets, decode, and each cached prediction row."""
         self.ix_checks += 1
         ix = self.ix
         same = all(ix[k] == fresh[k] for k in ("names", "pos", "out", "triples", "ref")) \
@@ -683,6 +686,36 @@ class Memo:
         told = Counter(f["r"] for f in state["facts"]
                        if not f["r"].startswith("cap:") and any(sp["kind"] == "told" for sp in f["supports"]))
         _need(same and +ix["told_rel"] == told, "incremental fact index diverged from the facts")
+        by_rel, by_s, by_o, by_sr, codes, codebits, small = {}, {}, {}, {}, set(), {}, Counter()
+        for f in state["facts"]:
+            t = (f["s"], f["r"], f["o"])
+            by_rel.setdefault(t[1], []).append(t)
+            by_s.setdefault(t[0], []).append(t)
+            by_o.setdefault(t[2], []).append(t)
+            by_sr.setdefault((t[0], t[1]), []).append(f)
+            for code in ((0, t[0]), (1, t[1]), (2, t[2])):
+                if code not in codes:
+                    codes.add(code)
+                    for b in _geom().bits(bits_for(code[1], code[0])):
+                        codebits.setdefault(b, set()).add(code)
+            if self.packet_of(t).bit_count() < SMALL_PACKET:
+                small[t] += 1
+        ok = ix["by_rel"] == by_rel and ix["by_s"] == by_s and ix["by_o"] == by_o \
+            and set(ix["by_sr"]) == set(by_sr) \
+            and all(len(ix["by_sr"][k]) == len(v) and all(a is b for a, b in zip(ix["by_sr"][k], v)) for k, v in by_sr.items()) \
+            and ix["codes"] == codes and {b: set(v) for b, v in ix["codebits"].items()} == codebits \
+            and Counter(ix["small"]) == small \
+            and ix["decode"] == {pack(bits_for(t, 2)).bits: t for t in fresh["names"]}
+        if ok:
+            pos = fresh["pos"]
+            for rel, rows in ix["prow"].items():
+                want = SparseRows()
+                for s_, _, o_ in by_rel.get(rel, ()):
+                    want[pos[s_]] = want[pos[s_]] | (1 << pos[o_])
+                if dict(rows) != dict(want):
+                    ok = False
+                    break
+        _need(ok, "incremental fact index diverged from the facts (G57b structures)")
 
     def region_hits(self, seeds, grown) -> bool:
         """`grown & _component(seeds)` is non-empty, decided from components kept across calls:
@@ -1024,6 +1057,12 @@ class Engine:
         """Truth maintenance: remove facts, then any proof that used them or a dropped program.
         A conclusion stays while one independent proof remains."""
         removed = set(ids)
+        if self.incremental and self.memo is not None and self.memo.ix_valid(self.state):
+            # Low 1 of verify-8994490: a removal discards the persistent index; it is checked first
+            # (before any support or fact changes), so a divergence fails the call instead of being
+            # healed by the rebuild
+            self.memo.counts["ix_checks_before_removal"] += 1
+            self.memo.ix_check(self.state, _fresh_index(self.state["facts"]))
         if self.incremental:
             if self._ents_tracked and getattr(self, "_ents", None) is None:
                 # the set the reference built at its first use, plus every fact told since

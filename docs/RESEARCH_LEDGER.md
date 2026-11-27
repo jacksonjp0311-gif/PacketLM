@@ -1154,3 +1154,30 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - Comp profile (dev 961, quiet): `_scan` 11.9 s of a 16.8 s C arm (123 scans, `step` 1.23 M calls),
   `_fc_requalify` 4.1 s. **Next: G58** — route library × primitive scans and requalification by
   relevance; then G59. Not started this chunk. Evidence: `docs/evidence/g57b/`.
+
+## 2026-11-27 09:05: verify-8994490 (9bd3569) folded in; switch rule recorded
+
+- **verify-8994490 (docs/verification/VERIFY_8994490.md on branch verify-8994490):** no High/Medium;
+  `--incremental` exactness held (2,162 sessions, 210,907 calls, 0 differences); counts, part S,
+  stop rule and L1/L3/Mj decisions reproduced; `g57b_drop_keeps_scope` confirmed equivalent.
+  Not re-run here (unchanged experiments).
+  - **Low 1** (`ix_check` covered only the reference structures + told_rel; a removal discarded a
+    valid index unchecked, so injected divergence went undetected: by_rel 7/60, by_sr 3/60, ref
+    10/60 persisted): fixed in G58 — `ix_check` now also checks by_rel, by_s, by_o, by_sr (fact
+    identity), codes/codebits/small, decode and every cached prediction row, and `_drop` checks the
+    index before discarding it. Check `g58_index_check_covers_g57b_structures` (5 corruption kinds ×
+    period/removal), mutations `g58_ix_check_skips_g57b_structures`, `g58_no_ix_check_before_removal`.
+    G57b.md overstatements ("equals a fresh build", "caught at the period") corrected.
+  - **Low 2** (detection is post-hoc): G57b.md now states it — up to 63 journaled mutating calls plus
+    unlimited read-only calls; fails closed; `journal replay diverged` needs a manual reset.
+  - **Low 3** (period and snapshot coincide, full validation runs twice): kept (validation precedes
+    the journal append) and stated as charged; amortized Xj R1k_16000 3.96 → 4.23 when charged
+    (verifier's figure, report-only; no decision changes).
+  - **Info:** `g57b_support_skips_told_rel` is effectively equivalent (unreachable from the command
+    language; killed only by a constructed check). G57b.md "finalized 07:50" corrected to cf511ba
+    07:38 (the ledger's "07:55" refers to 2afb144, the test/receipt commit).
+- **Switch rule (James, 08:26; to be pre-registered in G59):** if G59, after G58's cost fixes,
+  cannot qualify positive learning amortization under its pre-registered thresholds, that is
+  recorded as evidence that the limitation is the core representation, and the next step is to
+  evaluate an alternative mathematical approach with the same instrument (70297af) and verification
+  setup, rather than further engine optimization.
