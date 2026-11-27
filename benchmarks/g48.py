@@ -276,6 +276,11 @@ def run_arm(job):
             "final_state_bytes": state.stat().st_size}
 
 
+def _set_out(path):
+    global OUT
+    OUT = Path(path)
+
+
 def acc(tasks, pred=lambda r: True):
     rows = [r for t in tasks for r in t["rows"] if pred(r)]
     return (round(sum(r["got"] == r["truth"] for r in rows) / len(rows), 4) if rows else None), len(rows)
@@ -286,9 +291,12 @@ def main(argv):
     if "--seeds" in argv:
         seeds = [int(x) for x in argv[argv.index("--seeds") + 1].split(",")]
     rounds = 2
+    global OUT
+    if "--out" in argv:  # separate artifact dir per registered run (e.g. G48R)
+        OUT = ROOT / "artifacts" / argv[argv.index("--out") + 1]
     OUT.mkdir(parents=True, exist_ok=True)
     sha0 = source_hash()
-    with Pool(8) as pool:
+    with Pool(8, initializer=_set_out, initargs=(str(OUT),)) as pool:
         res = pool.map(run_arm, [(s, a, rounds) for s in seeds for a in ARMS])
     runs = {(r["seed"], r["arm"]): r for r in res}
     g = lambda a: [t for s in seeds for t in runs[(s, a)]["tasks"]]  # noqa: E731
@@ -321,7 +329,7 @@ def main(argv):
           "H6_A_replies_identical_to_P": all(runs[(s, "A")]["replies_sha"] == runs[(s, "P")]["replies_sha"] for s in seeds),
           "source_unchanged": sha0 == source_hash()}
     rep = {"metrics": m, "thresholds": th, "all_pass": all(th.values()), "source_sha256": sha0, "seeds": seeds}
-    name = "g48_dev" if "--dev" in argv else "g48"
+    name = "g48_dev" if "--dev" in argv else ("g48" if "--out" not in argv else argv[argv.index("--out") + 1])
     (OUT / f"{name}_receipt.json").write_text(json.dumps(rep, indent=1))
     (OUT / f"{name}_raw.json").write_text(json.dumps({f"{k[0]}:{k[1]}": v for k, v in runs.items()}))
     print(json.dumps({"thresholds": th, "P": {k: Pm[k] for k in ("by_class", "T1_depth_ge3", "wrong_qualified", "qualified_tasks")},
