@@ -1130,3 +1130,9 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - **Dev (not evidence):** part S dev seeds 991–992: Xj R_16000 3.6 (Xi 82.0), R1k_16000 2.9;
   L1/L3 harness dev seeds 961–964: exact j = i, Cj+maint‖Bj −0.86 comp / −2.39 unrel (Ci: −1.03 /
   −4.93); Bj‖Bi −0.05 / −0.09 (index overhead on small fresh states).
+- **Finalized 07:55 (cf511ba, 2afb144), before any G57b registered run:** stop rule also against the
+  N = 1000 baseline — material iff Xj R1k_16000 upper CI ≤ 8.9148 (half of G57 Xi's 17.8296,
+  computed from the published G57 part S files with the same bootstrap) **and** Xj R_16000 upper CI
+  ≤ 45.95; else stop and report. Part S receipt also hashes the harness. Tests at registration:
+  g44 162/162, suite 250/250, G45 18/18, mutations 140/141 (survivor: the documented equivalent
+  `g57b_drop_keeps_scope`). Builder handover (previous builder interrupted twice); no result seen.
