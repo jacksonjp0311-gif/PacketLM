@@ -1136,3 +1136,21 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   ≤ 45.95; else stop and report. Part S receipt also hashes the harness. Tests at registration:
   g44 162/162, suite 250/250, G45 18/18, mutations 140/141 (survivor: the documented equivalent
   `g57b_drop_keeps_scope`). Builder handover (previous builder interrupted twice); no result seen.
+
+## 2026-11-27 08:01: G57b registered results (part S 231–237; comp 241–247, unrel 251–257)
+
+- Run at 52ab89a (clean) under `/workspace/REGISTERED_RUN.lock` (07:59:35–08:00:59 EST), no other CPU
+  work beside it; instrument 70297af pinned, unmodified; per-arm writes. All guards held (Xj = Xi
+  replies and state bytes in every role and seed; part S replies equal Xs; 0 wrong-qualified).
+- **Material (stop rule): yes.** Xj R1k_16000 = 2.90 [2.57, 3.20] (≤ 8.91; G57 Xi on these seeds
+  17.48) and R_16000 = 3.75 [3.22, 4.20] (≤ 45.95; Xi 91.2). Task CPU at 16k: 205.6 → 8.6 ms.
+- **Rule F not claimed:** R1k_16000 upper 3.20 > 1.25; amortized 3.96. Snapshot/full validation at
+  16k 127 ms (Xi 87).
+- **L1j no claim:** −0.677 [−0.887, −0.489] (1.68×; G57 1.80×). **L3j no claim:** −2.213 [−2.377,
+  −2.037] (3.21×; G57 6.87×). **Mj claimed:** +0.041 comp, +0.387 unrel. Bj‖Bi −0.03 / −0.17 (index
+  overhead on fresh states). Cj+maint‖Pj+maint −0.39 comp (library cost), −0.02 unrel.
+- Outcomes: comp C 252 solved (247 qualified, 147 library) vs B/P 247 — not accuracy-matched; unrel
+  166/168 every arm. All predictions held.
+- Comp profile (dev 961, quiet): `_scan` 11.9 s of a 16.8 s C arm (123 scans, `step` 1.23 M calls),
+  `_fc_requalify` 4.1 s. **Next: G58** — route library × primitive scans and requalification by
+  relevance; then G59. Not started this chunk. Evidence: `docs/evidence/g57b/`.

@@ -1,0 +1,1092 @@
+{
+ "flags": [
+  "--answers",
+  "--bounded",
+  "--lean",
+  "--indexed",
+  "--incremental"
+ ],
+ "seed": 991,
+ "sizes": [
+  0,
+  1000,
+  4000,
+  16000
+ ],
+ "cpu": {
+  "0": 0.0746,
+  "1000": 0.0809,
+  "4000": 0.1052,
+  "16000": 0.2132
+ },
+ "functions": {},
+ "scaling": [
+  {
+   "fn": "~:0(<built-in method posix.fsync>)",
+   "tottime": [
+    0.02079,
+    0.01729,
+    0.01795,
+    0.05165
+   ],
+   "growth": 0.0309,
+   "calls": [
+    23,
+    20,
+    20,
+    20
+   ]
+  },
+  {
+   "fn": "engine.py:520(_union)",
+   "tottime": [
+    0.0001,
+    0.00083,
+    0.0033,
+    0.01267
+   ],
+   "growth": 0.0126,
+   "calls": [
+    60,
+    1066,
+    4084,
+    16156
+   ]
+  },
+  {
+   "fn": "engine.py:1258(expand)",
+   "tottime": [
+    0.00258,
+    0.00447,
+    0.00578,
+    0.01165
+   ],
+   "growth": 0.0091,
+   "calls": [
+    2552,
+    4892,
+    6512,
+    12992
+   ]
+  },
+  {
+   "fn": "~:0(<method 'get' of 'dict' objects>)",
+   "tottime": [
+    0.00226,
+    0.00284,
+    0.00386,
+    0.00999
+   ],
+   "growth": 0.0077,
+   "calls": [
+    14664,
+    16557,
+    22092,
+    44467
+   ]
+  },
+  {
+   "fn": "engine.py:1348(execute)",
+   "tottime": [
+    0.0024,
+    0.00306,
+    0.00434,
+    0.00992
+   ],
+   "growth": 0.0075,
+   "calls": [
+    807,
+    987,
+    1527,
+    3687
+   ]
+  },
+  {
+   "fn": "engine.py:636(region_hits)",
+   "tottime": [
+    0.00012,
+    0.00042,
+    0.00158,
+    0.00712
+   ],
+   "growth": 0.007,
+   "calls": [
+    45,
+    45,
+    45,
+    45
+   ]
+  },
+  {
+   "fn": "~:0(<built-in method _collections._count_elements>)",
+   "tottime": [
+    0.00025,
+    0.00072,
+    0.00186,
+    0.00698
+   ],
+   "growth": 0.0067,
+   "calls": [
+    832,
+    831,
+    831,
+    831
+   ]
+  },
+  {
+   "fn": "~:0(<method 'setdefault' of 'dict' objects>)",
+   "tottime": [
+    0.00062,
+    0.00119,
+    0.00207,
+    0.00693
+   ],
+   "growth": 0.0063,
+   "calls": [
+    2978,
+    5650,
+    11866,
+    36730
+   ]
+  },
+  {
+   "fn": "engine.py:511(_find)",
+   "tottime": [
+    0.00012,
+    0.00048,
+    0.00161,
+    0.00614
+   ],
+   "growth": 0.006,
+   "calls": [
+    615,
+    2627,
+    8663,
+    32807
+   ]
+  },
+  {
+   "fn": "~:0(<method 'startswith' of 'str' objects>)",
+   "tottime": [
+    0.00132,
+    0.00216,
+    0.00314,
+    0.00716
+   ],
+   "growth": 0.0058,
+   "calls": [
+    9797,
+    16539,
+    25977,
+    63729
+   ]
+  },
+  {
+   "fn": "geom.py:36(compose)",
+   "tottime": [
+    0.00085,
+    0.00122,
+    0.00168,
+    0.00571
+   ],
+   "growth": 0.0049,
+   "calls": [
+    957,
+    1137,
+    1677,
+    3837
+   ]
+  },
+  {
+   "fn": "engine.py:1146(_ask_indexed)",
+   "tottime": [
+    0.00038,
+    0.00064,
+    0.00136,
+    0.00439
+   ],
+   "growth": 0.004,
+   "calls": [
+    180,
+    180,
+    180,
+    180
+   ]
+  },
+  {
+   "fn": "geom.py:20(bits)",
+   "tottime": [
+    0.00274,
+    0.00286,
+    0.00337,
+    0.00664
+   ],
+   "growth": 0.0039,
+   "calls": [
+    1071,
+    1251,
+    1791,
+    3951
+   ]
+  },
+  {
+   "fn": "engine.py:112(_geom)",
+   "tottime": [
+    0.00162,
+    0.00195,
+    0.00259,
+    0.0053
+   ],
+   "growth": 0.0037,
+   "calls": [
+    2036,
+    2396,
+    3476,
+    7796
+   ]
+  },
+  {
+   "fn": "engine.py:1251(version)",
+   "tottime": [
+    0.00087,
+    0.00112,
+    0.00174,
+    0.00422
+   ],
+   "growth": 0.0033,
+   "calls": [
+    1797,
+    2417,
+    4277,
+    11717
+   ]
+  },
+  {
+   "fn": "engine.py:1596(evaluate)",
+   "tottime": [
+    0.00083,
+    0.00112,
+    0.0017,
+    0.00413
+   ],
+   "growth": 0.0033,
+   "calls": [
+    215,
+    275,
+    455,
+    1175
+   ]
+  },
+  {
+   "fn": "engine.py:1425(_step_row)",
+   "tottime": [
+    0.00123,
+    0.00148,
+    0.00202,
+    0.00432
+   ],
+   "growth": 0.0031,
+   "calls": [
+    957,
+    1137,
+    1677,
+    3837
+   ]
+  },
+  {
+   "fn": "engine.py:1610(primitives)",
+   "tottime": [
+    0.00083,
+    0.00121,
+    0.0017,
+    0.00383
+   ],
+   "growth": 0.003,
+   "calls": [
+    90,
+    90,
+    90,
+    90
+   ]
+  },
+  {
+   "fn": "~:0(<method 'append' of 'list' objects>)",
+   "tottime": [
+    0.00154,
+    0.00215,
+    0.00261,
+    0.00439
+   ],
+   "growth": 0.0029,
+   "calls": [
+    11261,
+    14800,
+    18220,
+    31900
+   ]
+  },
+  {
+   "fn": "<frozen importlib._bootstrap>:1390(_handle_fromlist)",
+   "tottime": [
+    0.00116,
+    0.0014,
+    0.00191,
+    0.0039
+   ],
+   "growth": 0.0027,
+   "calls": [
+    2037,
+    2396,
+    3476,
+    7796
+   ]
+  },
+  {
+   "fn": "~:0(<built-in method builtins.any>)",
+   "tottime": [
+    0.00094,
+    0.00119,
+    0.00167,
+    0.00359
+   ],
+   "growth": 0.0027,
+   "calls": [
+    2214,
+    2754,
+    4374,
+    10854
+   ]
+  },
+  {
+   "fn": "engine.py:77(judge_set)",
+   "tottime": [
+    0.0006,
+    0.0008,
+    0.00124,
+    0.00306
+   ],
+   "growth": 0.0025,
+   "calls": [
+    605,
+    785,
+    1325,
+    3485
+   ]
+  },
+  {
+   "fn": "~:0(<method 'bit_count' of 'int' objects>)",
+   "tottime": [
+    0.00034,
+    0.00048,
+    0.0009,
+    0.00248
+   ],
+   "growth": 0.0021,
+   "calls": [
+    1106,
+    1682,
+    3218,
+    9690
+   ]
+  },
+  {
+   "fn": "engine.py:1477(_rows)",
+   "tottime": [
+    0.00074,
+    0.00093,
+    0.0012,
+    0.0025
+   ],
+   "growth": 0.0018,
+   "calls": [
+    957,
+    1137,
+    1677,
+    3837
+   ]
+  },
+  {
+   "fn": "engine.py:607(recall_candidates)",
+   "tottime": [
+    0.00062,
+    0.00069,
+    0.001,
+    0.0023
+   ],
+   "growth": 0.0017,
+   "calls": [
+    52,
+    52,
+    52,
+    52
+   ]
+  },
+  {
+   "fn": "engine.py:134(_deps_of)",
+   "tottime": [
+    0.00044,
+    0.00057,
+    0.00089,
+    0.00211
+   ],
+   "growth": 0.0017,
+   "calls": [
+    815,
+    1075,
+    1855,
+    4975
+   ]
+  },
+  {
+   "fn": "engine.py:1285(_closure)",
+   "tottime": [
+    0.0003,
+    0.00043,
+    0.00071,
+    0.00181
+   ],
+   "growth": 0.0015,
+   "calls": [
+    405,
+    585,
+    1125,
+    3285
+   ]
+  },
+  {
+   "fn": "<frozen importlib._bootstrap>:645(parent)",
+   "tottime": [
+    0.00065,
+    0.00079,
+    0.00107,
+    0.00216
+   ],
+   "growth": 0.0015,
+   "calls": [
+    2040,
+    2396,
+    3476,
+    7796
+   ]
+  },
+  {
+   "fn": "engine.py:312(_valid_scoped)",
+   "tottime": [
+    0.00063,
+    0.00079,
+    0.00108,
+    0.002
+   ],
+   "growth": 0.0014,
+   "calls": [
+    19,
+    20,
+    20,
+    20
+   ]
+  },
+  {
+   "fn": "~:0(<method 'update' of 'set' objects>)",
+   "tottime": [
+    3e-05,
+    9e-05,
+    0.00028,
+    0.00144
+   ],
+   "growth": 0.0014,
+   "calls": [
+    53,
+    118,
+    325,
+    1224
+   ]
+  },
+  {
+   "fn": "engine.py:1517(_first_rel)",
+   "tottime": [
+    0.00035,
+    0.00101,
+    0.00113,
+    0.00173
+   ],
+   "growth": 0.0014,
+   "calls": [
+    600,
+    1920,
+    2280,
+    3720
+   ]
+  },
+  {
+   "fn": "engine.py:2344(_judge)",
+   "tottime": [
+    0.00033,
+    0.00046,
+    0.0007,
+    0.00165
+   ],
+   "growth": 0.0013,
+   "calls": [
+    575,
+    755,
+    1295,
+    3455
+   ]
+  },
+  {
+   "fn": "engine.py:144(_split_cap)",
+   "tottime": [
+    0.00028,
+    0.00039,
+    0.00061,
+    0.00152
+   ],
+   "growth": 0.0012,
+   "calls": [
+    505,
+    725,
+    1385,
+    4025
+   ]
+  },
+  {
+   "fn": "~:0(<built-in method builtins.len>)",
+   "tottime": [
+    0.00052,
+    0.0008,
+    0.00091,
+    0.00149
+   ],
+   "growth": 0.001,
+   "calls": [
+    3855,
+    6173,
+    7733,
+    13973
+   ]
+  },
+  {
+   "fn": "~:0(<built-in method builtins.all>)",
+   "tottime": [
+    0.00029,
+    0.00036,
+    0.00054,
+    0.00125
+   ],
+   "growth": 0.001,
+   "calls": [
+    335,
+    435,
+    735,
+    1935
+   ]
+  },
+  {
+   "fn": "engine.py:1357(<genexpr>)",
+   "tottime": [
+    0.00034,
+    0.00043,
+    0.0006,
+    0.00134
+   ],
+   "growth": 0.001,
+   "calls": [
+    1674,
+    2034,
+    3114,
+    7434
+   ]
+  },
+  {
+   "fn": "engine.py:126(_need)",
+   "tottime": [
+    0.00031,
+    0.00054,
+    0.00067,
+    0.00129
+   ],
+   "growth": 0.001,
+   "calls": [
+    2656,
+    4992,
+    6612,
+    13092
+   ]
+  },
+  {
+   "fn": "~:0(<method 'rpartition' of 'str' objects>)",
+   "tottime": [
+    0.00042,
+    0.00048,
+    0.00065,
+    0.00131
+   ],
+   "growth": 0.0009,
+   "calls": [
+    2045,
+    2396,
+    3476,
+    7796
+   ]
+  },
+  {
+   "fn": "~:0(<built-in method builtins.isinstance>)",
+   "tottime": [
+    0.00078,
+    0.00084,
+    0.00101,
+    0.00165
+   ],
+   "growth": 0.0009,
+   "calls": [
+    4682,
+    5151,
+    6711,
+    12951
+   ]
+  },
+  {
+   "fn": "engine.py:1334(review)",
+   "tottime": [
+    0.00022,
+    0.0003,
+    0.00047,
+    0.0011
+   ],
+   "growth": 0.0009,
+   "calls": [
+    30,
+    30,
+    30,
+    30
+   ]
+  }
+ ],
+ "comp_scan": {
+  "cpu_total_all_s": 16.7598,
+  "top_cumulative": [
+   {
+    "fn": "~:0(<built-in method builtins.exec>)",
+    "cumtime": 17.24,
+    "tottime": 0.0,
+    "calls": 2
+   },
+   {
+    "fn": "<string>:1(<module>)",
+    "cumtime": 17.2399,
+    "tottime": 0.0,
+    "calls": 1
+   },
+   {
+    "fn": "serve.py:305(main)",
+    "cumtime": 17.2399,
+    "tottime": 0.28,
+    "calls": 1
+   },
+   {
+    "fn": "serve.py:282(handle)",
+    "cumtime": 16.9485,
+    "tottime": 0.0032,
+    "calls": 226
+   },
+   {
+    "fn": "serve.py:222(call)",
+    "cumtime": 16.7819,
+    "tottime": 0.0065,
+    "calls": 153
+   },
+   {
+    "fn": "engine.py:2331(turn)",
+    "cumtime": 16.1651,
+    "tottime": 0.0064,
+    "calls": 4210
+   },
+   {
+    "fn": "engine.py:1719(acquire)",
+    "cumtime": 14.2835,
+    "tottime": 0.0932,
+    "calls": 156
+   },
+   {
+    "fn": "engine.py:2440(_turn)",
+    "cumtime": 12.05,
+    "tottime": 0.0173,
+    "calls": 4210
+   },
+   {
+    "fn": "engine.py:1882(_scan)",
+    "cumtime": 11.9201,
+    "tottime": 3.0453,
+    "calls": 123
+   },
+   {
+    "fn": "engine.py:1909(step)",
+    "cumtime": 5.8356,
+    "tottime": 4.1282,
+    "calls": 1234479
+   },
+   {
+    "fn": "engine.py:2414(_fc_requalify)",
+    "cumtime": 4.1028,
+    "tottime": 0.0008,
+    "calls": 40
+   },
+   {
+    "fn": "engine.py:1348(execute)",
+    "cumtime": 2.7078,
+    "tottime": 0.2921,
+    "calls": 110043
+   },
+   {
+    "fn": "engine.py:1638(hypotheses)",
+    "cumtime": 2.2447,
+    "tottime": 0.0317,
+    "calls": 308
+   },
+   {
+    "fn": "~:0(<method 'get' of 'dict' objects>)",
+    "cumtime": 1.9826,
+    "tottime": 1.9826,
+    "calls": 13314026
+   },
+   {
+    "fn": "~:0(<built-in method builtins.any>)",
+    "cumtime": 1.9106,
+    "tottime": 0.4225,
+    "calls": 1278525
+   },
+   {
+    "fn": "engine.py:1596(evaluate)",
+    "cumtime": 1.6789,
+    "tottime": 0.0595,
+    "calls": 22269
+   },
+   {
+    "fn": "engine.py:1425(_step_row)",
+    "cumtime": 1.4608,
+    "tottime": 0.3051,
+    "calls": 306968
+   },
+   {
+    "fn": "engine.py:1994(<genexpr>)",
+    "cumtime": 1.2585,
+    "tottime": 0.4321,
+    "calls": 932376
+   },
+   {
+    "fn": "engine.py:2053(investigate)",
+    "cumtime": 1.0372,
+    "tottime": 0.0066,
+    "calls": 56
+   },
+   {
+    "fn": "engine.py:1697(_outcomes)",
+    "cumtime": 1.0262,
+    "tottime": 0.0285,
+    "calls": 177
+   },
+   {
+    "fn": "engine.py:1258(expand)",
+    "cumtime": 0.7848,
+    "tottime": 0.4601,
+    "calls": 282764
+   },
+   {
+    "fn": "engine.py:112(_geom)",
+    "cumtime": 0.7588,
+    "tottime": 0.2759,
+    "calls": 425918
+   },
+   {
+    "fn": "~:0(<built-in method builtins.sorted>)",
+    "cumtime": 0.7044,
+    "tottime": 0.2708,
+    "calls": 229580
+   },
+   {
+    "fn": "engine.py:923(tell)",
+    "cumtime": 0.5354,
+    "tottime": 0.0124,
+    "calls": 2167
+   },
+   {
+    "fn": "engine.py:568(ix_append)",
+    "cumtime": 0.4949,
+    "tottime": 0.0091,
+    "calls": 2004
+   },
+   {
+    "fn": "engine.py:1523(_activated)",
+    "cumtime": 0.4536,
+    "tottime": 0.0039,
+    "calls": 308
+   },
+   {
+    "fn": "engine.py:1899(<lambda>)",
+    "cumtime": 0.4433,
+    "tottime": 0.2604,
+    "calls": 932499
+   },
+   {
+    "fn": "engine.py:593(_added)",
+    "cumtime": 0.4224,
+    "tottime": 0.2006,
+    "calls": 2004
+   },
+   {
+    "fn": "engine.py:1968(<genexpr>)",
+    "cumtime": 0.4223,
+    "tottime": 0.3124,
+    "calls": 1512375
+   },
+   {
+    "fn": "engine.py:1530(walk)",
+    "cumtime": 0.3995,
+    "tottime": 0.0704,
+    "calls": 26278
+   },
+   {
+    "fn": "engine.py:1991(<lambda>)",
+    "cumtime": 0.3836,
+    "tottime": 0.2664,
+    "calls": 932499
+   },
+   {
+    "fn": "engine.py:2307(_flush_growth)",
+    "cumtime": 0.3627,
+    "tottime": 0.0013,
+    "calls": 15
+   },
+   {
+    "fn": "engine.py:786(finish)",
+    "cumtime": 0.3593,
+    "tottime": 0.0001,
+    "calls": 156
+   },
+   {
+    "fn": "geom.py:36(compose)",
+    "cumtime": 0.3352,
+    "tottime": 0.2403,
+    "calls": 306968
+   },
+   {
+    "fn": "<frozen importlib._bootstrap>:1390(_handle_fromlist)",
+    "cumtime": 0.295,
+    "tottime": 0.1938,
+    "calls": 425919
+   },
+   {
+    "fn": "engine.py:1501(_image)",
+    "cumtime": 0.2893,
+    "tottime": 0.0216,
+    "calls": 27968
+   },
+   {
+    "fn": "engine.py:1477(_rows)",
+    "cumtime": 0.2516,
+    "tottime": 0.1754,
+    "calls": 306968
+   },
+   {
+    "fn": "engine.py:867(_idx)",
+    "cumtime": 0.2447,
+    "tottime": 0.0656,
+    "calls": 489860
+   },
+   {
+    "fn": "~:0(<method 'startswith' of 'str' objects>)",
+    "cumtime": 0.2446,
+    "tottime": 0.2446,
+    "calls": 2141414
+   },
+   {
+    "fn": "~:0(<method 'add' of 'set' objects>)",
+    "cumtime": 0.24,
+    "tottime": 0.24,
+    "calls": 1418863
+   },
+   {
+    "fn": "engine.py:1334(review)",
+    "cumtime": 0.2257,
+    "tottime": 0.0023,
+    "calls": 105
+   },
+   {
+    "fn": "engine.py:652(passes)",
+    "cumtime": 0.2142,
+    "tottime": 0.1478,
+    "calls": 434676
+   },
+   {
+    "fn": "~:0(<method 'append' of 'list' objects>)",
+    "cumtime": 0.2001,
+    "tottime": 0.2001,
+    "calls": 1533505
+   },
+   {
+    "fn": "engine.py:550(_ix_add)",
+    "cumtime": 0.1965,
+    "tottime": 0.0666,
+    "calls": 9068
+   },
+   {
+    "fn": "engine.py:91(judge_closed)",
+    "cumtime": 0.1938,
+    "tottime": 0.1938,
+    "calls": 980660
+   }
+  ],
+  "top_self": [
+   {
+    "fn": "engine.py:1909(step)",
+    "tottime": 4.1282,
+    "calls": 1234479
+   },
+   {
+    "fn": "engine.py:1882(_scan)",
+    "tottime": 3.0453,
+    "calls": 123
+   },
+   {
+    "fn": "~:0(<method 'get' of 'dict' objects>)",
+    "tottime": 1.9826,
+    "calls": 13314026
+   },
+   {
+    "fn": "engine.py:1258(expand)",
+    "tottime": 0.4601,
+    "calls": 282764
+   },
+   {
+    "fn": "engine.py:1994(<genexpr>)",
+    "tottime": 0.4321,
+    "calls": 932376
+   },
+   {
+    "fn": "~:0(<built-in method builtins.any>)",
+    "tottime": 0.4225,
+    "calls": 1278525
+   },
+   {
+    "fn": "engine.py:1968(<genexpr>)",
+    "tottime": 0.3124,
+    "calls": 1512375
+   },
+   {
+    "fn": "engine.py:1425(_step_row)",
+    "tottime": 0.3051,
+    "calls": 306968
+   },
+   {
+    "fn": "engine.py:1348(execute)",
+    "tottime": 0.2921,
+    "calls": 110043
+   },
+   {
+    "fn": "serve.py:305(main)",
+    "tottime": 0.28,
+    "calls": 1
+   },
+   {
+    "fn": "engine.py:112(_geom)",
+    "tottime": 0.2759,
+    "calls": 425918
+   },
+   {
+    "fn": "~:0(<built-in method builtins.sorted>)",
+    "tottime": 0.2708,
+    "calls": 229580
+   },
+   {
+    "fn": "engine.py:1991(<lambda>)",
+    "tottime": 0.2664,
+    "calls": 932499
+   },
+   {
+    "fn": "engine.py:1899(<lambda>)",
+    "tottime": 0.2604,
+    "calls": 932499
+   },
+   {
+    "fn": "~:0(<method 'startswith' of 'str' objects>)",
+    "tottime": 0.2446,
+    "calls": 2141414
+   },
+   {
+    "fn": "geom.py:36(compose)",
+    "tottime": 0.2403,
+    "calls": 306968
+   },
+   {
+    "fn": "~:0(<method 'add' of 'set' objects>)",
+    "tottime": 0.24,
+    "calls": 1418863
+   },
+   {
+    "fn": "engine.py:593(_added)",
+    "tottime": 0.2006,
+    "calls": 2004
+   },
+   {
+    "fn": "~:0(<method 'append' of 'list' objects>)",
+    "tottime": 0.2001,
+    "calls": 1533505
+   },
+   {
+    "fn": "<frozen importlib._bootstrap>:1390(_handle_fromlist)",
+    "tottime": 0.1938,
+    "calls": 425919
+   },
+   {
+    "fn": "engine.py:91(judge_closed)",
+    "tottime": 0.1938,
+    "calls": 980660
+   },
+   {
+    "fn": "~:0(<method 'items' of 'dict' objects>)",
+    "tottime": 0.1784,
+    "calls": 1243277
+   },
+   {
+    "fn": "engine.py:1477(_rows)",
+    "tottime": 0.1754,
+    "calls": 306968
+   },
+   {
+    "fn": "engine.py:652(passes)",
+    "tottime": 0.1478,
+    "calls": 434676
+   },
+   {
+    "fn": "~:0(<built-in method builtins.len>)",
+    "tottime": 0.1456,
+    "calls": 1139228
+   },
+   {
+    "fn": "~:0(<built-in method posix.fsync>)",
+    "tottime": 0.1197,
+    "calls": 111
+   },
+   {
+    "fn": "encoder.py:205(iterencode)",
+    "tottime": 0.1183,
+    "calls": 1039
+   },
+   {
+    "fn": "<frozen importlib._bootstrap>:645(parent)",
+    "tottime": 0.1141,
+    "calls": 425922
+   },
+   {
+    "fn": "engine.py:1357(<genexpr>)",
+    "tottime": 0.1115,
+    "calls": 567649
+   },
+   {
+    "fn": "engine.py:1719(acquire)",
+    "tottime": 0.0932,
+    "calls": 156
+   }
+  ]
+ }
+}
