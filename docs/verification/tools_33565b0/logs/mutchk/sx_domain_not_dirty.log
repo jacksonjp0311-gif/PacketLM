@@ -7,3 +7,5 @@ failed []
 {"ok": true, "sessions": 84, "reviews": 1524, "transitions": 594, "audit_violations": 0, "audit_first": []}
 rc=0
 == routed_diff 60 sessions audit churn lib mix K3
+{"seed": 7003, "K": 3, "snap": 8, "pad": "0", "lib": "mix", "churn": true, "audit": true, "arms": ["REF", "XR"], "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 60, "calls": 5093, "readonly_calls": 1422, "drops": 69, "torn": 41, "crashes": 40, "path_counts": {"XR.ix_rebuilds": 702, "XR.g58_flush_routed": 1078, "XR.g58_flush_unseen": 20884, "XR.full_validations": 1269, "XR.g58_review_full": 515, "XR.g58_cx_rebuilt": 180, "XR.g58_route_built": 3592, "XR.g58_route_cached": 50698, "XR.scoped_validations": 2402, "XR.candidate_queries": 7432, "XR.ix_appends": 1715, "XR.ix_checks_before_removal": 498, "XR.g58_review_fast": 4520, "XR.g58_review_unseen": 106816, "XR.g58_base_cached": 238766, "XR.g58_review_skipped": 7332, "XR.g58_reach_indexed": 297, "XR.ix_checks": 2104}, "period_full_validations": {"K3": 703}}
+rc=0

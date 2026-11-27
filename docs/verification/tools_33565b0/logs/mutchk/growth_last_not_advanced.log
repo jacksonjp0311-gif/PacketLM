@@ -2,3 +2,4 @@ applied
 == g44 (timeout 400 s)
 g44 rc=124
 == g58_diff 60 sessions seed 7001 + contract_fuzz 60 seed 7002
+== killed by verifier after g44 timeout (hang confirmed); remaining steps not needed
