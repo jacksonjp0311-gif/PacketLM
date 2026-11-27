@@ -40,6 +40,18 @@ class Router:
                 break
         return path
 
+    def path_union(self, residual: Packet, depth: int = 3) -> Packet | None:
+        """Union of the residual-hop path. Restored: removed in 6a345a5 while
+        gap, memory, demo, train, nexttoken, learn, vocab, crossdomain,
+        feedoffer and gaptest still call it."""
+        path = self.residual_hop(residual, depth)
+        if not path:
+            return None
+        acc = path[0]
+        for p in path[1:]:
+            acc = acc.union(p)
+        return acc
+
 if __name__ == "__main__":
     from .packets import hash_to_bits
     a = hash_to_bits("lily needle")
