@@ -1,0 +1,32 @@
+{
+ "root": "/workspace/verify-33565b0",
+ "flags": [
+  "--answers",
+  "--bounded",
+  "--lean",
+  "--deepen=5",
+  "--indexed",
+  "--incremental"
+ ],
+ "facts": 6204,
+ "caps": 1034,
+ "snapshot_ms_median": 300.2,
+ "snapshot_ms_no_ix_check": 56.57,
+ "ix_check_plus_fresh_ms": 249.3,
+ "profile_top": [
+  "        1    0.006    0.006    0.611    0.611 /workspace/verify-33565b0/packetlm/serve.py:141(_snapshot)",
+  "        1    0.159    0.159    0.506    0.506 /workspace/verify-33565b0/packetlm/engine.py:677(ix_check)",
+  "    12458    0.118    0.000    0.158    0.000 /workspace/verify-33565b0/packetlm/geom.py:20(bits)",
+  "        1    0.000    0.000    0.061    0.061 /workspace/verify-33565b0/packetlm/engine.py:891(save)",
+  "        1    0.003    0.003    0.061    0.061 /workspace/verify-33565b0/packetlm/engine.py:916(_save_lean)",
+  "     9286    0.008    0.000    0.053    0.000 /workspace/verify-33565b0/packetlm/field.py:25(pack)",
+  "   230026    0.048    0.000    0.048    0.000 {method 'add' of 'set' objects}",
+  "   242384    0.037    0.000    0.037    0.000 {method 'setdefault' of 'dict' objects}",
+  "        1    0.000    0.000    0.030    0.030 /workspace/verify-33565b0/packetlm/engine.py:418(validate_lean)",
+  "        1    0.015    0.015    0.030    0.030 /workspace/verify-33565b0/packetlm/engine.py:227(_valid_fast)",
+  "    12458    0.008    0.000    0.025    0.000 /workspace/verify-33565b0/packetlm/engine.py:114(_geom)",
+  "   239822    0.024    0.000    0.024    0.000 {method 'append' of 'list' objects}",
+  "     9286    0.023    0.000    0.023    0.000 {built-in method builtins.bin}",
+  "   198956    0.020    0.000    0.020    0.000 {method 'bit_length' of 'int' objects}"
+ ]
+}

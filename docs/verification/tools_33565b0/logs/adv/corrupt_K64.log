@@ -1,0 +1,539 @@
+{
+ "seed": 64,
+ "K": 64,
+ "snap": 64,
+ "sessions": 60,
+ "by_kind": {
+  "XJ:I1_by_sr_drop": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 216,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 124,
+   "recovered_equal_clean": 55,
+   "det_close": 3,
+   "recovery_failed": 2,
+   "trials_with_wrong_replies_before_detection": 2
+  },
+  "XJ:I2_told_rel_off": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 203,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 57,
+   "det_close": 3
+  },
+  "XJ:I3_small_and_codes_drop": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 203,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 56,
+   "det_close": 3,
+   "recovery_failed": 1,
+   "trials_with_wrong_replies_before_detection": 7
+  },
+  "XJ:I4_ref_core_drop": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 203,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 56,
+   "det_close": 3,
+   "recovery_failed": 1,
+   "trials_with_wrong_replies_before_detection": 1
+  },
+  "XJ:I5_by_rel_drop": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 206,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 54,
+   "det_close": 3,
+   "trials_with_wrong_replies_before_detection": 4,
+   "recovery_failed": 3
+  },
+  "XJ:S1_supports_empty": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 203,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 55,
+   "det_close": 3,
+   "trials_with_wrong_replies_before_detection": 3,
+   "recovery_failed": 2
+  },
+  "XJ:S2_dangling_premise": {
+   "trials": 60,
+   "det_call": 55,
+   "latency_mut_sum": 197,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 113,
+   "recovered_equal_clean": 55,
+   "det_close": 3,
+   "det_never": 2,
+   "index_rebuilt_after_injection": 2
+  },
+  "XJ:S3_id_mismatch": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 203,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 57,
+   "det_close": 3
+  },
+  "XJ:S5_inplace_valid_change": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 216,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 124,
+   "recovered_equal_clean": 44,
+   "det_close": 3,
+   "trials_with_wrong_replies_before_detection": 15,
+   "recovery_failed": 13
+  },
+  "XJ:S6_duplicate_append": {
+   "trials": 60,
+   "det_call": 58,
+   "latency_mut_sum": 107,
+   "latency_mut_max": 9,
+   "ro_served_before_detect": 50,
+   "recovered_equal_clean": 58,
+   "det_close": 2,
+   "index_rebuilt_after_injection": 2
+  },
+  "XJ:S7_cap_current_bad": {
+   "trials": 60,
+   "det_call": 60,
+   "latency_mut_sum": 60,
+   "latency_mut_max": 1,
+   "ro_served_before_detect": 9,
+   "recovered_equal_clean": 60
+  },
+  "XJ:S8_bits_key": {
+   "trials": 60,
+   "det_call": 55,
+   "latency_mut_sum": 197,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 113,
+   "recovered_equal_clean": 55,
+   "det_close": 3,
+   "det_never": 2,
+   "index_rebuilt_after_injection": 2
+  },
+  "XR:G1_rvx_rel_cleared": {
+   "trials": 54,
+   "det_never": 54,
+   "index_rebuilt_after_injection": 51,
+   "skipped": 6
+  },
+  "XR:G2_cx_offered_drop": {
+   "trials": 59,
+   "det_never": 34,
+   "index_rebuilt_after_injection": 31,
+   "undetected_final_differs": 33,
+   "det_call": 25,
+   "latency_mut_sum": 291,
+   "latency_mut_max": 26,
+   "ro_served_before_detect": 167,
+   "recovered_equal_clean": 25,
+   "skipped": 1
+  },
+  "XR:G3_sx_by_ent_cleared": {
+   "trials": 52,
+   "det_never": 30,
+   "index_rebuilt_after_injection": 30,
+   "det_call": 22,
+   "latency_mut_sum": 83,
+   "latency_mut_max": 12,
+   "ro_served_before_detect": 49,
+   "recovered_equal_clean": 22,
+   "skipped": 8,
+   "undetected_final_differs": 1
+  },
+  "XR:G4_rvx_subj_cleared": {
+   "trials": 54,
+   "det_never": 54,
+   "index_rebuilt_after_injection": 51,
+   "skipped": 6
+  },
+  "XR:I1_by_sr_drop": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 216,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 124,
+   "recovered_equal_clean": 53,
+   "det_close": 3,
+   "recovery_failed": 4,
+   "trials_with_wrong_replies_before_detection": 5
+  },
+  "XR:I2_told_rel_off": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 203,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 57,
+   "det_close": 3
+  },
+  "XR:I3_small_and_codes_drop": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 203,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 56,
+   "det_close": 3,
+   "recovery_failed": 1,
+   "trials_with_wrong_replies_before_detection": 7
+  },
+  "XR:I4_ref_core_drop": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 203,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 56,
+   "det_close": 3,
+   "recovery_failed": 1,
+   "trials_with_wrong_replies_before_detection": 1
+  },
+  "XR:I5_by_rel_drop": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 206,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 54,
+   "det_close": 3,
+   "trials_with_wrong_replies_before_detection": 4,
+   "recovery_failed": 3
+  },
+  "XR:S1_supports_empty": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 203,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 55,
+   "det_close": 3,
+   "trials_with_wrong_replies_before_detection": 3,
+   "recovery_failed": 2
+  },
+  "XR:S2_dangling_premise": {
+   "trials": 60,
+   "det_call": 55,
+   "latency_mut_sum": 197,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 113,
+   "recovered_equal_clean": 55,
+   "det_close": 3,
+   "det_never": 2,
+   "index_rebuilt_after_injection": 2
+  },
+  "XR:S3_id_mismatch": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 203,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 115,
+   "recovered_equal_clean": 57,
+   "det_close": 3
+  },
+  "XR:S5_inplace_valid_change": {
+   "trials": 60,
+   "det_call": 57,
+   "latency_mut_sum": 216,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 124,
+   "recovered_equal_clean": 44,
+   "det_close": 3,
+   "trials_with_wrong_replies_before_detection": 15,
+   "recovery_failed": 13
+  },
+  "XR:S6_duplicate_append": {
+   "trials": 60,
+   "det_call": 58,
+   "latency_mut_sum": 107,
+   "latency_mut_max": 9,
+   "ro_served_before_detect": 50,
+   "recovered_equal_clean": 58,
+   "det_close": 2,
+   "index_rebuilt_after_injection": 2
+  },
+  "XR:S7_cap_current_bad": {
+   "trials": 60,
+   "det_call": 60,
+   "latency_mut_sum": 96,
+   "latency_mut_max": 6,
+   "ro_served_before_detect": 21,
+   "recovered_equal_clean": 60
+  },
+  "XR:S8_bits_key": {
+   "trials": 60,
+   "det_call": 55,
+   "latency_mut_sum": 197,
+   "latency_mut_max": 11,
+   "ro_served_before_detect": 113,
+   "recovered_equal_clean": 55,
+   "det_close": 3,
+   "det_never": 2,
+   "index_rebuilt_after_injection": 2
+  }
+ }
+}
+{"session": 0, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 15, "ro_after": 11, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 0, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 15, "ro_after": 11, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 0, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 15, "ro_after": 11, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 0, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 15, "ro_after": 11, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 1, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 27, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 1, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 27, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 1, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 27, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 1, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 27, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 2, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 15, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 2, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 15, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 2, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 15, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 3, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 5, "served_wrong": 1, "detected": "close: StateError: incremental fact index diverged from the facts"}
+{"session": 3, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 8, "ro_after": 5, "served_wrong": 1, "detected": "close: StateError: incremental fact index diverged from the facts"}
+{"session": 3, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 8, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 3, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 8, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 3, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 8, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 4, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 20, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 4, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 20, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 4, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 20, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 4, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 20, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 5, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 11, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 5, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 11, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 6, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 15, "ro_after": 6, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 6, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 15, "ro_after": 6, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 6, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 15, "ro_after": 6, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 7, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 16, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 7, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 16, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 7, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 16, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 8, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 4, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 20"}
+{"session": 8, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 20"}
+{"session": 8, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 13, "ro_after": 8, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 8, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 13, "ro_after": 8, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 8, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 13, "ro_after": 8, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 9, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 27, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 9, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 27, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 10, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 5, "ro_after": 2, "served_wrong": 3, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 11"}
+{"session": 10, "kind": "I3_small_and_codes_drop", "engine": "XR", "mut_after": 5, "ro_after": 2, "served_wrong": 3, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 11"}
+{"session": 10, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 26, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 10, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 26, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 10, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 26, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 11, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 2, "ro_after": 2, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 11, "kind": "I5_by_rel_drop", "engine": "XR", "mut_after": 2, "ro_after": 2, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 11, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 45, "ro_after": 30, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 11, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 45, "ro_after": 30, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 12, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 1, "ro_after": 2, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 12, "kind": "I3_small_and_codes_drop", "engine": "XR", "mut_after": 1, "ro_after": 2, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 12, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 7, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 12, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 7, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 12, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 7, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 12, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 7, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 14, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 20, "ro_after": 11, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 14, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 20, "ro_after": 11, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 14, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 20, "ro_after": 11, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 14, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 20, "ro_after": 11, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 15, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 6, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 35"}
+{"session": 15, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 6, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 35"}
+{"session": 15, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 32, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 15, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 32, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 15, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 32, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 16, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 16, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 16, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 16, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 16, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 16, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 17, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 41, "ro_after": 24, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 17, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 41, "ro_after": 24, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 17, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 41, "ro_after": 24, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 18, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 5, "ro_after": 4, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 18"}
+{"session": 18, "kind": "I4_ref_core_drop", "engine": "XR", "mut_after": 5, "ro_after": 4, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 18"}
+{"session": 18, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 5, "ro_after": 4, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 18"}
+{"session": 18, "kind": "I5_by_rel_drop", "engine": "XR", "mut_after": 5, "ro_after": 4, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 18"}
+{"session": 18, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 11, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 18, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 11, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 18, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 11, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 19, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 9, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 19, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 9, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 19, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 9, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 20, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 3, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 21"}
+{"session": 20, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 3, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 21"}
+{"session": 20, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 10, "ro_after": 10, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 20, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 10, "ro_after": 10, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 20, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 10, "ro_after": 10, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 21, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 4, "ro_after": 3, "served_wrong": 1, "detected": "close: StateError: incremental fact index diverged from the facts"}
+{"session": 21, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 1, "detected": "close: StateError: incremental fact index diverged from the facts"}
+{"session": 21, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 21, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 21, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 22, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 18, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 22, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 18, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 22, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 18, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 22, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 18, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 23, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 2, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 24"}
+{"session": 23, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 2, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 24"}
+{"session": 23, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 12, "ro_after": 8, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 23, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 12, "ro_after": 8, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 23, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 12, "ro_after": 8, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 23, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 12, "ro_after": 8, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "S2_dangling_premise", "engine": "XJ", "mut_after": 25, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "S2_dangling_premise", "engine": "XR", "mut_after": 25, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 7, "served_wrong": 4, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 12"}
+{"session": 24, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 8, "ro_after": 7, "served_wrong": 4, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 12"}
+{"session": 24, "kind": "S8_bits_key", "engine": "XJ", "mut_after": 25, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "S8_bits_key", "engine": "XR", "mut_after": 25, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 8, "ro_after": 7, "served_wrong": 4, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 12"}
+{"session": 24, "kind": "I1_by_sr_drop", "engine": "XR", "mut_after": 8, "ro_after": 7, "served_wrong": 4, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 12"}
+{"session": 24, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 25, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 25, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 24, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 25, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 25, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 25, "kind": "S1_supports_empty", "engine": "XJ", "mut_after": 3, "ro_after": 5, "served_wrong": 1, "detected": "close: StateError: unsupported fact n2 r0 s1"}
+{"session": 25, "kind": "S1_supports_empty", "engine": "XR", "mut_after": 3, "ro_after": 5, "served_wrong": 1, "detected": "close: StateError: unsupported fact n2 r0 s1"}
+{"session": 25, "kind": "I1_by_sr_drop", "engine": "XR", "mut_after": 3, "ro_after": 5, "served_wrong": 1, "detected": "close: StateError: incremental fact index diverged from the facts (G57b structures)"}
+{"session": 25, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 3, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 25, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 3, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 25, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 3, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 26, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 61, "ro_after": 35, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 26, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 61, "ro_after": 35, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 26, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 61, "ro_after": 35, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 27, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 26, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 27, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 26, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 27, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 26, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 27, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 26, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 28, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 42, "ro_after": 32, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 28, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 42, "ro_after": 32, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 29, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 17, "ro_after": 10, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 30, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 1, "ro_after": 0, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 5"}
+{"session": 30, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 1, "ro_after": 0, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 5"}
+{"session": 30, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 29, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 30, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 29, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 31, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 12, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 31, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 12, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 31, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 12, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 31, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 12, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 28, "ro_after": 17, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 28, "ro_after": 17, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 28, "ro_after": 17, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 33, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 30, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 33, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 30, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 33, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 30, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 34, "kind": "S2_dangling_premise", "engine": "XJ", "mut_after": 35, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 34, "kind": "S2_dangling_premise", "engine": "XR", "mut_after": 35, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 34, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 9, "ro_after": 4, "served_wrong": 4, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 17"}
+{"session": 34, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 9, "ro_after": 4, "served_wrong": 4, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 17"}
+{"session": 34, "kind": "S8_bits_key", "engine": "XJ", "mut_after": 35, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 34, "kind": "S8_bits_key", "engine": "XR", "mut_after": 35, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 34, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 9, "ro_after": 4, "served_wrong": 4, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 17"}
+{"session": 34, "kind": "I1_by_sr_drop", "engine": "XR", "mut_after": 9, "ro_after": 4, "served_wrong": 4, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 17"}
+{"session": 34, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 3, "ro_after": 1, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 34, "kind": "I3_small_and_codes_drop", "engine": "XR", "mut_after": 3, "ro_after": 1, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 34, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 35, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 34, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 35, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 35, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 49, "ro_after": 29, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 35, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 49, "ro_after": 29, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 36, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 19, "ro_after": 18, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 36, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 19, "ro_after": 18, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 37, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 27, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 37, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 27, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 37, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 27, "ro_after": 15, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 38, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 12, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 38, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 12, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 38, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 12, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 38, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 12, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 39, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 4, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 10"}
+{"session": 39, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 10"}
+{"session": 39, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 4, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 39, "kind": "I3_small_and_codes_drop", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 39, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 37, "ro_after": 27, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 39, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 37, "ro_after": 27, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 39, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 37, "ro_after": 27, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 39, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 37, "ro_after": 27, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 40, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 2, "ro_after": 1, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 13"}
+{"session": 40, "kind": "I5_by_rel_drop", "engine": "XR", "mut_after": 2, "ro_after": 1, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 13"}
+{"session": 40, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 35, "ro_after": 24, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 40, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 35, "ro_after": 24, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 41, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 15, "ro_after": 8, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 41, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 15, "ro_after": 8, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 42, "kind": "S1_supports_empty", "engine": "XJ", "mut_after": 6, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 10"}
+{"session": 42, "kind": "S1_supports_empty", "engine": "XR", "mut_after": 6, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 10"}
+{"session": 42, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 6, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 10"}
+{"session": 42, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 6, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 10"}
+{"session": 42, "kind": "I1_by_sr_drop", "engine": "XR", "mut_after": 6, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 10"}
+{"session": 42, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 6, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 42, "kind": "I3_small_and_codes_drop", "engine": "XR", "mut_after": 6, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 42, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 25, "ro_after": 22, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 42, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 25, "ro_after": 22, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 43, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 8, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 43, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 8, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 43, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 8, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 43, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 8, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 44, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 10, "ro_after": 7, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 12"}
+{"session": 44, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 10, "ro_after": 7, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 12"}
+{"session": 44, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 10, "ro_after": 7, "served_wrong": 3, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 44, "kind": "I3_small_and_codes_drop", "engine": "XR", "mut_after": 10, "ro_after": 7, "served_wrong": 3, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 44, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 25, "ro_after": 18, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 44, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 25, "ro_after": 18, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 45, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 16, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 45, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 16, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 45, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 16, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 45, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 16, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 46, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 41"}
+{"session": 46, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 8, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 41"}
+{"session": 47, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 21, "ro_after": 16, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 47, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 21, "ro_after": 16, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 47, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 21, "ro_after": 16, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 48, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 48, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 48, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 48, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 4, "ro_after": 3, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 49, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 5, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 49, "kind": "I3_small_and_codes_drop", "engine": "XR", "mut_after": 5, "ro_after": 5, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "retry_reply_equal_clean": true, "recovered_equal_clean": true}
+{"session": 49, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 54, "ro_after": 32, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 49, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 54, "ro_after": 32, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 50, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 26, "ro_after": 16, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 50, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 26, "ro_after": 16, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 50, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 26, "ro_after": 16, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 51, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 11, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 51, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 11, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 52, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 9, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 52, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 9, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 52, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 9, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 52, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 9, "ro_after": 9, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 53, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 10, "ro_after": 6, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 53, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 10, "ro_after": 6, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 53, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 10, "ro_after": 6, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 53, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 10, "ro_after": 6, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 54, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 44, "ro_after": 30, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 54, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 44, "ro_after": 30, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 55, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 13, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 56, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 29, "ro_after": 24, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 56, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 29, "ro_after": 24, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 56, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 29, "ro_after": 24, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 57, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 5, "ro_after": 6, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 34"}
+{"session": 57, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 5, "ro_after": 6, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 34"}
+{"session": 57, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 6, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 57, "kind": "G2_cx_offered_drop", "engine": "XR", "mut_after": 6, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 57, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 6, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 57, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 6, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 58, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 35, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 58, "kind": "G3_sx_by_ent_cleared", "engine": "XR", "mut_after": 35, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 58, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 35, "ro_after": 20, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 59, "kind": "S1_supports_empty", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 21"}
+{"session": 59, "kind": "S1_supports_empty", "engine": "XR", "mut_after": 7, "ro_after": 7, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 21"}
+{"session": 59, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 21"}
+{"session": 59, "kind": "S5_inplace_valid_change", "engine": "XR", "mut_after": 7, "ro_after": 7, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts", "recovery": "reopen failed: StateError: journal replay diverged at record 21"}
+{"session": 59, "kind": "I1_by_sr_drop", "engine": "XR", "mut_after": 7, "ro_after": 7, "served_wrong": 1, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 21"}
+{"session": 59, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 10, "ro_after": 7, "served_wrong": 3, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 24"}
+{"session": 59, "kind": "I5_by_rel_drop", "engine": "XR", "mut_after": 10, "ro_after": 7, "served_wrong": 3, "detected": "call: StateError: incremental fact index diverged from the facts (G57b structures)", "recovery": "reopen failed: StateError: journal replay diverged at record 24"}
+{"session": 59, "kind": "G1_rvx_rel_cleared", "engine": "XR", "mut_after": 26, "ro_after": 17, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 59, "kind": "G4_rvx_subj_cleared", "engine": "XR", "mut_after": 26, "ro_after": 17, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
