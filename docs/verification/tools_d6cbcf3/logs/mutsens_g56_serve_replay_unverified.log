@@ -1,0 +1,8 @@
+applied g56_serve_replay_unverified
+== diff
+{"seed": 91, "flags": ["--answers", "--bounded", "--lean"], "crash": true, "inproc": false, "sessions": 15, "calls": 74, "diff_replies": 0, "diff_final_bytes": 0, "errors": 0, "events": {"every": 534, "kill_between": 18, "kill_mid": 12, "mid_applied": 9, "mid_applied_hash_checked": 5, "new_path_calls": 14, "new_path_diffs": 0, "finalized_from_journal": 2}}
+== inproc
+{"seed": 92, "flags": ["--answers", "--bounded", "--lean"], "crash": false, "inproc": true, "sessions": 8, "calls": 52, "diff_replies": 0, "diff_final_bytes": 0, "errors": 0, "events": {}}
+== faults
+{"seed": 93, "flags": ["--answers", "--bounded", "--lean"], "sessions": 3, "runs": 94, "crashes": 82, "final_state_differs": 0, "final_bytes_differ": 0, "errors": 9}
+{"errors_by": {"every=1 call=0 at fsync(): recovery error: journal does not extend the loaded": 4, "every=1 call=0 at replace(s.json.journal.tmp, s.json.journal): recovery error: journal does not extend the loaded": 2, "every=2 call=1 at fsync(): recovery error: journal does not extend the loaded": 2, "every=2 call=1 at replace(s.json.journal.tmp, s.json.journal): recovery error: journal does not 

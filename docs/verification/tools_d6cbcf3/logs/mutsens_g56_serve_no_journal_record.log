@@ -1,0 +1,12 @@
+applied g56_serve_no_journal_record
+== diff
+{"seed": 91, "flags": ["--answers", "--bounded", "--lean"], "crash": true, "inproc": false, "sessions": 15, "calls": 74, "diff_replies": 8, "diff_final_bytes": 8, "errors": 0, "events": {"every": 534, "kill_between": 18, "kill_mid": 12, "mid_applied": 4, "mid_applied_hash_checked": 0, "new_path_calls": 14, "new_path_diffs": 0, "finalized_from_journal": 0}}
+{"session": 4, "first_diff_call": 2, "ref": ["unknown", "none k0", "none k0", "complete e1 (4 entities)", "none k0", "unknown", "qualified k0 rel:ra+rel:ra", "qualified k0 rel:ra+rel:ra", "recorded e4 rc e2", "qualified k0 rel:ra+rel:ra", "complete e2 (6 entities)", "qualified k0 rel:ra+rel:ra", "qualified k0 rel:ra+rel:ra", "complete e5 (6 entities)", "qualified k0 rel:ra+rel:ra", "complete e6 (7
+{"session": 4, "final_bytes_differ": true, "state_equal_as_values": false, "turn": [18, 51], "log_len": [0, 1], "trace": null, "every": 5}
+== inproc
+{"seed": 92, "flags": ["--answers", "--bounded", "--lean"], "crash": false, "inproc": true, "sessions": 8, "calls": 52, "diff_replies": 0, "diff_final_bytes": 0, "errors": 5, "events": {}}
+{"session": 0, "errors": ["call 0 fresh-recovery: : key order/keys ['turn', 'facts', 'log', 'library', 'lexicon', 'capabilities'] vs ['turn', 'facts', 'log', 'library', 'lexicon', 'capabilities']", "call 1 fresh-recovery: : key order/keys ['turn', 'facts', 'log', 'library', 'lexicon', 'capabilities'] vs ['turn', 'facts', 'log', 'library', 'lexicon', 'capabilities']", "call 2 fresh-recovery: : key 
+{"session": 2, "errors": ["call 0 fresh-recovery: : key order/keys ['turn', 'facts', 'log', 'library', 'lexicon', 'capabilities'] vs ['turn', 'facts', 'log', 'library', 'lexicon', 'capabilities']", "call 1 fresh-recovery: : key order/keys ['turn', 'facts', 'log', 'library', 'lexicon', 'capabilities'] vs ['turn', 'facts', 'log', 'library', 'lexicon', 'capabilities']", "call 2 fresh-recovery: : key 
+== faults
+{"seed": 93, "flags": ["--answers", "--bounded", "--lean"], "sessions": 3, "runs": 94, "crashes": 82, "final_state_differs": 3, "final_bytes_differ": 3, "errors": 9}
+{"errors_by": {"every=1 call=0 at fsync(): recovery error: journal does not extend the loaded": 4, "every=1 call=0 at replace(s.json.journal.tmp, s.json.journal): recovery error: journal does not extend the loaded": 2, "every=2 call=1 at fsync(): recovery error: journal does not extend the loaded": 2, "every=2 call=1 at replace(s.json.journal.tmp, s.json.journal): recovery error: journal does not 
