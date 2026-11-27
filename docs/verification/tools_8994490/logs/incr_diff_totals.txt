@@ -1,0 +1,16 @@
+a11.log 300 12999 K 64 snap 64 pad 0 scoped 4607 full 1919 period n/a 0 diffs {} 0
+append61.log 30 12000 K 64 snap 1000 pad 0 scoped 7630 full 186 period {'K64': 148} 0 diffs {} 0
+append62.log 30 12090 K 64 snap 64 pad 1000 scoped 7778 full 178 period {'K64': 122} 0 diffs {} 0
+b12.log 300 12604 K 3 snap 8 pad 0 scoped 3713 full 2622 period n/a 0 diffs {} 0
+c13.log 300 12371 K 100000 snap 100000 pad 0 scoped 4381 full 1812 period n/a 0 diffs {} 0
+d14.log 150 6538 K 64 snap 64 pad mix scoped 2376 full 945 period n/a 0 diffs {} 0
+final71.log 300 12559 K 3 snap 8 pad 0 scoped 3651 full 2606 period {'K3': 781} 0 diffs {} 0
+final72.log 300 13056 K 64 snap 64 pad mix scoped 4824 full 1839 period {} 0 diffs {} 0
+final73.log 100 14758 K 64 snap 200 pad 0 scoped 5098 full 1827 period {} 0 diffs {} 0
+long31.log 100 27789 K 64 snap 64 pad 0 scoped 9787 full 3088 period n/a 0 diffs {} 0
+long32.log 100 26116 K 64 snap 200 pad 0 scoped 9158 full 2963 period n/a 0 diffs {} 0
+long51.log 40 19112 K 64 snap 200 pad 0 scoped 6837 full 1967 period {} 0 diffs {} 0
+long52.log 40 18977 K 64 snap 64 pad 0 scoped 6921 full 1897 period {} 0 diffs {} 0
+pad16k33.log 12 960 K 64 snap 64 pad 16000 scoped 652 full 77 period n/a 0 diffs {} 0
+pad1k34.log 60 8978 K 64 snap 64 pad 1000 scoped 3265 full 1064 period n/a 0 diffs {} 0
+TOTAL {'sessions': 2162, 'calls': 210907, 'readonly_calls': 105239, 'deep_checks': 420206, 'crashes': 1701, 'torn': 1727, 'drops': 4162}

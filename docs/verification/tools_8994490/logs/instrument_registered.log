@@ -1,0 +1,17 @@
+instrument head 70297af dirty=[]
+comp | Cj+maint || Bj | A_36 = -0.6770  [-0.8872, -0.4890] (95% paired bootstrap, S=7); delta-SE=0.1128; sign-flip p=0.01562; geometric-mean form=-0.6773
+comp | Cj+maint || Ci+maint | A_36 = +0.0406  [+0.0316, +0.0493] (95% paired bootstrap, S=7); delta-SE=0.0047; sign-flip p=0.01562; geometric-mean form=+0.0407
+comp | Ci+maint || Bi | A_36 = -0.8008  [-0.9908, -0.6128] (95% paired bootstrap, S=7); delta-SE=0.1055; sign-flip p=0.01562; geometric-mean form=-0.7992
+comp | Bj || Bi | A_36 = -0.0302  [-0.0533, -0.0048] (95% paired bootstrap, S=7); delta-SE=0.0135; sign-flip p=0.1094; geometric-mean form=-0.0290
+comp | Pj+maint || Pi+maint | A_36 = +0.0324  [+0.0243, +0.0423] (95% paired bootstrap, S=7); delta-SE=0.0050; sign-flip p=0.01562; geometric-mean form=+0.0334
+comp | Cj+maint || Pj+maint | A_36 = -0.3942  [-0.5659, -0.2259] (95% paired bootstrap, S=7); delta-SE=0.0951; sign-flip p=0.01562; geometric-mean form=-0.3956
+comp | Cj || Bj | A_36 = -0.5826  [-0.7868, -0.3936] (95% paired bootstrap, S=7); delta-SE=0.1108; sign-flip p=0.01562; geometric-mean form=-0.5814
+comp | Fj+maint || Fi+maint | A_36 = +0.1099  [+0.0886, +0.1348] (95% paired bootstrap, S=7); delta-SE=0.0128; sign-flip p=0.01562; geometric-mean form=+0.1120
+comp | Cj+maint || Fj+maint | A_36 = -9.6828  [-11.1114, -8.5357] (95% paired bootstrap, S=7); delta-SE=0.7173; sign-flip p=0.01562; geometric-mean form=-9.6747
+unrel | Cj+maint || Bj | A_24 = -2.2125  [-2.3765, -2.0369] (95% paired bootstrap, S=7); delta-SE=0.0943; sign-flip p=0.01562; geometric-mean form=-2.2099
+unrel | Cj+maint || Ci+maint | A_24 = +0.3874  [+0.3780, +0.3959] (95% paired bootstrap, S=7); delta-SE=0.0051; sign-flip p=0.01562; geometric-mean form=+0.3877
+unrel | Ci+maint || Bi | A_24 = -5.1408  [-5.4678, -4.8270] (95% paired bootstrap, S=7); delta-SE=0.1803; sign-flip p=0.01562; geometric-mean form=-5.1523
+unrel | Bj || Bi | A_24 = -0.1711  [-0.2318, -0.1106] (95% paired bootstrap, S=7); delta-SE=0.0340; sign-flip p=0.01562; geometric-mean form=-0.1736
+unrel | Pj+maint || Pi+maint | A_24 = +0.3995  [+0.3930, +0.4058] (95% paired bootstrap, S=7); delta-SE=0.0036; sign-flip p=0.01562; geometric-mean form=+0.3996
+unrel | Cj+maint || Pj+maint | A_24 = -0.0195  [-0.0369, -0.0040] (95% paired bootstrap, S=7); delta-SE=0.0091; sign-flip p=0.09375; geometric-mean form=-0.0187
+unrel | Cj || Bj | A_24 = -0.9096  [-1.0322, -0.7865] (95% paired bootstrap, S=7); delta-SE=0.0689; sign-flip p=0.01562; geometric-mean form=-0.9061

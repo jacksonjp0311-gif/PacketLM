@@ -1,0 +1,1379 @@
+{
+  "baseline_failed": [],
+  "mutations": {
+    "judge_none_contradicts": {
+      "exit": 1,
+      "failed": [
+        "discovery.missing_is_undetermined",
+        "discovery.gap_survives_as_undetermined",
+        "discovery.gap_keeps_provisional_until_taught",
+        "audit.zero_support_kept",
+        "audit.zero_support_conflict_blocks",
+        "audit.scan_matches_bruteforce",
+        "audit.contradiction_suspends",
+        "audit.versions_pin_dependents",
+        "audit.ambiguous_path_undetermined",
+        "px.px_judge_table",
+        "g49.fc_evaluate_closed_at_complete_base",
+        "g49.fc_less_defined_refuted_qualifies_base",
+        "g49.fc_scope_unobserved_changes_nothing_base",
+        "g49.fc_violation_retracts_and_demotes_base",
+        "g49.fc_evaluate_closed_at_complete_programs",
+        "g49.g51_qualified_library_offers_only_qualified"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "blocking_ignored": {
+      "exit": 1,
+      "failed": [
+        "discovery.gap_keeps_provisional_until_taught",
+        "audit.open_world_blocks_longer_alternative",
+        "audit.zero_support_conflict_blocks",
+        "audit.contradiction_suspends",
+        "g49.fc_less_defined_refuted_qualifies_base",
+        "g49.fc_scope_unobserved_changes_nothing_base",
+        "g49.fc_violation_retracts_and_demotes_base",
+        "g49.g51_qualified_library_offers_only_qualified"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "review_noop": {
+      "exit": 1,
+      "failed": [
+        "audit.contradiction_suspends",
+        "audit.reacquired_as_v2",
+        "audit.example_correction_invalidates"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "superseded_not_pinned": {
+      "exit": 1,
+      "failed": [
+        "audit.versions_pin_dependents"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "cycle_offered": {
+      "exit": 1,
+      "failed": [
+        "audit.no_cycle_offered"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "first_proof_only": {
+      "exit": 1,
+      "failed": [
+        "audit.two_proofs_stored",
+        "audit.one_retraction_keeps_conclusion"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "tms_all_or_nothing": {
+      "exit": 1,
+      "failed": [
+        "audit.one_retraction_keeps_conclusion"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "expression_borrows": {
+      "exit": 1,
+      "failed": [
+        "fresh_process.p3_uses_capability",
+        "fresh_process.p5_sees_corrections",
+        "audit.missing_construction_reported"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "no_dangling_check": {
+      "exit": 1,
+      "failed": [
+        "audit.nested_validation",
+        "g49.g54_fast_validation_equivalent"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "no_backup_fallback": {
+      "exit": 1,
+      "failed": [
+        "persistence.completed",
+        "fresh_process.p6_recovery_reported",
+        "audit.completed",
+        "g49.g54_lean_persistence_guarantees"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "ambiguity_off": {
+      "exit": 1,
+      "failed": [
+        "memory.ambiguity_abstains",
+        "audit.multiple_conclusions_ambiguous",
+        "g49.g54_lean_replies_and_recall_equal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g54_lean_ambiguity_off": {
+      "exit": 1,
+      "failed": [
+        "g49.g54_lean_replies_and_recall_equal",
+        "g57.g57_differential_replies_and_state_equal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "library_off": {
+      "exit": 1,
+      "failed": [
+        "acquisition.library_reuse",
+        "acquisition.binary_equals_walk",
+        "audit.completed",
+        "programs.prog_composition_uses_library",
+        "programs.prog_dependency_suspends_dependent",
+        "g49.g51_qualified_library_offers_only_qualified",
+        "g57.g57_fingerprint_covers_dependencies_entity_library"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "zero_support_dropped": {
+      "exit": 1,
+      "failed": [
+        "audit.zero_support_kept"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "unanswered_lost": {
+      "exit": 1,
+      "failed": [
+        "discovery.silent_oracle_adopts_nothing"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "activation_overprunes": {
+      "exit": 1,
+      "failed": [
+        "acquisition.one_observation_stays_pending",
+        "discovery.start_has_nine_live",
+        "retention.adaptive_matches_static",
+        "audit.completed",
+        "px.px_base_one_sided_unresolved_without",
+        "px.px_base_none_resolves_ambiguity",
+        "g49.completed",
+        "serve.g56_serve_replies_and_state_equal",
+        "serve.g56_serve_first_snapshot_crash_recovers",
+        "verify_3e2783c.completed",
+        "g57.g57_fingerprint_covers_dependencies_entity_library"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "open_world_off": {
+      "exit": 1,
+      "failed": [
+        "audit.zero_support_conflict_blocks",
+        "audit.scan_matches_bruteforce"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "prune_on_evidence_only": {
+      "exit": 1,
+      "failed": [
+        "audit.zero_support_conflict_blocks",
+        "audit.scan_matches_bruteforce",
+        "g49.g53_bounded_scan_equals_unbounded"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "domain_too_narrow": {
+      "exit": 1,
+      "failed": [
+        "discovery.gap_survives_as_undetermined",
+        "discovery.gap_keeps_provisional_until_taught",
+        "g49.fc_less_defined_refuted_qualifies_base",
+        "g49.fc_scope_unobserved_changes_nothing_base",
+        "g49.fc_violation_retracts_and_demotes_base",
+        "g49.g51_qualified_library_offers_only_qualified"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "dedupe_by_last_step": {
+      "exit": 1,
+      "failed": [
+        "discovery.gap_survives_as_undetermined",
+        "discovery.gap_keeps_provisional_until_taught",
+        "audit.open_world_blocks_longer_alternative",
+        "audit.scan_matches_bruteforce",
+        "g49.fc_less_defined_refuted_qualifies_base",
+        "g49.fc_scope_unobserved_changes_nothing_base",
+        "g49.fc_violation_retracts_and_demotes_base",
+        "g49.g51_qualified_library_offers_only_qualified",
+        "g49.g53_bounded_scan_equals_unbounded"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "binding_trusted_on_load": {
+      "exit": 1,
+      "failed": [
+        "persistence.binding_tamper_recovers_loudly",
+        "persistence.corrupt_primary_not_backed_up"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "v3_accepts_packets": {
+      "exit": 1,
+      "failed": [
+        "audit.nested_validation",
+        "g49.g54_fast_validation_equivalent"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "migration_silent": {
+      "exit": 1,
+      "failed": [
+        "migration.v2_migrates_reported"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "packet_roles_swapped": {
+      "exit": 1,
+      "failed": [
+        "memory.ambiguity_abstains",
+        "memory.ambiguity_resolved_by_correction",
+        "constructions.osv_read",
+        "constructions.question_template_learned",
+        "fresh_process.p2_reads_p1",
+        "fresh_process.p5_sees_corrections",
+        "fresh_process.p6_recovery_reported",
+        "audit.identities_separate",
+        "audit.missing_construction_reported",
+        "audit.multiple_conclusions_ambiguous",
+        "g57.g57_differential_replies_and_state_equal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "primary_trusted_on_save": {
+      "exit": 1,
+      "failed": [
+        "persistence.corrupt_primary_not_backed_up"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g54_lean_primary_trusted_on_save": {
+      "exit": 1,
+      "failed": [
+        "g49.g54_lean_persistence_guarantees"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "restore_off": {
+      "exit": 1,
+      "failed": [
+        "retention.adaptive_matches_static",
+        "programs.prog_question_pool_same_set_under_retention"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "gate_ignores_recent": {
+      "exit": 1,
+      "failed": [
+        "retention.gate_keeps_recently_touched"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "archive_deleted_on_restore": {
+      "exit": 1,
+      "failed": [
+        "retention.archive_never_deleted"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "prog_union_clauses": {
+      "exit": 1,
+      "failed": [
+        "programs.prog_run_matches_naive",
+        "programs.prog_trace_ends_match_run",
+        "programs.prog_ordered_choice",
+        "g49.exact_scan_equals_brute_force",
+        "g49.h1_identity_expressible_under_complete",
+        "g49.n1_no_candidate_caps_at_provisional"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "prog_not_inverted": {
+      "exit": 1,
+      "failed": [
+        "programs.prog_run_matches_naive",
+        "programs.prog_trace_ends_match_run",
+        "g49.exact_scan_equals_brute_force",
+        "g49.h1_identity_expressible_under_complete",
+        "g49.n1_no_candidate_caps_at_provisional"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "prog_no_recursion": {
+      "exit": 1,
+      "failed": [
+        "programs.prog_run_matches_naive",
+        "programs.prog_trace_ends_match_run",
+        "programs.prog_until_acquired",
+        "programs.prog_until_generalizes_depth",
+        "programs.prog_until_open_world_provisional",
+        "programs.prog_composition_uses_library",
+        "programs.prog_dependency_suspends_dependent",
+        "g49.exact_scan_equals_brute_force"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "prog_deps_hidden": {
+      "exit": 1,
+      "failed": [
+        "programs.prog_dependency_suspends_dependent"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "prog_investigate_defined_only": {
+      "exit": 1,
+      "failed": [
+        "programs.prog_investigate_one_sided",
+        "programs.prog_question_independent_of_fact_order"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "prog_scan_ignored": {
+      "exit": 1,
+      "failed": [
+        "programs.prog_until_open_world_provisional",
+        "programs.prog_filter_full_horizon_blocks",
+        "g49.fc_less_defined_refuted_qualifies_programs",
+        "g49.fc_scope_unobserved_changes_nothing_programs",
+        "g49.fc_violation_retracts_and_demotes_programs",
+        "g49.h1_guard_gap_caps_at_provisional",
+        "g49.g55_budget_covers_component",
+        "g49.s1_growth_in_region_requalifies"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "prog_order_dependent_ties": {
+      "exit": 1,
+      "failed": [
+        "programs.prog_question_inside_component"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "prog_investigate_outside_component": {
+      "exit": 1,
+      "failed": [
+        "programs.prog_question_inside_component",
+        "programs.prog_question_pool_same_set_under_retention"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "prog_scan_short_horizon": {
+      "exit": 1,
+      "failed": [
+        "programs.prog_filter_full_horizon_blocks"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "px_none_undetermined": {
+      "exit": 1,
+      "failed": [
+        "px.px_judge_table",
+        "px.px_base_qualifies_after_none"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "px_scan_skips_negative_subjects": {
+      "exit": 1,
+      "failed": [
+        "px.px_base_qualifies_after_none"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "px_statement_as_answer_entity": {
+      "exit": 1,
+      "failed": [
+        "px.px_statements_not_guard_proposals"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "px_investigate_defined_only": {
+      "exit": 1,
+      "failed": [
+        "px.px_base_none_resolves_ambiguity",
+        "px.px_base_qualifies_after_none"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "static_ignores_archive": {
+      "exit": 1,
+      "failed": [
+        "retention.static_open_restores_all"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "no_requalify": {
+      "exit": 1,
+      "failed": [
+        "fresh_process.p4_correction_drops_derived",
+        "fresh_process.p5_sees_corrections",
+        "audit.retirement_requalifies"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "p1_statement_alone_adopts": {
+      "exit": 1,
+      "failed": [
+        "g49.p1_statement_alone_adopts_nothing_programs"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "l3_statement_as_operator_answer": {
+      "exit": 1,
+      "failed": [
+        "g49.l3_statement_not_operator_answer"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "fc_judge_open": {
+      "exit": 1,
+      "failed": [
+        "g49.fc_evaluate_closed_at_complete_base",
+        "g49.fc_evaluate_closed_at_complete_programs",
+        "g49.m1_complete_after_example_reviews_version"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "fc_base_scan_open": {
+      "exit": 1,
+      "failed": [
+        "g49.fc_less_defined_refuted_qualifies_base"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "fc_programs_open": {
+      "exit": 1,
+      "failed": [
+        "g49.exact_scan_equals_brute_force"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "fc_exact_open": {
+      "exit": 1,
+      "failed": [
+        "g49.exact_scan_equals_brute_force",
+        "g49.fc_less_defined_refuted_qualifies_programs",
+        "g49.h1_guard_gap_caps_at_provisional",
+        "g49.s1_growth_in_region_requalifies",
+        "g49.n1_no_candidate_caps_at_provisional"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "fc_new_fact_ignored": {
+      "exit": 1,
+      "failed": [
+        "g49.fc_violation_retracts_and_demotes_base",
+        "g49.fc_violation_retracts_and_demotes_programs",
+        "g49.g53_fc_skip_only_settled"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "fc_removed_fact_ignored": {
+      "exit": 1,
+      "failed": [
+        "g49.fc_removed_fact_retracts"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "fc_no_requalify": {
+      "exit": 1,
+      "failed": [
+        "g49.fc_less_defined_refuted_qualifies_base",
+        "g49.fc_less_defined_refuted_qualifies_programs",
+        "g49.h1_guard_gap_caps_at_provisional",
+        "g49.s1_growth_in_region_requalifies",
+        "g49.n1_no_candidate_caps_at_provisional"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "fc_allowed_with_retention": {
+      "exit": 1,
+      "failed": [
+        "g49.fc_refused_with_adaptive_retention"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "exact_no_recursion": {
+      "exit": 1,
+      "failed": [
+        "g49.exact_scan_equals_brute_force"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "exact_counts_once": {
+      "exit": 1,
+      "failed": [
+        "g49.exact_scan_equals_brute_force"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "exact_rep_not_canonical": {
+      "exit": 1,
+      "failed": [
+        "g49.exact_scan_equals_brute_force"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "exact_self_body_any_length": {
+      "exit": 1,
+      "failed": [
+        "g49.exact_scan_equals_brute_force"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g50_tiebreak_off_values": {
+      "exit": 1,
+      "failed": [
+        "g49.g50_tiebreak_smallest_closure_values"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g50_tiebreak_off_answers": {
+      "exit": 1,
+      "failed": [
+        "g49.g50_tiebreak_smallest_closure_answers"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g50_closure_size_ignored": {
+      "exit": 1,
+      "failed": [
+        "g49.g50_tiebreak_smallest_closure_values",
+        "g49.g50_tiebreak_smallest_closure_answers"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g51_qualified_library_ignored": {
+      "exit": 1,
+      "failed": [
+        "g49.g51_qualified_library_offers_only_qualified"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "h1_guard_space_data_dependent": {
+      "exit": 1,
+      "failed": [
+        "g49.h1_hidden_guard_no_wrong_qualified",
+        "g49.h1_identity_expressible_under_complete",
+        "g49.h1_guard_gap_caps_at_provisional",
+        "g49.g55_budget_covers_component",
+        "g49.n1_no_candidate_caps_at_provisional"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "h1_gap_ignored": {
+      "exit": 1,
+      "failed": [
+        "g49.h1_guard_gap_caps_at_provisional"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "h1_no_identity_guard": {
+      "exit": 1,
+      "failed": [
+        "g49.h1_identity_expressible_under_complete",
+        "g49.n1_no_candidate_caps_at_provisional"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "m1_no_review_on_complete": {
+      "exit": 1,
+      "failed": [
+        "g49.m1_complete_after_example_reviews_version"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "m2_scope_ignored": {
+      "exit": 1,
+      "failed": [
+        "g49.m2_qualified_scoped_to_domain"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g53_memo_key_ignores_primitive": {
+      "exit": 1,
+      "failed": [
+        "g49.g53_bounded_scan_equals_unbounded",
+        "g49.g53_fc_skip_only_settled"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g53_index_drops_primitives": {
+      "exit": 1,
+      "failed": [
+        "g49.g53_bounded_scan_equals_unbounded"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g53_sparse_conflict_ignored": {
+      "exit": 1,
+      "failed": [
+        "g49.g53_bounded_scan_equals_unbounded"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g53_skip_ignores_basis": {
+      "exit": 1,
+      "failed": [
+        "g49.g53_fc_skip_only_settled"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "s1_growth_ignored": {
+      "exit": 1,
+      "failed": [
+        "g49.s1_growth_in_region_requalifies",
+        "verify_3e2783c.n1b_base_no_candidate_caps_at_provisional"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "s1_region_is_domain_only": {
+      "exit": 1,
+      "failed": [
+        "g49.s1_growth_in_region_requalifies",
+        "g57.g57_differential_replies_and_state_equal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "l1_dependency_status_ignored": {
+      "exit": 1,
+      "failed": [
+        "g49.l1_qualified_needs_qualified_deps"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "l1_no_demotion_propagation": {
+      "exit": 1,
+      "failed": [
+        "g49.l1_qualified_needs_qualified_deps"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g54_lean_checksum_accepts_any": {
+      "exit": 1,
+      "failed": [
+        "persistence.checksum_tamper_recovers_loudly",
+        "audit.nested_validation",
+        "g49.g54_lean_persistence_guarantees"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g54_lean_no_backup": {
+      "exit": 1,
+      "failed": [
+        "g49.completed",
+        "serve.g56_serve_contained_journal_dropped",
+        "serve.g56_serve_first_snapshot_crash_recovers"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g54_lean_save_unvalidated": {
+      "exit": 1,
+      "failed": [
+        "g49.g54_lean_persistence_guarantees"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g54_fast_validate_skips_premises": {
+      "exit": 1,
+      "failed": [
+        "g49.g54_fast_validation_equivalent"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g54_fast_validate_skips_cycles": {
+      "exit": 1,
+      "failed": [
+        "g49.g54_fast_validation_equivalent"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g54_lean_decode_wrong_role": {
+      "exit": 1,
+      "failed": [
+        "g49.g54_lean_replies_and_recall_equal",
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3",
+        "g57b.g57b_period_guard_catches_untouched_corruption"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "n1_no_candidate_keeps_qualified": {
+      "exit": 1,
+      "failed": [
+        "g49.n1_no_candidate_caps_at_provisional"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g55_budget_ignored": {
+      "exit": 1,
+      "failed": [
+        "g49.g55_budget_covers_component"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "m1_lean_sorted_keys": {
+      "exit": 1,
+      "failed": [
+        "g49.g54_lean_persistence_guarantees",
+        "serve.g56_serve_contained_journal_dropped",
+        "serve.g56_serve_first_snapshot_crash_recovers",
+        "verify_3e2783c.m1_insertion_order_exact"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "n1b_base_no_candidate_keeps_qualified": {
+      "exit": 1,
+      "failed": [
+        "verify_3e2783c.n1b_base_no_candidate_caps_at_provisional"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "low1_trailing_text_accepted": {
+      "exit": 1,
+      "failed": [
+        "verify_3e2783c.low1_single_value_after_prefix"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g56_serve_no_journal_record": {
+      "exit": 1,
+      "failed": [
+        "serve.g56_serve_journal_recovers",
+        "serve.g56_serve_replay_verified",
+        "serve.g56_serve_contained_journal_dropped",
+        "serve.g56_serve_first_snapshot_crash_recovers",
+        "serve.g56_engine_refuses_unclosed_journal",
+        "g57.g57_readonly_calls_detected_checked_not_journaled",
+        "g57b.g57b_period_guard_catches_untouched_corruption"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g56_serve_replay_unverified": {
+      "exit": 1,
+      "failed": [
+        "serve.g56_serve_replay_verified"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g56_serve_new_path_reuses_state": {
+      "exit": 1,
+      "failed": [
+        "serve.g56_serve_new_path_starts_empty"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g56_serve_memory_unvalidated": {
+      "exit": 1,
+      "failed": [
+        "serve.g56_serve_memory_state_validated"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g56_serve_journal_base_ignored": {
+      "exit": 1,
+      "failed": [
+        "serve.g56_serve_replay_verified",
+        "serve.g56_serve_contained_journal_dropped",
+        "serve.g56_serve_first_snapshot_crash_recovers"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g56_serve_no_snapshot_on_close": {
+      "exit": 1,
+      "failed": [
+        "serve.g56_serve_replies_and_state_equal",
+        "serve.g56_engine_refuses_unclosed_journal",
+        "g57.g57_differential_replies_and_state_equal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "scan_short_horizon": {
+      "exit": 1,
+      "failed": [
+        "audit.open_world_blocks_longer_alternative",
+        "audit.scan_matches_bruteforce",
+        "g49.fc_less_defined_refuted_qualifies_base",
+        "g49.fc_scope_unobserved_changes_nothing_base",
+        "g49.fc_violation_retracts_and_demotes_base",
+        "g49.g51_qualified_library_offers_only_qualified"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "deepen_past_ambiguity": {
+      "exit": 1,
+      "failed": [
+        "audit.deepen_stops_at_ambiguity"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "compose_skips_bit": {
+      "exit": 1,
+      "failed": [
+        "audit.compose_matches_naive",
+        "audit.ambiguous_path_undetermined"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "compose_keeps_source": {
+      "exit": 1,
+      "failed": [
+        "memory.derived_provenance",
+        "memory.correction_drops_derived",
+        "memory.correction_logged",
+        "acquisition.one_observation_stays_pending",
+        "acquisition.accumulated_acquires",
+        "acquisition.library_reuse",
+        "acquisition.library_matches_deep_search",
+        "acquisition.binary_equals_walk",
+        "discovery.all_seeds_discovered",
+        "discovery.gap_survives_as_undetermined",
+        "discovery.start_has_nine_live",
+        "discovery.gap_keeps_provisional_until_taught",
+        "discovery.silent_oracle_adopts_nothing",
+        "fresh_process.p2_reads_p1",
+        "fresh_process.p3_uses_capability",
+        "fresh_process.p4_correction_drops_derived",
+        "fresh_process.p5_sees_corrections",
+        "migration.v2_migration_same_answers",
+        "audit.completed",
+        "px.px_base_one_sided_unresolved_without",
+        "px.px_base_none_resolves_ambiguity",
+        "px.px_base_qualifies_after_none",
+        "g49.completed",
+        "serve.g56_serve_replies_and_state_equal",
+        "serve.g56_serve_first_snapshot_crash_recovers",
+        "verify_3e2783c.completed",
+        "g57.g57_fingerprint_covers_dependencies_entity_library"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_gate_ignores_stamps": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_gate_ignores_capabilities": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal",
+        "g57.g57_fingerprint_covers_dependencies_entity_library",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_gate_ignores_dependencies": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_fingerprint_covers_dependencies_entity_library"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_gate_ignores_known_entity": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_fingerprint_covers_dependencies_entity_library"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_memo_keeps_removed": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal",
+        "g57.g57_memo_recall_equals_reference"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_memo_ignores_added": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal",
+        "g57.g57_memo_recall_equals_reference",
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_memo_stamp_missed": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_stamps_on_add_and_remove"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_readonly_any_line": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal",
+        "g57.g57_readonly_calls_detected_checked_not_journaled",
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_gate_outside_readonly": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_by_rel_wrong_relation": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal",
+        "g57.g57_by_rel_rows_equal",
+        "g57.g57_fingerprint_covers_dependencies_entity_library",
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_gate_ignores_library": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_fingerprint_covers_dependencies_entity_library"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_uf_keeps_removed_edges": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal",
+        "g57.g57_component_classes_equal_bfs"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_uf_ignores_added_edges": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_component_classes_equal_bfs",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_region_ignores_seeds": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_component_classes_equal_bfs"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_packets_stale_after_rebuild": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal",
+        "g57.g57_memo_recall_equals_reference",
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_append_path_skips_one": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal",
+        "g57.g57_memo_recall_equals_reference",
+        "g57.g57_stamps_on_add_and_remove",
+        "g57.g57_component_classes_equal_bfs",
+        "g57.g57_readonly_calls_detected_checked_not_journaled",
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3",
+        "g57b.g57b_period_guard_catches_untouched_corruption"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_readonly_unchecked": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_readonly_calls_detected_checked_not_journaled"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "d6_no_empty_snapshot_for_new_path": {
+      "exit": 1,
+      "failed": [
+        "serve.g56_serve_first_snapshot_crash_recovers",
+        "serve.g56_engine_refuses_unclosed_journal",
+        "g57b.g57b_period_guard_catches_untouched_corruption"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "d6_contained_journal_unverified": {
+      "exit": 1,
+      "failed": [
+        "serve.g56_serve_first_snapshot_crash_recovers"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "d6_engine_reads_past_unclosed_journal": {
+      "exit": 1,
+      "failed": [
+        "serve.g56_engine_refuses_unclosed_journal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "d6_serve_call_skips_finish": {
+      "exit": 1,
+      "failed": [
+        "serve.g56_serve_replies_and_state_equal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_indexed_ambiguity_off": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57_region_seeds_only": {
+      "exit": 1,
+      "failed": [
+        "g57.g57_differential_replies_and_state_equal"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_append_skips_by_sr": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3",
+        "g57b.g57b_index_relations_find_equal_reference"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_append_skips_ref": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3",
+        "g57b.g57b_index_relations_find_equal_reference"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_append_skips_memo": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_support_skips_told_rel": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_index_relations_find_equal_reference"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_valid_ignores_identity": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3",
+        "g57b.g57b_index_relations_find_equal_reference"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_candidates_need_3_bits": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_recall_candidate_bound_tight_case"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_no_small_packets": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_recall_candidates_superset_dense_codes"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_differs_skips_domain": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_sparse_drops_negatives": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_was_known_always": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_drop_keeps_ents_untracked": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_differential_vs_g57_default_period",
+        "g57b.g57b_differential_vs_g57_period_3"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_touched_not_recorded": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_scoped_validation_checks_touched"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_scoped_skips_premises": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_scoped_validation_checks_touched"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_ix_check_noop": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_period_guard_catches_index_corruption"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_no_period_guard": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_period_guard_catches_untouched_corruption",
+        "g57b.g57b_period_guard_catches_index_corruption"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "v35_dom_cache_by_id": {
+      "exit": 1,
+      "failed": [
+        "g57b.g57b_domain_cache_keyed_on_content"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g57b_drop_keeps_scope": {
+      "exit": 0,
+      "failed": [],
+      "verdict": "SURVIVED",
+      "crash": null
+    },
+    "g45.t5_value_changed_when_provisional": {
+      "exit": 1,
+      "failed": [
+        "seed101.t4_transfer",
+        "seed101.t5_retention",
+        "seed202.t4_transfer",
+        "seed202.t5_retention",
+        "seed303.t4_transfer",
+        "seed303.t5_retention"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g45.t5_value_lost_when_provisional": {
+      "exit": 1,
+      "failed": [
+        "seed101.t3_coverage_ge_0_9",
+        "seed101.t4_transfer",
+        "seed101.t5_retention",
+        "seed202.t3_coverage_ge_0_9",
+        "seed202.t4_transfer",
+        "seed202.t5_retention",
+        "seed303.t3_coverage_ge_0_9",
+        "seed303.t4_transfer",
+        "seed303.t5_retention"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g45.t5_demoted_without_rescan": {
+      "exit": 1,
+      "failed": [
+        "seed101.t5_retention",
+        "seed202.t5_retention",
+        "seed303.t5_retention"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g45.t5_rescan_adopts_blocker": {
+      "exit": 1,
+      "failed": [
+        "seed101.t4_transfer",
+        "seed101.t5_retention",
+        "seed202.t4_transfer",
+        "seed202.t5_retention",
+        "seed303.t4_transfer",
+        "seed303.t5_retention"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    },
+    "g45.t5_value_changed_qualified": {
+      "exit": 1,
+      "failed": [
+        "seed101.t2_zero_wrong_qualified",
+        "seed101.t5_retention",
+        "seed202.t2_zero_wrong_qualified",
+        "seed202.t5_retention",
+        "seed303.t2_zero_wrong_qualified",
+        "seed303.t5_retention"
+      ],
+      "verdict": "KILLED",
+      "crash": null
+    }
+  },
+  "killed": 140,
+  "total": 141
+}
+rc=1

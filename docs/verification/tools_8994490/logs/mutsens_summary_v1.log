@@ -1,0 +1,17 @@
+g57b_append_skips_by_sr {'calls': 60, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 120, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_append_skips_ref {'calls': 722, 'reply_diffs': 1, 'state_diffs': 4, 'deep_diffs': 68, 'errors': 21, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_append_skips_memo {'calls': 1827, 'reply_diffs': 33, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_support_skips_told_rel {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_valid_ignores_identity {'calls': 1024, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 55, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_candidates_need_3_bits {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_no_small_packets {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_differs_skips_domain {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_sparse_drops_negatives {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_was_known_always {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_drop_keeps_ents_untracked {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_touched_not_recorded {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_scoped_skips_premises {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_ix_check_noop {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_no_period_guard {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+v35_dom_cache_by_id {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}
+g57b_drop_keeps_scope {'calls': 2483, 'reply_diffs': 0, 'state_diffs': 0, 'deep_diffs': 0, 'errors': 0, 'final_bytes_diffs': 0, 'journal_diffs': 0}

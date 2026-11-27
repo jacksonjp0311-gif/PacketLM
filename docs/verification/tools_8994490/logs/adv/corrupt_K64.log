@@ -1,0 +1,577 @@
+{
+ "seed": 22,
+ "K": 64,
+ "snap": 64,
+ "sessions": 60,
+ "by_kind": {
+  "XI:S1_supports_empty": {
+   "trials": 60,
+   "det_call": 59,
+   "latency_mut_sum": 59,
+   "latency_mut_max": 1,
+   "ro_served_before_detect": 42,
+   "recovered_equal_clean": 59,
+   "det_never": 1
+  },
+  "XI:S2_dangling_premise": {
+   "trials": 60,
+   "det_call": 59,
+   "latency_mut_sum": 59,
+   "latency_mut_max": 1,
+   "ro_served_before_detect": 42,
+   "recovered_equal_clean": 59,
+   "det_never": 1
+  },
+  "XI:S3_id_mismatch": {
+   "trials": 60,
+   "det_call": 59,
+   "latency_mut_sum": 59,
+   "latency_mut_max": 1,
+   "ro_served_before_detect": 42,
+   "recovered_equal_clean": 59,
+   "det_never": 1,
+   "undetected_final_differs": 1
+  },
+  "XI:S5_inplace_valid_change": {
+   "trials": 60,
+   "det_never": 60,
+   "trials_with_wrong_replies_before_detection": 49,
+   "undetected_final_differs": 60
+  },
+  "XI:S6_duplicate_append": {
+   "trials": 60,
+   "det_call": 59,
+   "latency_mut_sum": 59,
+   "latency_mut_max": 1,
+   "ro_served_before_detect": 42,
+   "recovered_equal_clean": 59,
+   "det_never": 1
+  },
+  "XI:S7_cap_current_bad": {
+   "trials": 60,
+   "det_call": 60,
+   "latency_mut_sum": 60,
+   "latency_mut_max": 1,
+   "ro_served_before_detect": 2,
+   "recovered_equal_clean": 60
+  },
+  "XI:S8_bits_key": {
+   "trials": 60,
+   "det_call": 59,
+   "latency_mut_sum": 59,
+   "latency_mut_max": 1,
+   "ro_served_before_detect": 42,
+   "recovered_equal_clean": 59,
+   "det_never": 1
+  },
+  "XJ:I1_by_sr_drop": {
+   "trials": 60,
+   "det_never": 60,
+   "index_healed_by_rebuild_before_end": 53,
+   "trials_with_wrong_replies_before_detection": 3,
+   "undetected_final_differs": 3
+  },
+  "XJ:I2_told_rel_off": {
+   "trials": 60,
+   "det_never": 53,
+   "index_healed_by_rebuild_before_end": 53,
+   "det_close": 7
+  },
+  "XJ:I3_small_and_codes_drop": {
+   "trials": 60,
+   "det_never": 60,
+   "index_healed_by_rebuild_before_end": 53,
+   "trials_with_wrong_replies_before_detection": 10
+  },
+  "XJ:I4_ref_core_drop": {
+   "trials": 60,
+   "det_never": 53,
+   "index_healed_by_rebuild_before_end": 53,
+   "undetected_final_differs": 10,
+   "trials_with_wrong_replies_before_detection": 2,
+   "det_close": 7
+  },
+  "XJ:I5_by_rel_drop": {
+   "trials": 60,
+   "det_never": 60,
+   "index_healed_by_rebuild_before_end": 53,
+   "trials_with_wrong_replies_before_detection": 11,
+   "undetected_final_differs": 7
+  },
+  "XJ:S1_supports_empty": {
+   "trials": 60,
+   "det_call": 52,
+   "latency_mut_sum": 204,
+   "latency_mut_max": 13,
+   "ro_served_before_detect": 181,
+   "recovered_equal_clean": 51,
+   "det_close": 7,
+   "det_never": 1,
+   "index_rebuilt_after_injection": 1,
+   "recovery_failed": 1,
+   "trials_with_wrong_replies_before_detection": 1
+  },
+  "XJ:S2_dangling_premise": {
+   "trials": 60,
+   "det_call": 52,
+   "latency_mut_sum": 204,
+   "latency_mut_max": 13,
+   "ro_served_before_detect": 181,
+   "recovered_equal_clean": 52,
+   "det_close": 7,
+   "det_never": 1,
+   "index_rebuilt_after_injection": 1
+  },
+  "XJ:S3_id_mismatch": {
+   "trials": 60,
+   "det_call": 53,
+   "latency_mut_sum": 212,
+   "latency_mut_max": 13,
+   "ro_served_before_detect": 195,
+   "recovered_equal_clean": 53,
+   "det_never": 1,
+   "index_rebuilt_after_injection": 1,
+   "undetected_final_differs": 1,
+   "det_close": 6
+  },
+  "XJ:S5_inplace_valid_change": {
+   "trials": 60,
+   "det_never": 53,
+   "trials_with_wrong_replies_before_detection": 45,
+   "index_rebuilt_after_injection": 53,
+   "undetected_final_differs": 53,
+   "det_close": 7
+  },
+  "XJ:S6_duplicate_append": {
+   "trials": 60,
+   "det_call": 55,
+   "latency_mut_sum": 131,
+   "latency_mut_max": 12,
+   "ro_served_before_detect": 97,
+   "recovered_equal_clean": 55,
+   "det_close": 4,
+   "trials_with_wrong_replies_before_detection": 1,
+   "index_rebuilt_after_injection": 5,
+   "det_never": 1
+  },
+  "XJ:S7_cap_current_bad": {
+   "trials": 60,
+   "det_call": 60,
+   "latency_mut_sum": 60,
+   "latency_mut_max": 1,
+   "ro_served_before_detect": 2,
+   "recovered_equal_clean": 60
+  },
+  "XJ:S8_bits_key": {
+   "trials": 60,
+   "det_call": 52,
+   "latency_mut_sum": 204,
+   "latency_mut_max": 13,
+   "ro_served_before_detect": 181,
+   "recovered_equal_clean": 52,
+   "det_close": 7,
+   "det_never": 1,
+   "index_rebuilt_after_injection": 1
+  }
+ }
+}
+{"session": 0, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 12, "ro_after": 21, "served_wrong": 13, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 0, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 12, "ro_after": 21, "served_wrong": 17, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 0, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 12, "ro_after": 21, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 0, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 12, "ro_after": 21, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 0, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 12, "ro_after": 21, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 0, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 12, "ro_after": 21, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 0, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 12, "ro_after": 21, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 1, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 11, "ro_after": 18, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 1, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 11, "ro_after": 18, "served_wrong": 10, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 1, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 11, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 1, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 11, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 1, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 11, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 1, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 11, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 1, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 11, "ro_after": 18, "served_wrong": 2, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 2, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 24, "ro_after": 27, "served_wrong": 10, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 2, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 24, "ro_after": 27, "served_wrong": 11, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 2, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 24, "ro_after": 27, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 2, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 24, "ro_after": 27, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 2, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 24, "ro_after": 27, "served_wrong": 10, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 2, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 24, "ro_after": 27, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 2, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 24, "ro_after": 27, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 3, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 13, "ro_after": 11, "served_wrong": 2, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 3, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 13, "ro_after": 11, "served_wrong": 10, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 3, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 13, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 3, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 13, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 3, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 13, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 3, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 13, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 3, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 13, "ro_after": 11, "served_wrong": 1, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 4, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 6, "ro_after": 7, "served_wrong": 2, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 4, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 6, "ro_after": 7, "served_wrong": 4, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 4, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 6, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 4, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 6, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 4, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 6, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 4, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 6, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 4, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 6, "ro_after": 7, "served_wrong": 3, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 5, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 24, "ro_after": 23, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 5, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 24, "ro_after": 23, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 5, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 24, "ro_after": 23, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 5, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 24, "ro_after": 23, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 5, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 24, "ro_after": 23, "served_wrong": 7, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 5, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 24, "ro_after": 23, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 5, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 24, "ro_after": 23, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 6, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 13, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 6, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 12, "ro_after": 18, "served_wrong": 13, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 6, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 6, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 6, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 6, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 6, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 7, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 25, "ro_after": 26, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 7, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 25, "ro_after": 26, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 7, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 25, "ro_after": 26, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 7, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 25, "ro_after": 26, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 7, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 25, "ro_after": 26, "served_wrong": 2, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 7, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 25, "ro_after": 26, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 7, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 25, "ro_after": 26, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 8, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 16, "ro_after": 15, "served_wrong": 4, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 8, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 16, "ro_after": 15, "served_wrong": 19, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 8, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 16, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 8, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 16, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 8, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 16, "ro_after": 15, "served_wrong": 2, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 8, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 16, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 8, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 16, "ro_after": 15, "served_wrong": 1, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 9, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 4, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 9, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 8, "ro_after": 4, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 9, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 8, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 9, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 8, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 9, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 8, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 9, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 8, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 9, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 8, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 10, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 8, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 10, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 8, "ro_after": 11, "served_wrong": 9, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 10, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 10, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 10, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 10, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 10, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 11, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 14, "ro_after": 15, "served_wrong": 6, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 11, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 14, "ro_after": 15, "served_wrong": 11, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 11, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 14, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 11, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 14, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 11, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 14, "ro_after": 15, "served_wrong": 5, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 11, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 14, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 11, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 14, "ro_after": 15, "served_wrong": 5, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 12, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 5, "ro_after": 6, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 12, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 5, "ro_after": 6, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 12, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 5, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 12, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 5, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 12, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 5, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 12, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 5, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 12, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 5, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 13, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 6, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 13, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 8, "ro_after": 11, "served_wrong": 14, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 13, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 13, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 13, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 13, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 13, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 8, "ro_after": 11, "served_wrong": 1, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 14, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 14, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 7, "ro_after": 7, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 14, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 14, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 14, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 14, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 14, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 15, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 10, "ro_after": 18, "served_wrong": 5, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 15, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 10, "ro_after": 18, "served_wrong": 8, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 15, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 10, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 15, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 10, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 15, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 10, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 15, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 10, "ro_after": 18, "served_wrong": 2, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 15, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 10, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 16, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 15, "served_wrong": 1, "detected": "close: StateError: incremental fact index diverged from the facts"}
+{"session": 16, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 8, "ro_after": 15, "served_wrong": 9, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 16, "kind": "S6_duplicate_append", "engine": "XJ", "mut_after": 8, "ro_after": 15, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "close: StateError: duplicate fact e0 r1 e1"}
+{"session": 16, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 8, "ro_after": 15, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 16, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 8, "ro_after": 15, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 16, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 8, "ro_after": 15, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 17, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 7, "ro_after": 6, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 17, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 7, "ro_after": 6, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 17, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 7, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 17, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 7, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 17, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 7, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 17, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 7, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 17, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 7, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 18, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 13, "ro_after": 17, "served_wrong": 3, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 18, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 13, "ro_after": 17, "served_wrong": 3, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 18, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 13, "ro_after": 17, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 18, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 13, "ro_after": 17, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 18, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 13, "ro_after": 17, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 18, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 13, "ro_after": 17, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 18, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 13, "ro_after": 17, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 19, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 9, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 19, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 12, "ro_after": 18, "served_wrong": 16, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 19, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 1, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 19, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 19, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 6, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 19, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 19, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 12, "ro_after": 18, "served_wrong": 3, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 20, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 19, "ro_after": 18, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 20, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 19, "ro_after": 18, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 20, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 19, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 20, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 19, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 20, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 19, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 20, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 19, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 20, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 19, "ro_after": 18, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 21, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 6, "served_wrong": 4, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 21, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 8, "ro_after": 6, "served_wrong": 4, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 21, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 8, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 21, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 8, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 21, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 8, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 21, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 8, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 21, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 8, "ro_after": 6, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 22, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 15, "ro_after": 17, "served_wrong": 9, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 22, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 15, "ro_after": 17, "served_wrong": 11, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 22, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 15, "ro_after": 17, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 22, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 15, "ro_after": 17, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 22, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 15, "ro_after": 17, "served_wrong": 4, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 22, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 15, "ro_after": 17, "served_wrong": 3, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 22, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 15, "ro_after": 17, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 23, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 9, "ro_after": 11, "served_wrong": 5, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 23, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 9, "ro_after": 11, "served_wrong": 5, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 23, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 9, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 23, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 9, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 23, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 9, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 23, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 9, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 23, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 9, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 14, "served_wrong": 7, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 24, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 8, "ro_after": 14, "served_wrong": 12, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 24, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 8, "ro_after": 14, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 8, "ro_after": 14, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 8, "ro_after": 14, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 8, "ro_after": 14, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 24, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 8, "ro_after": 14, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 25, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 11, "ro_after": 13, "served_wrong": 6, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 25, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 11, "ro_after": 13, "served_wrong": 6, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 25, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 11, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 25, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 11, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 25, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 11, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 25, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 11, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 25, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 11, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 26, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 7, "ro_after": 10, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 26, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 7, "ro_after": 10, "served_wrong": 7, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 26, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 7, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 26, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 7, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 26, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 7, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 26, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 7, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 26, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 7, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 27, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 15, "ro_after": 7, "served_wrong": 6, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 27, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 15, "ro_after": 7, "served_wrong": 13, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 27, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 15, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 27, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 15, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 27, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 15, "ro_after": 7, "served_wrong": 3, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 27, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 15, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 27, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 15, "ro_after": 7, "served_wrong": 5, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 28, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 5, "ro_after": 9, "served_wrong": 2, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 28, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 5, "ro_after": 9, "served_wrong": 7, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 28, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 5, "ro_after": 9, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 28, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 5, "ro_after": 9, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 28, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 5, "ro_after": 9, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 28, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 5, "ro_after": 9, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 28, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 5, "ro_after": 9, "served_wrong": 7, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 29, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 5, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 29, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 8, "ro_after": 5, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 29, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 8, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 29, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 8, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 29, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 8, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 29, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 8, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 29, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 8, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 30, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 16, "ro_after": 16, "served_wrong": 2, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 30, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 16, "ro_after": 16, "served_wrong": 6, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 30, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 16, "ro_after": 16, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 30, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 16, "ro_after": 16, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 30, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 16, "ro_after": 16, "served_wrong": 6, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 30, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 16, "ro_after": 16, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 30, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 16, "ro_after": 16, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 31, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 11, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 31, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 9, "ro_after": 10, "served_wrong": 11, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 31, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 31, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 31, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 31, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 31, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "S1_supports_empty", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "S1_supports_empty", "engine": "XI", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "S2_dangling_premise", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "S2_dangling_premise", "engine": "XI", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "S3_id_mismatch", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 32, "kind": "S3_id_mismatch", "engine": "XI", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 32, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 3, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 32, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 4, "ro_after": 5, "served_wrong": 3, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 32, "kind": "S6_duplicate_append", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "S6_duplicate_append", "engine": "XI", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "S8_bits_key", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "S8_bits_key", "engine": "XI", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 3, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 32, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 32, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 33, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 5, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 33, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 3, "ro_after": 4, "served_wrong": 5, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 33, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 33, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 33, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 33, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 33, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 34, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 4, "ro_after": 5, "served_wrong": 3, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 34, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 34, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 34, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 35, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 12, "ro_after": 13, "served_wrong": 2, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 35, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 12, "ro_after": 13, "served_wrong": 4, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 35, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 12, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 35, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 12, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 35, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 12, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 35, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 12, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 35, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 12, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 36, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 12, "ro_after": 12, "served_wrong": 5, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 36, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 12, "ro_after": 12, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 36, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 12, "ro_after": 12, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 36, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 12, "ro_after": 12, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 37, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 8, "ro_after": 12, "served_wrong": 8, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 37, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 8, "ro_after": 12, "served_wrong": 8, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 37, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 8, "ro_after": 12, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 37, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 8, "ro_after": 12, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 37, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 8, "ro_after": 12, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 37, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 8, "ro_after": 12, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 37, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 8, "ro_after": 12, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 38, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 6, "ro_after": 11, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 38, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 6, "ro_after": 11, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 38, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 6, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 38, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 6, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 38, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 6, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 38, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 6, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 38, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 6, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 39, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 4, "ro_after": 6, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 39, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 4, "ro_after": 6, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 39, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 4, "ro_after": 6, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 39, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 4, "ro_after": 6, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 40, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 14, "ro_after": 13, "served_wrong": 15, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 40, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 14, "ro_after": 13, "served_wrong": 16, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 40, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 14, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 40, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 14, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 40, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 14, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 40, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 14, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 40, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 14, "ro_after": 13, "served_wrong": 13, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 41, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 7, "ro_after": 9, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 41, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 7, "ro_after": 9, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 41, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 7, "ro_after": 9, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 41, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 7, "ro_after": 9, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 41, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 7, "ro_after": 9, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 41, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 7, "ro_after": 9, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 41, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 7, "ro_after": 9, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 42, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 42, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 4, "ro_after": 5, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 42, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 42, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 42, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 42, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 42, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 4, "ro_after": 5, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 43, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 13, "ro_after": 14, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 43, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 13, "ro_after": 14, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 43, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 13, "ro_after": 14, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 43, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 13, "ro_after": 14, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 43, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 13, "ro_after": 14, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 43, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 13, "ro_after": 14, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 43, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 13, "ro_after": 14, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 44, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 9, "ro_after": 13, "served_wrong": 2, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 44, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 9, "ro_after": 13, "served_wrong": 6, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 44, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 9, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 44, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 9, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 44, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 9, "ro_after": 13, "served_wrong": 4, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 44, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 9, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 44, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 9, "ro_after": 13, "served_wrong": 1, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 45, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 25, "ro_after": 23, "served_wrong": 25, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 45, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 25, "ro_after": 23, "served_wrong": 26, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 45, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 25, "ro_after": 23, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 45, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 25, "ro_after": 23, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 45, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 25, "ro_after": 23, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 45, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 25, "ro_after": 23, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 45, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 25, "ro_after": 23, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 46, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 17, "ro_after": 15, "served_wrong": 6, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 46, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 17, "ro_after": 15, "served_wrong": 6, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 46, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 17, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 46, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 17, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 46, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 17, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 46, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 17, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 46, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 17, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 47, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 13, "ro_after": 13, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 47, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 13, "ro_after": 13, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 47, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 13, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 47, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 13, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 47, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 13, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 47, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 13, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 47, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 13, "ro_after": 13, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 48, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 15, "ro_after": 21, "served_wrong": 4, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 48, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 15, "ro_after": 21, "served_wrong": 4, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 48, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 15, "ro_after": 21, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 48, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 15, "ro_after": 21, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 48, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 15, "ro_after": 21, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 48, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 15, "ro_after": 21, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 48, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 15, "ro_after": 21, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 49, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 5, "ro_after": 7, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 49, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 5, "ro_after": 7, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 49, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 5, "ro_after": 7, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 49, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 5, "ro_after": 7, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 50, "kind": "S1_supports_empty", "engine": "XJ", "mut_after": 5, "ro_after": 6, "served_wrong": 1, "detected": "call: StateError: unsupported fact e5 r3 e0", "recovery": "reopen failed: StateError: journal replay diverged at record 15"}
+{"session": 50, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 15, "ro_after": 15, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 50, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 15, "ro_after": 15, "served_wrong": 2, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 50, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 15, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 50, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 15, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 50, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 15, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 50, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 15, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 50, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 15, "ro_after": 15, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 51, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 51, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 51, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 51, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 51, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 51, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 51, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 7, "ro_after": 7, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 52, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 12, "ro_after": 12, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 52, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 12, "ro_after": 12, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 52, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 12, "ro_after": 12, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 52, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 12, "ro_after": 12, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 52, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 12, "ro_after": 12, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 52, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 12, "ro_after": 12, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 52, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 12, "ro_after": 12, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 53, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 11, "ro_after": 11, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 53, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 11, "ro_after": 11, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 53, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 11, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 53, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 11, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 53, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 11, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 53, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 11, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 53, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 11, "ro_after": 11, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 54, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 4, "ro_after": 2, "served_wrong": 2, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 54, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 4, "ro_after": 2, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 54, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 4, "ro_after": 2, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 54, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 4, "ro_after": 2, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 55, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 55, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 3, "ro_after": 4, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 55, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 55, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 55, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 55, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 55, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 3, "ro_after": 4, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 56, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 5, "ro_after": 3, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 56, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 5, "ro_after": 3, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 56, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 5, "ro_after": 3, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 56, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 5, "ro_after": 3, "served_wrong": 0, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 57, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 6, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 57, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 9, "ro_after": 10, "served_wrong": 8, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 57, "kind": "I1_by_sr_drop", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 57, "kind": "I2_told_rel_off", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 57, "kind": "I3_small_and_codes_drop", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 57, "kind": "I4_ref_core_drop", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 57, "kind": "I5_by_rel_drop", "engine": "XJ", "mut_after": 9, "ro_after": 10, "served_wrong": 0, "healed_by_rebuild": true, "detected": "never (close passed)", "final_state_equal_clean": true}
+{"session": 58, "kind": "S5_inplace_valid_change", "engine": "XJ", "mut_after": 9, "ro_after": 13, "served_wrong": 1, "index_rebuilt_after_injection": true, "detected": "never (close passed)", "final_state_equal_clean": false}
+{"session": 58, "kind": "S5_inplace_valid_change", "engine": "XI", "mut_after": 9, "ro_after": 13, "served_wrong": 1, "detected": "never (close passed)", "final_state_equal_clean": false}

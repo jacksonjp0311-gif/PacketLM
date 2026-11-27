@@ -1,0 +1,265 @@
+ 08:40:58 up  7:47,  0 users,  load average: 2.78, 2.86, 3.52
+Fri Nov 27 08:40:58 EST 2026
+{
+ "guards": {
+  "exact_replies_and_state_j_equal_i": true,
+  "no_wrong_qualified_C": true,
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ },
+ "comp": {
+  "primary": [
+   [
+    "Cj+maint",
+    "Bj",
+    "A_36 = -0.8884  [-0.9078, -0.8730] (95% paired bootstrap, S=2); delta-SE=0.0172; sign-flip p=0.5; geometric-mean form=-0.8903"
+   ],
+   [
+    "Cj+maint",
+    "Ci+maint",
+    "A_36 = +0.0408  [+0.0343, +0.0461] (95% paired bootstrap, S=2); delta-SE=0.0058; sign-flip p=0.5; geometric-mean form=+0.0402"
+   ]
+  ],
+  "secondary": [
+   [
+    "Ci+maint",
+    "Bi",
+    "A_36 = -1.0293  [-1.0405, -1.0205] (95% paired bootstrap, S=2); delta-SE=0.0099; sign-flip p=0.5; geometric-mean form=-1.0305"
+   ],
+   [
+    "Bj",
+    "Bi",
+    "A_36 = -0.0308  [-0.0329, -0.0291] (95% paired bootstrap, S=2); delta-SE=0.0019; sign-flip p=0.5; geometric-mean form=-0.0310"
+   ],
+   [
+    "Pj+maint",
+    "Pi+maint",
+    "A_36 = +0.0408  [+0.0391, +0.0430] (95% paired bootstrap, S=2); delta-SE=0.0019; sign-flip p=0.5; geometric-mean form=+0.0410"
+   ],
+   [
+    "Cj+maint",
+    "Pj+maint",
+    "A_36 = -0.5851  [-0.5967, -0.5760] (95% paired bootstrap, S=2); delta-SE=0.0102; sign-flip p=0.5; geometric-mean form=-0.5863"
+   ],
+   [
+    "Cj",
+    "Bj",
+    "A_36 = -0.7825  [-0.7900, -0.7731] (95% paired bootstrap, S=2); delta-SE=0.0084; sign-flip p=0.5; geometric-mean form=-0.7815"
+   ],
+   [
+    "Fj+maint",
+    "Fi+maint",
+    "A_36 = +0.1014  [+0.0902, +0.1136] (95% paired bootstrap, S=2); delta-SE=0.0117; sign-flip p=0.5; geometric-mean form=+0.1020"
+   ],
+   [
+    "Cj+maint",
+    "Fj+maint",
+    "A_36 = -9.3685  [-11.1640, -7.7632] (95% paired bootstrap, S=2); delta-SE=1.6951; sign-flip p=0.5; geometric-mean form=-9.3245"
+   ]
+  ],
+  "cpu": {
+   "Ci": 13.472,
+   "Cj": 12.922,
+   "Bi": 6.639,
+   "Bj": 6.843,
+   "Pi": 8.499,
+   "Pj": 8.152,
+   "Fi": 1.387,
+   "Fj": 1.246
+  },
+  "maint": {
+   "Ci": 0.797,
+   "Cj": 0.724,
+   "Pi": 0.817,
+   "Pj": 0.728,
+   "Fi": 0.52,
+   "Fj": 0.486
+  },
+  "outcomes": {
+   "Ci": {
+    "tasks": 72,
+    "solved": 72,
+    "qualified": 70,
+    "censored": 0,
+    "uses_library": 42,
+    "wrong_qualified_sealed": 0
+   },
+   "Cj": {
+    "tasks": 72,
+    "solved": 72,
+    "qualified": 70,
+    "censored": 0,
+    "uses_library": 42,
+    "wrong_qualified_sealed": 0
+   },
+   "Bi": {
+    "tasks": 72,
+    "solved": 70,
+    "qualified": 70,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bj": {
+    "tasks": 72,
+    "solved": 70,
+    "qualified": 70,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pi": {
+    "tasks": 72,
+    "solved": 70,
+    "qualified": 70,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pj": {
+    "tasks": 72,
+    "solved": 70,
+    "qualified": 70,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Fi": {
+    "tasks": 72,
+    "solved": 37,
+    "qualified": 35,
+    "censored": 36,
+    "uses_library": 24,
+    "wrong_qualified_sealed": 0
+   },
+   "Fj": {
+    "tasks": 72,
+    "solved": 37,
+    "qualified": 35,
+    "censored": 36,
+    "uses_library": 24,
+    "wrong_qualified_sealed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true,
+   "F": true
+  }
+ },
+ "unrel": {
+  "primary": [
+   [
+    "Cj+maint",
+    "Bj",
+    "A_24 = -2.3687  [-2.5083, -2.2301] (95% paired bootstrap, S=2); delta-SE=0.1391; sign-flip p=0.5; geometric-mean form=-2.3663"
+   ],
+   [
+    "Cj+maint",
+    "Ci+maint",
+    "A_24 = +0.3872  [+0.3798, +0.3949] (95% paired bootstrap, S=2); delta-SE=0.0076; sign-flip p=0.5; geometric-mean form=+0.3874"
+   ]
+  ],
+  "secondary": [
+   [
+    "Ci+maint",
+    "Bi",
+    "A_24 = -5.1508  [-5.2259, -5.0739] (95% paired bootstrap, S=2); delta-SE=0.0760; sign-flip p=0.5; geometric-mean form=-5.1494"
+   ],
+   [
+    "Bj",
+    "Bi",
+    "A_24 = -0.1190  [-0.1377, -0.1007] (95% paired bootstrap, S=2); delta-SE=0.0185; sign-flip p=0.5; geometric-mean form=-0.1191"
+   ],
+   [
+    "Pj+maint",
+    "Pi+maint",
+    "A_24 = +0.3960  [+0.3829, +0.4095] (95% paired bootstrap, S=2); delta-SE=0.0133; sign-flip p=0.5; geometric-mean form=+0.3963"
+   ],
+   [
+    "Cj+maint",
+    "Pj+maint",
+    "A_24 = -0.0075  [-0.0095, -0.0056] (95% paired bootstrap, S=2); delta-SE=0.0019; sign-flip p=0.5; geometric-mean form=-0.0076"
+   ],
+   [
+    "Cj",
+    "Bj",
+    "A_24 = -1.0646  [-1.1950, -0.9351] (95% paired bootstrap, S=2); delta-SE=0.1300; sign-flip p=0.5; geometric-mean form=-1.0610"
+   ]
+  ],
+  "cpu": {
+   "Ci": 1.737,
+   "Cj": 1.065,
+   "Bi": 0.282,
+   "Bj": 0.316,
+   "Pi": 1.749,
+   "Pj": 1.057
+  },
+  "maint": {
+   "Ci": 0.683,
+   "Cj": 0.412,
+   "Pi": 0.69,
+   "Pj": 0.416
+  },
+  "outcomes": {
+   "Ci": {
+    "tasks": 48,
+    "solved": 47,
+    "qualified": 47,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Cj": {
+    "tasks": 48,
+    "solved": 47,
+    "qualified": 47,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bi": {
+    "tasks": 48,
+    "solved": 47,
+    "qualified": 47,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bj": {
+    "tasks": 48,
+    "solved": 47,
+    "qualified": 47,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pi": {
+    "tasks": 48,
+    "solved": 47,
+    "qualified": 47,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pj": {
+    "tasks": 48,
+    "solved": 47,
+    "qualified": 47,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true
+  }
+ }
+}
+rc=0
+Fri Nov 27 08:41:13 EST 2026
+ 08:41:13 up  7:47,  0 users,  load average: 3.66, 3.06, 3.57

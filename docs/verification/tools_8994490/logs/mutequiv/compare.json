@@ -1,0 +1,32 @@
+[
+ {
+  "cfg": "3_8",
+  "calls": 21769,
+  "validations": 10292,
+  "scoped": 6193,
+  "reply_state_ixcheck_diffs": 0,
+  "validation_path_diffs": 0,
+  "ok_flag_diffs": 487,
+  "ok_diffs_with_ix_valid": 0
+ },
+ {
+  "cfg": "64_64",
+  "calls": 21769,
+  "validations": 10292,
+  "scoped": 7649,
+  "reply_state_ixcheck_diffs": 0,
+  "validation_path_diffs": 0,
+  "ok_flag_diffs": 487,
+  "ok_diffs_with_ix_valid": 0
+ },
+ {
+  "cfg": "64_200",
+  "calls": 21769,
+  "validations": 10292,
+  "scoped": 7649,
+  "reply_state_ixcheck_diffs": 0,
+  "validation_path_diffs": 0,
+  "ok_flag_diffs": 487,
+  "ok_diffs_with_ix_valid": 0
+ }
+]

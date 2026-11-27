@@ -1,0 +1,11 @@
+{"seed": 77, "K": 3, "snap": 8, "pad": "0", "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 60, "calls": 714, "readonly_calls": 256, "deep_checks": 1388, "deep_diffs": 78, "errors": 13, "drops": 20, "torn": 5, "crashes": 8, "stats_diffs": 4, "state_diffs": 7, "xj_path_counts": {"XJ.full_validations": 196, "XJ.ix_rebuilds": 171, "XJ.scoped_validations": 262, "XJ.candidate_queries": 2221, "XJ.ix_appends": 74, "XJ.ix_checks": 147, "XJ64.full_validations": 140, "XJ64.ix_rebuilds": 171, "XJ64.scoped_validations": 318, "XJ64.candidate_queries": 2221, "XJ64.ix_appends": 74, "XJ64.ix_checks": 91}, "period_full_validations": {"K3": 56}}
+{"session": 0, "call": 5, "server": "XJ", "deep": ["ref"]}
+{"session": 0, "call": 5, "server": "XJ64", "deep": ["ref"]}
+{"session": 1, "call": 11, "lines": ["What is e4 r0?", "ask zq r0", "fact e4 r0 e3", "ask e3 r1", "What is e5 mm?", "ask e3 zz"], "errors": {"REF": null, "XI": null, "XJ": "StateError: incremental fact index diverged from the facts", "XJ64": null}}
+{"session": 2, "call": 18, "lines": ["fact e1 r2 e0"], "errors": {"REF": null, "XI": null, "XJ": "StateError: incremental fact index diverged from the facts", "XJ64": null}}
+{"session": 3, "call": 25, "server": "XJ", "deep": ["ref"]}
+{"session": 3, "call": 25, "server": "XJ64", "deep": ["ref"]}
+{"session": 4, "call": 9, "server": "XJ", "deep": ["ref"]}
+{"session": 4, "call": 9, "server": "XJ64", "deep": ["ref"]}
+{"session": 5, "call": 9, "server": "XJ", "deep": ["ref"]}
+{"session": 5, "call": 9, "server": "XJ64", "deep": ["ref"]}

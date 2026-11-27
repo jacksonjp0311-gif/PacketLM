@@ -1,0 +1,591 @@
+{
+  "schema": "packetlm.engine/3",
+  "checks": {
+    "memory.provenance_told": true,
+    "memory.derived_provenance": true,
+    "memory.correction_drops_derived": true,
+    "memory.correction_logged": true,
+    "memory.ambiguity_abstains": true,
+    "memory.ambiguity_resolved_by_correction": true,
+    "memory.retraction": true,
+    "constructions.induced_orders": true,
+    "constructions.osv_read": true,
+    "constructions.speak_roundtrip": true,
+    "constructions.unknown_word_abstains": true,
+    "constructions.word_clash_rejected": true,
+    "constructions.question_template_learned": true,
+    "constructions.question_unknown_form_unparsed": true,
+    "acquisition.one_observation_stays_pending": true,
+    "acquisition.accumulated_acquires": true,
+    "acquisition.library_control_finds_nothing": true,
+    "acquisition.library_reuse": true,
+    "acquisition.library_matches_deep_search": true,
+    "acquisition.binary_equals_walk": true,
+    "discovery.missing_is_undetermined": true,
+    "discovery.all_seeds_discovered": true,
+    "discovery.gap_survives_as_undetermined": true,
+    "discovery.start_gives_no_hint": true,
+    "discovery.targets_vary": true,
+    "discovery.asks_within_log2": true,
+    "discovery.start_has_nine_live": true,
+    "discovery.gap_keeps_provisional_until_taught": true,
+    "discovery.silent_oracle_adopts_nothing": true,
+    "persistence.roundtrip": true,
+    "persistence.backup_is_prior_generation": true,
+    "persistence.no_temp_left": true,
+    "persistence.checksum_tamper_recovers_loudly": true,
+    "persistence.binding_tamper_recovers_loudly": true,
+    "persistence.corrupt_primary_not_backed_up": true,
+    "persistence.truncated_recovers": true,
+    "persistence.both_corrupt_raises": true,
+    "fresh_process.p1_new_state": true,
+    "fresh_process.p2_reads_p1": true,
+    "fresh_process.p3_uses_capability": true,
+    "fresh_process.p4_correction_drops_derived": true,
+    "fresh_process.p5_sees_corrections": true,
+    "fresh_process.p6_recovery_reported": true,
+    "migration.v2_migrates_reported": true,
+    "migration.v2_migration_same_answers": true,
+    "migration.v3_saved_without_packets": true,
+    "migration.v2_kept_as_backup": true,
+    "retention.adaptive_matches_static": true,
+    "retention.adaptive_archives_and_restores": true,
+    "retention.archive_never_deleted": true,
+    "retention.adaptive_hot_state_smaller": true,
+    "retention.refs_regex_matches_walk": true,
+    "retention.rearchive_reuses_file": true,
+    "retention.gate_keeps_recently_touched": true,
+    "retention.static_open_restores_all": true,
+    "audit.zero_support_kept": true,
+    "audit.activation_same_decision": true,
+    "audit.open_world_blocks_longer_alternative": true,
+    "audit.zero_support_conflict_blocks": true,
+    "audit.scan_matches_bruteforce": true,
+    "audit.compose_matches_naive": true,
+    "audit.retirement_requalifies": true,
+    "audit.deepen_stops_at_ambiguity": true,
+    "audit.contradiction_suspends": true,
+    "audit.reacquired_as_v2": true,
+    "audit.teacher_revokes": true,
+    "audit.versions_pin_dependents": true,
+    "audit.identities_separate": true,
+    "audit.no_cycle_offered": true,
+    "audit.two_proofs_stored": true,
+    "audit.one_retraction_keeps_conclusion": true,
+    "audit.missing_construction_reported": true,
+    "audit.nested_validation": true,
+    "audit.ambiguous_path_undetermined": true,
+    "audit.multiple_conclusions_ambiguous": true,
+    "audit.example_correction_invalidates": true,
+    "audit.conflicting_observations_adopt_nothing": true,
+    "programs.prog_run_matches_naive": true,
+    "programs.prog_differential_nonvacuous": true,
+    "programs.prog_trace_ends_match_run": true,
+    "programs.prog_ordered_choice": true,
+    "programs.prog_until_acquired": true,
+    "programs.prog_until_generalizes_depth": true,
+    "programs.prog_until_open_world_provisional": true,
+    "programs.prog_composition_uses_library": true,
+    "programs.prog_dependency_suspends_dependent": true,
+    "programs.prog_state_reloads": true,
+    "programs.prog_conditional_acquired": true,
+    "programs.prog_filter_acquired": true,
+    "programs.prog_filter_full_horizon_blocks": true,
+    "programs.prog_investigate_one_sided": true,
+    "programs.prog_question_independent_of_fact_order": true,
+    "programs.prog_question_inside_component": true,
+    "programs.prog_question_pool_same_set_under_retention": true,
+    "programs.prog_off_no_program_tokens": true,
+    "px.px_judge_table": true,
+    "px.px_base_one_sided_unresolved_without": true,
+    "px.px_base_none_resolves_ambiguity": true,
+    "px.px_base_qualifies_after_none": true,
+    "px.px_programs_none_contradicts_more_defined": true,
+    "px.px_statements_not_guard_proposals": true,
+    "g49.exact_scan_equals_brute_force": true,
+    "g49.p1_statement_alone_adopts_nothing_programs": true,
+    "g49.p1_statement_alone_adopts_nothing_base": true,
+    "g49.fc_judge_table": true,
+    "g49.fc_evaluate_closed_at_complete_base": true,
+    "g49.fc_less_defined_refuted_qualifies_base": true,
+    "g49.fc_scope_unobserved_changes_nothing_base": true,
+    "g49.fc_violation_retracts_and_demotes_base": true,
+    "g49.fc_evaluate_closed_at_complete_programs": true,
+    "g49.fc_less_defined_refuted_qualifies_programs": true,
+    "g49.fc_scope_unobserved_changes_nothing_programs": true,
+    "g49.fc_violation_retracts_and_demotes_programs": true,
+    "g49.fc_removed_fact_retracts": true,
+    "g49.l3_statement_not_operator_answer": true,
+    "g49.g50_tiebreak_smallest_closure_values": true,
+    "g49.g50_tiebreak_smallest_closure_answers": true,
+    "g49.g51_qualified_library_offers_only_qualified": true,
+    "g49.h1_hidden_guard_no_wrong_qualified": true,
+    "g49.h1_identity_expressible_under_complete": true,
+    "g49.m1_complete_after_example_reviews_version": true,
+    "g49.h1_guard_gap_caps_at_provisional": true,
+    "g49.g55_budget_covers_component": true,
+    "g49.m2_qualified_scoped_to_domain": true,
+    "g49.s1_growth_in_region_requalifies": true,
+    "g49.n1_no_candidate_caps_at_provisional": true,
+    "g49.l1_qualified_needs_qualified_deps": true,
+    "g49.g53_bounded_scan_equals_unbounded": true,
+    "g49.g53_fc_skip_only_settled": true,
+    "g49.g54_lean_replies_and_recall_equal": true,
+    "g49.g54_lean_persistence_guarantees": true,
+    "g49.g54_fast_validation_equivalent": true,
+    "g49.fc_refused_with_adaptive_retention": true,
+    "serve.g56_serve_replies_and_state_equal": true,
+    "serve.g56_serve_journal_recovers": true,
+    "serve.g56_serve_replay_verified": true,
+    "serve.g56_serve_contained_journal_dropped": true,
+    "serve.g56_serve_new_path_starts_empty": true,
+    "serve.g56_serve_memory_state_validated": true,
+    "serve.g56_serve_first_snapshot_crash_recovers": true,
+    "serve.g56_serve_stale_journal_refused": true,
+    "serve.g56_engine_refuses_unclosed_journal": true,
+    "verify_3e2783c.m1_insertion_order_exact": true,
+    "verify_3e2783c.n1b_base_no_candidate_caps_at_provisional": true,
+    "verify_3e2783c.low1_single_value_after_prefix": true,
+    "g57.g57_differential_replies_and_state_equal": true,
+    "g57.g57_memo_recall_equals_reference": true,
+    "g57.g57_stamps_on_add_and_remove": true,
+    "g57.g57_component_classes_equal_bfs": true,
+    "g57.g57_by_rel_rows_equal": true,
+    "g57.g57_fingerprint_covers_dependencies_entity_library": true,
+    "g57.g57_readonly_calls_detected_checked_not_journaled": true,
+    "g57b.g57b_differential_vs_g57_default_period": true,
+    "g57b.g57b_differential_vs_g57_period_3": true,
+    "g57b.g57b_recall_candidates_superset_real_codes": true,
+    "g57b.g57b_recall_candidates_superset_dense_codes": true,
+    "g57b.g57b_recall_candidate_bound_tight_case": true,
+    "g57b.g57b_index_relations_find_equal_reference": true,
+    "g57b.g57b_period_guard_catches_untouched_corruption": true,
+    "g57b.g57b_period_guard_catches_index_corruption": true,
+    "g57b.g57b_scoped_validation_checks_touched": true,
+    "g57b.g57b_domain_cache_keyed_on_content": true
+  },
+  "measures": {
+    "acquisition.binary_measure": {
+      "compared": 18,
+      "nonempty": 9,
+      "agree": 18,
+      "evaluated_lib_depth2": 22,
+      "evaluated_nolib_depth3": 22
+    },
+    "discovery.discovery": [
+      {
+        "seed": 1,
+        "target": 2,
+        "live_at_start": 9,
+        "zero_support_kept": 0,
+        "asks": 3,
+        "seq": [
+          "rel:r2",
+          "rel:r2"
+        ],
+        "status": "provisional",
+        "blocking": [
+          [
+            "rel:rg",
+            "rel:rg"
+          ]
+        ],
+        "ok": true,
+        "gap_undetermined": true,
+        "start_uniform": true,
+        "provisional_then_qualified": true
+      },
+      {
+        "seed": 7,
+        "target": 5,
+        "live_at_start": 9,
+        "zero_support_kept": 0,
+        "asks": 3,
+        "seq": [
+          "rel:r5",
+          "rel:r5"
+        ],
+        "status": "provisional",
+        "blocking": [
+          [
+            "rel:rg",
+            "rel:rg"
+          ]
+        ],
+        "ok": true,
+        "gap_undetermined": true,
+        "start_uniform": true,
+        "provisional_then_qualified": true
+      },
+      {
+        "seed": 13,
+        "target": 4,
+        "live_at_start": 9,
+        "zero_support_kept": 0,
+        "asks": 3,
+        "seq": [
+          "rel:r4",
+          "rel:r4"
+        ],
+        "status": "provisional",
+        "blocking": [
+          [
+            "rel:rg",
+            "rel:rg"
+          ]
+        ],
+        "ok": true,
+        "gap_undetermined": true,
+        "start_uniform": true,
+        "provisional_then_qualified": true
+      },
+      {
+        "seed": 21,
+        "target": 2,
+        "live_at_start": 9,
+        "zero_support_kept": 0,
+        "asks": 3,
+        "seq": [
+          "rel:r2",
+          "rel:r2"
+        ],
+        "status": "provisional",
+        "blocking": [
+          [
+            "rel:rg",
+            "rel:rg"
+          ]
+        ],
+        "ok": true,
+        "gap_undetermined": true,
+        "start_uniform": true,
+        "provisional_then_qualified": true
+      },
+      {
+        "seed": 42,
+        "target": 1,
+        "live_at_start": 9,
+        "zero_support_kept": 0,
+        "asks": 3,
+        "seq": [
+          "rel:r1",
+          "rel:r1"
+        ],
+        "status": "provisional",
+        "blocking": [
+          [
+            "rel:rg",
+            "rel:rg"
+          ]
+        ],
+        "ok": true,
+        "gap_undetermined": true,
+        "start_uniform": true,
+        "provisional_then_qualified": true
+      }
+    ],
+    "fresh_process.replies": {
+      "p1": {
+        "load": {
+          "loaded": "new"
+        },
+        "replies": [
+          "construction owns sro",
+          "construction parent sro",
+          "recorded rex owns map",
+          "recorded ann parent bea",
+          "recorded bea parent cy",
+          "recorded cy parent dee",
+          "observed grand ann cy"
+        ],
+        "stats": {
+          "evaluations": 0,
+          "executions": 0,
+          "row_ops": 0,
+          "asks": 0
+        },
+        "cpu_s": 0.0005,
+        "cpu_total_s": 0.028
+      },
+      "p2": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "rex owns map",
+          "observed grand bea dee",
+          "qualified grand rel:parent+rel:parent"
+        ],
+        "stats": {
+          "evaluations": 4,
+          "executions": 7,
+          "row_ops": 15,
+          "asks": 1
+        },
+        "cpu_s": 0.0111,
+        "cpu_total_s": 0.1088
+      },
+      "p3": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "ann grand cy [no construction for grand]",
+          "derived ann cap:grand cy (1 proofs)"
+        ],
+        "stats": {
+          "evaluations": 0,
+          "executions": 2,
+          "row_ops": 4,
+          "asks": 1
+        },
+        "cpu_s": 0.0021,
+        "cpu_total_s": 0.0298
+      },
+      "p4": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "corrected bea parent eve; removed 2; retired example grand: ann -> cy; retired example grand: bea -> dee; grand@1 provisional: evidence retired: no active examples",
+          "corrected rex owns key; removed 1"
+        ],
+        "stats": {
+          "evaluations": 0,
+          "executions": 0,
+          "row_ops": 0,
+          "asks": 0
+        },
+        "cpu_s": 0.0009,
+        "cpu_total_s": 0.0263
+      },
+      "p5": {
+        "load": {
+          "loaded": "primary"
+        },
+        "replies": [
+          "rex owns key",
+          "ann grand eve [no construction for grand] [provisional]",
+          "bea parent eve"
+        ],
+        "stats": {
+          "evaluations": 0,
+          "executions": 1,
+          "row_ops": 2,
+          "asks": 3
+        },
+        "cpu_s": 0.0019,
+        "cpu_total_s": 0.0269
+      },
+      "p6": {
+        "load": {
+          "loaded": "backup",
+          "recovered": true,
+          "primary_error": "Unterminated string starting at: line 1 column 2960 (char 2959)"
+        },
+        "replies": [
+          "rex owns key"
+        ],
+        "stats": {
+          "evaluations": 0,
+          "executions": 0,
+          "row_ops": 0,
+          "asks": 1
+        },
+        "cpu_s": 0.0009,
+        "cpu_total_s": 0.0255
+      }
+    },
+    "retention.retention": {
+      "archived": 18,
+      "restored": 14,
+      "smallest_ratio": 0.34,
+      "calls": 111,
+      "diffs": []
+    },
+    "audit.hypotheses": {
+      "live_stored": 9,
+      "zero_support_stored": 0,
+      "pruned": 72,
+      "reference_live": 81,
+      "reference_zero_support": 72,
+      "evaluated_with_activation": 18,
+      "evaluated_without": 90
+    },
+    "audit.bruteforce": {
+      "result": "provisional",
+      "engine": [
+        [
+          "p",
+          "r"
+        ],
+        [
+          "p",
+          "r",
+          "p"
+        ],
+        [
+          "p",
+          "r",
+          "q"
+        ],
+        [
+          "q",
+          "r"
+        ],
+        [
+          "q",
+          "s"
+        ],
+        [
+          "s"
+        ]
+      ],
+      "brute": [
+        [
+          "p",
+          "r"
+        ],
+        [
+          "p",
+          "r",
+          "p"
+        ],
+        [
+          "p",
+          "r",
+          "q"
+        ],
+        [
+          "q",
+          "r"
+        ],
+        [
+          "q",
+          "s"
+        ],
+        [
+          "s"
+        ]
+      ]
+    },
+    "audit.zero_support": {
+      "first": "provisional",
+      "scan": {
+        "horizon": 2,
+        "domain": 3,
+        "scanned": 2,
+        "evaluated": 2,
+        "contradicted": 0,
+        "compatible": 0,
+        "pruned_compatible": 7,
+        "blocking_n": 1,
+        "conflicts": 1,
+        "duplicates": 0,
+        "truncated": false
+      },
+      "question": {
+        "result": "question",
+        "subject": "x3"
+      },
+      "after": "qualified"
+    },
+    "audit.requalify": {
+      "first": "qualified",
+      "review": [
+        "retired example rf: a1 -> b1",
+        "rf@1 provisional: requalified on 1 active examples after evidence retirement (1 blocking)"
+      ],
+      "now": "provisional",
+      "qualified_at": [
+        9
+      ]
+    },
+    "audit.lookahead": {
+      "first": "provisional",
+      "blocking": [
+        [
+          "rel:q",
+          "rel:r"
+        ]
+      ],
+      "question": {
+        "result": "question",
+        "subject": "x3"
+      },
+      "after": "qualified"
+    },
+    "audit.versions": {
+      "nm_v2_status": "provisional",
+      "nm_v2_blocking": [
+        [
+          "rel:k",
+          "rel:m"
+        ]
+      ]
+    },
+    "audit.validation": {
+      "dangling": "dangling premise nope a b on p0 parent p1",
+      "missing_dep": "missing dependency cap:ghost@1 of great",
+      "dup": "duplicate fact p0 parent p1",
+      "badstatus": "bad version grand@1",
+      "cycle": "dependency cycle at cap:grand@1",
+      "checksum": "checksum mismatch",
+      "binding": "schema 3 stores no packet; bind is derived: p0 parent p1"
+    },
+    "programs.prog_compared": 6216,
+    "px.px_blockers_before_after": [
+      4,
+      9
+    ],
+    "g57.differential": {
+      "sessions": 53,
+      "calls": 767,
+      "readonly_calls": 323,
+      "gated_answers": 365,
+      "replies": 3245,
+      "ok": true
+    },
+    "g57b.differential_k64": {
+      "sessions": 53,
+      "calls": 792,
+      "readonly_calls": 326,
+      "gated_answers": 357,
+      "replies": 3349,
+      "paths": {
+        "full_validations": 174,
+        "ix_rebuilds": 174,
+        "scoped_validations": 292,
+        "candidate_queries": 1512,
+        "ix_appends": 69
+      },
+      "ok": true
+    },
+    "g57b.differential_k3": {
+      "sessions": 53,
+      "calls": 788,
+      "readonly_calls": 322,
+      "gated_answers": 339,
+      "replies": 3319,
+      "paths": {
+        "full_validations": 224,
+        "ix_rebuilds": 180,
+        "scoped_validations": 242,
+        "candidate_queries": 1520,
+        "ix_appends": 71
+      },
+      "ok": true
+    },
+    "g57b.candidates_dense0": {
+      "small": 0,
+      "mean_candidate_fraction": 0.0321
+    },
+    "g57b.candidates_dense1": {
+      "small": 137,
+      "mean_candidate_fraction": 0.9778
+    }
+  },
+  "count": 162,
+  "failed": [],
+  "claim": "one engine; symbolic and bitwise; not a mind"
+}

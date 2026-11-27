@@ -1,0 +1,11 @@
+{"seed": 77, "K": 3, "snap": 8, "pad": "0", "flags": ["--answers", "--bounded", "--lean", "--deepen=3"], "sessions": 60, "calls": 60, "readonly_calls": 0, "deep_checks": 120, "deep_diffs": 120, "xj_path_counts": {"XJ.full_validations": 60, "XJ.ix_rebuilds": 60, "XJ.ix_checks": 0, "XJ64.full_validations": 60, "XJ64.ix_rebuilds": 60, "XJ64.ix_checks": 0}, "period_full_validations": {}}
+{"session": 0, "call": 0, "server": "XJ", "deep": ["by_sr"]}
+{"session": 0, "call": 0, "server": "XJ64", "deep": ["by_sr"]}
+{"session": 1, "call": 0, "server": "XJ", "deep": ["by_sr"]}
+{"session": 1, "call": 0, "server": "XJ64", "deep": ["by_sr"]}
+{"session": 2, "call": 0, "server": "XJ", "deep": ["by_sr"]}
+{"session": 2, "call": 0, "server": "XJ64", "deep": ["by_sr"]}
+{"session": 3, "call": 0, "server": "XJ", "deep": ["by_sr"]}
+{"session": 3, "call": 0, "server": "XJ64", "deep": ["by_sr"]}
+{"session": 4, "call": 0, "server": "XJ", "deep": ["by_sr"]}
+{"session": 4, "call": 0, "server": "XJ64", "deep": ["by_sr"]}

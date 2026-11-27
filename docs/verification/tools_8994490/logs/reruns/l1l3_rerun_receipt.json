@@ -1,0 +1,1087 @@
+{
+ "started": "2026-11-27T08:40:58-0500",
+ "finished": "2026-11-27T08:41:13-0500",
+ "head": "8994490cfdc7eeb8434498c35771d7dd73fe01da",
+ "git_status_porcelain": "?? docs/verification/",
+ "harness_sha256": "f9934f54f542b6aabfc366952e1dc2a9ab2ae7efa9adf873eafd0c1a185f258a",
+ "instrument": {
+  "path": "/workspace/vendor/learning-amortization",
+  "head": "70297af",
+  "pinned": true,
+  "unmodified": true
+ },
+ "seeds": {
+  "comp": [
+   241,
+   245
+  ],
+  "unrel": [
+   251,
+   256
+  ]
+ },
+ "source_sha256": "d87a65766a52a64e8677d1b6a4b1c17926f13404dc72d1c63d60c8d574009d44",
+ "engine_sha256": "93473e0b0f5d424c88519097db68586a595b1cf0d4f3e1f076de3fbf03cb2625",
+ "curricula": {
+  "comp": {
+   "n": 36,
+   "per_seed": {
+    "241": {
+     "Ci": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "status": {
+       "provisional": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 5.9708,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "30e085d6995a82e1dcf92a47d560586b9512cf5a4e58c685f61bb3f453ffd993",
+      "final_state_sha256": "6cb62a09e3f6b6e3afa4c6acf93e7d8a59fab3d1ee9e1dd1539012576dedaf2d",
+      "calls": 141,
+      "maint_calls": 24,
+      "maint_cpu_s": 0.4355,
+      "inspect_cpu_s": 0.1013,
+      "close_cpu_total_s": 0.0091
+     },
+     "Cj": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "status": {
+       "provisional": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 5.7662,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "30e085d6995a82e1dcf92a47d560586b9512cf5a4e58c685f61bb3f453ffd993",
+      "final_state_sha256": "6cb62a09e3f6b6e3afa4c6acf93e7d8a59fab3d1ee9e1dd1539012576dedaf2d",
+      "calls": 141,
+      "maint_calls": 24,
+      "maint_cpu_s": 0.4073,
+      "inspect_cpu_s": 0.1087,
+      "close_cpu_total_s": 0.0135
+     },
+     "Bi": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 2.9261,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "8e0dc9deb1f2abdcc7d611c1939005ebc3973ad673a4e5ab42ec3cd489f836f3",
+      "final_state_sha256": null,
+      "calls": 119,
+      "maint_calls": 0,
+      "maint_cpu_s": 0,
+      "inspect_cpu_s": 0.0279,
+      "close_cpu_total_s": 0.002
+     },
+     "Bj": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.0224,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "8e0dc9deb1f2abdcc7d611c1939005ebc3973ad673a4e5ab42ec3cd489f836f3",
+      "final_state_sha256": null,
+      "calls": 119,
+      "maint_calls": 0,
+      "maint_cpu_s": 0,
+      "inspect_cpu_s": 0.027,
+      "close_cpu_total_s": 0.0022
+     },
+     "Pi": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.7737,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "9ccda3f976044ffd9b47783251074c66fd62470ccbcbc093f1059716e0e22701",
+      "final_state_sha256": "dfdc2fd1caef21448503105fd4b89895b748549f2eac3ec96679bdaa5619bc92",
+      "calls": 143,
+      "maint_calls": 24,
+      "maint_cpu_s": 0.4612,
+      "inspect_cpu_s": 0.0996,
+      "close_cpu_total_s": 0.0097
+     },
+     "Pj": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.6114,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "9ccda3f976044ffd9b47783251074c66fd62470ccbcbc093f1059716e0e22701",
+      "final_state_sha256": "dfdc2fd1caef21448503105fd4b89895b748549f2eac3ec96679bdaa5619bc92",
+      "calls": 143,
+      "maint_calls": 24,
+      "maint_cpu_s": 0.412,
+      "inspect_cpu_s": 0.1041,
+      "close_cpu_total_s": 0.0118
+     },
+     "Fi": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "status": {
+       "None": 18,
+       "qualified": 18
+      },
+      "censored": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.7232,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "0aa85cad572a7b233e584f400c28f9bfceeb5c422d30eafb811148cdd625b987",
+      "final_state_sha256": "ae9d5844e2f4950f39e4e298e3184e73c6fdb6a041cc87ed078f68fe3ef3aa30",
+      "calls": 92,
+      "maint_calls": 21,
+      "maint_cpu_s": 0.2991,
+      "inspect_cpu_s": 0.0515,
+      "close_cpu_total_s": 0.0043
+     },
+     "Fj": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "status": {
+       "None": 18,
+       "qualified": 18
+      },
+      "censored": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.658,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "0aa85cad572a7b233e584f400c28f9bfceeb5c422d30eafb811148cdd625b987",
+      "final_state_sha256": "ae9d5844e2f4950f39e4e298e3184e73c6fdb6a041cc87ed078f68fe3ef3aa30",
+      "calls": 92,
+      "maint_calls": 21,
+      "maint_cpu_s": 0.2762,
+      "inspect_cpu_s": 0.0532,
+      "close_cpu_total_s": 0.0065
+     }
+    },
+    "245": {
+     "Ci": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "status": {
+       "provisional": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.5016,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "67e788314eaad8cda31a2f5b34eadf9f666a4b679ae104f7adf99584cf1cd94b",
+      "final_state_sha256": "ae24f36df332203dbe84a6009130f0c205ad0ddc45bfd3d87b1a32c42463165c",
+      "calls": 152,
+      "maint_calls": 24,
+      "maint_cpu_s": 0.3612,
+      "inspect_cpu_s": 0.1044,
+      "close_cpu_total_s": 0.0096
+     },
+     "Cj": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "status": {
+       "provisional": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.1561,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "67e788314eaad8cda31a2f5b34eadf9f666a4b679ae104f7adf99584cf1cd94b",
+      "final_state_sha256": "ae24f36df332203dbe84a6009130f0c205ad0ddc45bfd3d87b1a32c42463165c",
+      "calls": 152,
+      "maint_calls": 24,
+      "maint_cpu_s": 0.3169,
+      "inspect_cpu_s": 0.1061,
+      "close_cpu_total_s": 0.0138
+     },
+     "Bi": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.7128,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "ad328646c0855477416d0aec1dcc273431f2bbef576e711102f06473d4218467",
+      "final_state_sha256": null,
+      "calls": 128,
+      "maint_calls": 0,
+      "maint_cpu_s": 0,
+      "inspect_cpu_s": 0.0292,
+      "close_cpu_total_s": 0.0015
+     },
+     "Bj": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.8207,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "ad328646c0855477416d0aec1dcc273431f2bbef576e711102f06473d4218467",
+      "final_state_sha256": null,
+      "calls": 128,
+      "maint_calls": 0,
+      "maint_cpu_s": 0,
+      "inspect_cpu_s": 0.0287,
+      "close_cpu_total_s": 0.0017
+     },
+     "Pi": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.7254,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "18338bbbfe8ebb625753d27f70d1f376523bf320fd76a56c6a7df42b3cc5774f",
+      "final_state_sha256": "4212e0f38c21bf7b92ad6f342c5002ae1467e6c693a54644e26f7b657dc443ec",
+      "calls": 152,
+      "maint_calls": 24,
+      "maint_cpu_s": 0.3557,
+      "inspect_cpu_s": 0.1001,
+      "close_cpu_total_s": 0.0093
+     },
+     "Pj": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 35
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.5407,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "18338bbbfe8ebb625753d27f70d1f376523bf320fd76a56c6a7df42b3cc5774f",
+      "final_state_sha256": "4212e0f38c21bf7b92ad6f342c5002ae1467e6c693a54644e26f7b657dc443ec",
+      "calls": 152,
+      "maint_calls": 24,
+      "maint_cpu_s": 0.3163,
+      "inspect_cpu_s": 0.1057,
+      "close_cpu_total_s": 0.0127
+     },
+     "Fi": {
+      "tasks": 36,
+      "solved": 19,
+      "qualified": 17,
+      "status": {
+       "None": 18,
+       "provisional": 1,
+       "qualified": 17
+      },
+      "censored": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.6637,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "c55e1f008a8266a0496ec25984d5fe409bfa7e11147ed3352aba6343e05547c1",
+      "final_state_sha256": "1fd97e6444ba2c27fa0dd9dd5340bdbeb8f3d216d3b6884d224867367972c3d1",
+      "calls": 98,
+      "maint_calls": 21,
+      "maint_cpu_s": 0.2212,
+      "inspect_cpu_s": 0.0527,
+      "close_cpu_total_s": 0.0046
+     },
+     "Fj": {
+      "tasks": 36,
+      "solved": 19,
+      "qualified": 17,
+      "status": {
+       "None": 18,
+       "provisional": 1,
+       "qualified": 17
+      },
+      "censored": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.5883,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "c55e1f008a8266a0496ec25984d5fe409bfa7e11147ed3352aba6343e05547c1",
+      "final_state_sha256": "1fd97e6444ba2c27fa0dd9dd5340bdbeb8f3d216d3b6884d224867367972c3d1",
+      "calls": 98,
+      "maint_calls": 21,
+      "maint_cpu_s": 0.2098,
+      "inspect_cpu_s": 0.0509,
+      "close_cpu_total_s": 0.0078
+     }
+    }
+   },
+   "cpu_total": {
+    "Ci": 13.472,
+    "Cj": 12.922,
+    "Bi": 6.639,
+    "Bj": 6.843,
+    "Pi": 8.499,
+    "Pj": 8.152,
+    "Fi": 1.387,
+    "Fj": 1.246
+   },
+   "maint_cpu": {
+    "Ci": 0.797,
+    "Cj": 0.724,
+    "Pi": 0.817,
+    "Pj": 0.728,
+    "Fi": 0.52,
+    "Fj": 0.486
+   },
+   "outcomes": {
+    "Ci": {
+     "tasks": 72,
+     "solved": 72,
+     "qualified": 70,
+     "censored": 0,
+     "uses_library": 42,
+     "wrong_qualified_sealed": 0
+    },
+    "Cj": {
+     "tasks": 72,
+     "solved": 72,
+     "qualified": 70,
+     "censored": 0,
+     "uses_library": 42,
+     "wrong_qualified_sealed": 0
+    },
+    "Bi": {
+     "tasks": 72,
+     "solved": 70,
+     "qualified": 70,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0
+    },
+    "Bj": {
+     "tasks": 72,
+     "solved": 70,
+     "qualified": 70,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0
+    },
+    "Pi": {
+     "tasks": 72,
+     "solved": 70,
+     "qualified": 70,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0
+    },
+    "Pj": {
+     "tasks": 72,
+     "solved": 70,
+     "qualified": 70,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0
+    },
+    "Fi": {
+     "tasks": 72,
+     "solved": 37,
+     "qualified": 35,
+     "censored": 36,
+     "uses_library": 24,
+     "wrong_qualified_sealed": 0
+    },
+    "Fj": {
+     "tasks": 72,
+     "solved": 37,
+     "qualified": 35,
+     "censored": 36,
+     "uses_library": 24,
+     "wrong_qualified_sealed": 0
+    }
+   },
+   "primary": [
+    {
+     "cont": "Cj+maint",
+     "base": "Bj",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.8884  [-0.9078, -0.8730] (95% paired bootstrap, S=2); delta-SE=0.0172; sign-flip p=0.5; geometric-mean form=-0.8903\ncensored tasks: Cj+maint=0, Bj=2\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0263 per task  [-0.0289, -0.0237]\nA_n curve (seed-mean costs): [ 0.089  0.057  0.219  0.192  0.104 -0.345 -0.327 -0.291 -0.167 -0.144\n -0.15  -0.516 -0.536 -0.497 -0.435 -0.443 -0.434 -0.729 -0.671 -0.792\n -0.752 -0.964 -1.161 -0.954 -0.941 -0.927 -0.911 -1.031 -1.059 -0.998\n -0.995 -1.005 -0.999 -1.052 -1.1   -0.888]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cj+maint",
+     "base": "Ci+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = +0.0408  [+0.0343, +0.0461] (95% paired bootstrap, S=2); delta-SE=0.0058; sign-flip p=0.5; geometric-mean form=+0.0402\ncensored tasks: Cj+maint=0, Ci+maint=0\ntrend of per-task log ratio: -0.0009 per task  [-0.0015, -0.0002]\nA_n curve (seed-mean costs): [-0.006  0.031  0.05   0.048  0.043  0.025  0.025  0.036  0.046  0.055\n  0.054  0.054  0.05   0.057  0.061  0.058  0.065  0.042  0.041  0.027\n  0.032  0.03   0.02   0.019  0.02   0.023  0.028  0.031  0.032  0.035\n  0.037  0.038  0.039  0.04   0.04   0.041]\nbreak-even n (seed-mean costs): 2",
+     "err": ""
+    }
+   ],
+   "secondary": [
+    {
+     "cont": "Ci+maint",
+     "base": "Bi",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -1.0293  [-1.0405, -1.0205] (95% paired bootstrap, S=2); delta-SE=0.0099; sign-flip p=0.5; geometric-mean form=-1.0305\ncensored tasks: Ci+maint=0, Bi=2\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0234 per task  [-0.0266, -0.0201]\nA_n curve (seed-mean costs): [ 0.006 -0.015  0.173  0.155  0.089 -0.363 -0.373 -0.364 -0.258 -0.263\n -0.257 -0.662 -0.682 -0.672 -0.593 -0.595 -0.603 -0.882 -0.831 -0.91\n -0.885 -1.107 -1.289 -1.065 -1.055 -1.046 -1.005 -1.141 -1.172 -1.118\n -1.119 -1.13  -1.128 -1.186 -1.233 -1.029]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Bj",
+     "base": "Bi",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.0308  [-0.0329, -0.0291] (95% paired bootstrap, S=2); delta-SE=0.0019; sign-flip p=0.5; geometric-mean form=-0.0310\ncensored tasks: Bj=2, Bi=2\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0021 per task  [+0.0020, +0.0021]\nA_n curve (seed-mean costs): [-0.098 -0.042 -0.005  0.005  0.026  0.011 -0.008 -0.019 -0.029 -0.042\n -0.034 -0.037 -0.04  -0.053 -0.043 -0.041 -0.045 -0.042 -0.05  -0.037\n -0.041 -0.041 -0.037 -0.037 -0.037 -0.037 -0.02  -0.021 -0.021 -0.023\n -0.023 -0.022 -0.023 -0.022 -0.021 -0.031]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Pj+maint",
+     "base": "Pi+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = +0.0408  [+0.0391, +0.0430] (95% paired bootstrap, S=2); delta-SE=0.0019; sign-flip p=0.5; geometric-mean form=+0.0410\ncensored tasks: Pj+maint=2, Pi+maint=2\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0022 per task  [+0.0017, +0.0027]\nA_n curve (seed-mean costs): [-0.158 -0.083 -0.031 -0.011  0.01   0.    -0.007  0.007  0.01   0.015\n  0.023  0.03   0.025  0.035  0.043  0.051  0.058  0.064  0.057  0.049\n  0.056  0.054  0.056  0.033  0.033  0.037  0.046  0.05   0.052  0.04\n  0.042  0.045  0.05   0.053  0.055  0.041]\nbreak-even n (seed-mean costs): 8",
+     "err": ""
+    },
+    {
+     "cont": "Cj+maint",
+     "base": "Pj+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.5851  [-0.5967, -0.5760] (95% paired bootstrap, S=2); delta-SE=0.0102; sign-flip p=0.5; geometric-mean form=-0.5863\ncensored tasks: Cj+maint=0, Pj+maint=2\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0265 per task  [-0.0272, -0.0259]\nA_n curve (seed-mean costs): [ 0.005 -0.079  0.09   0.061 -0.007 -0.008 -0.002 -0.012  0.045  0.033\n  0.009 -0.033 -0.031 -0.04  -0.022 -0.044 -0.064 -0.097 -0.085 -0.304\n -0.327 -0.551 -0.744 -0.624 -0.589 -0.594 -0.595 -0.71  -0.746 -0.679\n -0.658 -0.674 -0.675 -0.718 -0.766 -0.585]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cj",
+     "base": "Bj",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.7825  [-0.7900, -0.7731] (95% paired bootstrap, S=2); delta-SE=0.0084; sign-flip p=0.5; geometric-mean form=-0.7815\ncensored tasks: Cj=0, Bj=2\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0331 per task  [-0.0364, -0.0299]\nA_n curve (seed-mean costs): [ 0.089  0.057  0.219  0.192  0.104  0.064  0.045  0.049  0.125  0.13\n  0.092  0.031 -0.011 -0.002  0.018 -0.006 -0.032 -0.076 -0.116 -0.408\n -0.406 -0.675 -0.893 -0.768 -0.762 -0.755 -0.744 -0.88  -0.912 -0.867\n -0.867 -0.88  -0.877 -0.936 -0.986 -0.783]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Fj+maint",
+     "base": "Fi+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = +0.1014  [+0.0902, +0.1136] (95% paired bootstrap, S=2); delta-SE=0.0117; sign-flip p=0.5; geometric-mean form=+0.1020\ncensored tasks: Fj+maint=35, Fi+maint=35\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0367 per task  [+0.0352, +0.0383]\nA_n curve (seed-mean costs): [-0.142 -0.025  0.015  0.029  0.026  0.015  0.005  0.015  0.035  0.042\n  0.051  0.046  0.044  0.049  0.06   0.058  0.065  0.065  0.067  0.068\n  0.069  0.07   0.072  0.08   0.081  0.082  0.083  0.084  0.086  0.093\n  0.094  0.095  0.096  0.097  0.099  0.101]\nbreak-even n (seed-mean costs): 3",
+     "err": ""
+    },
+    {
+     "cont": "Cj+maint",
+     "base": "Fj+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -9.3685  [-11.1640, -7.7632] (95% paired bootstrap, S=2); delta-SE=1.6951; sign-flip p=0.5; geometric-mean form=-9.3245\ncensored tasks: Cj+maint=0, Fj+maint=35\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.2355 per task  [-0.2412, -0.2299]\nA_n curve (seed-mean costs): [ 9.297e-02  6.390e-02  4.622e-02  3.511e-02  2.348e-02  2.306e-02\n  5.059e-02  4.889e-02  4.378e-02  4.390e-02  3.818e-02  3.088e-02\n  2.965e-02  3.084e-02  2.778e-02  2.803e-02  2.497e-02 -4.420e-03\n -1.402e-01 -7.691e-01 -9.122e-01 -1.575e+00 -2.038e+00 -3.538e+00\n -3.681e+00 -3.822e+00 -3.966e+00 -4.771e+00 -5.035e+00 -6.562e+00\n -6.695e+00 -6.907e+00 -7.046e+00 -7.646e+00 -8.061e+00 -9.369e+00]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    }
+   ],
+   "exact_j_equals_i": {
+    "C": true,
+    "B": true,
+    "P": true,
+    "F": true
+   }
+  },
+  "unrel": {
+   "n": 24,
+   "per_seed": {
+    "251": {
+     "Ci": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "status": {
+       "qualified": 24
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.8467,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "cfa32829e3efaed3ddcf30fd2c8a83df8b836ac80fd1931c516120f2ade9b5ad",
+      "final_state_sha256": "928b604c2b0dcfde94f5c45a08163d0cfbe523fb8cabae458d1caffada2b3202",
+      "calls": 130,
+      "maint_calls": 72,
+      "maint_cpu_s": 0.3429,
+      "inspect_cpu_s": 0.0978,
+      "close_cpu_total_s": 0.012
+     },
+     "Cj": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "status": {
+       "qualified": 24
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.5123,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "cfa32829e3efaed3ddcf30fd2c8a83df8b836ac80fd1931c516120f2ade9b5ad",
+      "final_state_sha256": "928b604c2b0dcfde94f5c45a08163d0cfbe523fb8cabae458d1caffada2b3202",
+      "calls": 130,
+      "maint_calls": 72,
+      "maint_cpu_s": 0.2054,
+      "inspect_cpu_s": 0.1016,
+      "close_cpu_total_s": 0.0192
+     },
+     "Bi": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "status": {
+       "qualified": 24
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.1394,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "3f82f2ba585dbee48a385a6f13dabfcdff0d927fd6b15d2177c3f3e827f327f8",
+      "final_state_sha256": null,
+      "calls": 58,
+      "maint_calls": 0,
+      "maint_cpu_s": 0,
+      "inspect_cpu_s": 0.0102,
+      "close_cpu_total_s": 0.0008
+     },
+     "Bj": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "status": {
+       "qualified": 24
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.1586,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "3f82f2ba585dbee48a385a6f13dabfcdff0d927fd6b15d2177c3f3e827f327f8",
+      "final_state_sha256": null,
+      "calls": 58,
+      "maint_calls": 0,
+      "maint_cpu_s": 0,
+      "inspect_cpu_s": 0.0099,
+      "close_cpu_total_s": 0.0009
+     },
+     "Pi": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "status": {
+       "qualified": 24
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.8594,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "cfa32829e3efaed3ddcf30fd2c8a83df8b836ac80fd1931c516120f2ade9b5ad",
+      "final_state_sha256": "38bfb93cc1c10e0793ce2b7c770a691d27f067449c1b73c86b9a6512c6b3483a",
+      "calls": 130,
+      "maint_calls": 72,
+      "maint_cpu_s": 0.3523,
+      "inspect_cpu_s": 0.1005,
+      "close_cpu_total_s": 0.0125
+     },
+     "Pj": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "status": {
+       "qualified": 24
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.5075,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "cfa32829e3efaed3ddcf30fd2c8a83df8b836ac80fd1931c516120f2ade9b5ad",
+      "final_state_sha256": "38bfb93cc1c10e0793ce2b7c770a691d27f067449c1b73c86b9a6512c6b3483a",
+      "calls": 130,
+      "maint_calls": 72,
+      "maint_cpu_s": 0.21,
+      "inspect_cpu_s": 0.1011,
+      "close_cpu_total_s": 0.0203
+     }
+    },
+    "256": {
+     "Ci": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 23
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.8903,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "85ca3b109d2fb6ac8d1a03e6702f25a0b8abc864c8f91fa3b2d3bfc2888b68ad",
+      "final_state_sha256": "167d83e9f2cd6185d52b61d760fd816ad0d197db2221d1af85aa3a9b02b122e8",
+      "calls": 137,
+      "maint_calls": 72,
+      "maint_cpu_s": 0.3402,
+      "inspect_cpu_s": 0.0977,
+      "close_cpu_total_s": 0.0124
+     },
+     "Cj": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 23
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.5522,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "85ca3b109d2fb6ac8d1a03e6702f25a0b8abc864c8f91fa3b2d3bfc2888b68ad",
+      "final_state_sha256": "167d83e9f2cd6185d52b61d760fd816ad0d197db2221d1af85aa3a9b02b122e8",
+      "calls": 137,
+      "maint_calls": 72,
+      "maint_cpu_s": 0.2067,
+      "inspect_cpu_s": 0.0993,
+      "close_cpu_total_s": 0.0169
+     },
+     "Bi": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 23
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.143,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "277591b28d49e1421c1a3bb9df3860ee1b8bf3c7064899ebd0bca716d34f033b",
+      "final_state_sha256": null,
+      "calls": 65,
+      "maint_calls": 0,
+      "maint_cpu_s": 0,
+      "inspect_cpu_s": 0.0104,
+      "close_cpu_total_s": 0.001
+     },
+     "Bj": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 23
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.1574,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "277591b28d49e1421c1a3bb9df3860ee1b8bf3c7064899ebd0bca716d34f033b",
+      "final_state_sha256": null,
+      "calls": 65,
+      "maint_calls": 0,
+      "maint_cpu_s": 0,
+      "inspect_cpu_s": 0.0098,
+      "close_cpu_total_s": 0.0008
+     },
+     "Pi": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 23
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.8898,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "85ca3b109d2fb6ac8d1a03e6702f25a0b8abc864c8f91fa3b2d3bfc2888b68ad",
+      "final_state_sha256": "95d63026f847ccb4824f6c8ad91645d506d4fea3b747f4c797d76122c72557b9",
+      "calls": 137,
+      "maint_calls": 72,
+      "maint_cpu_s": 0.3379,
+      "inspect_cpu_s": 0.0986,
+      "close_cpu_total_s": 0.0125
+     },
+     "Pj": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "status": {
+       "ambiguous": 1,
+       "qualified": 23
+      },
+      "censored": 0,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 0.5491,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "85ca3b109d2fb6ac8d1a03e6702f25a0b8abc864c8f91fa3b2d3bfc2888b68ad",
+      "final_state_sha256": "95d63026f847ccb4824f6c8ad91645d506d4fea3b747f4c797d76122c72557b9",
+      "calls": 137,
+      "maint_calls": 72,
+      "maint_cpu_s": 0.2064,
+      "inspect_cpu_s": 0.1005,
+      "close_cpu_total_s": 0.0176
+     }
+    }
+   },
+   "cpu_total": {
+    "Ci": 1.737,
+    "Cj": 1.065,
+    "Bi": 0.282,
+    "Bj": 0.316,
+    "Pi": 1.749,
+    "Pj": 1.057
+   },
+   "maint_cpu": {
+    "Ci": 0.683,
+    "Cj": 0.412,
+    "Pi": 0.69,
+    "Pj": 0.416
+   },
+   "outcomes": {
+    "Ci": {
+     "tasks": 48,
+     "solved": 47,
+     "qualified": 47,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0
+    },
+    "Cj": {
+     "tasks": 48,
+     "solved": 47,
+     "qualified": 47,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0
+    },
+    "Bi": {
+     "tasks": 48,
+     "solved": 47,
+     "qualified": 47,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0
+    },
+    "Bj": {
+     "tasks": 48,
+     "solved": 47,
+     "qualified": 47,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0
+    },
+    "Pi": {
+     "tasks": 48,
+     "solved": 47,
+     "qualified": 47,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0
+    },
+    "Pj": {
+     "tasks": 48,
+     "solved": 47,
+     "qualified": 47,
+     "censored": 0,
+     "uses_library": 0,
+     "wrong_qualified_sealed": 0
+    }
+   },
+   "primary": [
+    {
+     "cont": "Cj+maint",
+     "base": "Bj",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -2.3687  [-2.5083, -2.2301] (95% paired bootstrap, S=2); delta-SE=0.1391; sign-flip p=0.5; geometric-mean form=-2.3663\ncensored tasks: Cj+maint=1, Bj=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0726 per task  [-0.0741, -0.0712]\nA_n curve (seed-mean costs): [-0.021 -0.072 -0.175 -0.258 -0.311 -0.387 -0.471 -0.565 -0.643 -0.724\n -0.805 -0.908 -1.029 -1.192 -1.278 -1.362 -1.483 -1.578 -1.666 -1.786\n -1.911 -2.052 -2.141 -2.369]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cj+maint",
+     "base": "Ci+maint",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = +0.3872  [+0.3798, +0.3949] (95% paired bootstrap, S=2); delta-SE=0.0076; sign-flip p=0.5; geometric-mean form=+0.3874\ncensored tasks: Cj+maint=1, Ci+maint=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0252 per task  [+0.0236, +0.0268]\nA_n curve (seed-mean costs): [-0.103 -0.071 -0.07   0.002  0.042  0.079  0.118  0.155  0.187  0.212\n  0.239  0.266  0.282  0.295  0.307  0.324  0.335  0.346  0.358  0.372\n  0.381  0.393  0.399  0.387]\nbreak-even n (seed-mean costs): 4",
+     "err": ""
+    }
+   ],
+   "secondary": [
+    {
+     "cont": "Ci+maint",
+     "base": "Bi",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -5.1508  [-5.2259, -5.0739] (95% paired bootstrap, S=2); delta-SE=0.0760; sign-flip p=0.5; geometric-mean form=-5.1494\ncensored tasks: Ci+maint=1, Bi=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0985 per task  [-0.1026, -0.0945]\nA_n curve (seed-mean costs): [ 0.133  0.038 -0.088 -0.261 -0.443 -0.6   -0.779 -0.993 -1.156 -1.332\n -1.559 -1.812 -2.054 -2.376 -2.605 -2.836 -3.113 -3.364 -3.598 -3.913\n -4.22  -4.58  -4.826 -5.151]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Bj",
+     "base": "Bi",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -0.1190  [-0.1377, -0.1007] (95% paired bootstrap, S=2); delta-SE=0.0185; sign-flip p=0.5; geometric-mean form=-0.1191\ncensored tasks: Bj=1, Bi=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0007 per task  [-0.0049, +0.0035]\nA_n curve (seed-mean costs): [ 0.063  0.039  0.01  -0.001 -0.054 -0.062 -0.067 -0.076 -0.066 -0.066\n -0.079 -0.082 -0.081 -0.086 -0.096 -0.098 -0.101 -0.106 -0.107 -0.108\n -0.111 -0.11  -0.115 -0.119]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Pj+maint",
+     "base": "Pi+maint",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = +0.3960  [+0.3829, +0.4095] (95% paired bootstrap, S=2); delta-SE=0.0133; sign-flip p=0.5; geometric-mean form=+0.3963\ncensored tasks: Pj+maint=1, Pi+maint=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0269 per task  [+0.0262, +0.0277]\nA_n curve (seed-mean costs): [ 0.026  0.009 -0.013  0.049  0.088  0.118  0.144  0.173  0.199  0.224\n  0.245  0.273  0.297  0.306  0.314  0.326  0.338  0.348  0.358  0.37\n  0.381  0.396  0.405  0.396]\nbreak-even n (seed-mean costs): 4",
+     "err": ""
+    },
+    {
+     "cont": "Cj+maint",
+     "base": "Pj+maint",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -0.0075  [-0.0095, -0.0056] (95% paired bootstrap, S=2); delta-SE=0.0019; sign-flip p=0.5; geometric-mean form=-0.0076\ncensored tasks: Cj+maint=1, Pj+maint=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0001 per task  [-0.0023, +0.0025]\nA_n curve (seed-mean costs): [-0.103 -0.063 -0.052 -0.05  -0.054 -0.043 -0.036 -0.03  -0.022 -0.022\n -0.019 -0.017 -0.021 -0.011 -0.008 -0.004 -0.005 -0.009 -0.009 -0.009\n -0.01  -0.011 -0.012 -0.007]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cj",
+     "base": "Bj",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -1.0646  [-1.1950, -0.9351] (95% paired bootstrap, S=2); delta-SE=0.1300; sign-flip p=0.5; geometric-mean form=-1.0610\ncensored tasks: Cj=1, Bj=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0648 per task  [-0.0684, -0.0612]\nA_n curve (seed-mean costs): [ 0.057  0.067  0.026  0.006 -0.003 -0.026 -0.056 -0.101 -0.133 -0.167\n -0.2   -0.257 -0.329 -0.458 -0.498 -0.535 -0.617 -0.66  -0.7   -0.771\n -0.859 -0.949 -0.99  -1.065]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    }
+   ],
+   "exact_j_equals_i": {
+    "C": true,
+    "B": true,
+    "P": true
+   }
+  }
+ },
+ "guards": {
+  "exact_replies_and_state_j_equal_i": true,
+  "no_wrong_qualified_C": true,
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ },
+ "lock": {
+  "start": null,
+  "end": null
+ },
+ "loadavg": {
+  "start": [
+   2.77880859375,
+   2.86083984375,
+   3.517578125
+  ],
+  "end": [
+   3.66455078125,
+   3.0615234375,
+   3.5732421875
+  ]
+ }
+}
