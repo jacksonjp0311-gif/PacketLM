@@ -30,7 +30,7 @@ The instrument and the paper are in [learning-amortization](https://github.com/j
 
 ## Current status
 
-As of 27 November 2026 (America/New_York): **no registered experiment has shown positive learning amortization.** The primary learning-to-learn contrasts remain negative. **G59**, the amortization qualification gate, is in progress. Its pre-registration is in [`docs/G59.md`](https://github.com/jacksonjp0311-gif/PacketLM/blob/g44-canonical-engine/docs/G59.md) on `g44-canonical-engine`; registered results have not been appended yet.
+As of 27 November 2026 (America/New_York): **no registered experiment has shown positive learning amortization.** **G59** gate: **HOLD** (no positive amortization qualified, comp A −0.52, deepest stratum at break-even). The switch rule triggered. An alternative representation (hyperdimensional codes) prototype is under way. Results are in [`docs/G59.md`](https://github.com/jacksonjp0311-gif/PacketLM/blob/main/docs/G59.md); independent check on branch [`verify-80cfb17`](https://github.com/jacksonjp0311-gif/PacketLM/tree/verify-80cfb17).
 
 Active development is on branch [`g44-canonical-engine`](https://github.com/jacksonjp0311-gif/PacketLM/tree/g44-canonical-engine), opened as [PR #1](https://github.com/jacksonjp0311-gif/PacketLM/pull/1). This `main` branch still holds the earlier packet-field demo described further below.
 
