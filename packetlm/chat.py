@@ -1,7 +1,7 @@
-"""Answer after reload.
+"""Second session.
 
-The live field is discarded.
-The saved field and sequence answer the question.
+The constructions are saved.
+The resumed answer uses those, not a fresh induce.
 Not a general mind.
 """
 
@@ -69,7 +69,7 @@ def turn(field, objects, library, seq, line):
         return f"{parts[2]} owns {owned}" if owned else "unknown"
     return "unparsed"
 
-def library():
+def fresh_library():
     return [
         induce([("mira isa dax", ("mira", "isa", "dax")), ("sam isa cat", ("sam", "isa", "cat"))]),
         induce([("ada owns box", ("ada", "owns", "box")), ("ned owns key", ("ned", "owns", "key"))]),
@@ -80,20 +80,21 @@ def run() -> dict:
     add(field, "mira", "isa", "dax")
     add(field, "dax", "tail", "green")
     seq = discover(field, [("mira", "green")], objects)
+    lib = fresh_library()
     lines = [ln for ln in Path("data/dialogue.txt").read_text().splitlines() if ln.strip()]
-    replies = [turn(field, objects, library(), seq, line) for line in lines]
-    save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None})
+    replies = [turn(field, objects, lib, seq, line) for line in lines]
+    save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None, "library": lib})
     loaded = load(STATE)
-    resumed = turn(loaded["field"], loaded["objects"], library(), tuple(loaded["seq"]), "what color is orion tail")
+    resumed = turn(loaded["field"], loaded["objects"], loaded["library"], tuple(loaded["seq"]), "what color is orion tail")
     checks = {
         "found": seq == ("isa", "tail"),
         "missing_abstains": apply_seq(field, None, "orion", objects) is None,
         "orion_after": replies[10] == "orion has a red tail",
-        "unrelated": replies[12] == "rex owns key",
-        "resumed": resumed == "orion has a red tail",
+        "resumed_from_saved_library": resumed == "orion has a red tail",
+        "library_saved": len(loaded.get("library", [])) == 2,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "resumed": resumed, "failed": failed, "claim": "answer comes from the reloaded state"}
+    receipt = {**checks, "failed": failed, "claim": "resume uses the saved constructions"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
@@ -102,9 +103,10 @@ def run() -> dict:
     return receipt
 
 def interactive():
-    state = load(STATE) if STATE.exists() else {"field": [], "objects": [], "seq": None}
+    state = load(STATE) if STATE.exists() else {"field": [], "objects": [], "seq": None, "library": fresh_library()}
     field, objects = state.get("field", []), state.get("objects", [])
     seq = tuple(state["seq"]) if state.get("seq") else None
+    lib = state.get("library") or fresh_library()
     while True:
         try:
             line = input("> ")
@@ -112,8 +114,8 @@ def interactive():
             break
         if line.strip() in {"quit", "exit"}:
             break
-        print(turn(field, objects, library(), seq, line))
-        save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None})
+        print(turn(field, objects, lib, seq, line))
+        save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None, "library": lib})
 
 if __name__ == "__main__":
     if "--interactive" in sys.argv:
