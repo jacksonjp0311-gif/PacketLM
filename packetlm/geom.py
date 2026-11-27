@@ -18,7 +18,13 @@ STATE = Path("data/geom_state.json")
 NAMES = {10: "alpha", 12: "gamma"}
 
 def bits(m):
-    return [i for i in range(m.bit_length()) if m & (1 << i)]
+    """Set-bit positions, lowest first; visits only set bits (lowest-set-bit isolation)."""
+    out = []
+    while m:
+        low = m & -m
+        out.append(low.bit_length() - 1)
+        m ^= low
+    return out
 
 def rows_from(facts, n, rel):
     rows = [0] * n
@@ -30,12 +36,11 @@ def rows_from(facts, n, rel):
 def compose(a_rows, b_rows):
     out = []
     for a in a_rows:
-        acc, k, row = 0, 0, a
-        while row:
-            if row & 1:
-                acc |= b_rows[k]
-            row >>= 1
-            k += 1
+        acc, row = 0, a
+        while row:  # visit set bits only: OR the rows of the active sources
+            low = row & -row
+            acc |= b_rows[low.bit_length() - 1]
+            row ^= low
         out.append(acc)
     return out
 

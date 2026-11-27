@@ -384,6 +384,21 @@ def audit_checks(tmp) -> dict:
     mine_b = {tuple(x[4:] for x in b) for b in gb.get("blocking", [])}
     out["scan_matches_bruteforce"] = bool(cand) and mine_b == brute and len(brute) > 0
     out["_bruteforce"] = {"result": gb.get("result"), "engine": sorted(mine_b), "brute": sorted(brute)}
+    # geom.compose / geom.bits (set-bit iteration) agree with the naive bit-by-bit definition
+    import random as _r
+    from . import geom as _g
+    rr = _r.Random(7)
+    ok = True
+    for _ in range(300):
+        n = rr.randint(1, 300)
+        rows = [rr.getrandbits(n) for _ in range(n)]
+        a = rr.getrandbits(n) & rr.getrandbits(n)
+        naive = 0
+        for k in range(n):
+            if a >> k & 1:
+                naive |= rows[k]
+        ok = ok and _g.compose([a], rows) == [naive] and _g.bits(a) == [k for k in range(n) if a >> k & 1]
+    out["compose_matches_naive"] = ok
     out["_zero_support"] = {"first": gz.get("result"), "scan": {k: v for k, v in gz.get("scan", {}).items() if k != "assumption"},
                             "question": qz, "after": gz2.get("result")}
     # P1 (audit 283f526): retiring evidence requalifies; the earlier qualification stays in qualified_at

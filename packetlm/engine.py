@@ -238,7 +238,10 @@ class Engine:
                         names.append(t)
                         decode[pack(bits_for(t, 2)).bits] = t
                 triples.append((f["s"], f["r"], f["o"]))
-            self._cache = {"names": names, "pos": pos, "decode": decode, "rows": {},
+            out = {}
+            for s_, r_, _ in triples:
+                out.setdefault(s_, set()).add(r_)
+            self._cache = {"names": names, "pos": pos, "decode": decode, "rows": {}, "out": out,
                            "triples": triples, "ref": reference.index(triples),
                            "byid": {f["id"]: f for f in self.state["facts"]}}
         return self._cache
@@ -663,16 +666,30 @@ class Engine:
                 return front
         return front
 
+    def _first_rel(self, prim):
+        base = self.expand([prim])
+        if not base:
+            return None
+        return base[0].split(":")[1] if base[0].startswith("until:") else base[0]
+
     def _activated(self, prims, n, start):
         """Programs of length n whose image of the start set never empties; returns (seqs, pruned)."""
         out, pruned, P = [], 0, len(prims)
+
+        first = {p: self._first_rel(p) for p in prims}
+        idx = self._idx()
 
         def walk(prefix, front):
             nonlocal pruned
             if len(prefix) == n:
                 out.append(tuple(prefix))
                 return
+            ents = [idx["names"][i] for i in _geom().bits(front)] if self.geometry else front
+            here = set().union(*(idx["out"].get(x, set()) for x in ents)) if ents else set()
             for p in prims:
+                if first[p] not in here:  # relevance index: no edge leaves the frontier (exact)
+                    pruned += P ** (n - len(prefix) - 1)
+                    continue
                 nxt = self._image(front, p)
                 if not nxt:
                     pruned += P ** (n - len(prefix) - 1)
@@ -922,11 +939,22 @@ class Engine:
         # and the counts are then lower bounds (`truncated`).
         out.update({"duplicates": 0, "truncated": False})
         level, seen = [([], [{e} for e in D], ())], {()}
+        first = {p: (pb[0].split(":")[1] if pb[0].startswith("until:") else pb[0]) for p, pb in prims}
+        outrel = self._idx()["out"]
         for depth in range(1, horizon + 1):
             nxt_level = []
             for prefix, front, bseq in level:
+                here = set()
+                for f in front:
+                    for x in f:
+                        here |= outrel.get(x, set())
                 for p, pb in prims:
                     key = bseq + tuple(pb)
+                    if first[p] not in here:  # relevance index: nothing leaves the frontier (exact)
+                        if key not in seen:
+                            seen.add(key)
+                            out["pruned_compatible"] += 1
+                        continue
                     if key in seen:
                         out["duplicates"] += 1
                         continue

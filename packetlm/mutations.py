@@ -1,6 +1,6 @@
 """Mutation run: break one engine mechanism at a time and confirm a check fails.
 
-Copies the repo to a temp dir, applies one textual mutation to engine.py,
+Copies the repo to a temp dir, applies one textual mutation to engine.py (or the named module),
 runs `python -m packetlm.g44_test` there, and records which checks failed.
 A mutation that no check notices is reported as SURVIVED.
 """
@@ -40,18 +40,19 @@ MUTATIONS = {
     "no_requalify": ('        out["review"] = retired + self.review() + self._requalify_retired()\n        return out\n\n    def correct_example', '        out["review"] = retired + self.review()\n        return out\n\n    def correct_example'),
     "scan_short_horizon": ('        horizon = self.deepen if (max_len is None and self.deepen) else searched', '        horizon = searched'),
     "deepen_past_ambiguity": ('                if any(h["status"] == "supported" for h in live):', '                if sum(h["status"] == "supported" for h in live) == 1:'),
+    "compose_skips_bit": ('            acc |= b_rows[low.bit_length() - 1]\n            row ^= low', '            acc |= b_rows[low.bit_length() - 1]\n            row ^= low\n            row &= row - 1', "geom.py"),
     "compose_keeps_source": ('            return g.compose([row], self._rows(token))[0]', '            return row | g.compose([row], self._rows(token))[0]'),
 }
 
 
 def run() -> dict:
     results = {}
-    for name, (old, new) in MUTATIONS.items():
+    for name, (old, new, *target) in MUTATIONS.items():
         with tempfile.TemporaryDirectory() as d:
             dst = Path(d) / "repo"
             shutil.copytree(ROOT / "packetlm", dst / "packetlm", ignore=shutil.ignore_patterns("__pycache__"))
             shutil.copytree(ROOT / "data", dst / "data")
-            eng = dst / "packetlm" / "engine.py"
+            eng = dst / "packetlm" / (target[0] if target else "engine.py")
             src = eng.read_text()
             if src.count(old) != 1:
                 results[name] = {"error": "mutation site not found exactly once"}

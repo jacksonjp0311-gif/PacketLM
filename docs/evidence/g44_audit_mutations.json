@@ -192,6 +192,15 @@
    "verdict": "KILLED",
    "crash": null
   },
+  "compose_skips_bit": {
+   "exit": 1,
+   "failed": [
+    "audit.compose_matches_naive",
+    "audit.ambiguous_path_undetermined"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
   "compose_keeps_source": {
    "exit": 1,
    "failed": [],
@@ -199,6 +208,6 @@
    "crash": "KeyError: 'x1'"
   }
  },
- "killed": 23,
- "total": 23
+ "killed": 24,
+ "total": 24
 }
