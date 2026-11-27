@@ -860,3 +860,20 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   process floor binds), comp −0.09.
 - **Registered design:** comp 141–147, unrel 151–157; rules M, L1, L2, L3 and the descriptive
   structural rule S.
+
+## 2026-11-27 03:05: G54 registered results (pre-registration 70c6dcb)
+
+- Seeds comp 141–147, unrel 151–157, S = 7, instrument 70297af; ran alone. All guards held
+  (Cl = Cb and Bl = Bb reply streams on all 14 seeds; 0 wrong-qualified).
+- **M: claimed on both curricula.** A(Cl+maint ‖ Cb+maint) = +0.174 [+0.170, +0.178] (comp),
+  +0.335 [+0.322, +0.344] (unrel).
+- **L1: no claim.** A(Cl+maint ‖ Bl) = −0.845 [−0.920, −0.773] (1.85×).
+- **L2: no claim.** A(Cl+maint ‖ Pl+maint) = −0.305 [−0.343, −0.270].
+- **L3: utility problem persists.** A(Cl+maint ‖ Bl) = −3.312 [−3.479, −3.163] (4.31×).
+- **S:** f0 = 25.9 ms. Comp A_struct −0.10, structural share 0.12 (gap mostly per-call work).
+  Unrel A_struct −1.14 (the floor binds: 911 processes × f0 = 23.6 s > 2 × Bl's 11.4 s), share
+  0.35. B gains 3–6% from `--lean`.
+- All predictions held. Descriptively across experiments (not a registered contrast):
+  comp ratio to the empty-state learner 3.87× (G51) → 1.89× (G53) → 1.85× (G54).
+- verify-050bebd (1f37c4f) judged the t5 restatement legitimate; its N1/Low items are handled
+  in the next entry.

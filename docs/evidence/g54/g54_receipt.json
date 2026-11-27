@@ -1,0 +1,1621 @@
+{
+ "started": "2026-11-27T02:50:06-0500",
+ "head": "70c6dcb9db26a086bec60978446350d7a2dcbb59",
+ "git_status_porcelain": "",
+ "harness_sha256": "2e6a6638d90e00501c1baa3342a1b13b6b2667719e00afc9f89841bc79af01ee",
+ "instrument": {
+  "path": "/workspace/vendor/learning-amortization",
+  "head": "70297af",
+  "pinned": true,
+  "unmodified": true
+ },
+ "seeds": {
+  "comp": [
+   141,
+   142,
+   143,
+   144,
+   145,
+   146,
+   147
+  ],
+  "unrel": [
+   151,
+   152,
+   153,
+   154,
+   155,
+   156,
+   157
+  ]
+ },
+ "source_sha256": "2fa68cde2cdb4d463a1d8f03de8029cdd20b900b1aee2ce5866e30ae2dfff346",
+ "engine_sha256": "9a26204d982276fc1d271a2e63690d2f42a454c528387352a3761081fc0be4e9",
+ "curricula": {
+  "comp": {
+   "n": 36,
+   "per_seed": {
+    "141": {
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.9246,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "d574e2838df633b590d2f9f87255c410bafe6a0f6896305990eb4b0101f0d716",
+      "processes": 143,
+      "maint_processes": 24,
+      "maint_cpu_s": 2.1104
+     },
+     "Cl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.5558,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "d574e2838df633b590d2f9f87255c410bafe6a0f6896305990eb4b0101f0d716",
+      "processes": 143,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.4677
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.2162,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "5fa7a39348e40775657ad2a9d6d8a1fbea8725fa47a6e1155f769e50ba2ed597",
+      "processes": 119,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.7344,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "5fa7a39348e40775657ad2a9d6d8a1fbea8725fa47a6e1155f769e50ba2ed597",
+      "processes": 119,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 9.1846,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "412d0250d514f7c595024bc7a9070ff10a3fdfe64d60923a84b3d4809f7f2582",
+      "processes": 143,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.4175
+     },
+     "Fl": {
+      "tasks": 36,
+      "solved": 21,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.8681,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "5f69b495a152f97c16f942cf9f5b6e2781877d4ab5f4ef0d47e426401938ac23",
+      "processes": 99,
+      "maint_processes": 21,
+      "maint_cpu_s": 1.0345
+     }
+    },
+    "142": {
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 34,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.9287,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0b527c631c01d7fbc88cd360e3c00dd18cfd2ef444c5198874230d1f6ad7d27d",
+      "processes": 141,
+      "maint_processes": 24,
+      "maint_cpu_s": 2.1733
+     },
+     "Cl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 34,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.5511,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0b527c631c01d7fbc88cd360e3c00dd18cfd2ef444c5198874230d1f6ad7d27d",
+      "processes": 141,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.5312
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 34,
+      "qualified": 34,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.5667,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "33e60152e757c7a83eb7b0ee163cd4d74a6f29b5a4555555482c3187a28e68b5",
+      "processes": 118,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 36,
+      "solved": 34,
+      "qualified": 34,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.1584,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "33e60152e757c7a83eb7b0ee163cd4d74a6f29b5a4555555482c3187a28e68b5",
+      "processes": 118,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 36,
+      "solved": 34,
+      "qualified": 34,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 8.6871,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "5a19f2bc8474feaeb93b6dc1b35c9fb0b0cf37dd1723cb4f5983e9499b92289c",
+      "processes": 142,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.4897
+     },
+     "Fl": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.8304,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "22687d48ed656287e851b171c91664df675b26d4c6d2fe70577e9afb752943da",
+      "processes": 96,
+      "maint_processes": 21,
+      "maint_cpu_s": 1.125
+     }
+    },
+    "143": {
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.2801,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "42577f9d8fcc17a4e486c0bf7f75be8510b0d12eb6165d3a2f513a8c2c00c8ab",
+      "processes": 141,
+      "maint_processes": 24,
+      "maint_cpu_s": 2.1841
+     },
+     "Cl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.9449,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "42577f9d8fcc17a4e486c0bf7f75be8510b0d12eb6165d3a2f513a8c2c00c8ab",
+      "processes": 141,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.4723
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.5163,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "ad57a0fa61964b42f5ed9d162be0a319c21a9cd6f4dac7cfee9612b0fd65603b",
+      "processes": 117,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.2151,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "ad57a0fa61964b42f5ed9d162be0a319c21a9cd6f4dac7cfee9612b0fd65603b",
+      "processes": 117,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 8.6452,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "d19f72e7eb8a2f599351578e2f7b8942f4764c8d2d20e5b7093ff95ad136e930",
+      "processes": 141,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.4477
+     },
+     "Fl": {
+      "tasks": 36,
+      "solved": 19,
+      "qualified": 17,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.5968,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "86127b8591cb17fab55623130561dab823e7ec76a7632a31d5d7116e274c8ff6",
+      "processes": 92,
+      "maint_processes": 21,
+      "maint_cpu_s": 1.065
+     }
+    },
+    "144": {
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 14.352,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "1f6a3bf12f7d56ecaf86c34f7da85757a6cb2bb7362f57f37f166f6e0ed2cc6d",
+      "processes": 141,
+      "maint_processes": 24,
+      "maint_cpu_s": 2.1659
+     },
+     "Cl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.8297,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "1f6a3bf12f7d56ecaf86c34f7da85757a6cb2bb7362f57f37f166f6e0ed2cc6d",
+      "processes": 141,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.5467
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.7583,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "8b705ccb5649fcca1d0818a4e75a35491d51a6be86980963d883e3cebab2bb98",
+      "processes": 117,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.3256,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "8b705ccb5649fcca1d0818a4e75a35491d51a6be86980963d883e3cebab2bb98",
+      "processes": 117,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 9.0186,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "391ea10b775623695bcf1597903fed2edfa00e6e89587e5a862d5971bdfc51f7",
+      "processes": 141,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.4769
+     },
+     "Fl": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.4266,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "ce994e12e495b85e73ff8a2cd77b8c1399746134b94b95a844e0f09ea7a5e942",
+      "processes": 89,
+      "maint_processes": 21,
+      "maint_cpu_s": 1.0569
+     }
+    },
+    "145": {
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.0218,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "ae2024ae6cb3259706eee2126bd13a6bba96c3809e0ff4cf8a23af7e4b9cc58f",
+      "processes": 148,
+      "maint_processes": 24,
+      "maint_cpu_s": 2.1612
+     },
+     "Cl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.599,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "ae2024ae6cb3259706eee2126bd13a6bba96c3809e0ff4cf8a23af7e4b9cc58f",
+      "processes": 148,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.4629
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.5127,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "68a1bdbca352a024c05d1a65b47334870960b7b5e6cebcc2ba9cd75ef08e005c",
+      "processes": 124,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.0363,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "68a1bdbca352a024c05d1a65b47334870960b7b5e6cebcc2ba9cd75ef08e005c",
+      "processes": 124,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 8.5156,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "efbf380b98000af4ce2900f7b08a40e9bd0122fdaeb92b5258dab35e83ac8519",
+      "processes": 148,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.4551
+     },
+     "Fl": {
+      "tasks": 36,
+      "solved": 19,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.7302,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "574ca580c1dce10b0b74c82678ae32a85fe9e0e07b205fd4b4878dbca4348b70",
+      "processes": 99,
+      "maint_processes": 21,
+      "maint_cpu_s": 1.0576
+     }
+    },
+    "146": {
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 14.9334,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "1cfc246715c2b795321748c37bc263d2ba198f5427214f2cfb95553e9b824cce",
+      "processes": 142,
+      "maint_processes": 24,
+      "maint_cpu_s": 2.1046
+     },
+     "Cl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 12.412,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "1cfc246715c2b795321748c37bc263d2ba198f5427214f2cfb95553e9b824cce",
+      "processes": 142,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.405
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.6423,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "ffdca89247726cbfcbc9e295b0a5ca8ed43b6c0c68da65639eb39b411de86329",
+      "processes": 118,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.2236,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "ffdca89247726cbfcbc9e295b0a5ca8ed43b6c0c68da65639eb39b411de86329",
+      "processes": 118,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 8.8996,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "e82cfb19324c10ecd806e574d1315d562a2d3b9292e0eeb6c7895e66d5cad031",
+      "processes": 142,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.4078
+     },
+     "Fl": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.6449,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "cb78c28a027335225fd21b80b4d53a0bec03aa454476db3d0fe9f8245bcc007d",
+      "processes": 93,
+      "maint_processes": 21,
+      "maint_cpu_s": 1.0433
+     }
+    },
+    "147": {
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.2367,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "99d80cc550d4d24e05afc1ebee6490aad55ac5f3d08cc5483df9001801a09496",
+      "processes": 140,
+      "maint_processes": 24,
+      "maint_cpu_s": 2.1468
+     },
+     "Cl": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.9855,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "99d80cc550d4d24e05afc1ebee6490aad55ac5f3d08cc5483df9001801a09496",
+      "processes": 140,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.5156
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 5.9937,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "7b824e89608e61a4fbf82fb3df8a79fcd1f9dad5c61b165cda610b8a48251fc7",
+      "processes": 115,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 5.5997,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "7b824e89608e61a4fbf82fb3df8a79fcd1f9dad5c61b165cda610b8a48251fc7",
+      "processes": 115,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 8.2466,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "e4db83ebf04bf88533518b021bc597ae9f6ae4df00a70b32f8817ae97952a848",
+      "processes": 139,
+      "maint_processes": 24,
+      "maint_cpu_s": 1.4599
+     },
+     "Fl": {
+      "tasks": 36,
+      "solved": 19,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 3.8011,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "547913e7db80077d62e45d4f5ecf0fbd536a249734cd1ebc4155feacdf3aa650",
+      "processes": 96,
+      "maint_processes": 21,
+      "maint_cpu_s": 1.0778
+     }
+    }
+   },
+   "instrument": [
+    {
+     "cont": "Cl+maint",
+     "base": "Bl",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.8451  [-0.9195, -0.7730] (95% paired bootstrap, S=7); delta-SE=0.0408; sign-flip p=0.01562; geometric-mean form=-0.8452\ncensored tasks: Cl+maint=0, Bl=5\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0162 per task  [-0.0181, -0.0149]\nA_n curve (seed-mean costs): [-0.071 -0.088 -0.067 -0.084 -0.111 -0.496 -0.468 -0.436 -0.385 -0.375\n -0.361 -0.576 -0.555 -0.538 -0.498 -0.486 -0.471 -0.62  -0.597 -0.601\n -0.592 -0.636 -0.675 -0.675 -0.663 -0.664 -0.667 -0.717 -0.737 -0.772\n -0.764 -0.766 -0.765 -0.792 -0.814 -0.845]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cl+maint",
+     "base": "Pl+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.3053  [-0.3430, -0.2704] (95% paired bootstrap, S=7); delta-SE=0.0201; sign-flip p=0.01562; geometric-mean form=-0.3044\ncensored tasks: Cl+maint=0, Pl+maint=5\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0116 per task  [-0.0129, -0.0102]\nA_n curve (seed-mean costs): [-0.118 -0.118 -0.105 -0.114 -0.135 -0.136 -0.133 -0.133 -0.116 -0.118\n -0.121 -0.122 -0.117 -0.115 -0.105 -0.103 -0.104 -0.097 -0.093 -0.129\n -0.133 -0.195 -0.233 -0.225 -0.219 -0.225 -0.231 -0.274 -0.292 -0.29\n -0.282 -0.284 -0.284 -0.305 -0.321 -0.305]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cl+maint",
+     "base": "Cb+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = +0.1738  [+0.1704, +0.1784] (95% paired bootstrap, S=7); delta-SE=0.0022; sign-flip p=0.01562; geometric-mean form=+0.1739\ncensored tasks: Cl+maint=0, Cb+maint=0\ntrend of per-task log ratio: +0.0030 per task  [+0.0019, +0.0041]\nA_n curve (seed-mean costs): [0.37  0.29  0.202 0.175 0.142 0.11  0.11  0.105 0.103 0.101 0.099 0.104\n 0.108 0.113 0.121 0.123 0.126 0.141 0.143 0.14  0.142 0.145 0.145 0.149\n 0.151 0.153 0.154 0.15  0.149 0.155 0.158 0.161 0.163 0.165 0.165 0.174]\nbreak-even n (seed-mean costs): 1",
+     "err": ""
+    },
+    {
+     "cont": "Bl",
+     "base": "Bb",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = +0.0630  [+0.0567, +0.0680] (95% paired bootstrap, S=7); delta-SE=0.0031; sign-flip p=0.01562; geometric-mean form=+0.0630\ncensored tasks: Bl=5, Bb=5\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0007 per task  [-0.0021, +0.0006]\nA_n curve (seed-mean costs): [0.063 0.063 0.049 0.063 0.062 0.07  0.073 0.082 0.08  0.078 0.076 0.074\n 0.08  0.084 0.081 0.08  0.076 0.077 0.077 0.077 0.076 0.066 0.064 0.065\n 0.065 0.065 0.064 0.062 0.062 0.06  0.06  0.059 0.06  0.06  0.061 0.063]\nbreak-even n (seed-mean costs): 1",
+     "err": ""
+    },
+    {
+     "cont": "Cl",
+     "base": "Bl",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.6048  [-0.6745, -0.5388] (95% paired bootstrap, S=7); delta-SE=0.0385; sign-flip p=0.01562; geometric-mean form=-0.6042\ncensored tasks: Cl=0, Bl=5\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0201 per task  [-0.0221, -0.0184]\nA_n curve (seed-mean costs): [-0.071 -0.088 -0.067 -0.084 -0.111 -0.135 -0.141 -0.152 -0.143 -0.151\n -0.162 -0.181 -0.184 -0.191 -0.183 -0.186 -0.192 -0.202 -0.203 -0.256\n -0.265 -0.342 -0.395 -0.398 -0.396 -0.408 -0.419 -0.483 -0.51  -0.527\n -0.525 -0.534 -0.539 -0.575 -0.601 -0.605]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cl",
+     "base": "Pl",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.3611  [-0.4057, -0.3192] (95% paired bootstrap, S=7); delta-SE=0.0243; sign-flip p=0.01562; geometric-mean form=-0.3600\ncensored tasks: Cl=0, Pl=5\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0115 per task  [-0.0128, -0.0102]\nA_n curve (seed-mean costs): [-0.118 -0.118 -0.105 -0.114 -0.135 -0.155 -0.149 -0.146 -0.124 -0.126\n -0.129 -0.141 -0.132 -0.128 -0.114 -0.111 -0.112 -0.115 -0.109 -0.154\n -0.158 -0.234 -0.279 -0.27  -0.26  -0.266 -0.272 -0.32  -0.341 -0.343\n -0.333 -0.333 -0.332 -0.354 -0.372 -0.361]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cl+maint",
+     "base": "Fl+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -2.0843  [-2.2495, -1.9365] (95% paired bootstrap, S=7); delta-SE=0.0890; sign-flip p=0.01562; geometric-mean form=-2.0829\ncensored tasks: Cl+maint=0, Fl+maint=120\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0859 per task  [-0.0879, -0.0841]\nA_n curve (seed-mean costs): [-0.085 -0.073 -0.093 -0.085 -0.087 -0.082 -0.081 -0.077 -0.073 -0.069\n -0.066 -0.065 -0.061 -0.059 -0.054 -0.053 -0.05  -0.046 -0.083 -0.222\n -0.268 -0.434 -0.517 -0.841 -0.873 -0.935 -0.98  -1.143 -1.203 -1.51\n -1.537 -1.596 -1.63  -1.755 -1.816 -2.084]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    }
+   ],
+   "structure": {
+    "floor_per_process_s": 0.0259,
+    "arms": {
+     "Cb": {
+      "processes": 996,
+      "floor_s": 25.796,
+      "above_floor_s": 70.881
+     },
+     "Cl": {
+      "processes": 996,
+      "floor_s": 25.796,
+      "above_floor_s": 54.082
+     },
+     "Bb": {
+      "processes": 828,
+      "floor_s": 21.445,
+      "above_floor_s": 24.761
+     },
+     "Bl": {
+      "processes": 828,
+      "floor_s": 21.445,
+      "above_floor_s": 21.848
+     },
+     "Pl": {
+      "processes": 996,
+      "floor_s": 25.796,
+      "above_floor_s": 35.401
+     },
+     "Fl": {
+      "processes": 664,
+      "floor_s": 17.198,
+      "above_floor_s": 8.7
+     }
+    },
+    "A_if_Cl_above_floor_equalled_Bl": -0.1005,
+    "structural_share_of_gap": 0.1189
+   },
+   "exact_Cl_equals_Cb": true,
+   "exact_Bl_equals_Bb": true
+  },
+  "unrel": {
+   "n": 24,
+   "per_seed": {
+    "151": {
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.4377,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "130b2f71798cc1b33e4e14264ed8a56dc07e294b2f9e955d69e1595d8a775ec5",
+      "processes": 124,
+      "maint_processes": 72,
+      "maint_cpu_s": 6.8701
+     },
+     "Cl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.9271,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "130b2f71798cc1b33e4e14264ed8a56dc07e294b2f9e955d69e1595d8a775ec5",
+      "processes": 124,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.4414
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.5319,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "a9acdd10b7f349ed77ae154c51de80f7ec44d6873d052ed239f79cdd1031b23d",
+      "processes": 52,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.4778,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "a9acdd10b7f349ed77ae154c51de80f7ec44d6873d052ed239f79cdd1031b23d",
+      "processes": 52,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.5066,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "130b2f71798cc1b33e4e14264ed8a56dc07e294b2f9e955d69e1595d8a775ec5",
+      "processes": 124,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.1982
+     }
+    },
+    "152": {
+     "Cb": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.0762,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "c57cf7c392a25f6573ff03232b3efe47a447427882d158bd625c16e219c1b716",
+      "processes": 131,
+      "maint_processes": 72,
+      "maint_cpu_s": 6.5475
+     },
+     "Cl": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.0774,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "c57cf7c392a25f6573ff03232b3efe47a447427882d158bd625c16e219c1b716",
+      "processes": 131,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.3643
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.7153,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "ff1da6de2bd2fda975f6976d400b3fb4d7556862bb3eed5cbc1c3034e16c22b0",
+      "processes": 59,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.6819,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "ff1da6de2bd2fda975f6976d400b3fb4d7556862bb3eed5cbc1c3034e16c22b0",
+      "processes": 59,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 24,
+      "solved": 23,
+      "qualified": 23,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.9315,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "c57cf7c392a25f6573ff03232b3efe47a447427882d158bd625c16e219c1b716",
+      "processes": 131,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.2867
+     }
+    },
+    "153": {
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.491,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "42f500a16b51cda282c233ea02672e1133695ff4caeb8687e5af2d1aecd78d50",
+      "processes": 128,
+      "maint_processes": 72,
+      "maint_cpu_s": 6.8181
+     },
+     "Cl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.9174,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "42f500a16b51cda282c233ea02672e1133695ff4caeb8687e5af2d1aecd78d50",
+      "processes": 128,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.362
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.6156,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "bf5766f06beb55c6753441fc441d8bfdc161f790177ec8b92f7d8ce17706dd40",
+      "processes": 56,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.5989,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "bf5766f06beb55c6753441fc441d8bfdc161f790177ec8b92f7d8ce17706dd40",
+      "processes": 56,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.9251,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "42f500a16b51cda282c233ea02672e1133695ff4caeb8687e5af2d1aecd78d50",
+      "processes": 128,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.3884
+     }
+    },
+    "154": {
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.1142,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "b4a24f42adce798fc36ce3166cf1d1801d5e64aabfbead53d0276efaa66f2f57",
+      "processes": 138,
+      "maint_processes": 72,
+      "maint_cpu_s": 6.8021
+     },
+     "Cl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.4107,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "b4a24f42adce798fc36ce3166cf1d1801d5e64aabfbead53d0276efaa66f2f57",
+      "processes": 138,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.4279
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.9259,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "c0c09dee78e660d7fcc99b8b9480ad4df754b73e5b37bb176551569b763621a2",
+      "processes": 66,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.8604,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "c0c09dee78e660d7fcc99b8b9480ad4df754b73e5b37bb176551569b763621a2",
+      "processes": 66,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.3323,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "b4a24f42adce798fc36ce3166cf1d1801d5e64aabfbead53d0276efaa66f2f57",
+      "processes": 138,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.3533
+     }
+    },
+    "155": {
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.6742,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0a0dce64f62907ccba42a4eebc9ae0f92d38b9325695b2ac0195590b39f730c2",
+      "processes": 132,
+      "maint_processes": 72,
+      "maint_cpu_s": 6.7658
+     },
+     "Cl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.0989,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0a0dce64f62907ccba42a4eebc9ae0f92d38b9325695b2ac0195590b39f730c2",
+      "processes": 132,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.422
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.7184,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "27000613fb4d1f6222233f678254575f3c6119602127e16e973f62406b135132",
+      "processes": 60,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.6676,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "27000613fb4d1f6222233f678254575f3c6119602127e16e973f62406b135132",
+      "processes": 60,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.0556,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0a0dce64f62907ccba42a4eebc9ae0f92d38b9325695b2ac0195590b39f730c2",
+      "processes": 132,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.3318
+     }
+    },
+    "156": {
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.4587,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "f23bd1b4849283fbc410d5ded4ab9087f420608aa9eb0ba274ce67bd53cce88b",
+      "processes": 126,
+      "maint_processes": 72,
+      "maint_cpu_s": 6.887
+     },
+     "Cl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.8206,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "f23bd1b4849283fbc410d5ded4ab9087f420608aa9eb0ba274ce67bd53cce88b",
+      "processes": 126,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.3087
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.5364,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "0dbb898f6fd267d08d84e627c776c1aaf624aeff4af0deaf336f0e2c24b65276",
+      "processes": 54,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.4999,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "0dbb898f6fd267d08d84e627c776c1aaf624aeff4af0deaf336f0e2c24b65276",
+      "processes": 54,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.8037,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "f23bd1b4849283fbc410d5ded4ab9087f420608aa9eb0ba274ce67bd53cce88b",
+      "processes": 126,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.3706
+     }
+    },
+    "157": {
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.7869,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0b0a2dcbbb63431cbcf5b61bb8820ba8c6686eb9e6b5dc23506efc8fd1e32899",
+      "processes": 132,
+      "maint_processes": 72,
+      "maint_cpu_s": 7.0367
+     },
+     "Cl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.008,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0b0a2dcbbb63431cbcf5b61bb8820ba8c6686eb9e6b5dc23506efc8fd1e32899",
+      "processes": 132,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.3518
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.6896,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "5e4eb172d65677992c6f94954c63d37aee80694d141c384e6a2e6d5f59cf8263",
+      "processes": 60,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Bl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.6367,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "5e4eb172d65677992c6f94954c63d37aee80694d141c384e6a2e6d5f59cf8263",
+      "processes": 60,
+      "maint_processes": 0,
+      "maint_cpu_s": 0
+     },
+     "Pl": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.9925,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "0b0a2dcbbb63431cbcf5b61bb8820ba8c6686eb9e6b5dc23506efc8fd1e32899",
+      "processes": 132,
+      "maint_processes": 72,
+      "maint_cpu_s": 4.33
+     }
+    }
+   },
+   "instrument": [
+    {
+     "cont": "Cl+maint",
+     "base": "Bl",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -3.3123  [-3.4794, -3.1631] (95% paired bootstrap, S=7); delta-SE=0.0871; sign-flip p=0.01562; geometric-mean form=-3.3221\ncensored tasks: Cl+maint=1, Bl=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0502 per task  [-0.0531, -0.0466]\nA_n curve (seed-mean costs): [-1.37  -1.449 -1.525 -1.56  -1.573 -1.723 -1.749 -1.816 -1.881 -1.958\n -2.002 -2.067 -2.147 -2.251 -2.343 -2.413 -2.509 -2.6   -2.709 -2.822\n -2.95  -3.072 -3.204 -3.312]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cl+maint",
+     "base": "Pl+maint",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -0.0147  [-0.0319, -0.0032] (95% paired bootstrap, S=7); delta-SE=0.0083; sign-flip p=0.03125; geometric-mean form=-0.0149\ncensored tasks: Cl+maint=1, Pl+maint=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0030 per task  [+0.0012, +0.0045]\nA_n curve (seed-mean costs): [-0.007 -0.036 -0.059 -0.057 -0.051 -0.066 -0.076 -0.067 -0.063 -0.059\n -0.045 -0.039 -0.036 -0.033 -0.03  -0.027 -0.026 -0.023 -0.02  -0.017\n -0.017 -0.016 -0.017 -0.015]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cl+maint",
+     "base": "Cb+maint",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = +0.3347  [+0.3217, +0.3440] (95% paired bootstrap, S=7); delta-SE=0.0064; sign-flip p=0.01562; geometric-mean form=+0.3346\ncensored tasks: Cl+maint=1, Cb+maint=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0220 per task  [+0.0203, +0.0236]\nA_n curve (seed-mean costs): [0.107 0.074 0.059 0.078 0.1   0.101 0.107 0.136 0.156 0.177 0.197 0.22\n 0.24  0.254 0.264 0.275 0.285 0.292 0.3   0.308 0.315 0.322 0.327 0.335]\nbreak-even n (seed-mean costs): 1",
+     "err": ""
+    },
+    {
+     "cont": "Bl",
+     "base": "Bb",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = +0.0264  [+0.0198, +0.0320] (95% paired bootstrap, S=7); delta-SE=0.0034; sign-flip p=0.01562; geometric-mean form=+0.0263\ncensored tasks: Bl=1, Bb=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0007 per task  [-0.0015, -0.0001]\nA_n curve (seed-mean costs): [0.041 0.041 0.042 0.037 0.041 0.042 0.035 0.035 0.034 0.032 0.033 0.033\n 0.032 0.031 0.027 0.024 0.025 0.025 0.026 0.027 0.027 0.026 0.027 0.026]\nbreak-even n (seed-mean costs): 1",
+     "err": ""
+    },
+    {
+     "cont": "Cl",
+     "base": "Bl",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -0.6267  [-0.6533, -0.6063] (95% paired bootstrap, S=7); delta-SE=0.0126; sign-flip p=0.01562; geometric-mean form=-0.6282\ncensored tasks: Cl=1, Bl=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0334 per task  [-0.0363, -0.0305]\nA_n curve (seed-mean costs): [-0.042 -0.051 -0.131 -0.166 -0.162 -0.183 -0.223 -0.238 -0.257 -0.289\n -0.313 -0.334 -0.353 -0.371 -0.394 -0.421 -0.449 -0.473 -0.498 -0.528\n -0.552 -0.575 -0.599 -0.627]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cl",
+     "base": "Pl",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -0.0161  [-0.0391, +0.0021] (95% paired bootstrap, S=7); delta-SE=0.0110; sign-flip p=0.1719; geometric-mean form=-0.0173\ncensored tasks: Cl=1, Pl=1\n  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: +0.0029 per task  [+0.0010, +0.0053]\nA_n curve (seed-mean costs): [-0.025 -0.025 -0.071 -0.075 -0.055 -0.058 -0.069 -0.06  -0.054 -0.056\n -0.04  -0.037 -0.035 -0.032 -0.028 -0.024 -0.025 -0.02  -0.018 -0.019\n -0.019 -0.017 -0.016 -0.016]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    }
+   ],
+   "structure": {
+    "floor_per_process_s": 0.0259,
+    "arms": {
+     "Cb": {
+      "processes": 911,
+      "floor_s": 23.595,
+      "above_floor_s": 50.444
+     },
+     "Cl": {
+      "processes": 911,
+      "floor_s": 23.595,
+      "above_floor_s": 25.665
+     },
+     "Bb": {
+      "processes": 407,
+      "floor_s": 10.541,
+      "above_floor_s": 1.192
+     },
+     "Bl": {
+      "processes": 407,
+      "floor_s": 10.541,
+      "above_floor_s": 0.882
+     },
+     "Pl": {
+      "processes": 911,
+      "floor_s": 23.595,
+      "above_floor_s": 24.952
+     }
+    },
+    "A_if_Cl_above_floor_equalled_Bl": -1.1427,
+    "structural_share_of_gap": 0.345
+   },
+   "exact_Cl_equals_Cb": true,
+   "exact_Bl_equals_Bb": true
+  }
+ },
+ "floor": {
+  "Bb": {
+   "n": 40,
+   "median_s": 0.0258,
+   "min_s": 0.0247,
+   "max_s": 0.0281
+  },
+  "Bl": {
+   "n": 40,
+   "median_s": 0.0259,
+   "min_s": 0.0247,
+   "max_s": 0.034
+  }
+ },
+ "guards": {
+  "exact_Cl_replies_equal_Cb": true,
+  "exact_Bl_replies_equal_Bb": true,
+  "no_wrong_qualified_Cb_Cl": true,
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ }
+}
