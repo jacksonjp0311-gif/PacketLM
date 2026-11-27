@@ -528,3 +528,15 @@ was found. Every finding is accepted. I did not modify the verifier's branch.
 
 **Plan.** G48R2 on new seeds 511–517, as the verification steering asked, then the protocol
 extension (PX).
+
+## 2026-11-26 23:25 — G48R2 registered (docs/G48R2.md): PASS, all 8 checks; H3 vacuous as predicted
+
+- P is 1.000 in every class, including depths 3–7.
+- X: 0.000 on T1–T3. S: 0.000.
+- **H6 passes on 7/7 seeds.**
+- No example is an evaluated item.
+- **0 qualified tasks:** everything is provisional under the full-horizon scan, so H3 has nothing
+  to test.
+- The G48 claim is therefore about accuracy and depth generalization of provisional programs,
+  not about qualification.
+- `sealed_tokens_g48.json` was refreshed with the G48R2 items.
