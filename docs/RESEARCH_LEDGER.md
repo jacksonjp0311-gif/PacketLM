@@ -1292,3 +1292,22 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
 - Stated before the run: G60H's qualification horizon (n + margin in each arm's own primitive
   language) is weaker than G59's (deepen primitives); dev shows the result depends on it (margin 1:
   comp A ≈ +0.54; margin 2: ≈ +0.02, only depth 5 positive). Predictions in docs/G60H.md §7.
+
+
+## 2026-11-27 13:10: G60H registered results — PASS at margin 1, HOLD at margin 2 (conditional)
+
+- Run at b54de78 (clean) under the lock 12:51:10–12:55:55 EST; part S 1 worker, gate 4 workers; load
+  1.6–3.5 (other heavy process: one sample of a nomad pytest); instrument 70297af pinned; guards held.
+- **Part S:** hC α_task 0.004 [−0.039, 0.065] — bounded (primary), α_charged-prop 0.015 — bounded
+  (co-primary); work identical at every N; 64k task 0.63 ms; local exponents ≈ 0 on every interval.
+- **Gate margin 1: PASS.** A(Ch+maint‖Bh) comp +0.550 [+0.523, +0.572], comprep +0.546, unrel −0.517
+  (> −0.949), mixed +0.415, long +0.458; library term (C‖P with maint) comp +0.519; P‖B comp +0.110;
+  maintenance Ch+maint‖Ch −0.13 (comp) … −1.04 (unrel). All comp strata qualified (depth 5 +0.87);
+  long crosses zero, o/s 0.64. ρ 1.35 (G59 12.9).
+- **Margin 2 (robustness): HOLD** — comp −0.007, long −0.133, library term negative; only depth 5
+  positive (≈ +0.33). Reading: conditional on the one-level uniqueness horizon.
+- Accuracy: 0 decode errors (part S 0/1493; gate 0/3984 per margin by deterministic replay — the
+  registered harness did not keep the counters), 0 wrong-qualified, C ≥ B sealed correct; not killed.
+- Predictions held except P‖B on comp (predicted to hold 0; registered +0.110).
+- Worth scaling (registered rule): **conditional** — the representation fixed the step-cost term; the
+  remaining barrier is the cost of certifying library-based hypotheses. Stopped after the prototype.

@@ -1,0 +1,1269 @@
+{
+ "margin": 2,
+ "total": {
+  "decodes": 3984,
+  "decode_errors": 0
+ },
+ "runs": [
+  {
+   "curriculum": "comp",
+   "seed": 401,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 11123,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "11cfe9d58302bb89c56a45b64f79c8f5bbb64178b6ead64bc44719a1dd490429"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 401,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 1670,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "39ef957d273d346857752160390347e0b942e1bff525c154df2d6893f57ac87f"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 401,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 34,
+    "cum_sig_decodes": 14908,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "3544bd0c2401401c8f54da5acbfce3e71ed90e2aeda6cf05e625b48979ab3b02"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 402,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 11120,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "b9adc52ea0ac2379ac513334deca75357db2a45682425310ce9bbe6770490c37"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 402,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 1531,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "10f3711df31317ee20740d6e97808aee5d2ad36d7cf6e50a13576156c45c60a3"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 402,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 17064,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "cfc0cddb5c381bfb5b317b20223f53a6233def59e0a85ddcb92b98330aac4e8a"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 403,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 11623,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "d24b8cf0a5210f0997b6feef88b7207e98d86778e02d5e968b2ed0bc20ede403"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 403,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 0,
+    "cum_sig_decodes": 2749,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "d2e6dd19f644b95c3513bfde80dc02ae9864056b1dace570a5bf2ca16da0480b"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 403,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 34,
+    "cum_sig_decodes": 15777,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "eb2aa6f805941f79d494ff9a28193caf474f5e57cc477beece6fed49f3d5594f"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 404,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 11596,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2baa06744070f20ade64b147d9b4765cee99e275be235980f3a9eadf5ecea439"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 404,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 1428,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "cd199462eabc3be484ceb95f4e88b2c1b31edd5c49441403924feda3aba2d6c1"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 404,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 14767,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "641d327b1e284afe8428767ee933839a59d88ce1f58bfec355af675aab8c4bb5"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 405,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 11133,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "40f9be514d2f0a7a89c6d201fc650526b45649b3f93d89b5839958f27f9cfd0e"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 405,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 0,
+    "cum_sig_decodes": 2377,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "23e5db9c79d630da1508cda0c6bf8868a47902bcc1978876cc6ed09acba135dd"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 405,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 34,
+    "cum_sig_decodes": 14639,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2b02b7d15d5e439c402f078bb6c8b6ab0d19fcd59c8a0e5a4b40cfa37e8ca038"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 406,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 34,
+    "cum_sig_decodes": 11082,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "f6c4c0b5e9e228d2cb7794f60d52e3d58d127c3ba43594ef4f00fbb0a82d9bdf"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 406,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 2975,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "098f1e9403beb5ae1088bac126ba9336204edbff6a8ad7b85b7569fdaaeae539"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 406,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 34,
+    "cum_sig_decodes": 16375,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "f270f676fdba28b2aad902f589803bbace25caa6e16ff5fdb3d1e97da738b8a8"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 407,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 12757,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "b55225fc9839aafafbe2e9b8642b2dcce6df35c5873725463f1d068bb5d8ef5c"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 407,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 0,
+    "cum_sig_decodes": 2273,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "f44cf285f009ec93c41c7813ad6347bbc46cf927ae69c9a08dbe94ce96bae9a9"
+  },
+  {
+   "curriculum": "comp",
+   "seed": 407,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 32,
+    "cum_sig_decodes": 18500,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "206b93c477800715eb61f0f30bec003126a6993320907fea9329736d3bab778f"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 411,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 11690,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "f8e24a4bef678e4e968f1979fcea58e4cfb16d2fe1d98e54e23ea270f1437fc8"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 411,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 0,
+    "cum_sig_decodes": 2342,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "1bc78ce6dc1b2273dbc9467c5ad0f9830a7262f851c9ea500ee691652f791075"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 411,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 34,
+    "cum_sig_decodes": 18079,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "919ed63a9914e8d62a39117a80862562d75ec138b7454c7eaaf0aeeca1b8f14d"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 412,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 11291,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "1b0ffa8ab7d5c211a0ee80f00412eb0eaee939aa65bf6c763c418b8ae38a22f7"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 412,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 2695,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "26fa4a31b71ce48bdc45ac0296a7717a67d64ebb8f5be5e931a97149e1cce525"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 412,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 35,
+    "cum_sig_decodes": 16453,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "1d41b20e36758506cb95e5b6be697d0b916a4c15b2bd171f502da49dec7974dc"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 413,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 10744,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "92b12399ce14dc5ee98ecb599dde62a56623dad05e80911e36e61149fdb8296a"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 413,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 0,
+    "cum_sig_decodes": 2103,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "859997f88f99fdea3de427301684decbd0a919588f36006d0d286155c0a30b72"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 413,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 33,
+    "cum_sig_decodes": 15071,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "a3be1340f1e9a683b51e89a8b1a1ea50290d521e9c48eadc93ae7449ec55ad4e"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 414,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 12495,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "4e1b1845755549e76992dec041ef026179499ed6cf04e6a6947c8e12fcf9301c"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 414,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 2077,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2bc40db0a1f75c153b2047a1734d3ab5254e1f3211359ef856a686bb4d187723"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 414,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 16960,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "1298db5820fcddeb03abad03f13b067746ceea93da10f2d290b6ba1cae1c07ed"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 415,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 35,
+    "cum_sig_decodes": 10527,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "dd1ceb4f3aa6e11ec9641227ad3f3bee1c0ed7e9fd077f9fcae8fd3c2cdd79e2"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 415,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 0,
+    "cum_sig_decodes": 3382,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2421b7c62aaa931d3812cc4acfab75b94b32d21cffa2aa0b846cb26b216f77c4"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 415,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 34,
+    "cum_sig_decodes": 16169,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "c0e1aee9c8582463c0e80b6d163ea5ccb9d00eaf4cdddfd5669261a7e75e9d3a"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 416,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 11077,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "549096f73ab7a58e1a3fda9c2f211713ae8670bdd62150781ca138e69621b384"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 416,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 2021,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "097996707dc9a616cdcfbcae29f57c09693a161dffa990f9a14796f309bb7b65"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 416,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 33,
+    "cum_sig_decodes": 12652,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "b500cddeae9c6a36eed356a07dd38669cbefefeea2649b5e2113b31e426ba18a"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 417,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 36,
+    "cum_sig_decodes": 12697,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "8b9235c0efb880d12eca0a27cf6921899a93007fa32d16bc92ad8c43e63d7b6f"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 417,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 0,
+    "cum_sig_decodes": 1985,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "4391055dbebfd27769588e9f382f1844772af0460ed8669354cdbf10a3f0ce09"
+  },
+  {
+   "curriculum": "comprep",
+   "seed": 417,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 34,
+    "cum_sig_decodes": 17332,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "bcb2ef7cbc3b72246886d308007d53093c086ffe04af1c1403d1da5748966b57"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 421,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 565,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "aeaf73f3c866d6a518ebbd38c9cbe0c0d646dc0a7382dd9ac2a117239eec889c"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 421,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 19,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "90ce8d2c5be3d14aa3fe9d3125a09cbe315a9e9a6a08ae9f2c91cbf80efeac6b"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 421,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 565,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "aeaf73f3c866d6a518ebbd38c9cbe0c0d646dc0a7382dd9ac2a117239eec889c"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 422,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 644,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "62e307b5da44353bb7fca5255eacb6822120e47b77956a93eb117fb20e47723b"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 422,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 28,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "8c359d3986d05134e6c48103fb1d4a27230968841151f4a632d7907724a31385"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 422,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 644,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "62e307b5da44353bb7fca5255eacb6822120e47b77956a93eb117fb20e47723b"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 423,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 612,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "b8986df3b20aaf7d6640959ad8abe9e3e7c29ee35140f0253e147777495b3e52"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 423,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 19,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "09377a7acfcf1d948816ab0ba4bddea614bdefd174a87e3c726316a96a85bbe9"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 423,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 612,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "b8986df3b20aaf7d6640959ad8abe9e3e7c29ee35140f0253e147777495b3e52"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 424,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 579,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "5922b12f059e378154625beb277dc12f565bc2d172011da5761a8f58893c1268"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 424,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 19,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2828c3ced2d652d99ea6745fe80e125caa32d1ee489d772f3f5a8e9d892844d6"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 424,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 579,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "5922b12f059e378154625beb277dc12f565bc2d172011da5761a8f58893c1268"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 425,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 570,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "8232de4c30d4778074a04d633dd06609915a6f92779ede6968cd848613c53fe2"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 425,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 28,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "167d66622bd11294219176d7eafc981cf9b04d125fb05d21faba05dd717dac10"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 425,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 570,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "8232de4c30d4778074a04d633dd06609915a6f92779ede6968cd848613c53fe2"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 426,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 629,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2e9021d994aab6bc2d11fa908d5ef475c9abe1dad5feecd4959953dd9233e01f"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 426,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 28,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2712adac3b43aa26ad52398a87ae36cf54a77e0608a360c0253e1b56bd57edd9"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 426,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 629,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2e9021d994aab6bc2d11fa908d5ef475c9abe1dad5feecd4959953dd9233e01f"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 427,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 616,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "0b5d88f7ddf4562a88e652b512e34c640f8516e34b388684c4b6028da8f39981"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 427,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 28,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "d344674eaa6811e6c2cf57e21aa9310709983cb5f25f19e76f69e7b5cd6a4b96"
+  },
+  {
+   "curriculum": "unrel",
+   "seed": 427,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 24,
+    "cum_sig_decodes": 616,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "0b5d88f7ddf4562a88e652b512e34c640f8516e34b388684c4b6028da8f39981"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 431,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 48,
+    "cum_sig_decodes": 12353,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "3a0e02abc57a846c40e8730a0a95a5da7ed9e37e9b9c4905278c66342bbfa1b0"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 431,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 28,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "32514cef71346d39582aae2bed0f002b4e30c0f4347d583f3effa2180d938fed"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 431,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 45,
+    "cum_sig_decodes": 18176,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "c5d4f623abd3988f1b390163c8b689cb430e79fe75666fbf69484a54b9140f96"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 432,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 48,
+    "cum_sig_decodes": 9460,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "6a576ed9ecf2910bfff18848fc12ffa199756d91356b044f042a55a0f4d2304f"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 432,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 24,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "830790efc565b1cd2c631010c3ef83bfad830e1aa6d0dd8d41ffc802831a638c"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 432,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 47,
+    "cum_sig_decodes": 12651,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2d2f5aa9403b7df4c410d816e0bc90959632729ad099d81db5868d4751abf644"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 433,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 48,
+    "cum_sig_decodes": 11355,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "318f7ad39de24b8cb6addd0701160eebb352baa53154003171a820da8fc3c32e"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 433,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 19,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2f74449a5753be8eb9777bdb3133e2a63b2ad93c73474d67ea889836c9ab446e"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 433,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 48,
+    "cum_sig_decodes": 15539,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "9e78188ddf15f60cf264e2204536ce6150aeb0be3fa193a17650cd97199ea9f9"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 434,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 48,
+    "cum_sig_decodes": 11497,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "dfea48b5e11bdb353acbccd57843e39cb08a6541ddfdb0973a7ca86c744555fb"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 434,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 28,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "d17c3ff1ce2f58ce6f7483b11785abc15884418837253839a800ae8985c9d997"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 434,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 48,
+    "cum_sig_decodes": 16241,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "673b15212e708106a26c31f68174b1756c541462bbb63244cf7c25de45f784cd"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 435,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 48,
+    "cum_sig_decodes": 10768,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "0fef8ddd59e9191f62c91eef429cb4d5dd9309de07371771c81bde1381328b4c"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 435,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 19,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "3fc94dcf05ea078674357f6b0d3325f73a42d9d8aa4453c96d3784b43f1afe01"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 435,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 47,
+    "cum_sig_decodes": 15304,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "47a0e3ba4608af7d62c6667170b255889c289624769522a8a3aee20e43a9322b"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 436,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 48,
+    "cum_sig_decodes": 12407,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "9f93d0c6e5d31322104204cf9424114454d639ec3232adce8b55919d81466392"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 436,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 19,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "124bd5944f96f19856d451bc815a57a260e3bdfb1015cce56b79da8263a4e2d6"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 436,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 46,
+    "cum_sig_decodes": 15431,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "44769d522b4a4d876fdba8d648d55475046ebed1132c48061c1f2fbf37566709"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 437,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 48,
+    "cum_sig_decodes": 10028,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "e26d552967865a4248a1a87201d8dca38394f1aa7e07cc735e2ecd0e335acc31"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 437,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 19,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "c7a18f523647a66126f7cf7904b499bf1203df1f785fccb69303d395933cb141"
+  },
+  {
+   "curriculum": "mixed",
+   "seed": 437,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 48,
+    "cum_sig_decodes": 13389,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "902bf34870ef020d04e8cf096365c35699d395aedb686b4c87025c610b7ce2cc"
+  },
+  {
+   "curriculum": "long",
+   "seed": 441,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 144,
+    "cum_sig_decodes": 40921,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "254b8a696145364daf5f565e15b0ac01881c19164e06f8aab8d735d9317b3b37"
+  },
+  {
+   "curriculum": "long",
+   "seed": 441,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 2149,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2453111636bf95c828e5bc739c58b874564ced7dbc20e49998f0fd537cda6b32"
+  },
+  {
+   "curriculum": "long",
+   "seed": 441,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 137,
+    "cum_sig_decodes": 59262,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "4844795d147726ca3f56001757b927851dd88766183671d63c8745445195db81"
+  },
+  {
+   "curriculum": "long",
+   "seed": 442,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 144,
+    "cum_sig_decodes": 42922,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "f0740b9696875fdd2dfb0b50e3af391dd0f8e63d22ce85f9249302a71779811e"
+  },
+  {
+   "curriculum": "long",
+   "seed": 442,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 3839,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "2d8f17f910f73d93fa4b93f6aff0944c71dfc3ac1b002d8170e600a6c230a864"
+  },
+  {
+   "curriculum": "long",
+   "seed": 442,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 137,
+    "cum_sig_decodes": 60974,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "f5c7ddd048a614283b4a754be7c4d00b42af5ab7c6d9b4db5204347f9de349e1"
+  },
+  {
+   "curriculum": "long",
+   "seed": 443,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 144,
+    "cum_sig_decodes": 38329,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "ce6f57ea78382054ed5a5e7548a1bd8833486ac6480707d2f18aff28db9dde7a"
+  },
+  {
+   "curriculum": "long",
+   "seed": 443,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 1872,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "b914084092215de1ff2497f5f649817fcfd520203142dfd417f66b5aefc999ad"
+  },
+  {
+   "curriculum": "long",
+   "seed": 443,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 138,
+    "cum_sig_decodes": 54068,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "31700f1b4d6bddc73e5bcc822201f41fa1b57c4eb13d07b7250d2391cc8ec013"
+  },
+  {
+   "curriculum": "long",
+   "seed": 444,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 144,
+    "cum_sig_decodes": 44413,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "8bfae1c6dfe38c33c5b77a01a15499ae845e5b4c983d393190745810600dfa8d"
+  },
+  {
+   "curriculum": "long",
+   "seed": 444,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 0,
+    "cum_sig_decodes": 1359,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "74d7356e205d2f3a9758eb24962542693f2b3ee7c0bdff017d0cafed3d89f415"
+  },
+  {
+   "curriculum": "long",
+   "seed": 444,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 138,
+    "cum_sig_decodes": 63428,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "3c156e11344121a4bac351147fd7c802cf2d72fc98cf0efc76c9438315fbf762"
+  },
+  {
+   "curriculum": "long",
+   "seed": 445,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 144,
+    "cum_sig_decodes": 43779,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "76c64371edb58c95825878127de7c4fbb5e702de8d14b68dd6506c4db017d5e6"
+  },
+  {
+   "curriculum": "long",
+   "seed": 445,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 1709,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "d6a8e79416b78a2f450933986e0b6feac15a079fe86d1428cd043a8061a2838f"
+  },
+  {
+   "curriculum": "long",
+   "seed": 445,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 140,
+    "cum_sig_decodes": 56779,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "b809dfa0c6b785cd2da7bdfe2ba4cd316f6f6a8e065bd4eeb1f6d2616c495963"
+  },
+  {
+   "curriculum": "long",
+   "seed": 446,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 144,
+    "cum_sig_decodes": 39639,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "84bcecf44cacfbac43271c1dca7d82dee85895f787846383d18486481345e405"
+  },
+  {
+   "curriculum": "long",
+   "seed": 446,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 1748,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "068a4fba94dcd8fbe47aedb4d0782324d41b9d1934f74c73f7b0dafc91c08589"
+  },
+  {
+   "curriculum": "long",
+   "seed": 446,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 139,
+    "cum_sig_decodes": 58266,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "9a2f42b287fae03a8f52c872858e17d8bdd35f6cf6cd4648009973660290dcd0"
+  },
+  {
+   "curriculum": "long",
+   "seed": 447,
+   "arm": "Ch",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 144,
+    "cum_sig_decodes": 41306,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "b1d0b1fe0b4e12d96893adc1bdc06a606f4170dff94bc1fd2bdb9e8c162a5d7f"
+  },
+  {
+   "curriculum": "long",
+   "seed": 447,
+   "arm": "Bh",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 1,
+    "cum_sig_decodes": 1302,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "ef371ac2a50456f43d70416d1ef763c6ec64ec0b3d8aa0dec7f2f00f0ccff241"
+  },
+  {
+   "curriculum": "long",
+   "seed": 447,
+   "arm": "Ph",
+   "counters": {
+    "cum_decode_errors": 0,
+    "cum_decodes": 139,
+    "cum_sig_decodes": 60979,
+    "cum_collisions": 0
+   },
+   "reply_stream_sha256": "c5d379a654161d68b4a32e23cb527850e457cb7d63eb7f9e045745a2c7cd6765"
+  }
+ ]
+}

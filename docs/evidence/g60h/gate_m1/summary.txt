@@ -1,0 +1,23 @@
+margin 1 verdict PASS {'Q1_comp_positive': True, 'Q2_no_correctness_or_retention_loss': True, 'Q3_unrel_penalty_halved': True, 'Q4a_comp_replicates': True, 'Q4b_mixed_positive': True, 'deepest_first_comp': True}
+ strata_q {'comp': {'2': True, '3': True, '4': True, '5': True}, 'comprep': {'2': True, '3': True, '4': True, '5': True}, 'mixed': {'2': True, '3': True, '4': True, '5': True}, 'long': {'2': False, '3': True, '4': True, '5': True}}
+ long [0.5767, [0.5595, 0.5926]] [0.0003, [0.0, 0.0007]] 0.6399 [-0.00837, [-0.01078, -0.00595]]
+== comp cpu {'Ch': 1.387, 'Bh': 3.08, 'Ph': 2.886} sealed {'Ch': 1124, 'Bh': 1098, 'Ph': 1098} solved {'Ch': 250, 'Bh': 241, 'Ph': 241} wq 0 tr_wq 0 ret 0 maint_share {'Ch': 0.112, 'Ph': 0.0503}
+    Ch+maint||Bh: +0.550 [+0.523,+0.572] | Ch+maint||Ph+maint: +0.519 [+0.481,+0.552] | Ch||Bh: +0.600 [+0.576,+0.621] | Ch||Ph: +0.551 [+0.512,+0.581] | Ph||Bh: +0.110 [+0.070,+0.148] | Ph+maint||Bh: +0.063 [+0.026,+0.098] | Ch+maint||Ch: -0.126 [-0.138,-0.116] | Ph+maint||Ph: -0.053 [-0.059,-0.048]
+    strata {'2': (105, 0.1114, [0.0757, 0.1461]), '3': (63, 0.1524, [0.0771, 0.2297]), '4': (63, 0.6284, [0.6147, 0.6414]), '5': (21, 0.8671, [0.8485, 0.8852])}
+    A_work 0.6663 rho_B 1.3493 rho_P 1.44 cens undetermined (both censored) 2 11 o/s 0.3959
+== comprep cpu {'Ch': 1.402, 'Bh': 3.091, 'Ph': 2.929} sealed {'Ch': 1129, 'Bh': 1080, 'Ph': 1080} solved {'Ch': 251, 'Bh': 239, 'Ph': 239} wq 0 tr_wq 0 ret 0 maint_share {'Ch': 0.1105, 'Ph': 0.051}
+    Ch+maint||Bh: +0.546 [+0.513,+0.571] | Ch+maint||Ph+maint: +0.521 [+0.472,+0.564] | Ch||Bh: +0.596 [+0.568,+0.618] | Ch||Ph: +0.551 [+0.505,+0.593] | Ph||Bh: +0.101 [+0.048,+0.138] | Ph+maint||Bh: +0.052 [+0.000,+0.089] | Ch+maint||Ch: -0.124 [-0.133,-0.116] | Ph+maint||Ph: -0.054 [-0.059,-0.049]
+    strata {'2': (105, 0.1191, [0.0944, 0.1442]), '3': (63, 0.1039, [0.0416, 0.1585]), '4': (63, 0.6768, [0.6381, 0.7054]), '5': (21, 0.8582, [0.8342, 0.8725])}
+    A_work 0.6669 rho_B 1.3623 rho_P 1.4374 cens undetermined (both censored) 1 13 o/s 0.3755
+== unrel cpu {'Ch': 0.573, 'Bh': 0.378, 'Ph': 0.567} sealed {'Ch': 672, 'Bh': 672, 'Ph': 672} solved {'Ch': 168, 'Bh': 168, 'Ph': 168} wq 0 tr_wq 0 ret 0 maint_share {'Ch': 0.5087, 'Ph': 0.5101}
+    Ch+maint||Bh: -0.517 [-0.586,-0.440] | Ch+maint||Ph+maint: -0.010 [-0.048,+0.019] | Ch||Bh: +0.255 [+0.222,+0.287] | Ch||Ph: -0.013 [-0.052,+0.023] | Ph||Bh: +0.265 [+0.252,+0.282] | Ph+maint||Bh: -0.501 [-0.541,-0.457] | Ch+maint||Ch: -1.036 [-1.101,-0.981] | Ph+maint||Ph: -1.041 [-1.124,-0.973]
+    strata {'2': (134, 0.2609, [0.2289, 0.2928]), '3': (34, 0.2335, [0.1665, 0.2735])}
+    A_work 0.0 rho_B 1.5168 rho_P 1.0104 cens exact 0 0 o/s s <= 0
+== mixed cpu {'Ch': 1.813, 'Bh': 3.098, 'Ph': 3.223} sealed {'Ch': 1470, 'Bh': 1447, 'Ph': 1447} solved {'Ch': 336, 'Bh': 329, 'Ph': 329} wq 0 tr_wq 0 ret 0 maint_share {'Ch': 0.2369, 'Ph': 0.125}
+    Ch+maint||Bh: +0.415 [+0.377,+0.447] | Ch+maint||Ph+maint: +0.437 [+0.406,+0.466] | Ch||Bh: +0.553 [+0.524,+0.578] | Ch||Ph: +0.509 [+0.479,+0.536] | Ph||Bh: +0.090 [+0.021,+0.158] | Ph+maint||Bh: -0.040 [-0.108,+0.027] | Ch+maint||Ch: -0.310 [-0.331,-0.291] | Ph+maint||Ph: -0.143 [-0.164,-0.126]
+    strata {'2': (170, 0.1493, [0.1177, 0.177]), '3': (82, 0.1597, [0.1081, 0.2251]), '4': (63, 0.6516, [0.6135, 0.6871]), '5': (21, 0.8385, [0.809, 0.8624])}
+    A_work 0.6417 rho_B 1.6338 rho_P 1.5704 cens lower bound (only the reference is censored) 0 7 o/s 0.4065
+== long cpu {'Ch': 6.171, 'Bh': 11.38, 'Ph': 11.683} sealed {'Ch': 4536, 'Bh': 4395, 'Ph': 4395} solved {'Ch': 1008, 'Bh': 969, 'Ph': 969} wq 0 tr_wq 0 ret 0 maint_share {'Ch': 0.2194, 'Ph': 0.1063}
+    Ch+maint||Bh: +0.458 [+0.436,+0.478] | Ch+maint||Ph+maint: +0.472 [+0.456,+0.489] | Ch||Bh: +0.577 [+0.559,+0.593] | Ch||Ph: +0.539 [+0.524,+0.553] | Ph||Bh: +0.083 [+0.056,+0.109] | Ph+maint||Bh: -0.027 [-0.056,+0.003] | Ch+maint||Ch: -0.281 [-0.293,-0.270] | Ph+maint||Ph: -0.119 [-0.121,-0.117]
+    strata {'2': (420, 0.0361, [-0.0228, 0.0847]), '3': (252, 0.225, [0.2029, 0.2422]), '4': (252, 0.6016, [0.5751, 0.6278]), '5': (84, 0.8466, [0.8365, 0.8562])}
+    A_work 0.6996 rho_B 1.805 rho_P 1.7582 cens lower bound (only the reference is censored) 0 39 o/s 0.6399
