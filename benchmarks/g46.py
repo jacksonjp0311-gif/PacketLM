@@ -29,6 +29,7 @@ SPEC = {
 FLAGS = {"C": [], "B": ["--no-library"], "P": ["--no-library"], "F": [], "S": [],
          "G": ["--no-geometry"], "N": ["--no-activation"]}
 CLI_ARMS = list(FLAGS)
+DEEPEN = {}  # per-arm depth budget; G46 uses 5 for every arm (G47 reuses this harness)
 N_CALL_BUDGET_S = 120  # amendment 1 (docs/G46.md): per-call wall budget for the activation ablation only
 
 
@@ -196,7 +197,7 @@ def _run_arm(seed, arm):
     persistent = d / f"{arm}.json"
     for p in d.glob(f"{arm}*.json*"):
         p.unlink()
-    flags = FLAGS[arm] + ["--deepen=5"]
+    flags = FLAGS[arm] + [f"--deepen={DEEPEN.get(arm, 5)}"]
     rng = random.Random(seed * 7919 + ord(arm))
     log, tasks, families, last = [], [], [], {}
     Teach = BudgetTeacher if arm == "N" else Teacher
