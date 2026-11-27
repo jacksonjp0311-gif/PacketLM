@@ -326,7 +326,11 @@ def _arm_body(seed, arm, fams, sealed_all, d, persistent, flags, rng, log, tasks
         families.append(fam_rec)
     lines = sum(len(e["lines"]) for e in log)
     return {"seed": seed, "arm": arm, "flags": flags, "tasks": tasks, "families": families,
-            "interactions": lines, "processes": len(log), "final_state_bytes":
+            "interactions": lines, "processes": len(log),
+            # whole-run CPU: every call incl. maintenance; cpu_total_s also includes process startup (M1/M4)
+            "cpu_all_s": round(sum(e["cpu_s"] for e in log), 4),
+            "cpu_total_all_s": round(sum(e.get("cpu_total_s") or 0 for e in log), 4),
+            "final_state_bytes":
             persistent.stat().st_size if persistent.exists() else None}
 
 

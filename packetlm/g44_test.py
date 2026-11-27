@@ -17,6 +17,7 @@ from pathlib import Path
 from .engine import Engine, StateError, judge, _checksum, SCHEMA, SCHEMA_V2
 from .field import add as field_add, ask as field_ask, bind
 from . import reference
+from . import programs as progs
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -677,6 +678,133 @@ def audit_checks(tmp) -> dict:
     return out
 
 
+def program_checks(tmp) -> dict:
+    """G48 program grammar (packetlm/programs.py, docs/G48.md)."""
+    out = {}
+
+    def val(e, name, x):
+        d = e.derive(name, x)
+        return d["fact"].split()[-1] if d.get("status") == "derived" else None
+    rng = random.Random(48)
+    # 1-2. differential: memoized interpreter vs independent naive one; trace ends vs run
+    agree = nonempty = cmp = trace_ok = 0
+    for g in range(6):
+        nodes = [f"n{g}_{i}" for i in range(14)]
+        ref = {}
+        for _ in range(30):
+            ref.setdefault(rng.choice(["u", "v"]), {}).setdefault(rng.choice(nodes), set()).add(rng.choice(nodes))
+        for x in nodes:
+            ref.setdefault("k", {}).setdefault(x, set()).add(rng.choice(["a", "b", "c"]))
+        facts = {}
+        for r, m in ref.items():
+            for x, ts in m.items():
+                for t in ts:
+                    facts.setdefault((x, r), []).append({"o": t, "id": f"{x} {r} {t}"})
+        find = lambda x, r, o=None: [f for f in facts.get((x, r), []) if o is None or f["o"] == o]  # noqa: E731
+        ind = progs.Inducer(progs.Ctx(ref), [], nodes, (["u", "v"], []), [("k", "a"), ("k", "b")])
+        for k in (2, 3, 4):
+            ps = list(ind.programs(k))
+            for p in rng.sample(ps, min(60, len(ps))):
+                for x in nodes[:7]:
+                    a, b = progs.run(progs.Ctx(ref), p, x), progs.run_naive(ref, p, x)
+                    cmp += 1
+                    agree += set(a) == set(b)
+                    nonempty += bool(a)
+                    ends = {e for e, _ in progs.trace(p, x, find, lambda t, z: [])}
+                    trace_ok += ends == set(a)
+    out["prog_run_matches_naive"] = agree == cmp and cmp >= 2000
+    out["prog_differential_nonvacuous"] = nonempty >= cmp // 10
+    out["prog_trace_ends_match_run"] = trace_ok == cmp
+    out["_prog_compared"] = cmp
+    # ordered choice: the first clause with a result wins (not a union)
+    ref = {"k": {"e": {"A"}}, "r1": {"e": {"x"}}, "r2": {"e": {"y"}, "f": {"z"}}}
+    pc = progs.parse("prog:is:k:A>rel:r1|rel:r2")
+    out["prog_ordered_choice"] = progs.run(progs.Ctx(ref), pc, "e") == {"x"} and progs.run(progs.Ctx(ref), pc, "f") == {"z"}
+    # 3. until-like program acquired from depth 1-2 examples, applied at depth 4
+    eng = Engine(tmp / "prog.json", programs=True)
+    tri = [("top", "in", "sky"), ("c1", "in", "top"), ("c2", "in", "top"), ("c1", "kind", "land"), ("c2", "kind", "land"),
+           ("top", "kind", "roof")]
+    chain = {}
+    for root in ("c1", "c2"):
+        for depth in (1, 2, 3, 4):
+            parent = root
+            for d in range(depth):
+                node = f"{root}_{depth}_{d}"
+                tri += [(node, "in", parent), (node, "kind", "mid" if d < depth - 1 else "leaf")]
+                chain[node] = root
+                parent = node
+    for t in tri:
+        eng.tell(*t)
+    for x in ("c1_1_0", "c2_2_1", "c2_1_0"):
+        eng.observe("home", x, chain[x])
+    r = eng.acquire("home")
+    seq = r.get("seq") or [""]
+    deep = [n for n in chain if n.endswith("_4_3") or n.endswith("_3_2")]
+    out["prog_until_acquired"] = r["result"] in ("qualified", "provisional") and "self" in seq[0] and ("is:" in seq[0] or "not:" in seq[0])
+    out["prog_until_generalizes_depth"] = all(val(eng, "home", n) == chain[n] for n in deep) and len(deep) == 4
+    out["prog_until_open_world_provisional"] = r.get("result") == "provisional" and bool(r.get("blocking"))
+    # 4. composition through the library; the dependency inside the program string is tracked
+    for root, cap in (("c1", "k1"), ("c2", "k2")):
+        eng.tell(root, "cap", cap)
+    for x in ("c1_1_0", "c2_2_1"):
+        eng.observe("hcap", x, {"c1": "k1", "c2": "k2"}[chain[x]])
+    r4 = eng.acquire("hcap")
+    s4 = (r4.get("seq") or [""])[0]
+    out["prog_composition_uses_library"] = s4.startswith("prog:cap:home@") and val(eng, "hcap", "c1_4_3") == "k1"
+    ev = eng.revoke("home")
+    out["prog_dependency_suspends_dependent"] = eng.version("hcap")["status"] == "suspended" and any("hcap" in e for e in ev)
+    eng.save()
+    re = Engine.open(tmp / "prog.json", programs=True)
+    out["prog_state_reloads"] = re.version("hcap")["seq"] == [s4] and re.report.get("loaded") == "primary"
+    # 5. conditional and 6. type filter, acquired from observations; filter qualifies (scan completes)
+    e2 = Engine(tmp / "prog2.json", programs=True)
+    for i in range(8):
+        e = f"p{i}"
+        e2.tell(e, "kind", "A" if i % 2 == 0 else "B")
+        e2.tell(e, "r1", f"o{i}a")
+        e2.tell(e, "r2", f"o{i}b")
+        for o in (f"o{i}a", f"o{i}b"):
+            e2.tell(o, "kind", "obj")
+    for i in (0, 1, 2, 3):
+        e2.observe("cond", f"p{i}", f"o{i}a" if i % 2 == 0 else f"o{i}b")
+    rc = e2.acquire("cond")
+    sc = (rc.get("seq") or [""])[0]
+    out["prog_conditional_acquired"] = "|" in sc and all(
+        val(e2, "cond", f"p{i}") == (f"o{i}a" if i % 2 == 0 else f"o{i}b") for i in range(4, 8))
+    e3 = Engine(tmp / "prog3.json", programs=True)
+    for i in range(6):
+        e3.tell(f"q{i}", "has", f"t{i}")
+        e3.tell(f"t{i}", "kind", "T")
+        for j in range(2):
+            e3.tell(f"q{i}", "has", f"d{i}{j}")
+            e3.tell(f"d{i}{j}", "kind", "D")
+    for i in range(3):
+        e3.observe("filt", f"q{i}", f"t{i}")
+    rf = e3.acquire("filt")
+    out["prog_filter_qualified"] = rf["result"] == "qualified" and rf["seq"] == ["prog:rel:has>is:kind:T"] and \
+        rf["scan"]["complete"] and all(val(e3, "filt", f"q{i}") == f"t{i}" for i in range(3, 6))
+    # 7. investigate asks where one hypothesis predicts nothing (one-sided split)
+    e4 = Engine(tmp / "prog4.json", programs=True)
+    for t in [("a", "in", "r"), ("a", "in", "w"), ("b", "in", "r"), ("b", "in", "w"), ("w", "kind", "Q"),
+              ("r", "kind", "R"), ("r", "tag", "u"), ("x", "in", "s"), ("x", "in", "w"), ("s", "kind", "R")]:
+        e4.tell(*t)
+    e4.observe("up", "a", "r")
+    e4.observe("up", "b", "r")
+    e4.acquire("up")
+    q = e4.investigate("up")
+    out["prog_investigate_one_sided"] = q.get("result") == "question" and q.get("subject") == "x" and \
+        e4.state["hypotheses"]["up"].get("supported_programs", 0) >= 2
+    # programs off: no program tokens are ever hypothesised
+    e5 = Engine(tmp / "prog5.json", deepen=3)
+    for t in tri:
+        e5.tell(*t)
+    for x in ("c1_1_0", "c2_2_1", "c2_1_0"):
+        e5.observe("home", x, chain[x])
+    r5 = e5.acquire("home")
+    out["prog_off_no_program_tokens"] = not any(str(x).startswith("prog:") for x in (r5.get("seq") or []))
+    return out
+
+
 def run() -> dict:
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
@@ -684,7 +812,8 @@ def run() -> dict:
         for sec, fn in [("memory", memory_checks), ("constructions", construction_checks),
                         ("acquisition", acquisition_checks), ("discovery", discovery_checks),
                         ("persistence", persistence_checks), ("fresh_process", fresh_process_checks),
-                        ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks)]:
+                        ("migration", migration_checks), ("retention", retention_checks), ("audit", audit_checks),
+                        ("programs", program_checks)]:
             # a section that raises is a failed check (named), not a crash that hides the other sections
             try:
                 sections[sec] = {"completed": True, **fn(tmp)}

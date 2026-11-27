@@ -33,6 +33,7 @@ from .packets import Packet
 from .roles import induce, select
 from . import reference
 from . import retention as ret_mod
+from . import programs as progs
 
 SCHEMA = "packetlm.engine/3"  # packets are derived by bind, never stored
 SCHEMA_V2 = "packetlm.engine/2"  # stored per-fact packets; accepted only to migrate, fully checked
@@ -90,7 +91,13 @@ MAX_ITER = 8
 
 
 def _deps_of(seq):
-    return [s for s in seq if s.startswith("cap:")]
+    out = []
+    for s in seq:
+        if s.startswith("cap:"):
+            out.append(s)
+        elif s.startswith("prog:"):
+            out += progs.deps(s)  # capabilities used inside an acquired G48 program
+    return out
 
 
 def _split_cap(step):
@@ -183,7 +190,7 @@ def _write_atomic(path: Path, data: bytes) -> None:
 
 class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
-                 operators=False, retention="static"):
+                 operators=False, retention="static", programs=False):
         self.path = Path(path)
         self.state = state if state is not None else empty_state()
         self.report = report or {"loaded": "new"}
@@ -199,6 +206,9 @@ class Engine:
         # x Q T). R, Q and T are proposed from the data (T from properties shared by the
         # observed answers), not supplied per domain.
         self.operators = operators
+        # programs: G48 acquisition over the designed program grammar of packetlm/programs.py
+        # (guards, ordered choice, tail recursion); the structure itself is acquired.
+        self.programs = programs
         self.stats = {"evaluations": 0, "executions": 0, "row_ops": 0, "asks": 0}
         self._cache = None
         self._known_bytes = None  # sha256 of the primary bytes this process validated or wrote
@@ -549,6 +559,13 @@ class Engine:
                 out.append(step[4:])
             elif step.startswith("op:"):
                 out.append(step[3:])
+            elif step.startswith("prog:"):
+                for d in progs.deps(step):
+                    dn, dv = _split_cap(d)
+                    ver = self.version(dn, dv)
+                    if not ver or ver["status"] not in PINNED_OK:
+                        return None
+                out.append(step)
             else:
                 name, v = _split_cap(step)
                 ver = self.version(name, v)
@@ -573,7 +590,7 @@ class Engine:
         out = []
         for n, cap in self.state["capabilities"].items():
             for ver in cap["versions"]:
-                if f"cap:{name}@{v}" in ver["seq"]:
+                if f"cap:{name}@{v}" in _deps_of(ver["seq"]):
                     out.append((n, ver["v"]))
         return out
 
@@ -615,12 +632,25 @@ class Engine:
     def execute(self, seq, subject):
         """Run a program. Geometric: bit-row composition (geom.compose). Disabled: symbolic sets."""
         self.stats["executions"] += 1
-        base = self.expand(seq) if any(s.startswith(("rel:", "cap:", "op:")) for s in seq) else list(seq)
+        base = self.expand(seq) if any(s.startswith(("rel:", "cap:", "op:", "prog:")) for s in seq) else list(seq)
         if base is None:
             return None
         idx = self._idx()
         if subject not in idx["pos"]:
             return set()
+        if any(b.startswith("prog:") for b in base):  # G48 programs run symbolically
+            front = {subject}
+            for b in base:
+                if b.startswith("prog:"):
+                    nxt = set()
+                    for y in front:
+                        nxt |= self._run_prog(b, y)
+                    front = nxt
+                else:
+                    front = self._step_set(front, b)
+                if not front:
+                    return set()
+            return front
         if not self.geometry:
             return reference.run(idx["ref"], base, subject)
         g = _geom()
@@ -630,6 +660,39 @@ class Engine:
             if not row:
                 return set()
         return {idx["names"][i] for i in g.bits(row)}
+
+    def _prog_ctx(self):
+        idx = self._idx()
+        if "prog_ctx" not in idx:
+            ref = {q: m for q, m in idx["ref"].items() if not q.startswith("cap:")}
+            idx["prog_ctx"] = progs.Ctx(ref, cap=lambda tok, z: self.execute([tok], z) or set())
+        return idx["prog_ctx"]
+
+    def _component(self, seeds):
+        """Entities connected to `seeds` by told facts in either direction (exact BFS)."""
+        idx = self._idx()
+        if "adj" not in idx:
+            adj = {}
+            for f in self.state["facts"]:
+                if f["r"].startswith("cap:"):
+                    continue
+                adj.setdefault(f["s"], set()).add(f["o"])
+                adj.setdefault(f["o"], set()).add(f["s"])
+            idx["adj"] = adj
+        adj, seen, todo = idx["adj"], set(seeds), list(seeds)
+        while todo:
+            for y in adj.get(todo.pop(), ()):
+                if y not in seen:
+                    seen.add(y)
+                    todo.append(y)
+        return seen
+
+    def _run_prog(self, text, x):
+        ctx = self._prog_ctx()
+        before = ctx.steps
+        out = progs.run(ctx, progs.parse(text), x)
+        self.stats["row_ops"] += ctx.steps - before
+        return set(out)
 
     def _mask(self, q, t):
         """Bit row of the entities x with a fact x q t (the predicate of an until step)."""
@@ -759,6 +822,11 @@ class Engine:
                 if rel.startswith("until:"):
                     nxt += self._until_paths(cur, prem, rel)
                     continue
+                if rel.startswith("prog:"):
+                    nxt += [(e, prem + p) for e, p in progs.trace(
+                        progs.parse(rel), cur, self._find,
+                        lambda tok, z: self.proofs(self.expand([tok]) or [], z))]
+                    continue
                 for f in self._find(cur, rel):
                     nxt.append((f["o"], prem + [f["id"]]))
             paths = nxt[:256]
@@ -867,9 +935,11 @@ class Engine:
 
     def _domain(self, seq):
         """Entities a program can be defined on: subjects of its first base step (exact)."""
-        base = self.expand(seq) if any(x.startswith(("rel:", "cap:", "op:")) for x in seq) else list(seq)
+        base = self.expand(seq) if any(x.startswith(("rel:", "cap:", "op:", "prog:")) for x in seq) else list(seq)
         if not base:
             return set()
+        if base[0].startswith("prog:"):
+            return set(self.entities())  # a program may begin with a guard: every entity
         first = base[0].split(":")[1] if base[0].startswith("until:") else base[0]
         return set(self._idx()["ref"].get(first, {}))
 
@@ -897,6 +967,8 @@ class Engine:
         return False
 
     def acquire(self, name, max_len=None) -> dict:
+        if self.programs and max_len is None:
+            return self._acquire_programs(name)
         if max_len is None and self.deepen:
             live, evaluated, contradicted, seen = [], 0, 0, set()
             pruned = 0
@@ -944,6 +1016,67 @@ class Engine:
         result["evaluated"] = evaluated
         result.update({"result": status, "seq": cand["seq"], "blocking": blocking, "scan": scan})
         result["version"], result["events"] = self._adopt(name, cand, status, blocking, scan)
+        return result
+
+    def _acquire_programs(self, name) -> dict:
+        """G48: smallest supported program in the designed grammar (packetlm/programs.py).
+        Supported programs that predict differently anywhere -> ambiguous (one representative
+        per prediction class is kept for investigate). Otherwise the canonical first program
+        is the candidate; the open-world scan up to its size decides qualified/provisional."""
+        obs = [tuple(o) for o in self.state["observations"].get(name, [])]
+        ctx = self._prog_ctx()
+        # relevance (designed, docs/G48.md): the vocabulary and the domain are the connected
+        # component(s) of the observed subjects and answers over told facts
+        comp = self._component({x for o in obs for x in o})
+        rels = sorted({r for r in self.relations() if any(x in comp for x in ctx.ref.get(r, {}))})
+        caps = [p for p in self.primitives(name) if p.startswith("cap:")
+                and any(s_ in comp for s_, _ in self.state["observations"].get(_split_cap(p)[0], []))]
+        sub = {q: {x: ts for x, ts in m.items() if x in comp} for q, m in ctx.ref.items()}
+        guards = progs.proposals(sub, obs)
+        dom = sorted(e for e in self.entities() if e in comp)
+        ind = progs.Inducer(ctx, obs, dom, (rels, caps), guards)
+        ev0 = self.stats["evaluations"]
+        k, sup = ind.search()
+        classes = {}
+        for p in sup:
+            key = tuple(progs.one(progs.run(ctx, p, e)) for e in ind.domain)
+            classes.setdefault(key, p)
+        reps = list(classes.values())
+        live = [{"seq": [progs.fmt(p)], "status": "supported", "support": len(obs)} for p in reps]
+        record = {"turn": self.state["turn"], "evaluated": ind.examined, "contradicted": 0, "searched_len": k,
+                  "pruned": 0, "live": live, "observations": len(obs), "grammar": "G48",
+                  "supported_programs": len(sup), "guards": [list(g) for g in guards]}
+        unanswered = self.state["hypotheses"].get(name, {}).get("unanswered")
+        if unanswered:
+            record["unanswered"] = unanswered  # questions the teacher could not answer stay recorded
+        self.state["hypotheses"][name] = record
+        self.stats["evaluations"] = ev0 + ind.examined
+        result = {"name": name, "evaluated": ind.examined, "pruned": 0, "live": len(live), "zero_support": 0}
+        if len(reps) != 1:
+            result["result"] = "ambiguous" if reps else "none"
+            result["supported"] = [h["seq"] for h in live]
+            cur = self.version(name)
+            if cur and cur["status"] == "qualified" and reps:
+                self._set_status(name, cur["v"], "provisional", "several supported programs")
+            return result
+        cand = reps[0]
+        cand_pred = {e: progs.run(ctx, cand, e) for e in ind.domain}
+        blockers, complete, examined = ind.scan(cand, cand_pred, horizon=progs.size(cand))
+        status = "qualified" if complete and not blockers else "provisional"
+        scan = {"horizon": progs.size(cand), "domain": len(dom), "scanned": examined, "complete": complete,
+                "budget": progs.SCAN_BUDGET, "blocking_n": len(blockers), "compatible": 0, "pruned_compatible": 0,
+                "assumption": "G48 open world: every non-contradicted program up to the candidate's size is an "
+                              "alternative; qualified only if that enumeration completes within the budget "
+                              "with no blocker."}
+        blocking = [[b] for b in blockers]
+        h = {"seq": [progs.fmt(cand)], "status": "supported", "support": len(obs)}
+        record.update({"candidate": h["seq"], "blocking": blocking, "scan": scan,
+                       "selection": "smallest supported G48 program; qualified only if the open-world scan completes "
+                                    "with no blocker"})
+        record["evaluated"] = ind.examined + examined
+        result.update({"result": status, "seq": h["seq"], "blocking": blocking, "scan": scan,
+                       "evaluated": record["evaluated"]})
+        result["version"], result["events"] = self._adopt(name, h, status, blocking, scan)
         return result
 
     ASSUMPTION = ("open world over current knowledge, horizon H: every non-contradicted program of length <= H is "
@@ -1082,6 +1215,18 @@ class Engine:
         best, best_score = None, 0
         for e in self.entities():
             if e in done:
+                continue
+            if self.programs:
+                # G48 (docs/G48.md, seed-33 mechanism): an answer v removes every hypothesis that
+                # does not predict v, including those that predict nothing there, because a
+                # supported program must support every observation. Worst case over defined v.
+                allp = [p[e] for p in preds.values()]
+                known = [v for v in allp if v is not None]
+                if not known or len(set(allp)) < 2:
+                    continue
+                score = min(len(allp) - known.count(v) for v in set(known))
+                if score > best_score:
+                    best, best_score = e, score
                 continue
             known = [p[e] for p in preds.values() if p[e] is not None]
             counts = {v: known.count(v) for v in set(known)}
@@ -1315,7 +1460,7 @@ def main(argv) -> int:
     t0 = time.process_time()
     flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False),
              "--no-activation": ("activation", False), "--operators": ("operators", True),
-             "--adaptive-retention": ("retention", "adaptive")}
+             "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):

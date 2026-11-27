@@ -393,3 +393,31 @@ historical.
 
 **L5.** The suite now lists each smoke demo's own False self-reports: 13 across 7 demos. These
 are legacy demos and are not claimed as working.
+
+## 2026-11-26 23:05 — G48 program acquisition and G47-AR: implementation and pre-registration (docs/G48.md, docs/G47_AR.md)
+
+**`packetlm/programs.py`, a designed program grammar.**
+- Tokens: `rel`, `cap`, `is`/`not` guards, and tail-recursive `self`.
+- Programs: 1–2 clauses with ordered choice, at most 5 tokens.
+- Integrated behind `--programs`; the base engine behaviour is unchanged without it.
+- Tests:
+  - g44 has a new `programs` section with 14 checks: memoized vs independent interpreter
+    (6216 comparisons), provenance trace, ordered choice, until/conditional/filter/composition
+    acquisition, dependency tracking through program strings, reload, and one-sided investigate.
+  - 6 new mutations, all killed by named checks: **39/39 killed, 0 crash kills**.
+- **The control structures are designed; their use is acquired.** The designed part is stated
+  precisely in G48.md, including two narrowing assumptions:
+  - relevance to the component of the observations;
+  - qualification only when the open-world scan completes within 200k programs.
+
+**Dev runs (seeds 998, 999), committed before registration (L1).**
+1. T1 examples were unstratified. Fixed so that both depths 1 and 2 are always present.
+2. A one-sided ambiguity reproduced the seed-33 mechanism. The programs-mode investigate now
+   also asks where a hypothesis predicts nothing.
+3. After both fixes, every threshold held on the dev seeds.
+
+**G47-AR dev (seed 999).** No harm; whole-run whole-process CPU ratio 0.72 for both adaptive
+arms.
+
+**Registration.** Both runs use the post-verification cost rules (whole-process CPU, all
+calls, maintenance included) and more seeds: G48 has 7, G47-AR has 5.
