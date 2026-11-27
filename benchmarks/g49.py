@@ -275,6 +275,10 @@ def metrics(ts):
 def main(argv):
     started = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    # verification L1 of b2bb9b8: record a dirty tree and the harness hash in the receipt
+    dirty_tree = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    import hashlib
+    harness = hashlib.sha256(b"".join((ROOT / f).read_bytes() for f in ["benchmarks/g49.py", "benchmarks/g48.py", "packetlm/g45_test.py"])).hexdigest()
     seeds = [int(x) for x in argv[argv.index("--seeds") + 1].split(",")] if "--seeds" in argv else SEEDS
     global OUT
     name = "g49_dev" if "--dev" in argv else (argv[argv.index("--out") + 1] if "--out" in argv else "g49")
@@ -314,7 +318,8 @@ def main(argv):
            "lying": {"false_statements": false_said, "retracted": retracted},
            "scope_control": {"untouched": untouched, "untouched_same": untouched_same, "tasks": len(N),
                              "statuses_equal_all": [t["status"] for t in N] == [t["status"] for t in R]},
-           "source_sha256": sha0, "engine_sha256": g48.engine_hash(), "seeds": seeds, "leaks": leaks}
+           "source_sha256": sha0, "engine_sha256": g48.engine_hash(), "seeds": seeds, "leaks": leaks,
+           "git_status_porcelain": dirty_tree, "harness_sha256": harness}
     (OUT / f"{name}_receipt.json").write_text(json.dumps(rep, indent=1))
     (OUT / f"{name}_raw.json").write_text(json.dumps({f"{k[0]}:{k[1]}": v for k, v in runs.items()}))
     print(json.dumps({"thresholds": th, "lying": rep["lying"], "scope_control": rep["scope_control"],

@@ -963,6 +963,21 @@ def g49_checks(tmp) -> dict:
         e.turn("fact b r4 z")  # falsifies the statement: retracted, re-acquired open-world
         st2 = e.version("h")["status"]
         log = e.state.get("complete_log", [])
+        if mode == "programs":
+            # after the H1 fix the guard space under `complete` is every pair on the component, so the
+            # fcw world stays provisional (is:r1:x2>rel:r1 etc. are real alternatives at m); the
+            # programs-mode positive uses a world where completeness at both subjects decides it
+            st1 = []
+            for comp in (False, True):
+                ep = Engine(tmp / f"fcq{comp}.json", programs=True)
+                for t in [("a", "r1", "c"), ("c", "r1", "c"), ("c", "r2", "c"), ("d", "r1", "e")]:
+                    ep.tell(*t)
+                for s_, v_ in (("a", "c"), ("c", "c")):
+                    ep.turn(f"example hq: {s_} -> {v_}")
+                    if comp:
+                        ep.turn(f"complete {s_}")
+                st1.append(ep.version("hq")["status"])
+            st1 = "qualified" if st1 == ["provisional", "qualified"] else str(st1)
         out[f"fc_less_defined_refuted_qualifies_{mode}"] = r["result"] == "provisional" and r["blocking"] and \
             msg.startswith("complete b") and st1 == "qualified"
         out[f"fc_scope_unobserved_changes_nothing_{mode}"] = unobs.startswith("complete c") and st0 == "provisional"
@@ -992,6 +1007,63 @@ def g49_checks(tmp) -> dict:
         q = et.investigate("h")
         out[f"g50_tiebreak_smallest_closure_{'answers' if ans else 'values'}"] = rr["result"] == "ambiguous" and \
             sizes["b"] == 5 and sizes["c"] == 3 and q.get("subject") == "c"
+    # G51: --qualified-library offers only qualified capabilities as library steps
+    libs = {}
+    for ql in (False, True):
+        el = Engine(tmp / f"ql{ql}.json", deepen=2, qualified_library=ql)
+        for t in [("p1", "s", "v1"), ("p2", "s", "v2"), ("a", "r1", "x"), ("a", "r2", "m"), ("m", "r3", "x"),
+                  ("b", "r1", "x2"), ("c", "r1", "x3"), ("c", "r2", "m3"), ("m3", "r3", "x3")]:
+            el.tell(*t)
+        el.observe("good", "p1", "v1")
+        el.observe("good", "p2", "v2")
+        el.acquire("good")
+        el.observe("open", "a", "x")
+        el.observe("open", "b", "x2")
+        el.acquire("open")
+        libs[ql] = ([el.version(n)["status"] for n in ("good", "open")],
+                    sorted(p for p in el.primitives("new") if p.startswith("cap:")))
+    out["g51_qualified_library_offers_only_qualified"] = libs[False][0] == libs[True][0] == ["qualified", "provisional"] \
+        and libs[False][1] == ["cap:good@1", "cap:open@1"] and libs[True][1] == ["cap:good@1"]
+    # verification b2bb9b8 regressions (H1, M1, M2), the verifier's reproductions
+    def run_lines(fn, lines, **kw):
+        e_ = Engine(tmp / fn, answers=True, **kw)
+        return e_, [e_.turn(l) for l in lines]
+    h1 = ["fact e0 k cb", "fact e0 ra e4", "fact e1 ra e4", "fact e2 k ca", "fact e2 ra e3", "fact e3 ra e4",
+          "fact e4 k cb", "fact e4 ra e0", "example kk: e4 -> e0", "complete e4", "example kk: e2 -> e2", "complete e2"]
+    eh, rh = run_lines("h1.json", h1 + ["what is e1 kk", "what is e3 kk"], programs=True)
+    # truth (is:k:ca|is:k:cb>rel:ra>is:k:cb) has no value at e1 or e3: no qualified value may be given
+    out["h1_hidden_guard_no_wrong_qualified"] = all(not r.startswith(("e1 kk", "e3 kk")) or "[provisional]" in r
+                                                    for r in rh[-2:]) \
+        and eh.state["hypotheses"]["kk"].get("scan", {}).get("guard_gap", 0) == 0 and "k" in str(eh.state["hypotheses"]["kk"]["guards"])
+    w21 = [("e0", "ra", "e7"), ("e1", "k", "cb"), ("e1", "ra", "e6"), ("e2", "k", "cb"), ("e2", "ra", "e1"), ("e3", "k", "cb"),
+           ("e3", "ra", "e0"), ("e3", "ra", "e5"), ("e4", "ra", "e8"), ("e5", "ra", "e5"), ("e7", "k", "cb"), ("e7", "ra", "e1"),
+           ("e7", "ra", "e8"), ("e8", "k", "cb"), ("e8", "ra", "e7"), ("e9", "k", "cb"), ("e9", "ra", "e1")]
+    l21 = [f"fact {a_} {r_} {b_}" for a_, r_, b_ in w21]
+    for x in ("e7", "e9", "e0", "e3", "e1"):  # truth: not:k:ca|... with no k ca told = identity
+        l21 += [f"example kk: {x} -> {x}", f"complete {x}"]
+    _, r21 = run_lines("h1b.json", l21 + ["what is e4 kk"], programs=True)
+    out["h1_identity_expressible_under_complete"] = r21[-1].startswith("e4 kk e4") or "[provisional]" in r21[-1] \
+        or r21[-1].startswith("unknown")
+    m1p = ["fact a p b", "fact x q w", "example k1: a -> b", "complete a", "example k1: x -> y", "complete x"]
+    em, _ = run_lines("m1p.json", m1p, programs=True)
+    base7 = ["fact a p b", "fact b p c", "fact c k top", "fact b k mid", "fact x p y", "fact y k top", "fact z p a"]
+    eb, rb = run_lines("m1b.json", base7 + ["example k1: a -> c", "example k1: x -> y", "complete a", "complete x",
+                                              "what is z k1"], deepen=2)
+    out["m1_complete_after_example_reviews_version"] = em.version("k1")["status"] not in ("qualified",) \
+        and eb.version("k1")["status"] == "suspended" and not rb[-1].startswith("z k1")
+    # H1: more component pairs than MAX_GUARDS -> the guard space stays data-dependent -> not qualified
+    eg, _ = run_lines("h1gap.json", [f"fact {a_} {r_} {b_}" for a_, r_, b_ in
+                                     [("a", "r1", "c"), ("c", "r1", "c"), ("c", "r2", "c"), ("d", "r1", "e")]
+                                     + [("c", "k", f"v{i}") for i in range(8)]]
+                      + ["example hq: a -> c", "complete a", "example hq: c -> c", "complete c"], programs=True)
+    sg = eg.state["hypotheses"]["hq"]["scan"]
+    out["h1_guard_gap_caps_at_provisional"] = sg["guard_gap"] > 0 and sg["blocking_n"] == 0 and sg["complete"] \
+        and eg.version("hq")["status"] == "provisional"
+    # M2: a qualified version answers [provisional] outside the domain its scan decided
+    e2_, r2_ = run_lines("m2.json", ["fact a r1 x", "fact b r1 y", "example g: a -> x", "example g: b -> y",
+                                     "fact n1 r1 n2", "what is n1 g", "what is a g"], deepen=2)
+    out["m2_qualified_scoped_to_domain"] = e2_.version("g")["status"] == "qualified" \
+        and "[provisional]" in r2_[-2] and r2_[-2].startswith("n1") and "[provisional]" not in r2_[-1]
     ea = Engine(tmp / "fcret.json", deepen=2, retention="adaptive")
     out["fc_refused_with_adaptive_retention"] = ea.turn("complete b").startswith("complete is not supported")
     return out

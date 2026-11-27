@@ -33,6 +33,17 @@ SETUP = [
 ]
 
 
+def _requalified_scope() -> bool:
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        e = Engine(Path(d) / "scope.json")
+        for line in SETUP:
+            e.turn(line)
+        before = e.turn("fact orion isa dax") and e.turn("what is orion tail")
+        e.turn("requalify tail")
+        return before == "orion hastail green [provisional]" and e.turn("what is orion tail") == "orion hastail green"
+
+
 def run() -> dict:
     if STATE.exists():
         STATE.unlink()  # the scripted run is reproducible: it always starts empty
@@ -49,7 +60,10 @@ def run() -> dict:
         "tail": loaded.turn("what is orion tail") == "orion hastail red [provisional]",
         "location": loaded.turn("what is mira location") == "mira at dock",
         "age_abstains": loaded.turn("what is orion age") == "unknown",
-        "generic": replies[7] == "orion hastail green",
+        # orion was told after `tail` was qualified: the answer generalizes, but outside the domain
+        # the scan decided it is provisional (verification M2 of b2bb9b8); `requalify` widens the scope
+        "generic": replies[7] == "orion hastail green [provisional]",
+        "generic_requalified": _requalified_scope(),
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {**checks, "setup": setup, "replies": replies, "load": loaded.report, "failed": failed,

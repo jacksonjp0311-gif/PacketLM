@@ -228,8 +228,9 @@ def _write_atomic(path: Path, data: bytes) -> None:
 
 class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
-                 operators=False, retention="static", programs=False, answers=False):
+                 operators=False, retention="static", programs=False, answers=False, qualified_library=False):
         self.path = Path(path)
+        self.qualified_library = qualified_library  # G51: library offers only qualified capabilities
         self.state = state if state is not None else empty_state()
         self.report = report or {"loaded": "new"}
         self.geometry = geometry
@@ -477,6 +478,7 @@ class Engine:
         horizon = self.deepen or ver.get("evidence", {}).get("horizon") or len(ver["seq"])
         scan = self._scan(name, ver["seq"], horizon)
         blocking = scan.pop("blocking")
+        ver["domain"] = scan.pop("domain_set")
         rec = self.state["hypotheses"].setdefault(name, {"live": []})
         rec.update({"candidate": ver["seq"], "blocking": blocking, "scan": scan})
         status = "provisional" if blocking else "qualified"
@@ -930,6 +932,8 @@ class Engine:
                 ver = self.version(n)
                 if n == name or not ver or ver["status"] not in EXEC_OK:
                     continue
+                if self.qualified_library and ver["status"] != "qualified":
+                    continue  # G51 arm Q: only qualified capabilities feed later acquisition
                 if any(dn == name for dn, _ in self._closure(n, ver["v"])):
                     continue  # would create a cycle
                 prims.append(f"cap:{n}@{ver['v']}")
@@ -1074,7 +1078,8 @@ class Engine:
         record["evaluated"] = evaluated
         result["evaluated"] = evaluated
         result.update({"result": status, "seq": cand["seq"], "blocking": blocking, "scan": scan})
-        result["version"], result["events"] = self._adopt(name, cand, status, blocking, scan)
+        result["version"], result["events"] = self._adopt(name, cand, status, blocking, scan,
+                                                          domain=scan.pop("domain_set", None))
         return result
 
     def _acquire_programs(self, name) -> dict:
@@ -1092,6 +1097,23 @@ class Engine:
                 and any(s_ in comp for s_, _ in self.state["observations"].get(_split_cap(p)[0], []))]
         sub = {q: {x: ts for x, ts in m.items() if x in comp} for q, m in ctx.ref.items()}
         guards = progs.proposals(sub, obs)
+        # verification H1 of b2bb9b8: closed-world judgments refute the less-defined alternatives
+        # that mask a data-dependent guard space, so with a `complete` observation the guard space
+        # must be every (Q, T) pair on the component (observation-independent). Guards on pairs
+        # absent from the component are constant there and can be removed without growing a
+        # program, so the scan then covers every grammar program up to MAX_SIZE. If the pairs exceed
+        # MAX_GUARDS the space stays data-dependent and qualification is capped at provisional.
+        # `not:` on a pair absent from the component is the identity filter; one absent pair
+        # (`absent absent`, unless told) keeps such programs expressible (verifier soundness seed 21).
+        gap = []
+        if any(s_ in self._closed() for s_, _ in obs):
+            allp = sorted({(q, t) for q, m in sub.items() for ts in m.values() for t in ts})
+            nil = next(("absent", f"absent{i}" if i else "absent") for i in range(len(allp) + 1)
+                       if ("absent", f"absent{i}" if i else "absent") not in allp)
+            allp.append(nil)
+            gap = [g for g in allp if g not in guards]
+            if gap and len(allp) <= progs.MAX_GUARDS:
+                guards, gap = guards + gap, []
         dom = sorted(e for e in self.entities() if e in comp)
         ind = progs.Inducer(ctx, obs, dom, (rels, caps), guards, closed=self._closed())
         ev0 = self.stats["evaluations"]
@@ -1127,8 +1149,8 @@ class Engine:
         # every program up to MAX_SIZE is decided, grouped by behaviour (docs/G49.md)
         ex = progs.Exact(ind).run(cand, cand_pred)
         blockers, complete, examined = ex["blockers"], ex["complete"], ex["programs"]
-        status = "qualified" if complete and not blockers else "provisional"
-        scan = {"horizon": horizon, "domain": len(dom), "scanned": examined, "complete": complete,
+        status = "qualified" if complete and not blockers and not gap else "provisional"
+        scan = {"horizon": horizon, "domain": len(dom), "guard_gap": len(gap), "scanned": examined, "complete": complete,
                 "method": "exact", "budget": progs.EXACT_BUDGET, "combos": ex["combos"],
                 "behaviours": ex["behaviours"], "blocking_behaviours": ex["blocking_behaviours"],
                 "universe": ex["universe"],
@@ -1144,7 +1166,7 @@ class Engine:
         record["evaluated"] = ind.examined + ex["combos"]
         result.update({"result": status, "seq": h["seq"], "blocking": blocking, "scan": scan,
                        "evaluated": record["evaluated"]})
-        result["version"], result["events"] = self._adopt(name, h, status, blocking, scan)
+        result["version"], result["events"] = self._adopt(name, h, status, blocking, scan, domain=dom)
         return result
 
     ASSUMPTION = ("open world over current knowledge, horizon H: every non-contradicted program of length <= H is "
@@ -1174,7 +1196,7 @@ class Engine:
         prims = [(p, self.expand([p])) for p in self.primitives(name)]
         prims = [(p, b) for p, b in prims if b is not None]
         P = len(prims)
-        out = {"horizon": horizon, "domain": len(D), "scanned": 0, "evaluated": 0, "contradicted": 0,
+        out = {"horizon": horizon, "domain": len(D), "domain_set": sorted(D), "scanned": 0, "evaluated": 0, "contradicted": 0,
                "compatible": 0, "pruned_compatible": 0, "blocking_n": 0, "conflicts": 0, "assumption": self.ASSUMPTION}
         blocking = []
 
@@ -1243,7 +1265,7 @@ class Engine:
             level = nxt_level
         return {**out, "blocking": blocking}
 
-    def _adopt(self, name, h, status, blocking, scan=None):
+    def _adopt(self, name, h, status, blocking, scan=None, domain=None):
         cap = self.state["capabilities"].setdefault(name, {"current": None, "versions": [], "express": None})
         cur = self.version(name)
         evidence = {"observations": len(self.state["observations"].get(name, [])),
@@ -1253,6 +1275,8 @@ class Engine:
                              "compatible": scan["compatible"], "pruned_compatible": scan["pruned_compatible"]})
         if cur and self.expand(cur["seq"]) == self.expand(h["seq"]) and cur["status"] in EXEC_OK + ("suspended",):
             cur["evidence"] = evidence
+            if domain is not None:
+                cur["domain"] = list(domain)
             return cur["v"], self._set_status(name, cur["v"], status, "requalified")
         events = []
         if cur and cur["status"] in EXEC_OK:
@@ -1262,6 +1286,8 @@ class Engine:
                "history": [{"turn": evidence["turn"], "status": status, "reason": "acquired"}]}
         if status == "qualified":
             ver["qualified_at"] = [evidence["turn"]]
+        if domain is not None:
+            ver["domain"] = list(domain)  # verification M2 of b2bb9b8: the scope "qualified" was decided on
         cap["versions"].append(ver)
         cap["current"] = ver["v"]
         return ver["v"], events
@@ -1378,14 +1404,26 @@ class Engine:
         if ver and ver["status"] in EXEC_OK:
             out = self.execute(ver["seq"], s)
             if out and len(out) == 1:
+                # verification M2 of b2bb9b8: qualified only inside the domain the scan decided;
+                # elsewhere (entities outside it, or told later) the answer is provisional
+                outside = ver["status"] == "qualified" and "domain" in ver and s not in self._dom_set(target, ver)
                 return {"status": "known", "value": next(iter(out)), "relation": target,
-                        "via": f"cap:{target}@{ver['v']}", "provisional": ver["status"] == "provisional"}
+                        "via": f"cap:{target}@{ver['v']}", "provisional": ver["status"] == "provisional" or outside,
+                        **({"scope": "outside acquisition domain"} if outside else {})}
             if out:
                 return {"status": "ambiguous", "value": None, "candidates": sorted(out), "relation": target,
                         "via": f"cap:{target}@{ver['v']}"}
         if ver and ver["status"] not in EXEC_OK:
             return {"status": "unknown", "value": None, "relation": target, "note": f"{target}@{ver['v']} {ver['status']}"}
         return {"status": "unknown", "value": None, "relation": target}
+
+    def _dom_set(self, name, ver):
+        key = (name, ver["v"], id(ver["domain"]))
+        c = getattr(self, "_dom_cache", {})
+        if c.get("key") != key:
+            c = {"key": key, "set": set(ver["domain"])}
+            self._dom_cache = c
+        return c["set"]
 
     def say(self, s, got) -> str:
         if got["status"] == "ambiguous":
@@ -1522,7 +1560,13 @@ class Engine:
     def _fc_requalify(self):
         names, self._fc_names = sorted(self._fc_names), set()
         for n in names:
-            if self.state["observations"].get(n):
+            obs = self.state["observations"].get(n)
+            if obs:
+                # verification M1 of b2bb9b8: review the current version under the new judgment
+                # first (as `observe` does); a contradicted version is suspended whatever `acquire` finds
+                ver = self.version(n)
+                if ver and ver["status"] in EXEC_OK and self.evaluate(ver["seq"], obs)["status"] == "contradicted":
+                    self._set_status(n, ver["v"], "suspended", "contradicted by its observations (complete)")
                 self.acquire(n)
 
     def _turn(self, line: str) -> str:
@@ -1639,7 +1683,8 @@ def main(argv) -> int:
     t0 = time.process_time()
     flags = {"--no-library": ("use_library", False), "--no-geometry": ("geometry", False),
              "--no-activation": ("activation", False), "--operators": ("operators", True),
-             "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True), "--answers": ("answers", True)}
+             "--adaptive-retention": ("retention", "adaptive"), "--programs": ("programs", True), "--answers": ("answers", True),
+             "--qualified-library": ("qualified_library", True)}
     kw = dict(flags[a] for a in argv if a in flags)
     for a in argv:
         if a.startswith("--deepen="):

@@ -679,3 +679,40 @@ Pre-registration commit b21cdd2.
 - 0 wrong-qualified; no harm on G46 thresholds 1–6.
 - 27 statements retracted by corrections.
 - Whole-run CPU: K 211.7 s vs E 144.5 s.
+
+## 2026-11-27 01:05: verification of b2bb9b8 addressed, and G52 pre-registration (docs/G52.md)
+
+**What the verifier found** (`verify-b2bb9b8` @ 98ba695): everything registered reproduced
+byte-identically, and its own brute force agreed with Exact on 500/500 cases.
+
+**H1 (High): `complete` was unsound when the truth lay outside the data-dependent guard
+proposals.**
+- I accept this.
+- Fix: with closed observations, the guard space is every component pair plus one absent pair
+  (the identity filter). If that is more than MAX_GUARDS, the status is capped at provisional.
+- The verifier's soundness tool on the fixed engine: 0 wrong qualified answers, in the domain or
+  on a new world, on seeds 11, 21 and 12-dep (before: 16 / 11 / 1 in the domain, and
+  50 / 36 / 15 on a new world).
+- Qualifications fell: 197→77, 203→56, 86→31.
+
+**M1: accepted and fixed.** `_fc_requalify` reviews the current version first.
+
+**M2: accepted and fixed.** "Qualified" is scoped to the domain the scan decided. Answers outside
+it are `[provisional]`. The chat `generic` check is restated to match, and `generic_requalified`
+is added.
+
+**Low items: fixed.** The receipts record `git status --porcelain` and a harness hash; the D1
+wording is corrected.
+
+**What this does to earlier claims.**
+- The G49 claims are corrected in G49.md, with the numbers untouched. G50 has a scope note.
+- The fcw programs-mode check is restated: under the sound rule its world correctly stays
+  provisional.
+
+**Tests:** g44 124/124, suite 212/212 (11/11 modules), mutations 69/69.
+
+**Dev run on the G49 harness** (seeds 9001–9002): FC2 fails, because F qualifies 0. The G48
+components carry more than 8 pairs.
+
+**Pre-registered:** G52, a replication of G50-A on seeds 551–557. The prediction is that FC2
+fails and everything else holds.
