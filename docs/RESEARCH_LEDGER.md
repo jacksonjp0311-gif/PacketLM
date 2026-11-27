@@ -624,3 +624,29 @@ control **before** registration. This is recorded here, not hidden.
 **Box note.** The box was replaced at about 23:35. Three edits made after about 23:33 were lost
 and redone identically: the px mutation site, the `fc_evaluate_closed_at_complete` check, and
 this entry. The tests were rerun after the redo.
+
+## 2026-11-27 00:05: G49 registered results (docs/G49.md): 10/11, NOT passed (D1)
+
+Pre-registration commit 9535318; seeds 531–537.
+
+**Passes:**
+- **X1:** 500/500 identical to brute force.
+- **Exact scans:** complete everywhere.
+- **FC1:** F has 0 wrong-qualified answers.
+- **FC2:** F qualifies 30/56 tasks; R and P qualify 0. By class, T1 3, T2 14, T3 12, T4 1.
+- **FC3:** 26/26 untouched N tasks are identical to R.
+- **FC4:** 167/167 false statements retracted.
+- **FC5:** L has 0 wrong-qualified answers after the reveal.
+- **D2:** F reaches 1.000 at depth ≥ 4.
+
+**D1 FAILS:** R reaches 0.9286 at depth ≥ 4, against a threshold of 0.95.
+- On seed 537, round 2, the recursive and the bounded program differ at depth 3 and below.
+- Investigate's tie-break by name picked three sealed nodes, which the teacher withheld, and the
+  6-question budget ran out. The task ended ambiguous.
+- Recorded; not rerun. This is the first failure of this cause.
+- Candidate fix (new pre-registration): prefer the shallowest splitting subject, or the one with
+  the smallest closure.
+
+**L window:** 81 qualified answers, 0 wrong; the predicted harm did not occur on these seeds.
+
+**Cost:** F's whole-process CPU is 1.66× R's.

@@ -36,3 +36,12 @@ for raw in sorted((ROOT / "docs/evidence").glob("px*/px*_raw.json")):  # PX part
             toks |= {r["s"] for r in t["rows"]}
 (ROOT / "benchmarks/sealed_tokens_g48.json").write_text(json.dumps(sorted(toks)) + "\n")
 print("g48", len(toks))
+# G49 (docs/G49.md): evaluated rows, window rows and abstention items (verification L4 of e944840)
+toks = set()
+for raw in sorted((ROOT / "docs/evidence").glob("g49*/g49*_raw.json")):
+    for v in json.loads(raw.read_text()).values():
+        for t in v["tasks"]:
+            toks |= {r["s"] for r in t["rows"]} | {r["s"] for r in (t.get("window_rows") or [])}
+            toks |= set(t.get("abstain", {}).get("items", []))
+(ROOT / "benchmarks/sealed_tokens_g49.json").write_text(json.dumps(sorted(toks)) + "\n")
+print("g49", len(toks))
