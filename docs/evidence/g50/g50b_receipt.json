@@ -1,0 +1,715 @@
+{
+ "started": "2026-11-27T00:19:11-0500",
+ "head": "b21cdd224b6e854bb9390b961a0cc7754639cb59",
+ "seeds": [
+  61,
+  62,
+  63,
+  64,
+  65,
+  66,
+  67
+ ],
+ "per_seed": {
+  "61": {
+   "C": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 2,
+     "ambiguous_replies": 2
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 83,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 14.5167
+   },
+   "E": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 2,
+     "ambiguous_replies": 2
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 82,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 20.8956
+   },
+   "K": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 2,
+     "ambiguous_replies": 2
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 36
+    },
+    "qualified": 36,
+    "qualified_acquired": 36,
+    "questions": 23,
+    "complete_active": 31,
+    "complete_retracted": 3,
+    "cpu_total_all_s": 29.9022
+   }
+  },
+  "62": {
+   "C": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 5,
+     "ambiguous_replies": 5
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 91,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 14.9571
+   },
+   "E": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 5,
+     "ambiguous_replies": 5
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 88,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 20.4527
+   },
+   "K": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 5,
+     "ambiguous_replies": 5
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 36
+    },
+    "qualified": 36,
+    "qualified_acquired": 36,
+    "questions": 31,
+    "complete_active": 38,
+    "complete_retracted": 1,
+    "cpu_total_all_s": 26.6419
+   }
+  },
+  "63": {
+   "C": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 4,
+     "ambiguous_replies": 4
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 84,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 14.821
+   },
+   "E": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 4,
+     "ambiguous_replies": 4
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 17,
+     "provisional": 19
+    },
+    "qualified": 17,
+    "qualified_acquired": 17,
+    "questions": 84,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 20.207
+   },
+   "K": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 4,
+     "ambiguous_replies": 4
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 35,
+     "provisional": 1
+    },
+    "qualified": 35,
+    "qualified_acquired": 35,
+    "questions": 28,
+    "complete_active": 31,
+    "complete_retracted": 3,
+    "cpu_total_all_s": 34.3882
+   }
+  },
+  "64": {
+   "C": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 3,
+     "correction_propagated": 3,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 3,
+     "ambiguous_replies": 3
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 82,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 15.2166
+   },
+   "E": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 3,
+     "correction_propagated": 3,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 3,
+     "ambiguous_replies": 3
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 82,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 21.1876
+   },
+   "K": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 3,
+     "correction_propagated": 3,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 3,
+     "ambiguous_replies": 3
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 35,
+     "provisional": 1
+    },
+    "qualified": 35,
+    "qualified_acquired": 35,
+    "questions": 27,
+    "complete_active": 29,
+    "complete_retracted": 3,
+    "cpu_total_all_s": 32.5419
+   }
+  },
+  "65": {
+   "C": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 5,
+     "ambiguous_replies": 5
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 83,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 14.8786
+   },
+   "E": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 5,
+     "ambiguous_replies": 5
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 89,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 20.2753
+   },
+   "K": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 5,
+     "ambiguous_replies": 5
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 36
+    },
+    "qualified": 36,
+    "qualified_acquired": 36,
+    "questions": 34,
+    "complete_active": 28,
+    "complete_retracted": 6,
+    "cpu_total_all_s": 29.3427
+   }
+  },
+  "66": {
+   "C": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 2,
+     "ambiguous_replies": 2
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 84,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 15.3946
+   },
+   "E": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 2,
+     "ambiguous_replies": 2
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 83,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 20.8358
+   },
+   "K": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 2,
+     "correction_propagated": 2,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 2,
+     "ambiguous_replies": 2
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 36
+    },
+    "qualified": 36,
+    "qualified_acquired": 36,
+    "questions": 27,
+    "complete_active": 29,
+    "complete_retracted": 6,
+    "cpu_total_all_s": 29.4357
+   }
+  },
+  "67": {
+   "C": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 1,
+     "correction_propagated": 1,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 4,
+     "ambiguous_replies": 4
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 81,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 14.5507
+   },
+   "E": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 1,
+     "correction_propagated": 1,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 4,
+     "ambiguous_replies": 4
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 18,
+     "provisional": 18
+    },
+    "qualified": 18,
+    "qualified_acquired": 18,
+    "questions": 81,
+    "complete_active": 0,
+    "complete_retracted": 0,
+    "cpu_total_all_s": 20.6491
+   },
+   "K": {
+    "metrics": {
+     "retention": 1.0,
+     "plasticity": 1.0,
+     "transfer": 1.0,
+     "wrong_qualified_sealed": 0,
+     "correction_affected": 1,
+     "correction_propagated": 1,
+     "spurious_on_undefined": 0,
+     "ambiguous_queries": 4,
+     "ambiguous_replies": 4
+    },
+    "thresholds": {
+     "1_retention": true,
+     "2_plasticity": true,
+     "3_transfer": true,
+     "4_no_wrong_qualified": true,
+     "5_correction": true,
+     "6_uncertainty": true
+    },
+    "acquired": 36,
+    "statuses": {
+     "qualified": 36
+    },
+    "qualified": 36,
+    "qualified_acquired": 36,
+    "questions": 25,
+    "complete_active": 31,
+    "complete_retracted": 5,
+    "cpu_total_all_s": 29.4959
+   }
+  }
+ },
+ "qualified": {
+  "C": 126,
+  "E": 125,
+  "K": 250
+ },
+ "thresholds": {
+  "KB1_K_wrong_qualified_0": true,
+  "KB2_K_qualifies_more_than_E": true,
+  "KB3_K_no_harm_1to6": true,
+  "source_unchanged": true
+ },
+ "all_pass": true,
+ "source_sha256": "2187d3378998d2382c62fcb19fd24ed8058f17442b2812267a5e5a94a6046906",
+ "engine_sha256": "6e92562675f87038dc8f7f34288dd5f739f4deb830f74d8d73b7e6e7c36e3d13",
+ "cpu_total_all_s": {
+  "C": 104.335,
+  "E": 144.503,
+  "K": 211.749
+ }
+}

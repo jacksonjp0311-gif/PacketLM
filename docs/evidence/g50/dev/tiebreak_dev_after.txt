@@ -1,0 +1,4 @@
+# printed by /workspace/PacketLM-notes/dev/rdev.py artifacts/tb_dev_after (R arm, seeds 4993-5008) after the G50 tie-break
+# (seed, [(correct depth>=4, n depth>=4, status, questions asked) per T1 task])
+4993-5005, 5007, 5008: every T1 task (16, 16, 'provisional', 6)
+5006 [(16, 16, 'provisional', 6), (16, 16, 'provisional', 6)]   # before: second task (0, 16, 'suspended', 6)

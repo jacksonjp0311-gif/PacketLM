@@ -1,0 +1,150 @@
+{
+  "suite": [
+    {
+      "module": "g37_test",
+      "exit": 0,
+      "checks": 2,
+      "failed": 0
+    },
+    {
+      "module": "system",
+      "exit": 0,
+      "checks": 10,
+      "failed": 0
+    },
+    {
+      "module": "bridge",
+      "exit": 0,
+      "checks": 7,
+      "failed": 0
+    },
+    {
+      "module": "roles",
+      "exit": 0,
+      "checks": 7,
+      "failed": 0
+    },
+    {
+      "module": "runtime",
+      "exit": 0,
+      "checks": 6,
+      "failed": 0
+    },
+    {
+      "module": "chat",
+      "exit": 0,
+      "checks": 6,
+      "failed": 0
+    },
+    {
+      "module": "qualify",
+      "exit": 0,
+      "checks": 5,
+      "failed": 0
+    },
+    {
+      "module": "geom",
+      "exit": 0,
+      "checks": 5,
+      "failed": 0
+    },
+    {
+      "module": "g44_test",
+      "exit": 0,
+      "checks": 174,
+      "failed": 0
+    },
+    {
+      "module": "legacy_checks",
+      "exit": 0,
+      "checks": 22,
+      "failed": 0
+    },
+    {
+      "module": "g45_test",
+      "exit": 0,
+      "checks": 18,
+      "failed": 0
+    }
+  ],
+  "checks": 262,
+  "failed": 0,
+  "modules_passed": 11,
+  "modules": 11,
+  "smoke_ran": 10,
+  "smoke": 10,
+  "smoke_note": "smoke = legacy demos that must run (exit 0); not claimed as working; their own false self-reports are listed",
+  "smoke_false_self_reports": 13,
+  "smoke_detail": [
+    {
+      "module": "crossdomain",
+      "exit": 0,
+      "false_self_reports": [
+        "kept"
+      ]
+    },
+    {
+      "module": "demo",
+      "exit": 0,
+      "false_self_reports": [
+        "multi_step",
+        "consistent"
+      ]
+    },
+    {
+      "module": "feedoffer",
+      "exit": 0,
+      "false_self_reports": [
+        "offered",
+        "gate_kept"
+      ]
+    },
+    {
+      "module": "gap",
+      "exit": 0,
+      "false_self_reports": []
+    },
+    {
+      "module": "gaptest",
+      "exit": 0,
+      "false_self_reports": [
+        "base_hits.lang-cont-001",
+        "base_hits.understand-001",
+        "base_hits.understand-002",
+        "any_new_capability"
+      ]
+    },
+    {
+      "module": "learn",
+      "exit": 0,
+      "false_self_reports": [
+        "any_kept"
+      ]
+    },
+    {
+      "module": "memory",
+      "exit": 0,
+      "false_self_reports": [
+        "path_changed"
+      ]
+    },
+    {
+      "module": "nexttoken",
+      "exit": 0,
+      "false_self_reports": [
+        "segment_improved",
+        "first_token_improved"
+      ]
+    },
+    {
+      "module": "train",
+      "exit": 0,
+      "false_self_reports": []
+    },
+    {
+      "module": "vocab",
+      "exit": 0,
+      "false_self_reports": []
+    }
+  ]
+}

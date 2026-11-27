@@ -1,0 +1,286 @@
+{
+ "metrics": {
+  "P": {
+   "by_class": {
+    "T1": {
+     "accuracy": 1.0,
+     "n": 124
+    },
+    "T2": {
+     "accuracy": 1.0,
+     "n": 48
+    },
+    "T3": {
+     "accuracy": 1.0,
+     "n": 36
+    },
+    "T4": {
+     "accuracy": 1.0,
+     "n": 124
+    }
+   },
+   "T1_depth_ge3": {
+    "accuracy": 1.0,
+    "n": 108
+   },
+   "T1_depth_6_7_transfer": {
+    "accuracy": 1.0,
+    "n": 12
+   },
+   "all": {
+    "accuracy": 1.0,
+    "n": 332
+   },
+   "T123": {
+    "accuracy": 1.0,
+    "n": 208
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "provisional_tasks": 16,
+   "answers_from_qualified": 0,
+   "status": [
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional"
+   ],
+   "T4_library_uses": 4,
+   "cpu_s": 3.09,
+   "cpu_total_s": 7.363,
+   "processes": 148,
+   "final_state_bytes": {
+    "998": 127134,
+    "999": 130438
+   }
+  },
+  "X": {
+   "by_class": {
+    "T1": {
+     "accuracy": 0.0,
+     "n": 124
+    },
+    "T2": {
+     "accuracy": 0.0,
+     "n": 48
+    },
+    "T3": {
+     "accuracy": 0.0,
+     "n": 36
+    },
+    "T4": {
+     "accuracy": 0.0645,
+     "n": 124
+    }
+   },
+   "T1_depth_ge3": {
+    "accuracy": 0.0,
+    "n": 108
+   },
+   "T1_depth_6_7_transfer": {
+    "accuracy": 0.0,
+    "n": 12
+   },
+   "all": {
+    "accuracy": 0.0241,
+    "n": 332
+   },
+   "T123": {
+    "accuracy": 0.0,
+    "n": 208
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "provisional_tasks": 4,
+   "answers_from_qualified": 0,
+   "status": [
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none",
+    "suspended",
+    "provisional",
+    "suspended",
+    "none"
+   ],
+   "T4_library_uses": 0,
+   "cpu_s": 0.717,
+   "cpu_total_s": 3.037,
+   "processes": 84,
+   "final_state_bytes": {
+    "998": 112958,
+    "999": 116068
+   }
+  },
+  "S": {
+   "by_class": {
+    "T1": {
+     "accuracy": 0.0,
+     "n": 124
+    },
+    "T2": {
+     "accuracy": 0.0,
+     "n": 48
+    },
+    "T3": {
+     "accuracy": 0.0,
+     "n": 36
+    },
+    "T4": {
+     "accuracy": 0.0,
+     "n": 124
+    }
+   },
+   "T1_depth_ge3": {
+    "accuracy": 0.0,
+    "n": 108
+   },
+   "T1_depth_6_7_transfer": {
+    "accuracy": 0.0,
+    "n": 12
+   },
+   "all": {
+    "accuracy": 0.0,
+    "n": 332
+   },
+   "T123": {
+    "accuracy": 0.0,
+    "n": 208
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "provisional_tasks": 0,
+   "answers_from_qualified": 0,
+   "status": [
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none",
+    "none"
+   ],
+   "T4_library_uses": 0,
+   "cpu_s": 44.098,
+   "cpu_total_s": 46.6,
+   "processes": 84,
+   "final_state_bytes": {
+    "998": 110847,
+    "999": 113984
+   }
+  },
+  "A": {
+   "by_class": {
+    "T1": {
+     "accuracy": 1.0,
+     "n": 124
+    },
+    "T2": {
+     "accuracy": 1.0,
+     "n": 48
+    },
+    "T3": {
+     "accuracy": 1.0,
+     "n": 36
+    },
+    "T4": {
+     "accuracy": 1.0,
+     "n": 124
+    }
+   },
+   "T1_depth_ge3": {
+    "accuracy": 1.0,
+    "n": 108
+   },
+   "T1_depth_6_7_transfer": {
+    "accuracy": 1.0,
+    "n": 12
+   },
+   "all": {
+    "accuracy": 1.0,
+    "n": 332
+   },
+   "T123": {
+    "accuracy": 1.0,
+    "n": 208
+   },
+   "wrong_qualified": 0,
+   "qualified_tasks": 0,
+   "provisional_tasks": 16,
+   "answers_from_qualified": 0,
+   "status": [
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional",
+    "provisional"
+   ],
+   "T4_library_uses": 4,
+   "cpu_s": 1.835,
+   "cpu_total_s": 5.988,
+   "processes": 148,
+   "final_state_bytes": {
+    "998": 29829,
+    "999": 29823
+   }
+  }
+ },
+ "thresholds": {
+  "H1_P_per_class_ge_0.95": true,
+  "H2_P_T1_depth_ge3_ge_0.95": true,
+  "H3_P_wrong_qualified_0": true,
+  "H4_X_T123_le_0.5": true,
+  "H5_S_all_le_0.10": true,
+  "H6_A_replies_identical_to_P": true,
+  "source_unchanged": true,
+  "no_example_is_evaluated": true
+ },
+ "all_pass": true,
+ "source_sha256": "bd7ddf3141797fa2e7292758770c5a933a6a56648df8f5b3ec17ee52c8698ff2",
+ "engine_sha256": "e30c08437fe95d1bb377978457df97ed6cab5a4b57aec967535ad6cdc170441f",
+ "seeds": [
+  998,
+  999
+ ],
+ "example_leaks": []
+}

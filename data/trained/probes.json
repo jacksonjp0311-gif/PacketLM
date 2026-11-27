@@ -1,0 +1,151 @@
+[
+ {
+  "q": "who is the parent of noah",
+  "want": "noah parent olga",
+  "session": "001_kinship.txt",
+  "superseded_by": "004_change.txt"
+ },
+ {
+  "q": "who is the grandparent of liam",
+  "want": "liam grandparent olga",
+  "session": "001_kinship.txt",
+  "superseded_by": "004_change.txt"
+ },
+ {
+  "q": "who is the grandparent of zed",
+  "want": "zed grandparent xia",
+  "session": "001_kinship.txt"
+ },
+ {
+  "q": "what is zed greatgrandparent",
+  "want": "zed greatgrandparent wes [no construction for greatgrandparent]",
+  "session": "001_kinship.txt"
+ },
+ {
+  "q": "what is noah greatgrandparent",
+  "want": "noah greatgrandparent quin [no construction for greatgrandparent]",
+  "session": "001_kinship.txt"
+ },
+ {
+  "q": "what is liam aunt",
+  "want": "liam aunt sara [no construction for aunt]",
+  "session": "001_kinship.txt"
+ },
+ {
+  "q": "what is zed aunt",
+  "want": "unknown",
+  "session": "001_kinship.txt"
+ },
+ {
+  "q": "which country is austin in",
+  "want": "austin country usa [no construction for country]",
+  "session": "002_geography.txt",
+  "superseded_by": "007_requalify_continent.txt"
+ },
+ {
+  "q": "which country is porto in",
+  "want": "porto country portugal [no construction for country]",
+  "session": "002_geography.txt",
+  "superseded_by": "006_types.txt"
+ },
+ {
+  "q": "what is porto continent",
+  "want": "porto continent europe [no construction for continent]",
+  "session": "002_geography.txt",
+  "superseded_by": "007_requalify_continent.txt"
+ },
+ {
+  "q": "what is texas country",
+  "want": "texas in usa",
+  "session": "002_geography.txt",
+  "superseded_by": "005_probe_fixes.txt"
+ },
+ {
+  "q": "what is shaft3 spins",
+  "want": "shaft3 spins wheel3 [no construction for spins]",
+  "session": "003_mechanism.txt",
+  "superseded_by": "005_probe_fixes.txt"
+ },
+ {
+  "q": "what is motor3 drives",
+  "want": "motor3 drives wheel3 [no construction for drives]",
+  "session": "003_mechanism.txt",
+  "superseded_by": "004_change.txt"
+ },
+ {
+  "q": "what is gear3 drives",
+  "want": "unknown",
+  "session": "003_mechanism.txt"
+ },
+ {
+  "q": "what is liam mom",
+  "want": "liam parent noah",
+  "session": "004_change.txt"
+ },
+ {
+  "q": "who is the grandparent of liam",
+  "want": "liam grandparent rita",
+  "session": "004_change.txt"
+ },
+ {
+  "q": "who is the parent of noah",
+  "want": "noah parent rita",
+  "session": "004_change.txt"
+ },
+ {
+  "q": "what is emma aunt",
+  "want": "unknown",
+  "session": "004_change.txt"
+ },
+ {
+  "q": "what is motor3 drives",
+  "want": "motor3 drives wheel9 [no construction for drives]",
+  "session": "004_change.txt"
+ },
+ {
+  "q": "what is texas country",
+  "want": "texas country america [no construction for country]",
+  "session": "005_probe_fixes.txt",
+  "superseded_by": "006_types.txt"
+ },
+ {
+  "q": "what is shaft3 spins",
+  "want": "shaft3 spins wheel9 [no construction for spins]",
+  "session": "005_probe_fixes.txt"
+ },
+ {
+  "q": "what is texas country",
+  "want": "texas country usa [no construction for country] [provisional]",
+  "session": "006_types.txt"
+ },
+ {
+  "q": "which country is dallas in",
+  "want": "dallas country usa [no construction for country] [provisional]",
+  "session": "006_types.txt"
+ },
+ {
+  "q": "which country is nice in",
+  "want": "nice country france [no construction for country] [provisional]",
+  "session": "006_types.txt"
+ },
+ {
+  "q": "which country is porto in",
+  "want": "porto country portugal [no construction for country] [provisional]",
+  "session": "006_types.txt"
+ },
+ {
+  "q": "which country is austin in",
+  "want": "austin country usa [no construction for country] [provisional]",
+  "session": "007_requalify_continent.txt"
+ },
+ {
+  "q": "what is porto continent",
+  "want": "porto continent europe [no construction for continent] [provisional]",
+  "session": "007_requalify_continent.txt"
+ },
+ {
+  "q": "what is dallas continent",
+  "want": "dallas continent america [no construction for continent] [provisional]",
+  "session": "007_requalify_continent.txt"
+ }
+]

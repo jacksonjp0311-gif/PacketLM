@@ -1,0 +1,11 @@
+{
+ "sessions": 1008,
+ "calls": 17221,
+ "readonly_calls": 7295,
+ "gated_answers": 9089,
+ "replies": 75877,
+ "mismatch": null,
+ "ok": true,
+ "command": "python3 -m packetlm.g57_diff 1000 1957",
+ "wall": "22.7 s"
+}

@@ -1,0 +1,9 @@
+# 005 Two earlier probes were mis-specified by the teacher, not failed by the engine:
+# - 002 expected "texas in usa" for `what is texas country`; country = in+in,
+#   so texas -> usa -> america is the taught procedure's answer.
+# - 004 corrected gear3 -> wheel9 but did not update the shaft3 spins probe.
+# Both are superseded here. The original failures stay in sessions.jsonl.
+expect what is texas country => texas country america [no construction for country]
+expect what is shaft3 spins => shaft3 spins wheel9 [no construction for spins]
+show grandparent
+show aunt

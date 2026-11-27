@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 from itertools import product
 from pathlib import Path
+from .engine import choose, express
 from .field import save, load
 from .roles import induce, select
 
@@ -17,7 +18,13 @@ STATE = Path("data/geom_state.json")
 NAMES = {10: "alpha", 12: "gamma"}
 
 def bits(m):
-    return [i for i in range(m.bit_length()) if m & (1 << i)]
+    """Set-bit positions, lowest first; visits only set bits (lowest-set-bit isolation)."""
+    out = []
+    while m:
+        low = m & -m
+        out.append(low.bit_length() - 1)
+        m ^= low
+    return out
 
 def rows_from(facts, n, rel):
     rows = [0] * n
@@ -29,12 +36,11 @@ def rows_from(facts, n, rel):
 def compose(a_rows, b_rows):
     out = []
     for a in a_rows:
-        acc, k, row = 0, 0, a
-        while row:
-            if row & 1:
-                acc |= b_rows[k]
-            row >>= 1
-            k += 1
+        acc, row = 0, a
+        while row:  # visit set bits only: OR the rows of the active sources
+            low = row & -row
+            acc |= b_rows[low.bit_length() - 1]
+            row ^= low
         out.append(acc)
     return out
 
@@ -57,16 +63,6 @@ def classify(facts, n, answer):
                 supported.append(seq)
     return supported, undetermined
 
-def choose(library, meaning):
-    hits = [c for c in library if c and c["meaning"] == meaning]
-    return hits[0] if len(hits) == 1 else None
-
-def express(construction, fact):
-    if not construction:
-        return None
-    s, r, o = fact
-    roles = {"s": s, "r": construction["word"], "o": o}
-    return " ".join(roles[role] for role in construction["order"])
 
 def run() -> dict:
     complete = [
@@ -98,7 +94,7 @@ def run() -> dict:
         "clash_abstain": clash is None,
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "spoken": spoken, "failed": failed, "claim": "construction selected from the library; a clash abstains"}
+    receipt = {**checks, "spoken_text": spoken, "failed": failed, "claim": "construction selected from the library; a clash abstains"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))

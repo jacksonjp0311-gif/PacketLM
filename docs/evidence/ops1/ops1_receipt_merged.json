@@ -1,0 +1,68 @@
+{
+ "metrics": {
+  "O_acquired": 9,
+  "graphs": 9,
+  "O_status": [
+   "provisional",
+   "provisional",
+   "provisional",
+   "provisional",
+   "provisional",
+   "provisional",
+   "provisional",
+   "provisional",
+   "provisional"
+  ],
+  "O_wrong_qualified": 0,
+  "O_accuracy_answered": 1.0,
+  "O_coverage": 1.0,
+  "O_provisional_answers": 747,
+  "X_wrong_qualified": 0,
+  "X_acquired": 0,
+  "X_status": [
+   "suspended",
+   "suspended",
+   "suspended",
+   "suspended",
+   "suspended",
+   "suspended",
+   "suspended",
+   "suspended",
+   "suspended"
+  ],
+  "X_answered": 0,
+  "S_matches": 0,
+  "S_wrong_qualified": 0,
+  "S_status": [
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none"
+  ],
+  "cpu_s": {
+   "O": 5.266,
+   "X": 2.889,
+   "S": 3.136
+  },
+  "processes": {
+   "O": 81,
+   "X": 45,
+   "S": 45
+  }
+ },
+ "thresholds": {
+  "1_acquired_ge_8": true,
+  "2_no_wrong_qualified": true,
+  "3_accuracy_coverage": true,
+  "4_control_off": true,
+  "5_shuffled_le_1": true,
+  "source_unchanged": true
+ },
+ "all_pass": true,
+ "source_sha256": "f07c1f0ddbb4c7fff85b91384e167cabfe63d55c2044bea07977415e90199ac9"
+}

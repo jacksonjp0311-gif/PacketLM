@@ -1,0 +1,260 @@
+{
+ "guards": {
+  "exact_replies_and_state_j_equal_i": true,
+  "no_wrong_qualified_C": true,
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ },
+ "comp": {
+  "primary": [
+   [
+    "Cj+maint",
+    "Bj",
+    "A_36 = -0.6770  [-0.8872, -0.4890] (95% paired bootstrap, S=7); delta-SE=0.1128; sign-flip p=0.01562; geometric-mean form=-0.6773"
+   ],
+   [
+    "Cj+maint",
+    "Ci+maint",
+    "A_36 = +0.0406  [+0.0316, +0.0493] (95% paired bootstrap, S=7); delta-SE=0.0047; sign-flip p=0.01562; geometric-mean form=+0.0407"
+   ]
+  ],
+  "secondary": [
+   [
+    "Ci+maint",
+    "Bi",
+    "A_36 = -0.8008  [-0.9908, -0.6128] (95% paired bootstrap, S=7); delta-SE=0.1055; sign-flip p=0.01562; geometric-mean form=-0.7992"
+   ],
+   [
+    "Bj",
+    "Bi",
+    "A_36 = -0.0302  [-0.0533, -0.0048] (95% paired bootstrap, S=7); delta-SE=0.0135; sign-flip p=0.1094; geometric-mean form=-0.0290"
+   ],
+   [
+    "Pj+maint",
+    "Pi+maint",
+    "A_36 = +0.0324  [+0.0243, +0.0423] (95% paired bootstrap, S=7); delta-SE=0.0050; sign-flip p=0.01562; geometric-mean form=+0.0334"
+   ],
+   [
+    "Cj+maint",
+    "Pj+maint",
+    "A_36 = -0.3942  [-0.5659, -0.2259] (95% paired bootstrap, S=7); delta-SE=0.0951; sign-flip p=0.01562; geometric-mean form=-0.3956"
+   ],
+   [
+    "Cj",
+    "Bj",
+    "A_36 = -0.5826  [-0.7868, -0.3936] (95% paired bootstrap, S=7); delta-SE=0.1108; sign-flip p=0.01562; geometric-mean form=-0.5814"
+   ],
+   [
+    "Fj+maint",
+    "Fi+maint",
+    "A_36 = +0.1099  [+0.0886, +0.1348] (95% paired bootstrap, S=7); delta-SE=0.0128; sign-flip p=0.01562; geometric-mean form=+0.1120"
+   ],
+   [
+    "Cj+maint",
+    "Fj+maint",
+    "A_36 = -9.6828  [-11.1114, -8.5357] (95% paired bootstrap, S=7); delta-SE=0.7173; sign-flip p=0.01562; geometric-mean form=-9.6747"
+   ]
+  ],
+  "cpu": {
+   "Ci": 50.419,
+   "Cj": 48.371,
+   "Bi": 27.998,
+   "Bj": 28.844,
+   "Pi": 35.855,
+   "Pj": 34.694,
+   "Fi": 5.087,
+   "Fj": 4.528
+  },
+  "maint": {
+   "Ci": 3.054,
+   "Cj": 2.722,
+   "Pi": 3.199,
+   "Pj": 2.9,
+   "Fi": 1.938,
+   "Fj": 1.786
+  },
+  "outcomes": {
+   "Ci": {
+    "tasks": 252,
+    "solved": 252,
+    "qualified": 247,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0
+   },
+   "Cj": {
+    "tasks": 252,
+    "solved": 252,
+    "qualified": 247,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0
+   },
+   "Bi": {
+    "tasks": 252,
+    "solved": 247,
+    "qualified": 247,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bj": {
+    "tasks": 252,
+    "solved": 247,
+    "qualified": 247,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pi": {
+    "tasks": 252,
+    "solved": 247,
+    "qualified": 247,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pj": {
+    "tasks": 252,
+    "solved": 247,
+    "qualified": 247,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Fi": {
+    "tasks": 252,
+    "solved": 128,
+    "qualified": 124,
+    "censored": 126,
+    "uses_library": 84,
+    "wrong_qualified_sealed": 0
+   },
+   "Fj": {
+    "tasks": 252,
+    "solved": 128,
+    "qualified": 124,
+    "censored": 126,
+    "uses_library": 84,
+    "wrong_qualified_sealed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true,
+   "F": true
+  }
+ },
+ "unrel": {
+  "primary": [
+   [
+    "Cj+maint",
+    "Bj",
+    "A_24 = -2.2125  [-2.3765, -2.0369] (95% paired bootstrap, S=7); delta-SE=0.0943; sign-flip p=0.01562; geometric-mean form=-2.2099"
+   ],
+   [
+    "Cj+maint",
+    "Ci+maint",
+    "A_24 = +0.3874  [+0.3780, +0.3959] (95% paired bootstrap, S=7); delta-SE=0.0051; sign-flip p=0.01562; geometric-mean form=+0.3877"
+   ]
+  ],
+  "secondary": [
+   [
+    "Ci+maint",
+    "Bi",
+    "A_24 = -5.1408  [-5.4678, -4.8270] (95% paired bootstrap, S=7); delta-SE=0.1803; sign-flip p=0.01562; geometric-mean form=-5.1523"
+   ],
+   [
+    "Bj",
+    "Bi",
+    "A_24 = -0.1711  [-0.2318, -0.1106] (95% paired bootstrap, S=7); delta-SE=0.0340; sign-flip p=0.01562; geometric-mean form=-0.1736"
+   ],
+   [
+    "Pj+maint",
+    "Pi+maint",
+    "A_24 = +0.3995  [+0.3930, +0.4058] (95% paired bootstrap, S=7); delta-SE=0.0036; sign-flip p=0.01562; geometric-mean form=+0.3996"
+   ],
+   [
+    "Cj+maint",
+    "Pj+maint",
+    "A_24 = -0.0195  [-0.0369, -0.0040] (95% paired bootstrap, S=7); delta-SE=0.0091; sign-flip p=0.09375; geometric-mean form=-0.0187"
+   ],
+   [
+    "Cj",
+    "Bj",
+    "A_24 = -0.9096  [-1.0322, -0.7865] (95% paired bootstrap, S=7); delta-SE=0.0689; sign-flip p=0.01562; geometric-mean form=-0.9061"
+   ]
+  ],
+  "cpu": {
+   "Ci": 6.291,
+   "Cj": 3.854,
+   "Bi": 1.024,
+   "Bj": 1.2,
+   "Pi": 6.296,
+   "Pj": 3.78
+  },
+  "maint": {
+   "Ci": 2.553,
+   "Cj": 1.563,
+   "Pi": 2.572,
+   "Pj": 1.542
+  },
+  "outcomes": {
+   "Ci": {
+    "tasks": 168,
+    "solved": 166,
+    "qualified": 166,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Cj": {
+    "tasks": 168,
+    "solved": 166,
+    "qualified": 166,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bi": {
+    "tasks": 168,
+    "solved": 166,
+    "qualified": 166,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bj": {
+    "tasks": 168,
+    "solved": 166,
+    "qualified": 166,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pi": {
+    "tasks": 168,
+    "solved": 166,
+    "qualified": 166,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pj": {
+    "tasks": 168,
+    "solved": 166,
+    "qualified": 166,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true
+  }
+ }
+}

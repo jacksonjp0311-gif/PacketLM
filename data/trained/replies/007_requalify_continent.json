@@ -1,0 +1,10 @@
+[
+ {
+  "line": "requalify continent",
+  "reply": "provisional continent op:until:in:isa:continent"
+ },
+ {
+  "line": "show continent",
+  "reply": "v1 rel:in+cap:country@1 suspended; v2 op:until:in:isa:continent provisional; current v2; examples 2 active, 0 retired"
+ }
+]

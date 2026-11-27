@@ -1,0 +1,7 @@
+__pycache__/
+artifacts/
+feed/
+data/*_state.json
+data/*_field.json
+data/roles_facts.json
+*.tmp

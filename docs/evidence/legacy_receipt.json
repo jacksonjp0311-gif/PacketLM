@@ -1,0 +1,29 @@
+{
+  "memory.path_union_is_or_of_path": true,
+  "memory.residual_excludes_covered": true,
+  "memory.receipt_covered_bits": true,
+  "gap.store_grows_by_kept": true,
+  "gap.kept_raise_coverage": true,
+  "gaptest.base_hits_recomputed": true,
+  "gaptest.improved_only_base_misses": true,
+  "demo.deterministic": true,
+  "demo.consistency_flag": true,
+  "learn.gate_rule": true,
+  "learn.improved_recomputed": true,
+  "learn.coverage_monotone": true,
+  "crossdomain.gate_rule": true,
+  "nexttoken.split_recomputed": true,
+  "nexttoken.flags_match_scores": true,
+  "train.certified_count": true,
+  "train.cold_never_hits": true,
+  "train.gate_rule": true,
+  "vocab.size_recomputed": true,
+  "vocab.accuracy_recomputed": true,
+  "feedoffer.gate_rule": true,
+  "feedoffer.feed_matches": true,
+  "findings": {
+    "memory_module_turn1_hops": 0
+  },
+  "failed": [],
+  "claim": "invariants of ten restored proxy modules; not capability claims"
+}

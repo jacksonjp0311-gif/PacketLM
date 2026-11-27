@@ -92,14 +92,15 @@ def run() -> dict:
         start = candidates(field, objects) + [("gap", "gap", "out")]
         live, asked = investigate(field, start, objects, query)
         named = [p for p in live if p[0] != "gap"]
-        results.append({"seed": seed, "target": target, "asks": len(asked), "ok": named == [hidden] and ("gap", "gap", "out") in live})
+        results.append({"seed": seed, "target": target, "asks": len(asked), "ok": named == [hidden] and ("gap", "gap", "out") in live,
+                        "gap_live": ("gap", "gap", "out") in live})
     save(STATE, {"results": [{k: v for k, v in r.items() if k != "target"} for r in results]})
     loaded = load(STATE)
     checks = {
         "oracle": apply_path(o_field, o_path, "seal", o_objects) == "plant",
         "all_seeds": all(r["ok"] for r in results),
         "varied": len({r["target"] for r in results}) > 1,
-        "gap_in_loop": all(("gap", "gap", "out") and r["ok"] for r in results),
+        "gap_in_loop": all(r["gap_live"] for r in results),  # was a truthy tuple and all_seeds (G44 audit item 11)
         "target_not_saved": "target" not in json.dumps(loaded),
     }
     failed = [k for k, v in checks.items() if not v]

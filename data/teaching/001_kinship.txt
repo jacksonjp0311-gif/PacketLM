@@ -1,0 +1,32 @@
+# 001 kinship. "X parent Y" means Y is X's parent.
+construct parent: ada parent bob = ada bob; cal parent dee = cal dee
+construct sibling: ann sibling ben = ann ben; cat sibling dan = cat dan
+construct grandparent: ada grandparent bob = ada bob; cal grandparent dee = cal dee
+question parent: who is the parent of ada = ada; who is the parent of cal = cal
+question grandparent: who is the grandparent of ada = ada; who is the grandparent of cal = cal
+liam parent noah
+noah parent olga
+olga parent pia
+pia parent quin
+emma parent finn
+finn parent gail
+gail parent hank
+hank parent ivor
+noah sibling sara
+finn sibling tess
+example grandparent: liam -> olga
+example grandparent: emma -> gail
+example greatgrandparent: liam -> pia
+example greatgrandparent: emma -> hank
+example aunt: liam -> sara
+example aunt: emma -> tess
+zed parent yan
+yan parent xia
+xia parent wes
+expect who is the parent of noah => noah parent olga
+expect who is the grandparent of liam => liam grandparent olga
+expect who is the grandparent of zed => zed grandparent xia
+expect what is zed greatgrandparent => zed greatgrandparent wes [no construction for greatgrandparent]
+expect what is noah greatgrandparent => noah greatgrandparent quin [no construction for greatgrandparent]
+expect what is liam aunt => liam aunt sara [no construction for aunt]
+expect what is zed aunt => unknown

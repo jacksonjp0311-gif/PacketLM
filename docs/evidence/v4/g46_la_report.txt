@@ -1,0 +1,44 @@
+== G46 C vs B
+A_36 = -0.4476  [-0.4588, -0.4382] (95% paired bootstrap, S=3); delta-SE=0.0061; sign-flip p=0.25; geometric-mean form=-0.4473
+censored tasks: C=1, B=11
+  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).
+  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).
+trend of per-task log ratio: -0.0097 per task  [-0.0116, -0.0070]
+A_n curve (seed-mean costs): [ 0.041 -0.166 -0.055 -0.15  -0.118 -0.171 -0.23  -0.307 -0.344 -0.405
+ -0.458 -0.537 -0.581 -0.644 -0.666 -0.719 -0.758 -0.804 -0.767 -0.811
+ -0.845 -0.767 -0.81  -0.281 -0.363 -0.442 -0.506 -0.506 -0.566 -0.332
+ -0.393 -0.47  -0.518 -0.521 -0.569 -0.448]
+break-even n (seed-mean costs): None
+== G46 C+maint vs B
+A_36 = -0.7471  [-0.7555, -0.7366] (95% paired bootstrap, S=3); delta-SE=0.0057; sign-flip p=0.25; geometric-mean form=-0.7471
+censored tasks: C+maint=1, B=11
+  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).
+  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).
+trend of per-task log ratio: -0.0128 per task  [-0.0143, -0.0111]
+A_n curve (seed-mean costs): [ 0.041 -0.166 -0.055 -0.15  -0.118 -0.444 -0.47  -0.523 -0.528 -0.573
+ -0.602 -0.956 -0.977 -1.015 -1.003 -1.043 -1.053 -1.422 -1.232 -1.159
+ -1.158 -1.034 -1.053 -0.547 -0.612 -0.679 -0.733 -0.716 -0.768 -0.598
+ -0.649 -0.722 -0.76  -0.749 -0.787 -0.747]
+break-even n (seed-mean costs): None
+== G46 C vs P
+A_36 = +0.2800  [+0.2627, +0.3024] (95% paired bootstrap, S=3); delta-SE=0.0114; sign-flip p=0.25; geometric-mean form=+0.2807
+censored tasks: C=1, P=11
+  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).
+  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).
+trend of per-task log ratio: +0.0196 per task  [+0.0170, +0.0237]
+A_n curve (seed-mean costs): [ 0.061 -0.138 -0.006 -0.067 -0.04  -0.096 -0.071 -0.083 -0.059 -0.084
+ -0.084 -0.119 -0.117 -0.126 -0.088 -0.1   -0.097 -0.106 -0.072 -0.097
+ -0.083 -0.043 -0.05   0.19   0.176  0.165  0.157  0.175  0.165  0.258
+  0.25   0.237  0.233  0.243  0.236  0.28 ]
+break-even n (seed-mean costs): 24
+== G46 G vs B
+A_36 = -0.2068  [-0.2212, -0.1798] (95% paired bootstrap, S=3); delta-SE=0.0140; sign-flip p=0.25; geometric-mean form=-0.2071
+censored tasks: G=1, B=11
+  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).
+  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).
+trend of per-task log ratio: -0.0085 per task  [-0.0096, -0.0079]
+A_n curve (seed-mean costs): [ 0.19   0.026  0.113  0.026  0.07   0.016 -0.045 -0.115 -0.153 -0.198
+ -0.257 -0.33  -0.378 -0.431 -0.456 -0.502 -0.538 -0.591 -0.563 -0.526
+ -0.557 -0.476 -0.502 -0.054 -0.122 -0.18  -0.233 -0.241 -0.302 -0.109
+ -0.161 -0.226 -0.271 -0.273 -0.309 -0.207]
+break-even n (seed-mean costs): None

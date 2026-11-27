@@ -98,7 +98,7 @@ def run() -> dict:
         "passive_from_field": ask(final, "ned", "helps", objects) == "lee",
         "not_reversed": ask(final, "lee", "helps", objects) is None,
         "isa_applied": ask(final, "mira", "isa", objects) == "dax",
-        "reloaded": True,
+        "reloaded": final == loaded and len(final) == len(loaded),  # was the constant True (G44 audit item 11)
     }
     failed = [k for k, v in checks.items() if not v]
     receipt = {**checks, "failed": failed, "claim": "passive applied from reloaded field; suite retained"}

@@ -1,0 +1,354 @@
+"""G56: the long-lived engine protocol (docs/G56.md).
+
+One process serves many calls. A call has the same meaning as one `python -m packetlm.engine STATE
+[flags] line ...` process: the lines are turned by a fresh `Engine` object over the state, then the
+call's state is made durable before the reply is returned. What changes is only where the state
+lives between calls and how it is made durable:
+
+- The state of the open STATE path stays in memory. A call on another path, or with other flags,
+  first closes the open one (snapshot) and opens the new one from disk exactly as the per-process
+  engine does (`Engine.open`, then journal recovery). A path with no file starts from
+  `empty_state()`: B tasks start from a fresh in-memory empty state, never a reused one.
+- After the lines, `Engine.finish` runs (growth re-scans, archiving), then the resulting state is
+  validated in memory by the same validator the per-process engine applies before every save
+  (`validate_lean`, full checks; only the checksum is not computed, because no bytes are written).
+- Durability is a journal `STATE.journal`: one fsync'd record per call (flags, lines, sha256 of the
+  replies) after a header naming the snapshot it extends. Every SNAPSHOT_EVERY calls, and on close,
+  the state is written by the ordinary `save` (lean: validated, backup kept, atomic, fsync) and the
+  journal restarts on the new snapshot.
+- Recovery (`open_path`): load the snapshot as the per-process engine does, then replay the journal
+  call by call through fresh `Engine` objects; every replayed call must reproduce its recorded
+  reply hash, or the load fails with StateError (no silent reconstruction). A journal whose header
+  names the backup's checksum (crash after the snapshot write, before the journal restart) is
+  already contained in the primary and is dropped; any other mismatch is an error.
+
+Accounting: each call reports `cpu_total_s` = CPU of this process since the end of the previous
+charged request (the first call carries interpreter start-up and imports), so the per-call values
+sum to the process's whole CPU except `inspect` requests, which are measurement only and reported
+separately (`inspect_cpu_s`).
+
+Protocol: one JSON request per stdin line, one JSON response per stdout line.
+  {"op": "call", "state": PATH, "flags": [...], "lines": [...]}
+  {"op": "inspect", "state": PATH}   -> writes PATH.inspect (the state document); uncharged
+  {"op": "close"}                    -> snapshots the open path; charged
+Run: python -m packetlm.serve
+"""
+from __future__ import annotations
+import gc
+import hashlib
+import json
+import os
+import resource
+import sys
+import time
+from pathlib import Path
+
+from .engine import _read_doc, _valid_scoped, _fresh_index, FULL_VALIDATE_EVERY, Engine, Memo, StateError, SCHEMA, validate_lean, parse_cli, empty_state, _need
+
+SNAPSHOT_EVERY = 64
+JOURNAL_SCHEMA = "packetlm.journal/1"
+
+
+def _cpu() -> float:
+    return sum(resource.getrusage(resource.RUSAGE_SELF)[:2])
+
+
+def _rhash(replies) -> str:
+    return hashlib.sha256(json.dumps(replies).encode()).hexdigest()
+
+
+def _file_checksum(p: Path):
+    """The checksum field of a state document on disk (None if absent or unreadable)."""
+    try:
+        return json.loads(p.read_bytes()).get("checksum")
+    except (OSError, ValueError, AttributeError):
+        return None
+
+
+def readonly_line(line: str) -> bool:
+    """G57: a line `Engine._turn` answers as a question (`what is S W` / `ask S W`, after the same
+    normalization). That branch only reads the state (docs/G57.md §2)."""
+    parts = line.strip().rstrip("?").rstrip(".").lower().split()
+    return (len(parts) == 4 and parts[0] == "what" and parts[1] == "is") or (len(parts) == 3 and parts[0] == "ask")
+
+
+def _state_digest(state) -> str:
+    return hashlib.sha256(json.dumps(state).encode()).hexdigest()
+
+
+class Open:
+    """The one state path held in memory."""
+
+    def __init__(self, path: Path, kw: dict, flags: list):
+        self.path, self.kw, self.flags = path, kw, flags
+        self.memo = Memo() if kw.get("indexed") else None  # G57: lives as long as the open state
+        self.since_full, self.validated = 0, False  # G57b: mutating calls since the last full validation
+        self.checked_call = False  # G59: set only between this call's `_validate` and its snapshot
+        self.snap_bytes = 0
+        self.state, self.report, self.known, self.since = None, None, None, 0
+        self.jpath = path.with_name(path.name + ".journal")
+        self.jfh = None
+
+
+class Server:
+    def __init__(self, snapshot_every=SNAPSHOT_EVERY, check_readonly=None, full_every=None, snapshot_ratio=None):
+        self.cur: Open | None = None
+        self.full_every = full_every or int(os.environ.get("PACKETLM_FULL_VALIDATE_EVERY", FULL_VALIDATE_EVERY))
+        # tests and the differential check: verify that every read-only call left the state unchanged
+        self.check_readonly = bool(int(os.environ.get("PACKETLM_CHECK_READONLY", "0"))) if check_readonly is None \
+            else check_readonly
+        self.every = snapshot_every
+        # G59 (docs/G59.md §2e): proportional maintenance. With a ratio q > 0, a snapshot is taken when at
+        # least `every` calls are journaled AND the journal holds at least q x the snapshot's bytes
+        # (log compaction: reopening replays at most about q x the snapshot), and the periodic full
+        # validation happens at those snapshots instead of every FULL_VALIDATE_EVERY calls. Snapshot
+        # and validation work per call is then bounded by the call's own journal bytes instead of
+        # growing with the state. Off (0) by default; replies and state are the same either way.
+        self.ratio = snapshot_ratio if snapshot_ratio is not None else float(os.environ.get("PACKETLM_SNAPSHOT_RATIO", "0"))
+        self.mark = 0.0  # CPU at the end of the previous charged request
+
+    # ---------- persistence ----------
+
+    def _engine(self, o: Open) -> Engine:
+        eng = Engine(o.path, o.state, dict(o.report), **o.kw, **({"memo": o.memo} if o.memo is not None else {}))
+        eng._known_bytes = o.known
+        return eng
+
+    def _journal_start(self, o: Open, base) -> None:
+        if o.jfh:
+            o.jfh.close()
+        tmp = o.jpath.with_name(o.jpath.name + ".tmp")
+        with open(tmp, "wb") as fh:
+            fh.write((json.dumps({"schema": JOURNAL_SCHEMA, "base": base}) + "\n").encode())
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(tmp, o.jpath)
+        o.jfh = open(o.jpath, "ab")
+
+    def _validate(self, o: Open, eng) -> None:
+        """Every structural check after a changing call. G57b (`--incremental`): only what the call
+        changed, when the call changed facts only through `tell` and removed none; a full
+        validation (with a check of the persistent index against a fresh build) at least every
+        FULL_VALIDATE_EVERY mutating calls, and after any untracked change."""
+        sc = o.memo.scope if eng.incremental else None
+        o.since_full += 1
+        if sc is not None and sc["ok"] and (o.since_full < self.full_every or self.ratio > 0) and o.memo.ix_valid(eng.state) \
+                and _valid_scoped(eng.state, sc["touched"], o.memo.ix["byid"],
+                                  *((sc.get("caps", set()), None if sc.get("obs_all") else sc.get("obs", set()))
+                                    if eng.routed else (None, None))):
+            o.memo.counts["scoped_validations"] += 1
+            return
+        if eng.incremental:
+            o.memo.counts["full_validations"] += 1
+        validate_lean({"schema": SCHEMA, "checksum": None, "state": eng.state}, checksum_ok=True)
+        if eng.incremental:
+            if o.memo.ix_valid(eng.state):
+                o.memo.ix_check(eng.state, _fresh_index(eng.state["facts"]))
+            else:
+                eng._idx()  # adopt the index now (O(F), as this validation), so the next calls are scoped
+            eng.cache_check()  # G59 (Low 1 of verify-33565b0): the G58 caches too
+        o.since_full, o.validated = 0, True
+        o.checked_call = True  # G59 (Med of verify-33565b0): a snapshot in this call need not repeat the checks
+
+    def _snapshot(self, o: Open) -> None:
+        eng = self._engine(o)
+        eng.save()  # lean save: full validation, backup kept, atomic replace, fsync
+        o.state, o.known, o.since = eng.state, eng._known_bytes, 0
+        # G57b: the snapshot is a full validation. G59 (Med of verify-33565b0): skipped when this call's
+        # `_validate` already ran the full checks on the same state (nothing writes in between)
+        if eng.incremental and not o.checked_call:
+            if o.memo.ix_valid(eng.state):
+                o.memo.ix_check(eng.state, _fresh_index(eng.state["facts"]))
+            eng.cache_check()
+        o.since_full, o.validated = 0, True
+        self._journal_start(o, _file_checksum(o.path))
+        o.snap_bytes = o.path.stat().st_size  # G59: for the proportional policy
+        if o.kw.get("partitioned"):
+            # G59 (docs/G59.md §2d): the snapshot's state is long-lived while the path is open. CPython's
+            # cyclic collector would otherwise re-traverse all of it (every fact, related or not) in
+            # its full collections, an O(heap) cost that lands on whichever call crosses the threshold.
+            # Collect the young generations (the garbage of this call), then move the survivors to the
+            # permanent generation; `close` returns them. No reply or state depends on it.
+            gc.collect(1)
+            gc.freeze()
+
+    @staticmethod
+    def _replay(path: Path, o: Open, lines) -> tuple:
+        """Replay journal records onto o.state through fresh engines; every record must reproduce its
+        reply hash (no silent reconstruction). A torn final record is ignored."""
+        state, done = o.state, 0
+        for k, raw in enumerate(lines[1:], 1):
+            try:
+                rec = json.loads(raw)
+            except ValueError:
+                _need(k == len(lines) - 1, "journal record corrupt before its end")
+                break  # a torn final record: its call never returned a reply
+            e = Engine(path, state, dict(o.report), **parse_cli(rec["flags"])[0])
+            e._known_bytes = o.known
+            got = [e.turn(x) for x in rec["lines"]]
+            e.finish()
+            _need(_rhash(got) == rec["replies_sha256"], f"journal replay diverged at record {k}")
+            state = e.state
+            done += 1
+        return state, done
+
+    def open_path(self, path: Path, kw: dict, flags: list) -> Open:
+        _need(kw.get("lean"), "the long-lived protocol requires --lean snapshots")
+        # adaptive retention counts engine constructions as calls; not supported by this protocol
+        _need(kw.get("retention", "static") == "static", "the long-lived protocol requires static retention")
+        o = Open(path, kw, flags)
+        eng = Engine.open(path, **kw)  # same load as the per-process engine (validation, backup recovery)
+        o.state, o.report, o.known = eng.state, eng.report, eng._known_bytes
+        if o.jpath.exists():
+            lines = o.jpath.read_bytes().splitlines()
+            head = json.loads(lines[0]) if lines else {}
+            _need(head.get("schema") == JOURNAL_SCHEMA, "journal header invalid")
+            # verification Low 1 of d6cbcf3: every journal extends a snapshot (a new path gets an empty
+            # one at open, below). A journal naming no base, or beside no state file, belongs to
+            # deleted state; it is refused, never replayed onto an empty state.
+            _need(head.get("base") is not None and eng.report.get("loaded") != "new",
+                  "journal without its base snapshot (reset a path by deleting STATE, STATE.bak and STATE.journal)")
+            have = _file_checksum(path) if eng.report.get("loaded") == "primary" else \
+                _file_checksum(path.with_name(path.name + ".bak"))
+            if head["base"] == have:
+                o.state, done = self._replay(path, o, lines)
+                o.report = {**o.report, "journal_replayed": done}
+            else:
+                # verification S1 of d6cbcf3: a crash between a snapshot and the journal restart.
+                # Replay the journal onto the base it names; it is contained in the loaded primary
+                # iff the result is exactly the primary's state text.
+                bak = path.with_name(path.name + ".bak")
+                _need(eng.report.get("loaded") == "primary" and head["base"] == _file_checksum(bak),
+                      "journal does not extend the loaded snapshot")
+                doc, ok = _read_doc(bak.read_bytes())
+                _need(ok, "journal base snapshot fails its checksum")
+                base = Open(path, kw, flags)
+                base.state, base.report, base.known = doc["state"], dict(o.report), None
+                got, done = self._replay(path, base, lines)
+                _need(hashlib.sha256(json.dumps(got).encode()).hexdigest() == have,
+                      "journal does not extend the loaded snapshot")
+                o.report = {**o.report, "journal_dropped": f"contained in the primary snapshot ({done} records)"}
+            self._snapshot(o)  # replayed calls become a snapshot; the journal restarts on it
+        elif eng.report.get("loaded") == "new":
+            self._snapshot(o)  # a new path: an empty snapshot first, so every journal names a base
+        else:
+            self._journal_start(o, _file_checksum(path))
+            o.snap_bytes = path.stat().st_size  # G59: for the proportional policy
+        return o
+
+    def close(self) -> None:
+        o, self.cur = self.cur, None
+        if o is None:
+            return
+        if o.since or not o.path.exists():
+            self._snapshot(o)
+        if o.jfh:
+            o.jfh.close()
+        if gc.get_freeze_count():
+            gc.unfreeze()  # G59: the closed path's state is no longer long-lived; it is collectable again
+
+    # ---------- requests ----------
+
+    def call(self, path, flags, lines) -> dict:
+        t0 = time.process_time()
+        path = Path(path)
+        kw, rest = parse_cli(list(flags))
+        _need(not rest, f"unknown flags {rest}")
+        o = self.cur
+        if o is None or o.path != path or o.flags != list(flags):
+            self.close()
+            o = self.cur = self.open_path(path, kw, list(flags))
+            report = dict(o.report)
+        else:
+            report = {"loaded": "memory"}
+        eng = self._engine(o)
+        if eng.incremental:  # G57b: what this call changes, for change-scoped validation
+            o.memo.scope = {"ok": o.validated and o.memo.ix_valid(o.state), "touched": []}
+        # G57 (a): a call whose lines are all questions under --indexed is read-only. Its state was
+        # validated and journaled when it was last changed, so it is neither re-validated nor
+        # journaled; its re-asks may be answered from the memo (Engine._gated).
+        ro = bool(o.memo is not None and lines and all(readonly_line(x) for x in lines))
+        eng.readonly_call = ro
+        before = _state_digest(eng.state) if ro and self.check_readonly else None
+        replies = [eng.turn(x) for x in lines]
+        eng.finish()
+        if ro:
+            if before is not None:
+                _need(_state_digest(eng.state) == before, "read-only call changed the state")
+            now = _cpu()
+            out = {"load": report, "replies": replies, "stats": eng.stats, "cpu_s": round(time.process_time() - t0, 4),
+                   "cpu_total_s": round(now - self.mark, 4), "readonly": True}
+            self.mark = now
+            return out
+        o.checked_call = False
+        self._validate(o, eng)
+        o.state = eng.state
+        o.jfh.write((json.dumps({"flags": list(flags), "lines": list(lines), "replies_sha256": _rhash(replies)})
+                     + "\n").encode())
+        o.jfh.flush()
+        os.fsync(o.jfh.fileno())
+        o.since += 1
+        if o.since >= self.every and (self.ratio <= 0 or o.jfh.tell() >= self.ratio * o.snap_bytes):
+            self._snapshot(o)
+        o.checked_call = False
+        now = _cpu()
+        out = {"load": report, "replies": replies, "stats": eng.stats, "cpu_s": round(time.process_time() - t0, 4),
+               "cpu_total_s": round(now - self.mark, 4)}
+        self.mark = now
+        return out
+
+    def inspect(self, path) -> dict:
+        """Measurement only: write the open (or on-disk) state document for the harness to read."""
+        c0 = _cpu()
+        path = Path(path)
+        st = self.cur.state if self.cur and self.cur.path == path else None
+        dst = path.with_name(path.name + ".inspect")
+        if st is not None:
+            dst.write_text(json.dumps({"schema": SCHEMA, "checksum": None, "state": st}))
+        elif dst.exists():
+            dst.unlink()
+        dt = _cpu() - c0
+        self.mark += dt  # excluded from the next charged request
+        return {"inspected": st is not None, "inspect_cpu_s": round(dt, 4)}
+
+    def handle(self, req) -> dict:
+        op = req.get("op")
+        if op == "call":
+            try:
+                return self.call(req["state"], req.get("flags", []), req["lines"])
+            except BaseException:
+                # as when an engine process fails: nothing of this call is kept; the next call
+                # reloads from the snapshot and the journal
+                o, self.cur = self.cur, None
+                if o and o.jfh:
+                    o.jfh.close()
+                raise
+        if op == "inspect":
+            return self.inspect(req["state"])
+        if op == "close":
+            self.close()
+            now = _cpu()
+            out = {"closed": True, "cpu_total_s": round(now - self.mark, 4)}
+            self.mark = now
+            return out
+        raise ValueError(f"unknown op {op}")
+
+
+def main() -> int:
+    srv = Server(int(os.environ.get("PACKETLM_SNAPSHOT_EVERY", SNAPSHOT_EVERY)))
+    out = sys.stdout
+    for raw in sys.stdin:
+        if not raw.strip():
+            continue
+        try:
+            resp = srv.handle(json.loads(raw))
+        except (StateError, ValueError, KeyError) as exc:
+            resp = {"error": f"{type(exc).__name__}: {exc}"}
+        out.write(json.dumps(resp) + "\n")
+        out.flush()
+    srv.close()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

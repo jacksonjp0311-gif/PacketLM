@@ -1,0 +1,13 @@
+# 004 vocabulary, correction and retraction on earlier sessions.
+define mom as parent
+expect what is liam mom => liam parent noah
+correct noah parent rita
+rita parent pia
+expect who is the grandparent of liam => liam grandparent rita
+expect who is the parent of noah => noah parent rita
+retract finn sibling tess
+expect what is emma aunt => unknown
+correct gear3 turns wheel9
+expect what is motor3 drives => motor3 drives wheel9 [no construction for drives]
+show grandparent
+show aunt

@@ -1,0 +1,1132 @@
+{
+ "started": "2026-11-27T02:04:54-0500",
+ "head": "1932326b4e05ac0041907efea82f279f6b3dd1a3",
+ "git_status_porcelain": "",
+ "harness_sha256": "935c2053896e0943b12400b3e54b6d067dadc2e6ada2b253218e62646d8de738",
+ "instrument": {
+  "path": "/workspace/vendor/learning-amortization",
+  "head": "70297af",
+  "pinned": true,
+  "unmodified": true
+ },
+ "seeds": {
+  "comp": [
+   121,
+   122,
+   123,
+   124,
+   125,
+   126,
+   127
+  ],
+  "unrel": [
+   131,
+   132,
+   133,
+   134,
+   135,
+   136,
+   137
+  ]
+ },
+ "source_sha256": "1b937149b1aa65e7866c40439f61209569f9d2a0410be6d54a48bf58881e59cd",
+ "engine_sha256": "29a742c212f2b6cbfb5bd70a3075a21fcf9ca116c8ab155fc07e9079b325eadb",
+ "curricula": {
+  "comp": {
+   "n": 36,
+   "per_seed": {
+    "121": {
+     "C": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 27.3684,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "6ceb5dd716c6325940b17f71853d1b98b832fa0f74f4ac4914189d93c3024ad6"
+     },
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.1813,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "6ceb5dd716c6325940b17f71853d1b98b832fa0f74f4ac4914189d93c3024ad6"
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.7089,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "90ac3ffdfbb5299139cb9f6c034c23d2e6101900dcdb9735053cca3ef33cdd19"
+     },
+     "Pb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 12.1656,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "1c727127249d97d6d3d4f93adc0fa0f97e9dbd23a70f980efd2ff2c24b4774e3"
+     },
+     "Fb": {
+      "tasks": 36,
+      "solved": 22,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.5739,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "f04daf315fd3c0c929a6ece3d0a7fd435a209540afa44a61fd5af1c2708bfe01"
+     }
+    },
+    "122": {
+     "C": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 33.9355,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "58dbd51fbcadebbc664d6b375f615cdcbce487f92257927b77c0000c92c0baba"
+     },
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 15.7208,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "58dbd51fbcadebbc664d6b375f615cdcbce487f92257927b77c0000c92c0baba"
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.7503,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "5e705e6521de6a373769165795ee29dd7f7b394ce3245d8b5ccae43b1529d95a"
+     },
+     "Pb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 12.8224,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "dc2ca9b8ba5ad2fa2b5da4b0c42ef988afb58bc6c328bba4e0b3d4b3d4cfea8a"
+     },
+     "Fb": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.7018,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "eb90375e4eae8b51717db07d98789e1d32cfd30ea30ad0332424e5f2a18a4093"
+     }
+    },
+    "123": {
+     "C": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 28.7436,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "7865e986a5c27c9df2d1ea4e725ff56b318e55ea3e88c85106bb8af81bd97545"
+     },
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 35,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.3939,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "7865e986a5c27c9df2d1ea4e725ff56b318e55ea3e88c85106bb8af81bd97545"
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 6.3989,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "626b35a71eb6ccf3e8662700ca4fe5a3680e87ef3047e9079ee072b59cba2a04"
+     },
+     "Pb": {
+      "tasks": 36,
+      "solved": 35,
+      "qualified": 35,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.2429,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "009e6ed8ff2742b0543d009b30fbc0fa68fd1e8c997f4708f9b5167f417a3f1e"
+     },
+     "Fb": {
+      "tasks": 36,
+      "solved": 19,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.6458,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "9d0f21aee9da0708fd6265bd406e02bec4113bdf5fd55e82741c39b2ce011c52"
+     }
+    },
+    "124": {
+     "C": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 29.7463,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "2604f3d4c872c3f222a257c7a614dc37a000ee6e25e8431aec8fcc672b78ca83"
+     },
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 14.346,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "2604f3d4c872c3f222a257c7a614dc37a000ee6e25e8431aec8fcc672b78ca83"
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 8.1471,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "4e3a2759a617118523bb4053446a00c6d999705382f0914d5548405fde59d910"
+     },
+     "Pb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.405,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "414776a2d49d6487e165867aa45947faef560ee579b3157b044af8e55ff386fe"
+     },
+     "Fb": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.8472,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "3185ba157ede5053535f374ab523fd922c57534538e3ce6bd0e95327a62c50a3"
+     }
+    },
+    "125": {
+     "C": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 29.2656,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "88e01902a4873aa2069e3e5a4cb380d0f8f4c89c7ca1b7c660619fe13a139bdf"
+     },
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 13.4255,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "88e01902a4873aa2069e3e5a4cb380d0f8f4c89c7ca1b7c660619fe13a139bdf"
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.06,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "dc1072b12b66301c7454b9e6dda7331d7f95237db94e28e1f8dca37c1640618c"
+     },
+     "Pb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.1358,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "994c18a3972cc7bef0d9022faff73b279aef0417a2ddec3de87165a3d05abd7c"
+     },
+     "Fb": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.7311,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "f0eb4886811bf40ef915e03e8d3c95d1ef4a59429039f9e93e49d805a589e623"
+     }
+    },
+    "126": {
+     "C": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 33.8903,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "eeb35acb27e2fdf4df9ee69848773ad8e82296ee127caa697c26423d15d3f372"
+     },
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 14.388,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "eeb35acb27e2fdf4df9ee69848773ad8e82296ee127caa697c26423d15d3f372"
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 8.0178,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "889624ee73d689733d2602be5ef51489232880d7adbacbd5e1d050f59f6f2640"
+     },
+     "Pb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 12.8493,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "6cc66bd7e91039cf402a2f9d2c6cfa4c160740a2b557748ddd7fa75fcaf6398c"
+     },
+     "Fb": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.7138,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "7eecd93efd8532ad33f7fb1621845f55bc4b6556953258dc0f1364fc94836ab4"
+     }
+    },
+    "127": {
+     "C": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 30.1107,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "a021682d0b87104c2ed2eb14f8a085a4330fd37a3520b99b26c126ad7130c078"
+     },
+     "Cb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 21,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 14.8432,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "a021682d0b87104c2ed2eb14f8a085a4330fd37a3520b99b26c126ad7130c078"
+     },
+     "Bb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 7.5873,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "21aba2a9ea8c9417965b51fd428589698283bb6187b502d3eec307d3a9175fb6"
+     },
+     "Pb": {
+      "tasks": 36,
+      "solved": 36,
+      "qualified": 36,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.9836,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "c60cc52699829ed53aecdd57253fd5b0476633ff585994b655a207346bd8a1d2"
+     },
+     "Fb": {
+      "tasks": 36,
+      "solved": 18,
+      "qualified": 18,
+      "uses_library": 12,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 4.5615,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": false,
+       "3_transfer": false,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": false
+      },
+      "reply_stream_sha256": "d5ec3a4cb01efe29f16151d76ad5135ae8bc59d01c71fac62d7158229133066b"
+     }
+    }
+   },
+   "instrument": [
+    {
+     "cont": "Cb+maint",
+     "base": "Bb",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.8853  [-0.9806, -0.7901] (95% paired bootstrap, S=7); delta-SE=0.0530; sign-flip p=0.01562; geometric-mean form=-0.8875\ncensored tasks: Cb+maint=0, Bb=1\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0196 per task  [-0.0236, -0.0159]\nA_n curve (seed-mean costs): [-0.21  -0.145 -0.068 -0.054 -0.037 -0.377 -0.35  -0.331 -0.303 -0.302\n -0.292 -0.512 -0.51  -0.506 -0.473 -0.467 -0.455 -0.63  -0.614 -0.647\n -0.639 -0.694 -0.732 -0.715 -0.706 -0.711 -0.71  -0.751 -0.774 -0.807\n -0.799 -0.806 -0.808 -0.842 -0.863 -0.885]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cb+maint",
+     "base": "Pb+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.1600  [-0.2080, -0.1103] (95% paired bootstrap, S=7); delta-SE=0.0270; sign-flip p=0.01562; geometric-mean form=-0.1603\ncensored tasks: Cb+maint=0, Pb+maint=1\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0095 per task  [-0.0122, -0.0070]\nA_n curve (seed-mean costs): [ 0.106  0.061  0.069  0.043  0.019 -0.016 -0.016 -0.017 -0.013 -0.016\n -0.027 -0.035 -0.035 -0.037 -0.034 -0.035 -0.038 -0.034 -0.031 -0.065\n -0.068 -0.116 -0.127 -0.107 -0.103 -0.109 -0.11  -0.142 -0.16  -0.156\n -0.151 -0.152 -0.151 -0.17  -0.182 -0.16 ]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cb+maint",
+     "base": "C+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = +0.5339  [+0.5194, +0.5507] (95% paired bootstrap, S=7); delta-SE=0.0089; sign-flip p=0.01562; geometric-mean form=+0.5334\ncensored tasks: Cb+maint=0, C+maint=0\ntrend of per-task log ratio: +0.0314 per task  [+0.0292, +0.0332]\nA_n curve (seed-mean costs): [0.151 0.149 0.129 0.146 0.142 0.138 0.13  0.123 0.121 0.125 0.124 0.128\n 0.125 0.125 0.125 0.129 0.127 0.129 0.135 0.163 0.207 0.271 0.343 0.409\n 0.404 0.406 0.414 0.438 0.463 0.49  0.486 0.486 0.491 0.504 0.523 0.534]\nbreak-even n (seed-mean costs): 1",
+     "err": ""
+    },
+    {
+     "cont": "Cb",
+     "base": "Pb",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -0.2002  [-0.2592, -0.1382] (95% paired bootstrap, S=7); delta-SE=0.0338; sign-flip p=0.01562; geometric-mean form=-0.2009\ncensored tasks: Cb=0, Pb=1\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0093 per task  [-0.0121, -0.0066]\nA_n curve (seed-mean costs): [ 0.106  0.061  0.069  0.043  0.019 -0.017 -0.017 -0.019 -0.013 -0.017\n -0.029 -0.04  -0.04  -0.042 -0.039 -0.039 -0.042 -0.05  -0.046 -0.087\n -0.09  -0.148 -0.159 -0.139 -0.133 -0.139 -0.14  -0.175 -0.197 -0.196\n -0.189 -0.189 -0.186 -0.207 -0.221 -0.2  ]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cb+maint",
+     "base": "Fb+maint",
+     "n": 36,
+     "rc": 0,
+     "report": "A_36 = -2.0297  [-2.1713, -1.9035] (95% paired bootstrap, S=7); delta-SE=0.0744; sign-flip p=0.01562; geometric-mean form=-2.0249\ncensored tasks: Cb+maint=0, Fb+maint=121\n  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).\ntrend of per-task log ratio: -0.0837 per task  [-0.0863, -0.0815]\nA_n curve (seed-mean costs): [-0.207 -0.101 -0.085 -0.082 -0.069 -0.058 -0.058 -0.058 -0.054 -0.054\n -0.051 -0.049 -0.048 -0.048 -0.046 -0.043 -0.04  -0.03  -0.075 -0.24\n -0.299 -0.453 -0.542 -0.824 -0.854 -0.916 -0.955 -1.11  -1.175 -1.453\n -1.489 -1.544 -1.582 -1.714 -1.775 -2.03 ]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    }
+   ],
+   "exact_Cb_equals_C": true
+  },
+  "unrel": {
+   "n": 24,
+   "per_seed": {
+    "131": {
+     "C": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.9659,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "ecdc25a158b9d45c09b9b3b63f5fd5a1234a83b4f97577a197b65c8f8c48a8d2"
+     },
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.7484,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "ecdc25a158b9d45c09b9b3b63f5fd5a1234a83b4f97577a197b65c8f8c48a8d2"
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 2.0875,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "435d6762de63dff9d209e2775dc50907e00108a8633da85a92834ba7120c6a1b"
+     },
+     "Pb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.9544,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "ecdc25a158b9d45c09b9b3b63f5fd5a1234a83b4f97577a197b65c8f8c48a8d2"
+     }
+    },
+    "132": {
+     "C": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.8555,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "7ac5a76eddb7b4b2c8212477e2578aa264ee7be00583f0c15259bea3a21ee5c2"
+     },
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.5093,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "7ac5a76eddb7b4b2c8212477e2578aa264ee7be00583f0c15259bea3a21ee5c2"
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 2.0351,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "c011705a20992a4256540dcaaed4fc7f3531676aa6ddfe9fcd5370bd48289c42"
+     },
+     "Pb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.7439,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "7ac5a76eddb7b4b2c8212477e2578aa264ee7be00583f0c15259bea3a21ee5c2"
+     }
+    },
+    "133": {
+     "C": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.8505,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "c4f444374ef09ae86431f9678184a4124c0627d023448fc6b1411e26238b654b"
+     },
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.0385,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "c4f444374ef09ae86431f9678184a4124c0627d023448fc6b1411e26238b654b"
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.6589,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "24b8cc350191c83edabbde617fb378b18e78b36a7b09f182dae79ac6e17e66fd"
+     },
+     "Pb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.8427,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "c4f444374ef09ae86431f9678184a4124c0627d023448fc6b1411e26238b654b"
+     }
+    },
+    "134": {
+     "C": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.0941,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "33c852695a2fbc4687074b16914c3df276537613573b7611988b4bdced577842"
+     },
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.7517,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "33c852695a2fbc4687074b16914c3df276537613573b7611988b4bdced577842"
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.6109,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "4aae3fa73e15ab24c4e335f222b4c9874d254fa9a46a25d2c34f656f5562d96a"
+     },
+     "Pb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.681,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "33c852695a2fbc4687074b16914c3df276537613573b7611988b4bdced577842"
+     }
+    },
+    "135": {
+     "C": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.6962,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "687ece6d577a861a4f7366ed57254b4a6c11d9397d15f91e357df0aeafff7475"
+     },
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.6745,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "687ece6d577a861a4f7366ed57254b4a6c11d9397d15f91e357df0aeafff7475"
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.6719,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "f6a3b8994d7f673ef94ab352ef041f5bfc25a4027ac7a5772a3c71822a7bb0ad"
+     },
+     "Pb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.4137,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "687ece6d577a861a4f7366ed57254b4a6c11d9397d15f91e357df0aeafff7475"
+     }
+    },
+    "136": {
+     "C": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.0617,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "bf0a6938cd292862b244e083c3762ef87fdb148d8899a28661e100f4d066c797"
+     },
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.233,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "bf0a6938cd292862b244e083c3762ef87fdb148d8899a28661e100f4d066c797"
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.8346,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "765ee4745c984b85a942a2669d8ec253eaa51ec2a308dc567acf4c020ce1e290"
+     },
+     "Pb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.1479,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "bf0a6938cd292862b244e083c3762ef87fdb148d8899a28661e100f4d066c797"
+     }
+    },
+    "137": {
+     "C": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.2085,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "bf4ce16c6fb9bec31078302950b8ea8db55e4ca068563cc2f14ecd9664b734a1"
+     },
+     "Cb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 10.993,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "bf4ce16c6fb9bec31078302950b8ea8db55e4ca068563cc2f14ecd9664b734a1"
+     },
+     "Bb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 1.7893,
+      "g46_thresholds": null,
+      "reply_stream_sha256": "c9157c7382d2b73f5d8504557971cf0264aabb11e4295c605719299be4095206"
+     },
+     "Pb": {
+      "tasks": 24,
+      "solved": 24,
+      "qualified": 24,
+      "uses_library": 0,
+      "wrong_qualified_sealed": 0,
+      "cpu_total_all_s": 11.0987,
+      "g46_thresholds": {
+       "1_retention": true,
+       "2_plasticity": true,
+       "3_transfer": true,
+       "4_no_wrong_qualified": true,
+       "5_correction": true,
+       "6_uncertainty": true
+      },
+      "reply_stream_sha256": "bf4ce16c6fb9bec31078302950b8ea8db55e4ca068563cc2f14ecd9664b734a1"
+     }
+    }
+   },
+   "instrument": [
+    {
+     "cont": "Cb+maint",
+     "base": "Bb",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -5.0646  [-5.4557, -4.6659] (95% paired bootstrap, S=7); delta-SE=0.2185; sign-flip p=0.01562; geometric-mean form=-5.0898\ncensored tasks: Cb+maint=0, Bb=0\ntrend of per-task log ratio: -0.0735 per task  [-0.0823, -0.0659]\nA_n curve (seed-mean costs): [-1.495 -1.487 -1.494 -1.566 -1.671 -1.805 -1.923 -2.027 -2.112 -2.297\n -2.425 -2.596 -2.776 -2.951 -3.121 -3.334 -3.52  -3.708 -3.921 -4.148\n -4.365 -4.586 -4.831 -5.065]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cb+maint",
+     "base": "Pb+maint",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = -0.0009  [-0.0129, +0.0109] (95% paired bootstrap, S=7); delta-SE=0.0067; sign-flip p=0.8594; geometric-mean form=-0.0012\ncensored tasks: Cb+maint=0, Pb+maint=0\ntrend of per-task log ratio: -0.0013 per task  [-0.0053, +0.0030]\nA_n curve (seed-mean costs): [-2.662e-02 -4.971e-04  5.801e-04  2.206e-02  2.852e-02  2.612e-02\n  1.929e-02  1.755e-02  1.734e-02  9.490e-03  5.686e-03  1.154e-03\n  1.847e-04 -1.016e-03 -5.933e-04 -9.039e-04  3.663e-03  2.717e-03\n  5.976e-06 -1.813e-03  1.314e-03  2.560e-03  3.947e-05 -8.598e-04]\nbreak-even n (seed-mean costs): None",
+     "err": ""
+    },
+    {
+     "cont": "Cb+maint",
+     "base": "C+maint",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = +0.0101  [-0.0042, +0.0231] (95% paired bootstrap, S=7); delta-SE=0.0076; sign-flip p=0.2188; geometric-mean form=+0.0099\ncensored tasks: Cb+maint=0, C+maint=0\ntrend of per-task log ratio: +0.0001 per task  [-0.0040, +0.0039]\nA_n curve (seed-mean costs): [ 0.013  0.009 -0.003  0.006  0.012  0.005  0.007  0.006  0.01   0.006\n  0.009  0.005  0.006  0.005  0.005  0.007  0.011  0.013  0.013  0.011\n  0.015  0.014  0.012  0.01 ]\nbreak-even n (seed-mean costs): 4",
+     "err": ""
+    },
+    {
+     "cont": "Cb",
+     "base": "Pb",
+     "n": 24,
+     "rc": 0,
+     "report": "A_24 = +0.0009  [-0.0221, +0.0215] (95% paired bootstrap, S=7); delta-SE=0.0121; sign-flip p=0.9531; geometric-mean form=+0.0006\ncensored tasks: Cb=0, Pb=0\ntrend of per-task log ratio: -0.0016 per task  [-0.0057, +0.0031]\nA_n curve (seed-mean costs): [-0.031 -0.009  0.007  0.021  0.031  0.026  0.024  0.018  0.015  0.007\n  0.004 -0.005 -0.005 -0.005 -0.004  0.     0.011  0.009  0.007  0.\n  0.003  0.006  0.004  0.001]\nbreak-even n (seed-mean costs): 16",
+     "err": ""
+    }
+   ],
+   "exact_Cb_equals_C": true
+  }
+ },
+ "guards": {
+  "exact_Cb_replies_equal_C": true,
+  "no_wrong_qualified_C_Cb": true,
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ }
+}

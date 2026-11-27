@@ -1,0 +1,98 @@
+[
+ {
+  "line": "construct parent: ada parent bob = ada bob; cal parent dee = cal dee",
+  "reply": "construction parent sro"
+ },
+ {
+  "line": "construct sibling: ann sibling ben = ann ben; cat sibling dan = cat dan",
+  "reply": "construction sibling sro"
+ },
+ {
+  "line": "construct grandparent: ada grandparent bob = ada bob; cal grandparent dee = cal dee",
+  "reply": "construction grandparent sro"
+ },
+ {
+  "line": "question parent: who is the parent of ada = ada; who is the parent of cal = cal",
+  "reply": "question parent who is the parent of <s>"
+ },
+ {
+  "line": "question grandparent: who is the grandparent of ada = ada; who is the grandparent of cal = cal",
+  "reply": "question grandparent who is the grandparent of <s>"
+ },
+ {
+  "line": "liam parent noah",
+  "reply": "recorded liam parent noah"
+ },
+ {
+  "line": "noah parent olga",
+  "reply": "recorded noah parent olga"
+ },
+ {
+  "line": "olga parent pia",
+  "reply": "recorded olga parent pia"
+ },
+ {
+  "line": "pia parent quin",
+  "reply": "recorded pia parent quin"
+ },
+ {
+  "line": "emma parent finn",
+  "reply": "recorded emma parent finn"
+ },
+ {
+  "line": "finn parent gail",
+  "reply": "recorded finn parent gail"
+ },
+ {
+  "line": "gail parent hank",
+  "reply": "recorded gail parent hank"
+ },
+ {
+  "line": "hank parent ivor",
+  "reply": "recorded hank parent ivor"
+ },
+ {
+  "line": "noah sibling sara",
+  "reply": "recorded noah sibling sara"
+ },
+ {
+  "line": "finn sibling tess",
+  "reply": "recorded finn sibling tess"
+ },
+ {
+  "line": "example grandparent: liam -> olga",
+  "reply": "qualified grandparent rel:parent+rel:parent"
+ },
+ {
+  "line": "example grandparent: emma -> gail",
+  "reply": "qualified grandparent rel:parent+rel:parent"
+ },
+ {
+  "line": "example greatgrandparent: liam -> pia",
+  "reply": "qualified greatgrandparent rel:parent+cap:grandparent@1"
+ },
+ {
+  "line": "example greatgrandparent: emma -> hank",
+  "reply": "qualified greatgrandparent rel:parent+cap:grandparent@1"
+ },
+ {
+  "line": "example aunt: liam -> sara",
+  "reply": "qualified aunt rel:parent+rel:sibling"
+ },
+ {
+  "line": "example aunt: emma -> tess",
+  "reply": "qualified aunt rel:parent+rel:sibling"
+ },
+ {
+  "line": "zed parent yan",
+  "reply": "recorded zed parent yan"
+ },
+ {
+  "line": "yan parent xia",
+  "reply": "recorded yan parent xia"
+ },
+ {
+  "line": "xia parent wes",
+  "reply": "recorded xia parent wes"
+ }
+]

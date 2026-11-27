@@ -1,0 +1,2 @@
+{"mode": "plain", "seed": 11, "cases": 231, "qualified": 1, "cases_wrong_qualified_domain": 0, "wrong_qualified_domain_answers": 0, "cases_wrong_qualified_new_entities": 0}
+{"bad_cases": 0, "bad_in_domain_cases": 0, "bad_in_domain_hidden_in_space": 0, "bad_in_domain_hidden_outside_space": 0, "bad_only_outside_domain": 0, "qualified_hidden_in_space": 1}

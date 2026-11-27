@@ -1,0 +1,54 @@
+[
+ {
+  "line": "fact france isa country",
+  "reply": "recorded france isa country"
+ },
+ {
+  "line": "fact japan isa country",
+  "reply": "recorded japan isa country"
+ },
+ {
+  "line": "fact usa isa country",
+  "reply": "recorded usa isa country"
+ },
+ {
+  "line": "fact portugal isa country",
+  "reply": "recorded portugal isa country"
+ },
+ {
+  "line": "fact europe isa continent",
+  "reply": "recorded europe isa continent"
+ },
+ {
+  "line": "fact asia isa continent",
+  "reply": "recorded asia isa continent"
+ },
+ {
+  "line": "fact america isa continent",
+  "reply": "recorded america isa continent"
+ },
+ {
+  "line": "nice in france",
+  "reply": "recorded nice in france"
+ },
+ {
+  "line": "dallas in collin",
+  "reply": "recorded dallas in collin"
+ },
+ {
+  "line": "collin in texas",
+  "reply": "recorded collin in texas"
+ },
+ {
+  "line": "example country: texas -> usa",
+  "reply": "provisional country op:until:in:isa:country; country@1 suspended: contradicted by its observations; continent@1 suspended: dependency country@1 suspended"
+ },
+ {
+  "line": "show country",
+  "reply": "v1 rel:in+rel:in suspended; v2 op:until:in:isa:country provisional; current v2; examples 3 active, 0 retired"
+ },
+ {
+  "line": "why austin country",
+  "reply": "cap:country@2 = op:until:in:isa:country (provisional, 3 examples, 1 open alternatives); path austin in texas, texas in usa, usa isa country"
+ }
+]

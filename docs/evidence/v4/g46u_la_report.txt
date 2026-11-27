@@ -1,0 +1,16 @@
+== G46U C vs B
+A_24 = -9.7840  [-9.9277, -9.6554] (95% paired bootstrap, S=3); delta-SE=0.0797; sign-flip p=0.25; geometric-mean form=-9.7839
+censored tasks: C=0, B=0
+trend of per-task log ratio: -0.1094 per task  [-0.1108, -0.1074]
+A_n curve (seed-mean costs): [ 0.226 -0.019 -0.475 -1.393 -1.694 -2.179 -2.229 -2.539 -2.946 -3.973
+ -4.383 -4.743 -5.623 -6.262 -6.667 -6.98  -7.314 -7.73  -7.97  -8.188
+ -8.605 -9.043 -9.437 -9.784]
+break-even n (seed-mean costs): None
+== G46U C vs P
+A_24 = -0.0571  [-0.0631, -0.0455] (95% paired bootstrap, S=3); delta-SE=0.0057; sign-flip p=0.25; geometric-mean form=-0.0570
+censored tasks: C=0, P=0
+trend of per-task log ratio: +0.0037 per task  [+0.0011, +0.0053]
+A_n curve (seed-mean costs): [-0.252 -0.068 -0.044 -0.304 -0.202 -0.137 -0.099 -0.042 -0.019 -0.103
+ -0.08  -0.071 -0.107 -0.122 -0.109 -0.09  -0.083 -0.077 -0.075 -0.075
+ -0.061 -0.058 -0.061 -0.057]
+break-even n (seed-mean costs): None

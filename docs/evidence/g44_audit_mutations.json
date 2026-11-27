@@ -1,0 +1,213 @@
+{
+ "mutations": {
+  "judge_none_contradicts": {
+   "exit": 1,
+   "failed": [
+    "discovery.missing_is_undetermined",
+    "discovery.gap_survives_as_undetermined",
+    "audit.zero_support_kept",
+    "audit.versions_pin_dependents",
+    "audit.ambiguous_path_undetermined"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "blocking_ignored": {
+   "exit": 1,
+   "failed": [
+    "discovery.gap_keeps_provisional_until_taught",
+    "audit.open_world_blocks_longer_alternative",
+    "audit.zero_support_conflict_blocks",
+    "audit.contradiction_suspends"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "review_noop": {
+   "exit": 1,
+   "failed": [
+    "audit.contradiction_suspends",
+    "audit.reacquired_as_v2",
+    "audit.example_correction_invalidates"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "superseded_not_pinned": {
+   "exit": 1,
+   "failed": [
+    "audit.versions_pin_dependents"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "cycle_offered": {
+   "exit": 1,
+   "failed": [
+    "audit.no_cycle_offered"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "first_proof_only": {
+   "exit": 1,
+   "failed": [
+    "audit.two_proofs_stored",
+    "audit.one_retraction_keeps_conclusion"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "tms_all_or_nothing": {
+   "exit": 1,
+   "failed": [
+    "audit.one_retraction_keeps_conclusion"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "expression_borrows": {
+   "exit": 1,
+   "failed": [
+    "fresh_process.p3_uses_capability",
+    "fresh_process.p5_sees_corrections",
+    "audit.missing_construction_reported"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "no_dangling_check": {
+   "exit": 1,
+   "failed": [
+    "audit.nested_validation"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "no_backup_fallback": {
+   "exit": 1,
+   "failed": [],
+   "verdict": "KILLED",
+   "crash": "packetlm.engine.StateError: no valid state: {'primary': 'checksum mismatch'}"
+  },
+  "ambiguity_off": {
+   "exit": 1,
+   "failed": [
+    "memory.ambiguity_abstains",
+    "audit.multiple_conclusions_ambiguous"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "library_off": {
+   "exit": 1,
+   "failed": [],
+   "verdict": "KILLED",
+   "crash": "KeyError: 'great'"
+  },
+  "zero_support_dropped": {
+   "exit": 1,
+   "failed": [
+    "audit.zero_support_kept"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "unanswered_lost": {
+   "exit": 1,
+   "failed": [
+    "discovery.silent_oracle_adopts_nothing"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "activation_overprunes": {
+   "exit": 1,
+   "failed": [],
+   "verdict": "KILLED",
+   "crash": "TypeError: 'NoneType' object is not subscriptable"
+  },
+  "open_world_off": {
+   "exit": 1,
+   "failed": [
+    "audit.zero_support_conflict_blocks",
+    "audit.scan_matches_bruteforce"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "prune_on_evidence_only": {
+   "exit": 1,
+   "failed": [
+    "audit.zero_support_conflict_blocks",
+    "audit.scan_matches_bruteforce"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "domain_too_narrow": {
+   "exit": 1,
+   "failed": [
+    "discovery.gap_survives_as_undetermined",
+    "discovery.gap_keeps_provisional_until_taught"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "dedupe_by_last_step": {
+   "exit": 1,
+   "failed": [
+    "discovery.gap_survives_as_undetermined",
+    "discovery.gap_keeps_provisional_until_taught",
+    "audit.open_world_blocks_longer_alternative",
+    "audit.scan_matches_bruteforce"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "no_requalify": {
+   "exit": 1,
+   "failed": [
+    "fresh_process.p4_correction_drops_derived",
+    "fresh_process.p5_sees_corrections",
+    "audit.retirement_requalifies"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "scan_short_horizon": {
+   "exit": 1,
+   "failed": [
+    "audit.open_world_blocks_longer_alternative",
+    "audit.scan_matches_bruteforce"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "deepen_past_ambiguity": {
+   "exit": 1,
+   "failed": [
+    "audit.deepen_stops_at_ambiguity"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "compose_skips_bit": {
+   "exit": 1,
+   "failed": [
+    "audit.compose_matches_naive",
+    "audit.ambiguous_path_undetermined"
+   ],
+   "verdict": "KILLED",
+   "crash": null
+  },
+  "compose_keeps_source": {
+   "exit": 1,
+   "failed": [],
+   "verdict": "KILLED",
+   "crash": "KeyError: 'x1'"
+  }
+ },
+ "killed": 24,
+ "total": 24
+}

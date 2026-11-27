@@ -1,0 +1,674 @@
+Here is the updated master roadmap for Grok. It preserves our original vision while incorporating what the overnight experiments have revealed.
+
+The priority is now to overcome the computational utility problem, expand the expressiveness of acquired reasoning, and ultimately develop a genuinely adaptive, non-transformer conversational intelligence.
+
+Updated PacketLM research roadmap
+
+G44–56
+
+Foundations and qualification
+
+Persistent engine, interactive acquisition, hierarchical reuse, longitudinal experiments.
+
+Established foundations; open qualifications remain
+
+G57–59
+
+Computational efficiency
+
+Selective activation, adaptive retention, positive learning amortization.
+
+CURRENT DEVELOPMENT FRONTIER
+
+G60–64
+
+Algorithmic intelligence
+
+Predicates, conditional reasoning, iteration, program synthesis and abstraction.
+
+G65–69
+
+Language intelligence
+
+Grounded vocabulary, compositional grammar, context, dialogue and expression.
+
+G70–74
+
+Adaptive learning
+
+Active discovery, learning regulation, acquired search strategies and plasticity.
+
+G75–79
+
+Cross-domain intelligence
+
+Structural transfer, analogy, planning and unfamiliar environments.
+
+G80–84
+
+Bounded recursive improvement
+
+Verified computational improvements, autonomous curriculum and capability evolution.
+
+G85–90
+
+Generalization qualification
+
+Frozen-source evaluation, independent controls and architectural assessment.
+
+Master execution directive for Grok
+
+PACKETLM — MASTER EVOLUTION ROADMAP II
+
+1. Mission and continuity
+
+Continue the existing PacketLM research program.
+
+Canonical repository:
+https://github.com/jacksonjp0311-gif/PacketLM
+
+Active development:
+https://github.com/jacksonjp0311-gif/PacketLM/pull/1
+
+Independent measurement framework:
+https://github.com/jacksonjp0311-gif/learning-amortization
+
+Last independently inspected checkpoint:
+d6cbcf3e0c7d6fb4c4b2afd09a6b4819e3142229
+
+Inspect the latest repository state before proceeding. Development may have advanced beyond this checkpoint.
+
+Do not restart the architecture.
+
+Preserve all historical experiments, acquired mechanisms, qualification receipts, negative results and research continuity.
+
+Our ultimate objective is to investigate and develop a lightweight, CPU-compatible, non-transformer computational intelligence capable of acquiring language, knowledge, reasoning algorithms and increasingly general computational capabilities through experience.
+
+The system must eventually be evaluated on whether it can improve its own learning effectiveness without requiring developers to implement every new ability.
+
+2. Current scientific position
+
+PacketLM has established prototype mechanisms for:
+
+* Persistent semantic memory.
+* Sparse binary geometric representation.
+* Learned linguistic constructions.
+* Interactive teaching.
+* Executable procedure acquisition.
+* Hierarchical capability reuse.
+* Evidence tracking and correction.
+* Active investigation.
+* Versioned capabilities.
+* Independent verification.
+* Longitudinal experimentation.
+
+At G56, the repository reports:
+
+* 230 regression checks passing.
+* 101 mutations detected.
+* 252 compositional tasks solved.
+* 248 qualified procedures.
+* 147 tasks using the acquired capability library.
+* Zero incorrect qualified procedures in the registered experiment.
+
+However, positive learning amortization remains unqualified.
+
+The continual learner consumed approximately 2.13 times the CPU cost of the empty-state learner on compositional tasks and 18 times on unrelated tasks.
+
+Task completion was not identical across all arms.
+
+On unrelated tasks, approximately 77% of continual CPU cost came from maintenance rechecks.
+
+These are research findings, not reasons to abandon the architecture.
+
+The immediate objective is to solve the computational utility problem without sacrificing acquired capability, correctness or adaptability.
+
+3. G57 — Selective computational activation
+
+Develop mechanisms that activate relevant knowledge rather than inspecting the entire accumulated state.
+
+Investigate:
+
+* Relation indexes.
+* Entity indexes.
+* Component indexes.
+* Dependency indexes.
+* Sparse geometric activation.
+* Incremental verification.
+* Evidence-gated rechecks.
+* Localized candidate generation.
+
+Account for newly introduced evidence, alternative paths, contradictions, retractions and capability replacement.
+
+An unchanged historical proof is not sufficient to guarantee that no new contradiction exists.
+
+Establish exactness against the exhaustive reference implementation.
+
+Measure total costs, including index construction and maintenance.
+
+Test scaling while increasing irrelevant knowledge independently of relevant knowledge.
+
+Target: computation increasingly proportional to the relevant dependency region rather than total accumulated state.
+
+4. G58 — Adaptive capability economics
+
+Develop an evidence-gated capability management mechanism.
+
+Investigate the expected future value of a retained capability:
+
+V(p) = expected future savings − expected future continuing costs.
+
+Include retrieval, verification, maintenance, execution and storage costs.
+
+Distinguish:
+
+* Active capabilities.
+* Dormant capabilities.
+* Provisional capabilities.
+* Suspended capabilities.
+* Archived capabilities.
+
+Do not permanently destroy acquired knowledge merely because it is currently unused.
+
+Investigate whether capability routing can prevent unrelated procedures from enlarging every search.
+
+Compare adaptive retention against static retention, primitive-only and empty-state controls.
+
+Preserve dependency integrity and recoverability.
+
+5. G59 — Learning amortization qualification
+
+Use the independent Learning Amortization framework without changing its metric to favor PacketLM.
+
+A_n = 1 − C_continual(n) / C_reference(n).
+
+Measure complete lifecycle costs.
+
+Evaluate at comparable achieved performance.
+
+Report task completion, qualification, censoring and uncertainty separately.
+
+Use compositional, unrelated and mixed curricula.
+
+Investigate break-even, marginal savings, tail amortization and novelty-stratified amortization.
+
+Primary proposed qualification:
+
+* Positive amortization on compositional tasks with a confidence interval excluding zero.
+* No material loss of semantic correctness or retention.
+* A substantial reduction in the unrelated-task utility penalty.
+* Reproduction across independent seeds and unfamiliar environments.
+
+Preregister exact numerical thresholds before measurement.
+
+Do not force a pass. Retain HOLD if the evidence does not support qualification.
+
+6. G60 — Expressive program representation
+
+Move beyond fixed relational sequences.
+
+Develop a bounded, typed executable program representation supporting:
+
+* Relational traversal.
+* Predicates.
+* Type constraints.
+* Variable binding.
+* Set operations.
+* Composition.
+* Conditional execution.
+
+Preserve compatibility with previously acquired procedures.
+
+Separate program representation from domain-specific knowledge.
+
+Do not implement a specialized solver for every new task.
+
+7. G61 — Conditional algorithm acquisition
+
+Investigate learning executable conditions from observations.
+
+Examples include selecting an ancestor according to its semantic type rather than following a fixed number of edges.
+
+Acquire conditions through generic search and evidence.
+
+Evaluate on unfamiliar graphs, variable-depth structures and distractor relationships.
+
+Compare against fixed-path learners.
+
+8. G62 — Bounded iteration and recursion
+
+Investigate acquiring iterative procedures and termination conditions.
+
+Support:
+
+* Bounded traversal.
+* Repeated operations.
+* Recursive composition.
+* Cycle detection.
+* Explicit termination.
+* Resource limits.
+
+Never permit unbounded execution.
+
+Test on unfamiliar graph sizes and depths.
+
+Determine whether acquired programs generalize beyond their training lengths.
+
+9. G63 — Program synthesis
+
+Develop generic acquisition of small executable algorithms from examples and constraints.
+
+Investigate:
+
+* Candidate generation.
+* Program equivalence.
+* Counterexample-guided refinement.
+* Type-directed synthesis.
+* Geometric candidate pruning.
+* Reuse of acquired subprograms.
+
+Use independent semantic oracles.
+
+Preserve ambiguity when multiple explanations remain possible.
+
+10. G64 — Hierarchical algorithmic abstraction
+
+Allow acquired algorithms to become primitives for acquiring more complex algorithms.
+
+Investigate abstraction across different program structures.
+
+Measure whether hierarchical reuse reduces search cost, teacher interactions and total computational expenditure.
+
+Compare against competitive synthesis systems without acquired libraries.
+
+Distinguish transferable abstraction from caching.
+
+11. G65 — Grounded vocabulary
+
+Develop acquired vocabulary connected to semantic entities, relationships, types and executable operations.
+
+Investigate lexical ambiguity, synonyms and unfamiliar words.
+
+The system should distinguish knowing a word from knowing what the word means computationally.
+
+12. G66 — Compositional grammar
+
+Move beyond fixed three-token constructions.
+
+Investigate learning variable-length constructions and semantic role assignments.
+
+Support nested expressions and compositional syntax.
+
+Evaluate unfamiliar sentence structures, role reversals and novel combinations.
+
+Do not use a pretrained transformer or external language model.
+
+13. G67 — Semantic operators
+
+Investigate acquired linguistic mechanisms for:
+
+* Negation.
+* Quantification.
+* Conjunction.
+* Disjunction.
+* Conditions.
+* Comparisons.
+* Temporal relationships.
+
+Distinguish absence of evidence from explicit negation.
+
+Connect linguistic operators to executable semantic operations.
+
+14. G68 — Dialogue and context
+
+Develop persistent conversational context.
+
+Investigate:
+
+* Reference resolution.
+* Pronouns.
+* Topic continuity.
+* Clarification.
+* Multi-turn reasoning.
+* Context-dependent interpretation.
+* Correction across dialogue turns.
+
+Avoid memorized conversation scripts masquerading as understanding.
+
+15. G69 — Conversational qualification
+
+Integrate language acquisition, semantic reasoning and expression into the canonical runtime.
+
+Demonstrate a human teaching PacketLM unfamiliar concepts and reasoning procedures through conversation.
+
+Freeze the engine during qualification.
+
+Evaluate interpretation, reasoning, expression, correction, retention and uncertainty handling.
+
+The goal is increasingly flexible acquired communication, not superficial fluency.
+
+16. G70 — Active learning regulation
+
+Develop mechanisms that identify what information would improve the learner.
+
+Investigate uncertainty, unresolved hypotheses, knowledge gaps and expected information gain.
+
+Select informative observations under explicit resource constraints.
+
+Measure teacher interactions saved relative to passive learning.
+
+17. G71 — Acquired search strategies
+
+Investigate whether PacketLM can learn how to search more effectively.
+
+The system should potentially acquire:
+
+* Candidate ordering.
+* Useful abstractions.
+* Search heuristics.
+* Routing strategies.
+* Relevant dependency patterns.
+
+Evaluate learned search strategies on unfamiliar tasks.
+
+Keep the independent verifier outside the learned policy.
+
+18. G72 — Adaptive plasticity
+
+Investigate how to preserve acquired knowledge without losing the ability to acquire unfamiliar capabilities.
+
+Measure:
+
+* Retention.
+* New-task acquisition.
+* Interference.
+* Negative transfer.
+* Recovery after distribution changes.
+* Computational adaptability.
+
+Compare fixed and adaptive learning policies.
+
+19. G73 — Autonomous curriculum selection
+
+Investigate whether the system can select useful learning tasks within a bounded environment.
+
+Prioritize tasks according to uncertainty reduction, expected transfer and computational value.
+
+No uncontrolled external actions.
+
+Use explicit objectives and resource budgets.
+
+20. G74 — Learning-to-learn qualification
+
+Test the stronger hypothesis that previous experience improves future acquisition effectiveness.
+
+Use frozen-source longitudinal experiments.
+
+Include fork-and-discard probes at successive experience checkpoints.
+
+Use unfamiliar tasks of controlled difficulty.
+
+Measure absolute acquisition costs, learning curves, novelty-stratified amortization and retention.
+
+Distinguish improvements caused by developer changes from improvements acquired by PacketLM.
+
+21. G75 — Structural analogy
+
+Investigate whether the learner can recognize equivalent computational structures expressed through different entities and vocabulary.
+
+Test relation renaming, graph transformations and unfamiliar semantic domains.
+
+Acquire mappings from evidence.
+
+22. G76 — Cross-domain transfer
+
+Evaluate whether acquired capabilities transfer across:
+
+* Spatial reasoning.
+* Temporal reasoning.
+* Classification.
+* Numerical relationships.
+* Mechanical systems.
+* Causal models.
+* Algorithmic environments.
+
+Use the same acquisition architecture.
+
+Measure positive and negative transfer.
+
+23. G77 — Model acquisition
+
+Investigate learning bounded predictive models of environments.
+
+Support observations, predictions, interventions and model revision.
+
+Distinguish correlation from causal evidence.
+
+Evaluate on unfamiliar controlled environments.
+
+24. G78 — Planning
+
+Investigate acquisition and composition of executable action sequences in simulated environments.
+
+Use explicit goals, constraints and verified transition models.
+
+Evaluate planning efficiency and adaptation when environmental conditions change.
+
+25. G79 — Generalization across environments
+
+Combine language, reasoning, model acquisition and planning.
+
+Evaluate on previously unseen combinations of tasks.
+
+Freeze the engine.
+
+Require meaningful transfer beyond vocabulary renaming and familiar graph templates.
+
+26. G80 — Verified internal improvement
+
+Investigate whether PacketLM can propose improvements to its acquired programs and computational policies.
+
+Every proposal must be isolated, reversible and independently evaluated.
+
+The candidate must not control its own verifier or acceptance criteria.
+
+27. G81 — Adaptive computational organization
+
+Investigate whether acquired experience can improve the organization of knowledge, routing and executable capabilities.
+
+Measure total lifecycle cost and correctness.
+
+Compare adaptive organization with static indexing and fixed policies.
+
+28. G82 — Recursive capability acquisition
+
+Investigate whether acquired learning procedures can themselves become reusable components of subsequent acquisition.
+
+Distinguish ordinary program composition from genuine improvement in learning algorithms.
+
+Require causal ablations and independent controls.
+
+29. G83 — Sustained adaptive evolution
+
+Conduct long-duration controlled learning experiments.
+
+Investigate whether improvements remain beneficial over successive task distributions.
+
+Measure stability, retention, plasticity, resource growth and cumulative learning efficiency.
+
+Preserve negative results.
+
+30. G84 — Bounded self-improvement qualification
+
+Evaluate the complete adaptive improvement loop.
+
+Require:
+
+* Frozen independent verifier.
+* Reversible changes.
+* Resource-bounded proposals.
+* Preserved historical capabilities.
+* Improvement on unfamiliar tasks.
+* No changes to permissions or acceptance criteria.
+* No uncontrolled source modification.
+
+Do not claim recursive self-improvement merely because developers repeatedly improve the engine.
+
+31. G85–G90 — Comprehensive intelligence assessment
+
+G85: Independent language acquisition evaluation.
+
+G86: Independent continual learning and retention evaluation.
+
+G87: Independent algorithm acquisition and reasoning evaluation.
+
+G88: Independent cross-domain transfer and adaptability evaluation.
+
+G89: Independent computational efficiency and learning-to-learn evaluation.
+
+G90: Integrated architectural assessment.
+
+Compare against competitive alternative architectures.
+
+Use sealed evaluation environments, independent reviewers and frozen-source experiments.
+
+Determine which capabilities have actually been established and which remain unproven.
+
+G90 is a comprehensive research assessment, not a predetermined declaration of AGI.
+
+32. Permanent architectural principles
+
+Maintain one canonical computational engine.
+
+Keep Bitwork central to the investigation while allowing competitive symbolic controls.
+
+The architecture should increasingly support:
+
+Experience → Semantic knowledge → Executable capability → Abstraction → Improved acquisition.
+
+Language should connect to meaning.
+
+Meaning should connect to computation.
+
+Computation should connect to evidence.
+
+Evidence should regulate durable acquisition.
+
+Acquired capabilities should be evaluated for their future computational utility.
+
+33. Continuous execution protocol
+
+Continue authorized research and implementation without waiting for approval after every routine development decision.
+
+For every milestone:
+
+1. Inspect the current checkpoint.
+2. Establish the baseline.
+3. Identify the scientific question.
+4. Preregister acceptance criteria.
+5. Implement the mechanism.
+6. Run historical regressions.
+7. Execute independent controls.
+8. Challenge the results.
+9. Preserve raw evidence.
+10. Record PASS, HOLD or FAIL.
+11. Commit verified changes.
+12. Continue justified development.
+
+Do not advance a qualification merely to increase the milestone number.
+
+Independent work may proceed while an earlier qualification remains on HOLD, provided dependencies and limitations are explicit.
+
+Do not repeatedly run expensive experiments without investigating the cause of failure.
+
+Checkpoint every completed arm and seed.
+
+Do not lose completed measurements because another experimental arm times out.
+
+34. Research infrastructure
+
+Maintain a cumulative research ledger and explicit milestone dependency map.
+
+Separate:
+
+* Development experiments.
+* Registered qualification experiments.
+* Independent verification.
+* Exploratory observations.
+* Failed hypotheses.
+
+Record source hashes, seeds, environment details, costs, acceptance criteria and raw results.
+
+Do not reuse consumed sealed seeds for fresh qualification.
+
+Preserve the pinned Learning Amortization instrument.
+
+Use local testing and avoid unnecessary GitHub Actions expenditure.
+
+Coordinate builder and verifier workloads so concurrent jobs do not invalidate timing experiments.
+
+35. Non-negotiable constraints
+
+No transformers.
+
+No external LLM runtime inside PacketLM.
+
+No pretrained language weights.
+
+No fabricated evidence.
+
+No hardcoded domain-specific solvers in qualified learning paths.
+
+No benchmark leakage.
+
+No weakened acceptance criteria.
+
+No disappearing historical regressions.
+
+No uncontrolled self-modification.
+
+No destructive repository operations.
+
+No unauthorized merges or spending.
+
+No external autonomous actions by PacketLM.
+
+No unsupported claims of consciousness or general intelligence.
+
+36. Final directive
+
+Begin from the latest actual repository checkpoint.
+
+Resolve the computational utility problem while preserving the existing learning architecture.
+
+Then progressively expand the expressiveness of acquired algorithms, language, adaptation and generalization.
+
+The roadmap is a scientific dependency structure, not a race toward G90.
+
+Prioritize the highest-value unresolved mechanism.
+
+Investigate unexpected behavior.
+
+Preserve failures.
+
+Retain verified improvements.
+
+Continue development within available resources and authorization.
+
+Our objective is not merely to build software that appears intelligent.
+
+It is to investigate whether intelligence can accumulate as acquired, executable, transferable computational capability.
+
+Build. Learn. Verify. Evolve. Continue.
+
+What I changed from the original roadmap
+
+The new roadmap places substantially greater emphasis on algorithm acquisition, computational economics and learning regulation. The earlier roadmap moved too quickly from simple relational reasoning toward generalization without establishing whether the architecture could scale economically.
+
+The new sequence addresses that weakness.
+
+G59 is our next major scientific gate. G69 is our major conversational gate. G74 is our learning-to-learn gate. G90 is our comprehensive assessment.
+
+These are proposed milestones, not predictions of when general intelligence will emerge. Grok should preserve the existing experimental numbering where conflicts arise and maintain a separate mapping to these research objectives.
+
+This roadmap is based on the last inspected G56 checkpoint; I have not verified subsequent commits or modified either repository.

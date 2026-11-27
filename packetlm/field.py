@@ -10,9 +10,11 @@ from __future__ import annotations
 import json
 import hashlib
 import os
+from functools import lru_cache
 from pathlib import Path
 from .packets import Packet, BITS
 
+@lru_cache(maxsize=None)  # pure function of its arguments
 def bits_for(token: str, role: int, nbits: int = 16) -> int:
     h = hashlib.sha256(f"{role}:{token}".encode()).digest()
     acc = 0

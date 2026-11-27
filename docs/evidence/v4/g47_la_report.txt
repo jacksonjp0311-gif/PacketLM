@@ -1,0 +1,33 @@
+== G47 K vs Q
+A_36 = -0.6192  [-0.6897, -0.5392] (95% paired bootstrap, S=3); delta-SE=0.0448; sign-flip p=0.25; geometric-mean form=-0.6194
+censored tasks: K=1, Q=61
+  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).
+  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).
+trend of per-task log ratio: -0.0256 per task  [-0.0267, -0.0248]
+A_n curve (seed-mean costs): [-0.099 -0.038 -0.019 -0.069 -0.039 -0.116 -0.062  0.032  0.007  0.001
+  0.002 -0.062 -0.06  -0.051 -0.081 -0.097 -0.101 -0.114 -0.101 -0.136
+ -0.163 -0.274 -0.305 -0.413 -0.338 -0.413 -0.379 -0.452 -0.452 -0.501
+ -0.453 -0.501 -0.511 -0.566 -0.568 -0.619]
+break-even n (seed-mean costs): None
+== G47 L vs M
+A_36 = -0.4512  [-0.4596, -0.4432] (95% paired bootstrap, S=3); delta-SE=0.0047; sign-flip p=0.25; geometric-mean form=-0.4512
+censored tasks: L=1, M=36
+  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).
+  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).
+trend of per-task log ratio: -0.0137 per task  [-0.0167, -0.0104]
+A_n curve (seed-mean costs): [-0.106 -0.072 -0.141 -0.202 -0.286 -0.302 -0.245 -0.2   -0.186 -0.193
+ -0.298 -0.278 -0.255 -0.232 -0.251 -0.265 -0.285 -0.27  -0.209 -0.161
+ -0.19  -0.322 -0.349 -0.441 -0.398 -0.344 -0.335 -0.404 -0.381 -0.434
+ -0.393 -0.394 -0.387 -0.44  -0.415 -0.451]
+break-even n (seed-mean costs): None
+== G47 K+maint vs Q+maint
+A_36 = -0.4680  [-0.5032, -0.4413] (95% paired bootstrap, S=3); delta-SE=0.0181; sign-flip p=0.25; geometric-mean form=-0.4678
+censored tasks: K+maint=1, Q+maint=61
+  note: continual-arm censoring makes the reported A an UPPER bound (optimistic).
+  note: reference-arm censoring makes the reported A a LOWER bound (pessimistic).
+trend of per-task log ratio: -0.0209 per task  [-0.0235, -0.0189]
+A_n curve (seed-mean costs): [-0.099 -0.038 -0.019 -0.069 -0.039 -0.103 -0.066  0.007 -0.01  -0.012
+ -0.011 -0.065 -0.063 -0.057 -0.078 -0.09  -0.093 -0.104 -0.096 -0.121
+ -0.143 -0.226 -0.254 -0.313 -0.273 -0.33  -0.312 -0.37  -0.375 -0.358
+ -0.335 -0.373 -0.388 -0.432 -0.443 -0.468]
+break-even n (seed-mean costs): None
