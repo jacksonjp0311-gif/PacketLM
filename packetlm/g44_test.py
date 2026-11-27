@@ -1059,6 +1059,16 @@ def g49_checks(tmp) -> dict:
     sg = eg.state["hypotheses"]["hq"]["scan"]
     out["h1_guard_gap_caps_at_provisional"] = sg["guard_gap"] > 0 and sg["blocking_n"] == 0 and sg["complete"] \
         and eg.version("hq")["status"] == "provisional"
+    # G55 (option 3): an observation-independent budget covering the component removes the gap
+    eg16, _ = run_lines("h1gap16.json", [f"fact {a_} {r_} {b_}" for a_, r_, b_ in
+                                         [("a", "r1", "c"), ("c", "r1", "c"), ("c", "r2", "c"), ("d", "r1", "e")]
+                                         + [("c", "k", f"v{i}") for i in range(8)]]
+                        + ["example hq: a -> c", "complete a", "example hq: c -> c", "complete c"], programs=True,
+                        closed_guards=16)
+    s16 = eg16.state["hypotheses"]["hq"]["scan"]
+    out["g55_budget_covers_component"] = s16["guard_gap"] == 0 and sg["guard_gap"] > 0 \
+        and len(eg16.state["hypotheses"]["hq"]["guards"]) > progs_max_guards() \
+        and (eg16.version("hq")["status"] == "qualified") == (s16["complete"] and s16["blocking_n"] == 0)
     # M2: a qualified version answers [provisional] outside the domain its scan decided
     e2_, r2_ = run_lines("m2.json", ["fact a r1 x", "fact b r1 y", "example g: a -> x", "example g: b -> y",
                                      "fact n1 r1 n2", "what is n1 g", "what is a g"], deepen=2)
@@ -1258,6 +1268,11 @@ def g49_checks(tmp) -> dict:
     ea = Engine(tmp / "fcret.json", deepen=2, retention="adaptive")
     out["fc_refused_with_adaptive_retention"] = ea.turn("complete b").startswith("complete is not supported")
     return out
+
+
+def progs_max_guards():
+    from . import programs
+    return programs.MAX_GUARDS
 
 
 def run() -> dict:

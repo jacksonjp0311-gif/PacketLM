@@ -893,3 +893,27 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   The 3.87× → 1.89× → 1.85× sequence is labelled descriptive across experiments (G54.md, here).
 - **Info:** B-contrast load sensitivity noted in G54.md.
 - **Tests:** g44 132/132, suite 220/220 (11/11), G45 18/18, mutations 91/91 (86 g44 + 5 g45).
+
+## 2026-11-27 03:50: G55 pre-registration (option 3: observation-independent guard budget)
+
+- **Interruption note.** At 03:49 the session was interrupted mid-chunk. The box was **not**
+  replaced. The working tree held the uncommitted G55 work on top of 045c61a, and origin matches
+  045c61a. Nothing registered was lost:
+  - G53 and G54 results are committed (050bebd, e9c88f1);
+  - the N1 fix, the G45 annotation and the verifier's t5 mutations are committed (045c61a);
+  - no registered G55 seed has been run.
+- **Mechanism.** `--closed-guards=N`: under `complete`, the full component pair space is used when
+  it has ≤ N pairs. N is a constant, so H1 soundness is unchanged. The default is 8 (the G52 rule).
+  Check `g55_budget_covers_component`; mutation `g55_budget_ignored`.
+- **Dev (not evidence).**
+  - F24/F72 were abandoned: 24 covers no component; 72 exhausts EXACT_BUDGET and takes minutes per
+    task.
+  - On the F8/F32/L32 dev, F32 completes the covered scans (gap 0) but finds ≥ 16 genuine
+    blockers per scan. Qualified is 0 for both F8 and F32. Scan combinations grow 50–100×.
+  - G52's 0/56 was over-determined: lifting the budget converts "capped" into "genuinely
+    ambiguous".
+- **Registered:** arms F8/F32/L32, seeds 561–567, rules Q/C/Adopt (docs/G55.md).
+  Predictions: Q fails, C likely fails, soundness holds.
+- **docs/G53.md:** the L1 decision text now labels G51's 3.87× as descriptive (not a registered
+  contrast).
+- **Tests:** g44 133/133, suite 221/221 (11/11), G45 18/18, mutations 92/92.

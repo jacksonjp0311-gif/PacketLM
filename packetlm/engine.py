@@ -342,9 +342,11 @@ def _write_atomic(path: Path, data: bytes) -> None:
 class Engine:
     def __init__(self, path, state=None, report=None, geometry=True, use_library=True, deepen=None, activation=True,
                  operators=False, retention="static", programs=False, answers=False, qualified_library=False,
-                 bounded=False, lean=False):
+                 bounded=False, lean=False, closed_guards=None):
         self.path = Path(path)
         self.qualified_library = qualified_library  # G51: library offers only qualified capabilities
+        # G55 (option 3): guard budget under `complete`, independent of the observations; None = MAX_GUARDS
+        self.closed_guards = progs.MAX_GUARDS if closed_guards is None else closed_guards
         self.lean = lean  # G54: exact per-call cost bounds (persistence, geometric recall)
         self.bounded = bounded  # G53: exact cost bounds (memoized scan images; no re-scan of settled versions)
         self.state = state if state is not None else empty_state()
@@ -1326,7 +1328,7 @@ class Engine:
                        if ("absent", f"absent{i}" if i else "absent") not in allp)
             allp.append(nil)
             gap = [g for g in allp if g not in guards]
-            if gap and len(allp) <= progs.MAX_GUARDS:
+            if gap and len(allp) <= self.closed_guards:
                 guards, gap = guards + gap, []
         dom = sorted(e for e in self.entities() if e in comp)
         ind = progs.Inducer(ctx, obs, dom, (rels, caps), guards, closed=self._closed())
@@ -2012,7 +2014,9 @@ def main(argv) -> int:
     for a in argv:
         if a.startswith("--deepen="):
             kw["deepen"] = int(a.split("=", 1)[1])
-    argv = [a for a in argv if a not in flags and not a.startswith("--deepen=")]
+        if a.startswith("--closed-guards="):
+            kw["closed_guards"] = int(a.split("=", 1)[1])
+    argv = [a for a in argv if a not in flags and not a.startswith(("--deepen=", "--closed-guards="))]
     eng = Engine.open(argv[0], **kw)
     replies = [eng.turn(line) for line in argv[1:]]
     eng.save()

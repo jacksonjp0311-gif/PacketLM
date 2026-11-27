@@ -1,0 +1,1000 @@
+{
+ "F32_9101.json": {
+  "caps": {
+   "dlsrvt": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "superseded",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "nqqbwd": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "cavnoq": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "nsnylp": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "xvwiie": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "rsormm": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "ulczhm": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "mqxadf": [
+    [
+     "provisional",
+     null
+    ]
+   ]
+  },
+  "scans": [
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 64,
+    "scanned": 2015384,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 124668,
+    "behaviours": 46155,
+    "blocking_behaviours": 1,
+    "universe": 71,
+    "blocking_n": 1,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 63,
+    "scanned": 4445995,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 196587,
+    "behaviours": 60132,
+    "blocking_behaviours": 45,
+    "universe": 71,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 39,
+    "guard_gap": 0,
+    "scanned": 202329103,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 291339,
+    "behaviours": 31394,
+    "blocking_behaviours": 62,
+    "universe": 39,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 40,
+    "guard_gap": 0,
+    "scanned": 226960654,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 149277,
+    "behaviours": 16407,
+    "blocking_behaviours": 126,
+    "universe": 40,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 65,
+    "scanned": 2015384,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 114606,
+    "behaviours": 40932,
+    "blocking_behaviours": 0,
+    "universe": 71,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 64,
+    "scanned": 4445995,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 170057,
+    "behaviours": 58091,
+    "blocking_behaviours": 71,
+    "universe": 71,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 39,
+    "guard_gap": 0,
+    "scanned": 202329103,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 291339,
+    "behaviours": 31394,
+    "blocking_behaviours": 62,
+    "universe": 39,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 40,
+    "guard_gap": 0,
+    "scanned": 226960654,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 154737,
+    "behaviours": 18268,
+    "blocking_behaviours": 163,
+    "universe": 40,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   }
+  ]
+ },
+ "F32_9102.json": {
+  "caps": {
+   "qddskc": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "meifli": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "kujaan": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "hrroxz": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "tgpwnl": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "bnrekv": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "bjtgch": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "bmihev": [
+    [
+     "provisional",
+     null
+    ]
+   ]
+  },
+  "scans": [
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 63,
+    "scanned": 3126100,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 167174,
+    "behaviours": 58342,
+    "blocking_behaviours": 0,
+    "universe": 71,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 65,
+    "scanned": 1807847,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 67289,
+    "behaviours": 23047,
+    "blocking_behaviours": 18,
+    "universe": 71,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 39,
+    "guard_gap": 0,
+    "scanned": 202329103,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 291339,
+    "behaviours": 31394,
+    "blocking_behaviours": 62,
+    "universe": 39,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 40,
+    "guard_gap": 0,
+    "scanned": 226960654,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 157467,
+    "behaviours": 19035,
+    "blocking_behaviours": 161,
+    "universe": 40,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 63,
+    "scanned": 3126100,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 196482,
+    "behaviours": 76291,
+    "blocking_behaviours": 1,
+    "universe": 71,
+    "blocking_n": 1,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 63,
+    "scanned": 4445995,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 136728,
+    "behaviours": 37758,
+    "blocking_behaviours": 51,
+    "universe": 71,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 39,
+    "guard_gap": 0,
+    "scanned": 202329103,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 291339,
+    "behaviours": 31394,
+    "blocking_behaviours": 62,
+    "universe": 39,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 40,
+    "guard_gap": 0,
+    "scanned": 226960654,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 153372,
+    "behaviours": 17844,
+    "blocking_behaviours": 134,
+    "universe": 40,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   }
+  ]
+ },
+ "F8_9101.json": {
+  "caps": {
+   "dlsrvt": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "superseded",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "nqqbwd": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "cavnoq": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "nsnylp": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "xvwiie": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "rsormm": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "ulczhm": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "mqxadf": [
+    [
+     "provisional",
+     null
+    ]
+   ]
+  },
+  "scans": [
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 64,
+    "scanned": 2015384,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 124668,
+    "behaviours": 46155,
+    "blocking_behaviours": 1,
+    "universe": 71,
+    "blocking_n": 1,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 63,
+    "scanned": 4445995,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 196587,
+    "behaviours": 60132,
+    "blocking_behaviours": 45,
+    "universe": 71,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 39,
+    "guard_gap": 25,
+    "scanned": 91353,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 2738,
+    "behaviours": 125,
+    "blocking_behaviours": 0,
+    "universe": 39,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 40,
+    "guard_gap": 28,
+    "scanned": 114286,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 5080,
+    "behaviours": 386,
+    "blocking_behaviours": 0,
+    "universe": 40,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 65,
+    "scanned": 2015384,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 114606,
+    "behaviours": 40932,
+    "blocking_behaviours": 0,
+    "universe": 71,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 64,
+    "scanned": 4445995,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 170057,
+    "behaviours": 58091,
+    "blocking_behaviours": 71,
+    "universe": 71,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 39,
+    "guard_gap": 25,
+    "scanned": 91353,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 2738,
+    "behaviours": 125,
+    "blocking_behaviours": 0,
+    "universe": 39,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 40,
+    "guard_gap": 28,
+    "scanned": 114286,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 5080,
+    "behaviours": 386,
+    "blocking_behaviours": 0,
+    "universe": 40,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   }
+  ]
+ },
+ "F8_9102.json": {
+  "caps": {
+   "qddskc": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "meifli": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "kujaan": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "hrroxz": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "tgpwnl": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "bnrekv": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "bjtgch": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "bmihev": [
+    [
+     "provisional",
+     null
+    ]
+   ]
+  },
+  "scans": [
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 63,
+    "scanned": 3126100,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 167174,
+    "behaviours": 58342,
+    "blocking_behaviours": 0,
+    "universe": 71,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 65,
+    "scanned": 1807847,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 67289,
+    "behaviours": 23047,
+    "blocking_behaviours": 18,
+    "universe": 71,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 39,
+    "guard_gap": 25,
+    "scanned": 91353,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 2738,
+    "behaviours": 125,
+    "blocking_behaviours": 0,
+    "universe": 39,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 40,
+    "guard_gap": 28,
+    "scanned": 114286,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 5080,
+    "behaviours": 366,
+    "blocking_behaviours": 0,
+    "universe": 40,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 63,
+    "scanned": 3126100,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 196482,
+    "behaviours": 76291,
+    "blocking_behaviours": 1,
+    "universe": 71,
+    "blocking_n": 1,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 63,
+    "scanned": 4445995,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 136728,
+    "behaviours": 37758,
+    "blocking_behaviours": 51,
+    "universe": 71,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 39,
+    "guard_gap": 25,
+    "scanned": 91353,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 2738,
+    "behaviours": 125,
+    "blocking_behaviours": 0,
+    "universe": 39,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 40,
+    "guard_gap": 28,
+    "scanned": 114286,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 5080,
+    "behaviours": 386,
+    "blocking_behaviours": 0,
+    "universe": 40,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   }
+  ]
+ },
+ "L32_9101.json": {
+  "caps": {
+   "dlsrvt": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "superseded",
+     null
+    ],
+    [
+     "superseded",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "nqqbwd": [
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "cavnoq": [
+    [
+     "suspended",
+     null
+    ]
+   ]
+  },
+  "scans": [
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 63,
+    "scanned": 3126100,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 166702,
+    "behaviours": 58263,
+    "blocking_behaviours": 10,
+    "universe": 71,
+    "blocking_n": 10,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 63,
+    "scanned": 4445995,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 196587,
+    "behaviours": 60132,
+    "blocking_behaviours": 45,
+    "universe": 71,
+    "blocking_n": 16,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   null
+  ]
+ },
+ "L32_9102.json": {
+  "caps": {
+   "qddskc": [
+    [
+     "suspended",
+     null
+    ]
+   ],
+   "meifli": [
+    [
+     "superseded",
+     null
+    ],
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ],
+   "kujaan": [
+    [
+     "suspended",
+     null
+    ],
+    [
+     "provisional",
+     null
+    ]
+   ]
+  },
+  "scans": [
+   null,
+   {
+    "horizon": 5,
+    "domain": 71,
+    "guard_gap": 65,
+    "scanned": 1229220,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 50308,
+    "behaviours": 16543,
+    "blocking_behaviours": 0,
+    "universe": 71,
+    "blocking_n": 0,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   },
+   {
+    "horizon": 5,
+    "domain": 39,
+    "guard_gap": 0,
+    "scanned": 91353,
+    "complete": true,
+    "method": "exact",
+    "budget": 4000000,
+    "combos": 2738,
+    "behaviours": 125,
+    "blocking_behaviours": 10,
+    "universe": 39,
+    "blocking_n": 10,
+    "compatible": 0,
+    "pruned_compatible": 0,
+    "assumption": "G48 open world: every non-contradicted program up to MAX_SIZE tokens is an alternative; qualified only if every program is decided (exact scan completes) with no blocker."
+   }
+  ]
+ }
+}

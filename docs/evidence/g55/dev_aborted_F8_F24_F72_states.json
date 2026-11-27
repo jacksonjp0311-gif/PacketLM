@@ -1,0 +1,413 @@
+{
+ "F24_9101.json": {
+  "dlsrvt": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 64,
+    "combos": 124668,
+    "complete": true,
+    "blocking_n": 1
+   }
+  },
+  "nqqbwd": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 63,
+    "combos": 196587,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "cavnoq": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 25,
+    "combos": 2738,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "nsnylp": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 28,
+    "combos": 5080,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "xvwiie": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 65,
+    "combos": 114606,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "rsormm": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 64,
+    "combos": 170057,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "ulczhm": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 25,
+    "combos": 2738,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "mqxadf": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 28,
+    "combos": 5080,
+    "complete": true,
+    "blocking_n": 0
+   }
+  }
+ },
+ "F24_9102.json": {
+  "qddskc": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 63,
+    "combos": 167174,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "meifli": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 65,
+    "combos": 67289,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "kujaan": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 25,
+    "combos": 2738,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "hrroxz": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 28,
+    "combos": 5080,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "tgpwnl": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 63,
+    "combos": 196482,
+    "complete": true,
+    "blocking_n": 1
+   }
+  },
+  "bnrekv": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 63,
+    "combos": 136728,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "bjtgch": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 25,
+    "combos": 2738,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "bmihev": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 28,
+    "combos": 5080,
+    "complete": true,
+    "blocking_n": 0
+   }
+  }
+ },
+ "F72_9101.json": {
+  "dlsrvt": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 0,
+    "combos": 4000001,
+    "complete": false,
+    "blocking_n": 0
+   }
+  },
+  "nqqbwd": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": null,
+    "combos": null,
+    "complete": null,
+    "blocking_n": null
+   }
+  }
+ },
+ "F72_9102.json": {
+  "qddskc": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 0,
+    "combos": 4000001,
+    "complete": false,
+    "blocking_n": 0
+   }
+  },
+  "meifli": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 0,
+    "combos": 4000001,
+    "complete": false,
+    "blocking_n": 0
+   }
+  },
+  "kujaan": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 0,
+    "combos": 291339,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "hrroxz": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 0,
+    "combos": 157467,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "tgpwnl": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 0,
+    "combos": 4000001,
+    "complete": false,
+    "blocking_n": 0
+   }
+  },
+  "bnrekv": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 0,
+    "combos": 4000001,
+    "complete": false,
+    "blocking_n": 0
+   }
+  },
+  "bjtgch": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 0,
+    "combos": 291339,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "bmihev": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 0,
+    "combos": 153372,
+    "complete": true,
+    "blocking_n": 16
+   }
+  }
+ },
+ "F8_9101.json": {
+  "dlsrvt": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 64,
+    "combos": 124668,
+    "complete": true,
+    "blocking_n": 1
+   }
+  },
+  "nqqbwd": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 63,
+    "combos": 196587,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "cavnoq": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 25,
+    "combos": 2738,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "nsnylp": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 28,
+    "combos": 5080,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "xvwiie": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 65,
+    "combos": 114606,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "rsormm": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 64,
+    "combos": 170057,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "ulczhm": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 25,
+    "combos": 2738,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "mqxadf": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 28,
+    "combos": 5080,
+    "complete": true,
+    "blocking_n": 0
+   }
+  }
+ },
+ "F8_9102.json": {
+  "qddskc": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 63,
+    "combos": 167174,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "meifli": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 65,
+    "combos": 67289,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "kujaan": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 25,
+    "combos": 2738,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "hrroxz": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 28,
+    "combos": 5080,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "tgpwnl": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 63,
+    "combos": 196482,
+    "complete": true,
+    "blocking_n": 1
+   }
+  },
+  "bnrekv": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 63,
+    "combos": 136728,
+    "complete": true,
+    "blocking_n": 16
+   }
+  },
+  "bjtgch": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 25,
+    "combos": 2738,
+    "complete": true,
+    "blocking_n": 0
+   }
+  },
+  "bmihev": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 28,
+    "combos": 5080,
+    "complete": true,
+    "blocking_n": 0
+   }
+  }
+ },
+ "L72_9101.json": {
+  "dlsrvt": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": 0,
+    "combos": 4000001,
+    "complete": false,
+    "blocking_n": 0
+   }
+  },
+  "nqqbwd": {
+   "status": "provisional",
+   "scan": {
+    "guard_gap": null,
+    "combos": null,
+    "complete": null,
+    "blocking_n": null
+   }
+  }
+ },
+ "L72_9102.json": {}
+}

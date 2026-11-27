@@ -103,6 +103,7 @@ MUTATIONS = {
     "g54_fast_validate_skips_cycles": ('                visit(f"cap:{name}@{ver[\'v\']}", set())\n    except StateError:', '                pass\n    except StateError:'),
     "g54_lean_decode_wrong_role": ('            idx["decode"] = {pack(bits_for(t, 2)).bits: t for t in idx["names"]}', '            idx["decode"] = {pack(bits_for(t, 1)).bits: t for t in idx["names"]}'),
     "n1_no_candidate_keeps_qualified": ('            if cur and cur["status"] == "qualified":\n                self._set_status(name, cur["v"], "provisional",', '            if cur and cur["status"] == "qualified" and reps:\n                self._set_status(name, cur["v"], "provisional",'),
+    "g55_budget_ignored": ('            if gap and len(allp) <= self.closed_guards:', '            if gap and len(allp) <= progs.MAX_GUARDS:'),
     "scan_short_horizon": ('        horizon = self.deepen if (max_len is None and self.deepen) else searched', '        horizon = searched'),
     "deepen_past_ambiguity": ('                if any(h["status"] == "supported" for h in live):', '                if sum(h["status"] == "supported" for h in live) == 1:'),
     "compose_skips_bit": ('            acc |= b_rows[low.bit_length() - 1]\n            row ^= low', '            acc |= b_rows[low.bit_length() - 1]\n            row ^= low\n            row &= row - 1', "geom.py"),
