@@ -101,7 +101,14 @@ def censoring(raw, seeds, cont, base):
         "upper bound (only the learner is censored)" if not b else "undetermined (both censored)"
     n = sum(len(raw[f"{s}:{base.replace('+maint', '')}"]["tasks"]) for s in seeds)
     matched = A(raw, seeds, cont.replace("+maint", ""), base.replace("+maint", ""), sel=lambda s, i: (s, i) not in c and (s, i) not in b)
+    rec = A(raw, seeds, cont.replace("+maint", ""), base.replace("+maint", ""))
+    # the censoring interval (instrument Prop. 9): a censored task's cost to solve is at least its recorded
+    # cost, so censoring only in the reference can only raise A (interval [recorded, 1]); only in the
+    # learner, only lower it ([-inf, recorded]); in both, the sign is not determined by the data
+    interval = [rec[0], 1.0] if c == set() and b else [float("-inf"), rec[0]] if b == set() and c else \
+        [rec[0], rec[0]] if not c and not b else None
     return {"censored_cont": len(c), "censored_base": len(b), "tasks": n, "recorded_A_is": direction,
+            "A_recorded_task_only": rec, "censoring_interval": interval,
             "matched_subset_tasks": n - len(c | b), "A_matched_task_only": matched}
 
 

@@ -143,6 +143,15 @@ def gate(q):
                                         "Q4a_comp_replicates", "Q4b_mixed_positive"))
     out["verdict"] = "PASS" if out["PASS"] else "HOLD"
     out["switch_rule_triggered"] = not out["PASS"]  # docs/G59.md §8 (James, 08:26)
+    # per search-depth stratum (docs/G59.md §6c): qualified positive iff the lower CI > 0; deepest-first
+    # holds iff, in comp, the deepest stratum has the highest point A (and, if any stratum qualifies,
+    # the deepest is among those that do)
+    st = {c: q[c]["analyses"]["strata_B_depth"] for c in q if c != "unrel"}
+    out["strata_qualified"] = {c: {k: v["A"][1][0] > 0 for k, v in d.items()} for c, d in st.items()}
+    cs = st["comp"]
+    deep = max(cs, key=int)
+    anyq = [k for k, v in out["strata_qualified"]["comp"].items() if v]
+    out["deepest_first_comp"] = all(cs[deep]["A"][0] >= v["A"][0] for v in cs.values()) and (not anyq or deep in anyq)
     L = q["long"]["analyses"]["parsed"]["Ck||Bk"]
     a, b = L["A"], L["beta"]
     out["accumulation"] = {"A_final_task_only": a, "beta": b,
@@ -173,7 +182,7 @@ def main(argv):
     jobs = [(c, s, a, str(OUT)) for c in only for s in seeds[c] for a in arms[c]]
     jobs.sort(key=lambda j: (j[0] != "long", j[2][0] not in ("C", "P")))  # long jobs first
     res = []
-    with Pool(int(os.environ.get("G59_WORKERS", "7"))) as pool:
+    with Pool(int(os.environ.get("G59_WORKERS", "4"))) as pool:
         for r in pool.imap_unordered(job, jobs):
             res.append(r)
             with open(OUT / "progress.jsonl", "a") as fh:

@@ -1625,6 +1625,7 @@ class Engine:
                 new = [x for x in itertools.islice(pos, X["npos"], None)]
                 X["ents"].update(new)
             else:
+                memo.counts["g58_review_pos_changed"] += 1
                 cur = set(pos)
                 new, X["ents"] = cur ^ X["ents"], cur
             for x in new:
