@@ -1763,6 +1763,30 @@ def g57b_checks(tmp: Path) -> dict:
     guarded("g57b_recall_candidates_superset_real_codes", lambda: candidates(False))
     guarded("g57b_recall_candidates_superset_dense_codes", lambda: candidates(True))
 
+    def candidate_bound_witness():
+        # the bound's tight case: a passing packet of exactly SMALL_PACKET bits whose codes each
+        # share only 2 bits with b_s (and 14 of its relation code with b_r) is a candidate
+        from . import engine as E
+        real = E.bits_for
+        m = lambda bits: sum(1 << b for b in bits)  # noqa: E731
+        codes = {("S", 0): m(range(100, 116)), ("R", 1): m(range(0, 16)),
+                 ("A", 0): m([100, 101] + list(range(200, 205)) + list(range(300, 309))),
+                 ("R2", 1): m(list(range(0, 14)) + [104, 105]),
+                 ("B", 2): m([102, 103] + list(range(200, 205)) + list(range(400, 409)))}
+        E.bits_for = lambda tok, role: codes.get((tok, role)) or real(tok, role)
+        try:
+            a, _ = eng_pair("wit")
+            a.tell("A", "R2", "B")
+            a.tell("u", "v", "w")
+            a._idx()
+            p, q = a.memo.packet_of(("A", "R2", "B")), codes[("S", 0)] ^ codes[("R", 1)]
+            passes = 2 * (q & p).bit_count() > p.bit_count()
+            return p.bit_count() == SMALL_PACKET and passes and ("A", "R2", "B") in a.memo.recall_candidates("S", "R") \
+                and ("A", "R2", "B") not in a.memo.ix["small"]
+        finally:
+            E.bits_for = real
+    guarded("g57b_recall_candidate_bound_tight_case", candidate_bound_witness)
+
     def index_equal():
         # after random tells, supports and removals the persistent index equals a fresh build,
         # relations() and _find equal the unindexed engine's
@@ -1771,6 +1795,10 @@ def g57b_checks(tmp: Path) -> dict:
         ents, rels = [f"d{i}" for i in range(15)], ["p", "q", "r"]
         for step in range(150):
             x, r_, y = rng.choice(ents), rng.choice(rels), rng.choice(ents)
+            if rng.random() < 0.2:  # derived first: its relation becomes told only when told later
+                r_ = rng.choice(["dz", "dy"])
+                for e in (a, b):
+                    e.tell(x, r_, y, source="derive", program="cap:dd@1")
             for e in (a, b):
                 e.tell(x, r_, y)
             if rng.random() < 0.1:
@@ -1846,7 +1874,10 @@ def g57b_checks(tmp: Path) -> dict:
         t = a.memo.scope["touched"]
         good = _valid_scoped(a.state, t, a.memo.ix["byid"])
         t[0]["supports"] = []
-        return good and len(t) == 1 and not _valid_scoped(a.state, t, a.memo.ix["byid"])
+        broken = not _valid_scoped(a.state, t, a.memo.ix["byid"])
+        t[0]["supports"] = [{"kind": "derived", "source": "x", "turn": 1, "premises": ["no such fact"], "program": None}]
+        dangling = not _valid_scoped(a.state, t, a.memo.ix["byid"])
+        return good and len(t) == 1 and broken and dangling
     guarded("g57b_scoped_validation_checks_touched", scoped_rejects_touched)
 
     def dom_cache_content():

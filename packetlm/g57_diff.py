@@ -129,6 +129,14 @@ SCENARIOS = [
      ["investigate zz"], ["what is d zz", "what is a zz"]],
     # an entity unknown at the first ask becomes known; a fact appears at a cached recall
     [CHAIN, ZZ, ["what is q zz", "what is q p"], ["fact q p a"], ["what is q zz", "what is q p"]],
+    # G57b: a negative statement at a known entity outside the candidate's domain (sparse tables)
+    [CHAIN + ["fact x9 q y9", "fact a q b", "fact b q c"], ZZ, ["example zz: x9 -> !none"],
+     ["what is a zz", "what is x9 zz", "what is d zz"], ["investigate zz"], ["what is e zz"]],
+    # G57b: in one call, an entity loses all its facts and is told again (known to the reference's
+    # entity set from its first use: growth must still re-check the region)
+    # (o8 is only ever an object, so the retraction itself does not grow it)
+    [CHAIN, ZZ, ["what is a zz"], ["fact w8 q o8"], ["fact w8 q v8", "retract w8 q o8", "fact o8 p a", "what is a zz"],
+     ["what is o8 zz", "what is a zz"]],
 ]
 
 
@@ -151,8 +159,11 @@ def run(n=60, seed=0, mutate=None, ref_flags=None, new_flags=None, full_every=No
                 stats["replies"] += len(c)
                 stats["readonly_calls"] += bool(b.get("readonly"))
                 stats["gated_answers"] += b["stats"].get("gated", 0)
-                if a["replies"] != b["replies"] or json.dumps(ref.cur.state) != json.dumps(ind.cur.state):
-                    stats["mismatch"] = {"session": k, "lines": c, "ref": a["replies"], "indexed": b["replies"]}
+                # G57b mode (both engines indexed): the engines' work counters must match too
+                same_stats = not (ref_flags and "--indexed" in ref_flags) or a["stats"] == b["stats"]
+                if a["replies"] != b["replies"] or json.dumps(ref.cur.state) != json.dumps(ind.cur.state) or not same_stats:
+                    stats["mismatch"] = {"session": k, "lines": c, "ref": a["replies"], "indexed": b["replies"],
+                                         "stats_equal": same_stats}
                     return {**stats, "ok": False}
             if ind.cur is not None and ind.cur.memo is not None:
                 for k, v in ind.cur.memo.counts.items():
