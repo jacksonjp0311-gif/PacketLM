@@ -1,7 +1,6 @@
-"""Causal speech.
+"""The relation comes from the store.
 
-The reached node becomes the object.
-A different graph must speak a different sentence.
+A missing name abstains.
 Not a general mind.
 """
 
@@ -63,10 +62,10 @@ def express(construction, fact):
     roles = {"s": s, "r": construction["word"], "o": o}
     return " ".join(roles[role] for role in construction["order"])
 
-def speak(construction, start, reached):
-    if len(reached) != 1:
-        return None
-    fact = (NAMES[start], "part", NAMES[reached[0]])
+def speak(construction, start, reached, out_rel):
+    if len(reached) != 1 or start not in NAMES or reached[0] not in NAMES:
+        return None, None
+    fact = (NAMES[start], out_rel, NAMES[reached[0]])
     return express(construction, fact), fact
 
 def run() -> dict:
@@ -84,25 +83,23 @@ def run() -> dict:
     loaded = load(STATE)
     part = induce([("ada part box", ("ada", "part", "box")), ("ned part key", ("ned", "part", "key"))])
     seq = tuple(loaded.get("seq", []))
-    graphs = {
-        10: [(10, "in", 11), (11, "in", 12)],
-        20: [(20, "in", 21), (21, "in", 22)],
-    }
+    out_rel = loaded.get("out")
+    graphs = {10: [(10, "in", 11), (11, "in", 12)], 20: [(20, "in", 21), (21, "in", 22)]}
     spoken = {}
     for start, facts in graphs.items():
         base = {"in": rows_from(facts, 23, "in"), "near": rows_from(facts, 23, "near")}
         reached = bits(compile_seq(base, seq)[start]) if len(seq) == 2 else []
-        said, fact = speak(part, start, reached) or (None, None)
-        spoken[start] = {"said": said, "fact": fact, "reached": reached}
+        said, fact = speak(part, start, reached, out_rel)
+        spoken[start] = {"said": said, "fact": fact}
     checks = {
         "incomplete_withheld": withheld,
-        "qualified": qualified,
-        "from_result": spoken[10]["said"] == "alpha part gamma",
+        "from_store": out_rel == "part" and spoken[10]["said"] == "alpha part gamma",
         "changes": spoken[20]["said"] == "delta part omega",
+        "unknown_name": speak(part, 99, [12], out_rel) == (None, None),
         "roundtrip": select([part], spoken[10]["said"]) == spoken[10]["fact"],
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "spoken": spoken, "failed": failed, "claim": "sentence comes from the reached node; a different graph speaks differently"}
+    receipt = {**checks, "failed": failed, "claim": "relation comes from the store; a missing name abstains"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/geom_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
