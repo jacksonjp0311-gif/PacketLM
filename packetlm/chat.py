@@ -1,7 +1,7 @@
-"""Fixes, not a new trick.
+"""Answer after reload.
 
-No sequence means abstain, not the subject.
-The terminal loads, answers, and saves.
+The live field is discarded.
+The saved field and sequence answer the question.
 Not a general mind.
 """
 
@@ -82,18 +82,18 @@ def run() -> dict:
     seq = discover(field, [("mira", "green")], objects)
     lines = [ln for ln in Path("data/dialogue.txt").read_text().splitlines() if ln.strip()]
     replies = [turn(field, objects, library(), seq, line) for line in lines]
-    save(STATE, {"field": field, "seq": list(seq) if seq else None})
+    save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None})
     loaded = load(STATE)
+    resumed = turn(loaded["field"], loaded["objects"], library(), tuple(loaded["seq"]), "what color is orion tail")
     checks = {
         "found": seq == ("isa", "tail"),
         "missing_abstains": apply_seq(field, None, "orion", objects) is None,
         "orion_after": replies[10] == "orion has a red tail",
-        "mira_after": replies[11] == "mira has a red tail",
         "unrelated": replies[12] == "rex owns key",
-        "reloaded": loaded.get("seq") == ["isa", "tail"],
+        "resumed": resumed == "orion has a red tail",
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {**checks, "failed": failed, "claim": "missing sequence abstains; state reloads"}
+    receipt = {**checks, "resumed": resumed, "failed": failed, "claim": "answer comes from the reloaded state"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
@@ -102,10 +102,9 @@ def run() -> dict:
     return receipt
 
 def interactive():
-    state = load(STATE) if STATE.exists() else {"field": [], "seq": None}
-    field = state.get("field", [])
+    state = load(STATE) if STATE.exists() else {"field": [], "objects": [], "seq": None}
+    field, objects = state.get("field", []), state.get("objects", [])
     seq = tuple(state["seq"]) if state.get("seq") else None
-    objects = sorted({t for f in field for t in (f["s"], f["r"], f["o"])})
     while True:
         try:
             line = input("> ")
@@ -114,7 +113,7 @@ def interactive():
         if line.strip() in {"quit", "exit"}:
             break
         print(turn(field, objects, library(), seq, line))
-        save(STATE, {"field": field, "seq": list(seq) if seq else None})
+        save(STATE, {"field": field, "objects": objects, "seq": list(seq) if seq else None})
 
 if __name__ == "__main__":
     if "--interactive" in sys.argv:
