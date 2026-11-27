@@ -1351,8 +1351,11 @@ class Engine:
             result["result"] = "ambiguous" if reps else "none"
             result["supported"] = [h["seq"] for h in live]
             cur = self.version(name)
-            if cur and cur["status"] == "qualified" and reps:
-                self._set_status(name, cur["v"], "provisional", "several supported programs")
+            # verification N1 of 050bebd: a re-acquisition that does not return the current version
+            # (none found, or several) leaves it without a scan on current knowledge: not qualified
+            if cur and cur["status"] == "qualified":
+                self._set_status(name, cur["v"], "provisional",
+                                 "several supported programs" if reps else "re-acquisition found no candidate")
             return result
         cand = reps[0]
         cand_pred = {e: progs.run(ctx, cand, e) for e in ind.domain}

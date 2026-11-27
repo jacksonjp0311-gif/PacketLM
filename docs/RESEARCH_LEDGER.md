@@ -877,3 +877,19 @@ fronts, and no re-scan of settled versions when the basis is unchanged.
   comp ratio to the empty-state learner 3.87× (G51) → 1.89× (G53) → 1.85× (G54).
 - verify-050bebd (1f37c4f) judged the t5 restatement legitimate; its N1/Low items are handled
   in the next entry.
+
+## 2026-11-27 03:25: verify-050bebd response (N1, Lows)
+
+- Verdict: the G45 t5 restatement is legitimate (genuine blockers, a fresh learner agrees, values
+  byte-identical, 5 retention-loss mutations all fail t5). t5 is unchanged.
+- **N1 (Medium, programs mode), fixed.** A re-acquisition (after growth or a retraction) that does
+  not return the current version (no candidate, or several) now caps a qualified version at
+  provisional ("re-acquisition found no candidate"). The verifier's repro now ends
+  `e3 kk e4 [no construction for kk] [provisional]`. Check `n1_no_candidate_caps_at_provisional`;
+  mutation `n1_no_candidate_keeps_qualified`. No registered number is affected (programs mode).
+- **The verifier's 5 t5 mutations** are in the suite (`G45_MUTATIONS`, run against g45_test,
+  killed only by a `t5_retention` failure): 5/5 killed.
+- **Low:** docs/G45.md criterion 5 annotated with the G53 restatement and the strict result.
+  The 3.87× → 1.89× → 1.85× sequence is labelled descriptive across experiments (G54.md, here).
+- **Info:** B-contrast load sensitivity noted in G54.md.
+- **Tests:** g44 132/132, suite 220/220 (11/11), G45 18/18, mutations 91/91 (86 g44 + 5 g45).

@@ -102,11 +102,46 @@ MUTATIONS = {
     "g54_fast_validate_skips_premises": ('                if q not in ids:\n                    return False', '                pass'),
     "g54_fast_validate_skips_cycles": ('                visit(f"cap:{name}@{ver[\'v\']}", set())\n    except StateError:', '                pass\n    except StateError:'),
     "g54_lean_decode_wrong_role": ('            idx["decode"] = {pack(bits_for(t, 2)).bits: t for t in idx["names"]}', '            idx["decode"] = {pack(bits_for(t, 1)).bits: t for t in idx["names"]}'),
+    "n1_no_candidate_keeps_qualified": ('            if cur and cur["status"] == "qualified":\n                self._set_status(name, cur["v"], "provisional",', '            if cur and cur["status"] == "qualified" and reps:\n                self._set_status(name, cur["v"], "provisional",'),
     "scan_short_horizon": ('        horizon = self.deepen if (max_len is None and self.deepen) else searched', '        horizon = searched'),
     "deepen_past_ambiguity": ('                if any(h["status"] == "supported" for h in live):', '                if sum(h["status"] == "supported" for h in live) == 1:'),
     "compose_skips_bit": ('            acc |= b_rows[low.bit_length() - 1]\n            row ^= low', '            acc |= b_rows[low.bit_length() - 1]\n            row ^= low\n            row &= row - 1', "geom.py"),
     "compose_keeps_source": ('            return g.compose([row], self._rows(token))[0]', '            return row | g.compose([row], self._rows(token))[0]'),
 }
+
+
+# verify-050bebd: the verifier's mutations of the restated G45 t5 (retention). They are run against
+# packetlm.g45_test; killed only if a `t5_retention` check fails (docs/verification/tools_050bebd).
+_SAY = 'return text + (" [provisional]" if got.get("provisional") else "")'
+_FLUSH = ('                self.stats["grown_requalified"] = self.stats.get("grown_requalified", 0) + 1\n'
+          '                self.acquire(n)')
+G45_MUTATIONS = {
+    "t5_value_changed_when_provisional": (_SAY, 'return (text.replace(str(got["value"]), str(got["value"])[::-1]) + " [provisional]") if got.get("provisional") else text'),
+    "t5_value_lost_when_provisional": (_SAY, 'return "unknown" if got.get("provisional") else text'),
+    "t5_demoted_without_rescan": (_FLUSH, '                self.stats["grown_requalified"] = self.stats.get("grown_requalified", 0) + 1\n'
+                                          '                self._set_status(n, ver["v"], "provisional", "requalified")'),
+    "t5_rescan_adopts_blocker": (_FLUSH, _FLUSH + '\n                _b = self.state["hypotheses"].get(n, {}).get("blocking") or []\n'
+                                         '                if _b:\n                    self.version(n)["seq"] = list(_b[-1])'),
+    "t5_value_changed_qualified": (_SAY, 'return text.replace(str(got["value"]), str(got["value"])[::-1]) if (not got.get("provisional") and self.state["turn"] > 590) else text + (" [provisional]" if got.get("provisional") else "")'),
+}
+
+
+def _run_g45_mutation(old, new) -> dict:
+    with tempfile.TemporaryDirectory() as d:
+        dst = Path(d) / "repo"
+        shutil.copytree(ROOT / "packetlm", dst / "packetlm", ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copytree(ROOT / "data", dst / "data")
+        eng = dst / "packetlm" / "engine.py"
+        src = eng.read_text()
+        if src.count(old) != 1:
+            return {"error": "mutation site not found exactly once"}
+        eng.write_text(src.replace(old, new))
+        p = subprocess.run([sys.executable, "-m", "packetlm.g45_test"], cwd=dst, capture_output=True, text=True, timeout=900)
+        rec = dst / "artifacts" / "g45_receipt.json"
+        failed = json.loads(rec.read_text())["failed"] if rec.exists() else []
+        t5 = [f for f in failed if f.endswith("t5_retention")]
+        return {"exit": p.returncode, "failed": failed, "verdict": "KILLED" if t5 else "SURVIVED",
+                "crash": p.stderr.strip().splitlines()[-1][:200] if p.returncode and not failed else None}
 
 
 def _baseline() -> list:
@@ -144,6 +179,8 @@ def run() -> dict:
             results[name] = {"exit": p.returncode, "failed": failed,
                              "verdict": "KILLED" if p.returncode else "SURVIVED",
                              "crash": p.stderr.strip().splitlines()[-1][:200] if p.returncode and not failed else None}
+    for name, (old, new) in G45_MUTATIONS.items():
+        results["g45." + name] = _run_g45_mutation(old, new) if not base_failed else {"error": "baseline fails"}
     out = {"baseline_failed": base_failed, "mutations": results, "killed": sum(r.get("verdict") == "KILLED" for r in results.values()),
            "total": len(results)}
     Path("artifacts").mkdir(exist_ok=True)

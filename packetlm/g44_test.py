@@ -1070,6 +1070,14 @@ def g49_checks(tmp) -> dict:
     es1, rs1 = run_lines("s1.json", s1 + ["fact u r3 z", "what is m hq", "fact m r3 z", "what is m hq"], programs=True)
     out["s1_growth_in_region_requalifies"] = "[provisional]" not in rs1[8] and "[provisional]" not in rs1[10] \
         and "[provisional]" in rs1[12] and es1.stats.get("grown_requalified") == 1
+    # N1 of 050bebd: a re-acquisition after a retraction that finds no candidate caps the version
+    n1 = ["fact e0 ra e1", "fact e0 ra e2", "fact e1 k cb", "fact e1 ra e2", "fact e1 rb e1", "fact e2 k ca",
+          "fact e2 rb e4", "fact e3 ra e2", "fact e3 ra e4", "example kk: e4 -> e4", "complete e4", "example kk: e2 -> e2",
+          "complete e2", "example kk: e1 -> e1", "complete e1", "example kk: e3 -> e4", "complete e3",
+          "example kk: e0 -> e0", "complete e0", "show kk", "fact e3 ra n2", "show kk", "what is e3 kk"]
+    en1, rn1 = run_lines("n1.json", n1, programs=True)
+    out["n1_no_candidate_caps_at_provisional"] = " qualified;" in rn1[19] and en1.state["hypotheses"]["kk"].get("candidate") is None \
+        and " provisional;" in rn1[21] and rn1[22].endswith("[provisional]")
     # L1 of cdb4828: qualified only on qualified dependencies; a demoted dependency demotes dependents
     el1 = Engine(tmp / "l1dep.json", deepen=2)
     for t in [("p1", "s", "v1"), ("p2", "s", "v2"), ("v1", "t", "w1"), ("v2", "t", "w2")]:
