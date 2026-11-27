@@ -1,8 +1,7 @@
-"""Premise, not just a fact.
+"""Two dependents.
 
-Rex is a dax. Dax tails are green.
-Correct the dax. Rex's answer must change.
-Rex's own fact was never stored.
+Orion and Mira both follow the dax.
+Rex's ownership does not move.
 Not a general mind.
 """
 
@@ -53,15 +52,15 @@ def run() -> dict:
     lines = [ln for ln in Path("data/dialogue.txt").read_text().splitlines() if ln.strip()]
     replies = run_lines(lines)
     checks = {
-        "owns_before": replies[1] == "rex owns map",
-        "owns_after": replies[3] == "rex owns key",
-        "derived_before": replies[6] == "orion has a green tail",
-        "premise": replies[7] == "corrected dax tail red",
-        "derived_after": replies[8] == "orion has a red tail",
-        "not_stored": not any(f["s"] == "orion" and f["r"] == "tail" for f in load(STATE)),
+        "orion_before": replies[7] == "orion has a green tail",
+        "mira_before": replies[8] == "mira has a green tail",
+        "premise": replies[9] == "corrected dax tail red",
+        "orion_after": replies[10] == "orion has a red tail",
+        "mira_after": replies[11] == "mira has a red tail",
+        "unrelated": replies[12] == "rex owns key",
     }
     failed = [k for k, v in checks.items() if not v]
-    receipt = {"replies": replies, **checks, "failed": failed, "claim": "premise correction changes a derived answer"}
+    receipt = {"replies": replies, **checks, "failed": failed, "claim": "two dependents move; unrelated fact stays"}
     Path("artifacts").mkdir(exist_ok=True)
     Path("artifacts/chat_receipt.json").write_text(json.dumps(receipt, indent=2))
     print(json.dumps(receipt, indent=2))
