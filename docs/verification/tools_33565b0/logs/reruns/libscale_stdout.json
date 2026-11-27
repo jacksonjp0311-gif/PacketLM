@@ -1,0 +1,269 @@
+{
+ "started": "2026-11-27T10:14:05-0500",
+ "finished": "2026-11-27T10:15:46-0500",
+ "seeds": [
+  261,
+  264
+ ],
+ "sizes": [
+  0,
+  64,
+  256,
+  1024
+ ],
+ "tasks": 10,
+ "provenance_start": {
+  "head": "3cc897fba4dacdacc27ea9a8f8f0da34c1a5b3dc",
+  "git_status_porcelain": "?? docs/verification/tools_33565b0/logs/adv/r101_audit_K3.log\n?? docs/verification/tools_33565b0/logs/adv/r102_K64.log\n?? docs/verification/tools_33565b0/logs/adv/r103_lib64.log\n?? docs/verification/tools_33565b0/logs/mutations.log\n?? docs/verification/tools_33565b0/logs/reruns/\n?? docs/verification/tools_33565b0/totals.py",
+  "source_sha256": "ac13665458576dcdef4b889ea7d03b25081175cabdcea55abae65c35a3df76a1",
+  "engine_sha256": "4564cc06dc300dacf7100718c68f1bee527521e974c7c2381187362b90abd83d",
+  "harness_sha256": "2bee113fc4b589e1f4e6510c7b75510f2311596580ae1dd509cf6a1bc21447f1",
+  "ref_root": "/workspace/verify-33565b0-j0",
+  "ref_head": "8994490cfdc7eeb8434498c35771d7dd73fe01da",
+  "ref_clean": true,
+  "lock": null,
+  "loadavg": [
+   0.45361328125,
+   2.8154296875,
+   4.7744140625
+  ],
+  "at": "2026-11-27T10:14:05-0500"
+ },
+ "provenance_end": {
+  "head": "3cc897fba4dacdacc27ea9a8f8f0da34c1a5b3dc",
+  "git_status_porcelain": "?? docs/verification/tools_33565b0/logs/adv/r101_audit_K3.log\n?? docs/verification/tools_33565b0/logs/adv/r102_K64.log\n?? docs/verification/tools_33565b0/logs/adv/r103_lib64.log\n?? docs/verification/tools_33565b0/logs/mutations.log\n?? docs/verification/tools_33565b0/logs/reruns/\n?? docs/verification/tools_33565b0/totals.py",
+  "source_sha256": "ac13665458576dcdef4b889ea7d03b25081175cabdcea55abae65c35a3df76a1",
+  "engine_sha256": "4564cc06dc300dacf7100718c68f1bee527521e974c7c2381187362b90abd83d",
+  "harness_sha256": "2bee113fc4b589e1f4e6510c7b75510f2311596580ae1dd509cf6a1bc21447f1",
+  "ref_root": "/workspace/verify-33565b0-j0",
+  "ref_head": "8994490cfdc7eeb8434498c35771d7dd73fe01da",
+  "ref_clean": true,
+  "lock": null,
+  "loadavg": [
+   9.06884765625,
+   5.021484375,
+   5.357421875
+  ],
+  "at": "2026-11-27T10:15:46-0500"
+ },
+ "source_unchanged": true,
+ "guard_ref_is_8994490": true,
+ "guard_replies_equal_j0": true,
+ "guard_state_equal_j0": true,
+ "guard_workload_answered": true,
+ "guard_no_snapshot_in_window": true,
+ "summary": {
+  "j0": {
+   "mean_task_cpu_ms": {
+    "0": 3.284,
+    "64": 9.144,
+    "256": 31.239,
+    "1024": 173.536
+   },
+   "pad_cpu_s": {
+    "0": 0.001,
+    "64": 0.246,
+    "256": 3.165,
+    "1024": 56.465
+   },
+   "snapshot_cpu_ms": {
+    "0": 1.115,
+    "64": 5.835,
+    "256": 17.285,
+    "1024": 82.705
+   },
+   "R0_64": [
+    2.784,
+    [
+     2.7597,
+     2.8083
+    ]
+   ],
+   "R0_256": [
+    9.5121,
+    [
+     8.3954,
+     10.6288
+    ]
+   ],
+   "R64_256": [
+    3.4134,
+    [
+     3.0421,
+     3.7848
+    ]
+   ],
+   "R64_amort_256": [
+    3.3961,
+    [
+     3.0348,
+     3.7575
+    ]
+   ],
+   "R0_1024": [
+    52.8327,
+    [
+     50.9845,
+     54.681
+    ]
+   ],
+   "R64_1024": [
+    18.9844,
+    [
+     18.155,
+     19.8139
+    ]
+   ],
+   "R64_amort_1024": [
+    18.8005,
+    [
+     17.9954,
+     19.6055
+    ]
+   ]
+  },
+  "j": {
+   "mean_task_cpu_ms": {
+    "0": 2.994,
+    "64": 9.636,
+    "256": 30.345,
+    "1024": 156.971
+   },
+   "pad_cpu_s": {
+    "0": 0.001,
+    "64": 0.269,
+    "256": 3.615,
+    "1024": 66.183
+   },
+   "snapshot_cpu_ms": {
+    "0": 3.61,
+    "64": 23.065,
+    "256": 80.79,
+    "1024": 336.935
+   },
+   "R0_64": [
+    3.2184,
+    [
+     3.212,
+     3.2249
+    ]
+   ],
+   "R0_256": [
+    10.1369,
+    [
+     9.5996,
+     10.6741
+    ]
+   ],
+   "R64_256": [
+    3.15,
+    [
+     2.9768,
+     3.3232
+    ]
+   ],
+   "R64_amort_256": [
+    3.1962,
+    [
+     3.0479,
+     3.3445
+    ]
+   ],
+   "R0_1024": [
+    52.4193,
+    [
+     48.9833,
+     55.8554
+    ]
+   ],
+   "R64_1024": [
+    16.2852,
+    [
+     15.2501,
+     17.3203
+    ]
+   ],
+   "R64_amort_1024": [
+    16.0654,
+    [
+     15.237,
+     16.8939
+    ]
+   ]
+  },
+  "r": {
+   "mean_task_cpu_ms": {
+    "0": 2.647,
+    "64": 3.126,
+    "256": 4.01,
+    "1024": 7.604
+   },
+   "pad_cpu_s": {
+    "0": 0.001,
+    "64": 0.147,
+    "256": 1.168,
+    "1024": 15.59
+   },
+   "snapshot_cpu_ms": {
+    "0": 4.345,
+    "64": 22.015,
+    "256": 82.69,
+    "1024": 440.41
+   },
+   "R0_64": [
+    1.181,
+    [
+     1.1383,
+     1.2236
+    ]
+   ],
+   "R0_256": [
+    1.5147,
+    [
+     1.5145,
+     1.5149
+    ]
+   ],
+   "R64_256": [
+    1.2843,
+    [
+     1.238,
+     1.3306
+    ]
+   ],
+   "R64_amort_256": [
+    2.039,
+    [
+     2.0231,
+     2.0548
+    ]
+   ],
+   "R0_1024": [
+    2.8729,
+    [
+     2.3124,
+     3.4333
+    ]
+   ],
+   "R64_1024": [
+    2.4187,
+    [
+     2.0315,
+     2.8058
+    ]
+   ],
+   "R64_amort_1024": [
+    7.7575,
+    [
+     6.084,
+     9.4309
+    ]
+   ]
+  }
+ },
+ "material_vs_L64": true,
+ "material_vs_L0": true,
+ "material": true,
+ "flat_r": false,
+ "flat_r_vs_L0": false
+}

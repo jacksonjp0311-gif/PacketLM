@@ -1,0 +1,270 @@
+{
+ "guards": {
+  "exact_replies_and_state_r_equal_j": true,
+  "no_wrong_qualified_C": true,
+  "instrument_pinned_unmodified": true,
+  "all_reports_ran": true,
+  "source_unchanged": true
+ },
+ "comp": {
+  "primary": [
+   [
+    "Cr+maint",
+    "Br",
+    "A_36 = -0.7632  [-0.8906, -0.6505] (95% paired bootstrap, S=7); delta-SE=0.0694; sign-flip p=0.01562; geometric-mean form=-0.7777"
+   ],
+   [
+    "Cr+maint",
+    "Pr+maint",
+    "A_36 = -0.4988  [-0.5718, -0.4295] (95% paired bootstrap, S=7); delta-SE=0.0418; sign-flip p=0.01562; geometric-mean form=-0.5074"
+   ],
+   [
+    "Cr+maint",
+    "Cj+maint",
+    "A_36 = +0.0342  [+0.0104, +0.0588] (95% paired bootstrap, S=7); delta-SE=0.0135; sign-flip p=0.04688; geometric-mean form=+0.0359"
+   ]
+  ],
+  "secondary": [
+   [
+    "Cj+maint",
+    "Bj",
+    "A_36 = -0.8368  [-0.9803, -0.7034] (95% paired bootstrap, S=7); delta-SE=0.0785; sign-flip p=0.01562; geometric-mean form=-0.8533"
+   ],
+   [
+    "Cj+maint",
+    "Pj+maint",
+    "A_36 = -0.5483  [-0.6569, -0.4499] (95% paired bootstrap, S=7); delta-SE=0.0586; sign-flip p=0.01562; geometric-mean form=-0.5592"
+   ],
+   [
+    "Br",
+    "Bj",
+    "A_36 = -0.0061  [-0.0172, +0.0064] (95% paired bootstrap, S=7); delta-SE=0.0064; sign-flip p=0.4531; geometric-mean form=-0.0051"
+   ],
+   [
+    "Pr+maint",
+    "Pj+maint",
+    "A_36 = +0.0024  [-0.0167, +0.0206] (95% paired bootstrap, S=7); delta-SE=0.0101; sign-flip p=0.8594; geometric-mean form=+0.0028"
+   ],
+   [
+    "Cr",
+    "Br",
+    "A_36 = -0.6573  [-0.7690, -0.5585] (95% paired bootstrap, S=7); delta-SE=0.0605; sign-flip p=0.01562; geometric-mean form=-0.6703"
+   ],
+   [
+    "Fr+maint",
+    "Fj+maint",
+    "A_36 = +0.0069  [-0.0388, +0.0458] (95% paired bootstrap, S=7); delta-SE=0.0239; sign-flip p=0.7812; geometric-mean form=+0.0080"
+   ],
+   [
+    "Cr+maint",
+    "Fr+maint",
+    "A_36 = -9.6291  [-10.3259, -9.1514] (95% paired bootstrap, S=7); delta-SE=0.3280; sign-flip p=0.01562; geometric-mean form=-9.6362"
+   ]
+  ],
+  "cpu": {
+   "Cj": 58.886,
+   "Cr": 56.869,
+   "Bj": 32.059,
+   "Br": 32.253,
+   "Pj": 38.034,
+   "Pr": 37.944,
+   "Fj": 5.388,
+   "Fr": 5.35
+  },
+  "maint": {
+   "Cj": 3.484,
+   "Cr": 3.415,
+   "Pj": 3.651,
+   "Pr": 3.545,
+   "Fj": 2.27,
+   "Fr": 2.309
+  },
+  "outcomes": {
+   "Cj": {
+    "tasks": 252,
+    "solved": 252,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0
+   },
+   "Cr": {
+    "tasks": 252,
+    "solved": 252,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 147,
+    "wrong_qualified_sealed": 0
+   },
+   "Bj": {
+    "tasks": 252,
+    "solved": 246,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Br": {
+    "tasks": 252,
+    "solved": 246,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pj": {
+    "tasks": 252,
+    "solved": 246,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pr": {
+    "tasks": 252,
+    "solved": 246,
+    "qualified": 246,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Fj": {
+    "tasks": 252,
+    "solved": 129,
+    "qualified": 124,
+    "censored": 126,
+    "uses_library": 84,
+    "wrong_qualified_sealed": 0
+   },
+   "Fr": {
+    "tasks": 252,
+    "solved": 129,
+    "qualified": 124,
+    "censored": 126,
+    "uses_library": 84,
+    "wrong_qualified_sealed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true,
+   "F": true
+  }
+ },
+ "unrel": {
+  "primary": [
+   [
+    "Cr+maint",
+    "Br",
+    "A_24 = -1.9084  [-2.1748, -1.6997] (95% paired bootstrap, S=7); delta-SE=0.1388; sign-flip p=0.01562; geometric-mean form=-1.8887"
+   ],
+   [
+    "Cr+maint",
+    "Pr+maint",
+    "A_24 = -0.0168  [-0.0600, +0.0184] (95% paired bootstrap, S=7); delta-SE=0.0226; sign-flip p=0.5938; geometric-mean form=-0.0127"
+   ],
+   [
+    "Cr+maint",
+    "Cj+maint",
+    "A_24 = +0.0594  [+0.0102, +0.1019] (95% paired bootstrap, S=7); delta-SE=0.0261; sign-flip p=0.04688; geometric-mean form=+0.0638"
+   ]
+  ],
+  "secondary": [
+   [
+    "Cj+maint",
+    "Bj",
+    "A_24 = -2.1146  [-2.3153, -1.9275] (95% paired bootstrap, S=7); delta-SE=0.1106; sign-flip p=0.01562; geometric-mean form=-2.1116"
+   ],
+   [
+    "Cj+maint",
+    "Pj+maint",
+    "A_24 = -0.0166  [-0.0376, +0.0002] (95% paired bootstrap, S=7); delta-SE=0.0107; sign-flip p=0.2344; geometric-mean form=-0.0167"
+   ],
+   [
+    "Br",
+    "Bj",
+    "A_24 = -0.0073  [-0.0424, +0.0248] (95% paired bootstrap, S=7); delta-SE=0.0186; sign-flip p=0.6406; geometric-mean form=-0.0084"
+   ],
+   [
+    "Pr+maint",
+    "Pj+maint",
+    "A_24 = +0.0596  [+0.0392, +0.0779] (95% paired bootstrap, S=7); delta-SE=0.0106; sign-flip p=0.01562; geometric-mean form=+0.0601"
+   ],
+   [
+    "Cr",
+    "Br",
+    "A_24 = -0.5354  [-0.7715, -0.3734] (95% paired bootstrap, S=7); delta-SE=0.1180; sign-flip p=0.01562; geometric-mean form=-0.5106"
+   ]
+  ],
+  "cpu": {
+   "Cj": 4.831,
+   "Cr": 4.544,
+   "Bj": 1.551,
+   "Br": 1.562,
+   "Pj": 4.752,
+   "Pr": 4.469
+  },
+  "maint": {
+   "Cj": 2.166,
+   "Cr": 2.145,
+   "Pj": 2.108,
+   "Pr": 2.098
+  },
+  "outcomes": {
+   "Cj": {
+    "tasks": 168,
+    "solved": 164,
+    "qualified": 164,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Cr": {
+    "tasks": 168,
+    "solved": 164,
+    "qualified": 164,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Bj": {
+    "tasks": 168,
+    "solved": 164,
+    "qualified": 164,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Br": {
+    "tasks": 168,
+    "solved": 164,
+    "qualified": 164,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pj": {
+    "tasks": 168,
+    "solved": 164,
+    "qualified": 164,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   },
+   "Pr": {
+    "tasks": 168,
+    "solved": 164,
+    "qualified": 164,
+    "censored": 0,
+    "uses_library": 0,
+    "wrong_qualified_sealed": 0
+   }
+  },
+  "exact": {
+   "C": true,
+   "B": true,
+   "P": true
+  }
+ }
+}
