@@ -18,3 +18,8 @@ ledger "every prediction held except part S point": charged-prop point 0.36[0.28
 mutdiff no-audit dense 30 sess/2608 calls: threshold_one_too_high, hit_filter_strict, so_pairs_skipped NOT detected at output level (outcome-neutral in random sessions); pair_dropped, small_part_dropped caught by ix_check at call 0. audit runs pending.
 instrument_recompute: 64/64 contrasts match first line.
 work_probe seed 291 (under load 15, so timings rough): hit set per 50 queries 995 (16k) -> 3943 (64k) = linear; H 43 const; small_part 1->8; recall fn CPU 7.4->14.6 ms; workload 36.8->65.2 ms; profile call count 107k->119k (=alpha 0.078, matches work). => linear term in pair-list traversal inside set.update (one c_call per list, size grows) -> work metric under-counts it. rerun probe at low load with process_time profiler.
+(2) mutations 193/194 (survivor g57b_drop_keeps_scope), the 5 616d37e survivors now KILLED by the 2 new tests; no timeouts. tight test is behavioral (candidate membership + ask equality).
+mutdiff WITH audit (real/dense/block, 20 sess 1983 calls each): threshold+1, hit_strict, so_pairs NOT detected -> exactness of tight case rests on proof + constructed test.
+bound_property.py: constructed near-boundary triples: 4.8M samples, ~840k eligible, 45 tight, 0 violations.
+external load: /workspace/nomad (other agent) wrote 1569 files 11:30-11:50 during registered run (64k seeds 293-297 ran 11:30-11:37; gate 11:40-11:52; gate start load 5.87). per-seed 64k k no obvious shift (291 pre-overlap 8.63 vs mean 9.02).
+rerun.sh started 12:33 (k 1 worker; gate comp301+unrel321; probe seed 292)
