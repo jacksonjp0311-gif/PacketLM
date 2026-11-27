@@ -244,3 +244,23 @@ items 1–3.
   - `python3 benchmarks/g46.py --seeds 11,22,33 --jobs 8` (about 6 min on 8 cores);
   - `python3 benchmarks/la_export.py artifacts/g46/g46_raw.json costs.csv`;
   - `PYTHONPATH=<learning-amortization@70297af> python3 -m amortization costs.csv --cont C --base B`.
+
+## 2026-11-26 21:45 — G47 and G46-U (frozen engine `cab85669629f…`)
+
+- **G47 (docs/G47.md):**
+  - H3 (reach) true: library at depth 2 acquires 35–36 tasks against 15.
+  - H4 true on the instrument: `A^reuse_36` = +0.225.
+  - H5 false: the library costs more per acquired task at depth 3. The primitive arm is heavily
+    censored, so the instrument's `A(L‖M)` = −0.82 is a lower bound.
+  - 0 wrong qualified answers with the library.
+- **G46-U (docs/G46U.md):** unrelated curriculum; 0 library uses; `A_24(C‖B)` = −23.1;
+  `A_24(C‖P)` = −0.03. The predicted utility problem is confirmed and comes from retained
+  knowledge, not the library.
+- **Learning-amortization feedback (FEEDBACK_LA_integration.txt). I agree with:**
+  - an external, unmodified instrument;
+  - raw lifecycle CSVs (published for G46, G47 and G46-U);
+  - censoring, read with the instrument's own direction notes;
+  - both curricula, now run.
+  Adaptive retention is pre-registered next, as its own experiment (G51-prep), after the exact
+  efficiency work. The efficiency work is a developer improvement and changes no decision. It is
+  measured and kept separate, so that G51 compares retention policies on the same engine.
